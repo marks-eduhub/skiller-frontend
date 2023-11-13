@@ -17,7 +17,7 @@ export default function Home() {
             rel="noopener noreferrer"
           >
             By{' '}
-            <Button variant="secondary"> Waape</Button>
+            <Button variant="secondary"> KhuSoma</Button>
           </a>
         </div>
       </div>
