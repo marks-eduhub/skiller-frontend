@@ -36,14 +36,13 @@ This repo has some additional tools already setup for you:
 - [Prettier](https://prettier.io) for code formatting
 - [ShadCN UI](https://shadcn.com/) for UI components
 - [React Hot Toast](https://react-hot-toast.com/) for toast notifications
-- [React Icons](https://react-icons.github.io/react-icons/) for icons
+- [Radix Icons](https://www.radix-ui.com/icons) for icons
 
 ### Recommended Optional Utilities
 
 - [React Query](https://react-query.tanstack.com/) for data fetching with Rest API
 - [React Apollo Client](https://www.apollographql.com/docs/react/) for data fetching with GraphQL
 - [React Hook Form](https://react-hook-form.com/) for forms
-- [Formik](https://formik.org/) for forms
 
 ## Deployment
 
@@ -55,7 +54,6 @@ Setup the following GitHub Action Secrets in your repo:
 - `VERCEL_PROJECT_ID` - Your Vercel Project ID
 - `VERCEL_TOKEN` - Your Vercel Token
 - `SLACK_BOT_TOKEN` - Your Slack Bot Token
-
 
 ## Learn More
 
@@ -71,3 +69,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Making a pull request
+
+### How to make a pull request.
+
+Please make sure you always branch off `development` to create any other branch.
+
+All your changes should be in the branch that you have created from development and the pull request should always be made against development
+(merging your branch into development)
+
+NEVER push directly to either `master` or `development` as this may affect the CI/CD pipeline.
+
+### Branch naming.
+
+- For fixes, your branch name should start with fx, followed by a hyphen and after it an appropriate word/name. eg, fx-auth-screens.
+- For new features , your branch name should start with feat, followed by a hyphen and after it an appropriate word/name. eg, feat-auth-screens.
+- For refactors, your branch name should start with ch, followed by a hyphen and after it an appropriate word/name. eg, ch-auth-screens.
+
+Words should be separated with hyphens following the naming convention
