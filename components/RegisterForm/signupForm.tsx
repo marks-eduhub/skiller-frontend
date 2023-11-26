@@ -1,205 +1,104 @@
 import React from "react";
+import data from "./data.json"
 
 export default function SignUp() {
   return (
-    <div style={{ width: "1512px", height: "982px", background: "#E9E9E9" }}>
-      <div
-        style={{
-          display: "flex",
-          width: "355px",
-          height: "67px",
-          flexDirection: "column",
-          justifyContent: "center",
-          flexShrink: "0",
-          color: "#000",
-          textAlign: "center",
-          fontFamily: "Poppins",
-          fontSize: "50px",
-          fontStyle: "normal",
-          fontWeight: "600",
-          lineHeight: "normal",
-        }}
-      >
-        Register
-      </div>
-      <div>
-        <label
-          htmlFor="email"
-          style={{
-            display: "flex",
-            width: "81.581px",
-            height: "25px",
-            flexDirection: "column",
-            justifyContent: "center",
-            flexShrink: "0",
-            color: "#000",
-            fontFamily: "Poppins",
-            fontSize: "25px",
-            fontStyle: "normal",
-            lineHeight: "normal",
-          }}
-        >
-          Email
-        </label>
-        <input type="email" id="email" name="email" required></input>
-        <label
-          htmlFor="email"
-          style={{
-            display: "flex",
-            width: "81.581px",
-            height: "25px",
-            flexDirection: "column",
-            justifyContent: "center",
-            flexShrink: "0",
-            color: "#000",
-            fontFamily: "Poppins",
-            fontSize: "25px",
-            fontStyle: "normal",
-            lineHeight: "normal",
-          }}
-        >
-          Gender
-        </label>
-        <select id="gender" name="gender">
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
-        <label
-          htmlFor="email"
-          style={{
-            display: "flex",
-            width: "81.581px",
-            height: "25px",
-            flexDirection: "column",
-            justifyContent: "center",
-            flexShrink: "0",
-            color: "#000",
-            fontFamily: "Poppins",
-            fontSize: "25px",
-            fontStyle: "normal",
-            lineHeight: "normal",
-          }}
-        >
-          Password
-        </label>
-        <input type="password" id="password" name="password" required></input>
-      </div>
-      <div>
-        <label htmlFor="phone">Phone:</label>
-        <div style={{ display: "flex" }}>
-          <select id="countryCode" name="countryCode" style={{ width: "30%" }}>
-            <option value="+1">+1</option>
-            <option value="+44">+44</option>
-          </select>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            style={{ width: "70%" }}
-            required
-          />
+    <div className="bg-[#E9E9E9] h-screen  w-[100%] flex flex-col p-[1.5rem] text-black items-center">
+      <h2 className="font-[600] text-[50px] mt-[1rem]">
+        {data.registerForm.title}
+      </h2>
+      <div className="flex flex-col w-[100%] gap-[2.2rem] mt-[2rem]">
+        {/* email and password */}
+        <div className="flex flex-row gap-[1.5rem] w-full">
+          <div className="flex flex-col items-start">
+            <div className="font-[400] text-[22px]">Email</div>
+            <input
+              placeholder="black@gmail.com"
+              type="text"
+              className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <div className="font-[400] text-[22px]">Phone</div>
+            <div className=" w-[20rem] gap-2 flex flex-row ">
+              <input
+                placeholder="256"
+                type="text"
+                className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[4rem]"
+              />
+              <input
+                placeholder="700600504"
+                type="text"
+                className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[14rem]"
+              />
+            </div>
+          </div>
         </div>
+        {/* gender and dob */}
+        <div className="flex flex-row gap-[1.5rem] w-full">
+          <div className="flex flex-col items-start">
+            <div className="font-[400] text-[22px]">Gender</div>
+            <select
+              id="gender"
+              name="gender"
+              className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[20rem]"
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div className="flex flex-col items-start">
+            <div className="font-[400] text-[22px]">Date of birth</div>
+            <div className=" w-[20rem] gap-4 flex flex-row ">
+              <input
+                placeholder="DD"
+                type="number"
+                className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[4.5rem]"
+              />
+              <input
+                placeholder="MM"
+                type="number"
+                className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[4.5rem]"
+              />
+              <input
+                placeholder="YYYY"
+                type="number"
+                className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[8rem]"
+              />
+            </div>
+          </div>
+        </div>
+        {/* passwords */}
+        <div className="flex flex-row gap-[1.5rem] w-full">
+          <div className="flex flex-col items-start">
+            <div className="font-[400] text-[22px]">Password</div>
+            <input
+              placeholder="***************"
+              type="password"
+              className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
+            />
+          </div>
+          <div className="flex flex-col items-start">
+            <div className="font-[400] text-[22px]">Confirm Password</div>
+            <input
+              placeholder="***************"
+              type="password"
+              className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
+            />
+          </div>
+        </div>
+        {/* checkbox */}
+        {/* register button */}
 
-        <label htmlFor="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required></input>
-        <label
-          htmlFor="confirmPassword"
-          style={{
-            display: "flex",
-            width: "81.581px",
-            height: "25px",
-            flexDirection: "column",
-            justifyContent: "center",
-            flexShrink: "0",
-            color: "#000",
-            fontFamily: "Poppins",
-            fontSize: "25px",
-            fontStyle: "normal",
-            lineHeight: "normal",
-          }}
-        >
-          Confirm Password:
-        </label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          required
-        ></input>
-      </div>
-      <div
-        style={{
-          width: "30px",
-          height: "30px",
-          flexShrink: "0",
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-        >
-          <rect
-            x="1"
-            y="1"
-            width="28"
-            height="28"
-            rx="6"
-            stroke="black"
-            stroke-width="2"
-          />
-        </svg>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          width: "509px",
-          height: "69px",
-          flexDirection: "column",
-          justifyContent: "center",
-          flexShrink: "0",
-          color: "#002BC5",
-          textAlign: "justify",
-          fontFamily: "Poppins",
-          fontSize: "20px",
-          fontStyle: "normal",
-          fontWeight: "400",
-          lineHeight: "normal",
-        }}
-      >
-        Terms and conditions.
-      </div>
-      <button
-        style={{
-          width: "213px",
-          height: "66px",
-          flexShrink: "0",
-          background: "#000",
-          borderRadius: "7px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            width: "150px",
-            height: "35px",
-            flexDirection: "column",
-            justifyContent: "center",
-            flexShrink: "0",
-            color: "#FFF",
-            textAlign: "center",
-            fontFamily: "Poppins",
-            fontSize: "29px",
-            fontStyle: "normal",
-            fontWeight: "400",
-            lineHeight: "normal",
-          }}
-        >
-          Register
+        <div className="flex flex-row items-center gap-6 mt-[2rem] font-[700]">
+          <hr className="border-[1px] border-black w-[48%] "/>
+          OR
+          <hr className="border-[1px] border-black w-[48%] "/>
         </div>
-      </button>
+         {/* google logo */}
+
+      </div>
     </div>
   );
 }

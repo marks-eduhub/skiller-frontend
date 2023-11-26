@@ -1,78 +1,22 @@
 import React from "react";
+import data from "./data.json"
+import Image from "next/image";
+import Link from "next/link";
 
 export default function RegisterDrawer() {
   return (
-    <div
-      style={{
-        background: "linear-gradient(180deg, #000 51.07%, #101010 100%)",
-        backgroundBlendMode: "darken",
-        width: "730px",
-        height: "982px",
-        flexShrink: 0,
-      }}
-    >
-      <div>
-        <div
-          style={{
-            display: "flex",
-            width: "464px",
-            height: "196px",
-            padding: "45px 39px",
-            justifyContent: "center",
-            alignItems: "center",
-            flexShrink: 0,
-            borderRadius: "41px",
-            border: "1px solid #FFF",
-            background: "#000",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              width: "386px",
-              height: "106px",
-              flexDirection: "column",
-              justifyContent: "center",
-              flexShrink: 0,
-              color: "#FFF",
-              textAlign: "center",
-              fontFamily: "Poppins",
-              fontSize: "70px",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "normal",
-              letterSpacing: "14px",
-            }}
-          >
-            Skiller
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            width: "386px",
-            height: "106px",
-            flexDirection: "column",
-            justifyContent: "center",
-            color: "#FFF",
-            textAlign: "center",
-            fontFamily: "Poppins",
-          }}
-        >
-          Let's Help you, better you.
-        </div>
+    <div className="hidden md:flex w-full flex-col gap-[3rem] bg-black h-screen justify-center relative items-center text-white" >
+      <div className="relative w-[22rem] h-[12rem]">
+      <Image
+       src={data.logo}
+       alt={"logo"}
+       fill
+      />
       </div>
-      <button
-        style={{
-          borderRadius: "22px",
-          background: "#FFF",
-          width: "485px",
-          height: "73px",
-          flexShrink: 0,
-        }}
-      >
-        Login
-      </button>
+      <div className="text-[40px] mt-[2rem]">{data.tagline}</div>
+      <Link href={data.action.link} className="bg-white absolute bottom-[2rem] rounded-[22px] py-[1rem] text-[29px] min-w-[22rem] flex justify-center text-black">
+      {data.action.text}
+      </Link>
     </div>
   );
 }

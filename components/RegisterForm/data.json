@@ -1,0 +1,11 @@
+{
+    "logo": "/logos/tempLogo.svg",
+    "tagline":"Let's help you, better you.",
+    "action": {
+        "text": "Login",
+        "link": "/auth"
+    },
+    "registerForm":{
+        "title": "Register"
+    }
+}
