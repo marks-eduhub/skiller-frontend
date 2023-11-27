@@ -1,5 +1,7 @@
 import React from "react";
-import data from "./data.json"
+import data from "./data.json";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function SignUp() {
   return (
@@ -54,27 +56,30 @@ export default function SignUp() {
               <input
                 placeholder="DD"
                 type="number"
+                min="1"
                 className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[4.5rem]"
               />
               <input
                 placeholder="MM"
                 type="number"
+                min="1"
                 className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[4.5rem]"
               />
               <input
                 placeholder="YYYY"
                 type="number"
+                min="1"
                 className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[1.3rem] w-[8rem]"
               />
             </div>
           </div>
         </div>
-        {/* passwords */}
+
         <div className="flex flex-row gap-[1.5rem] w-full">
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Password</div>
             <input
-              placeholder="***************"
+              placeholder="************                                            👁"
               type="password"
               className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
             />
@@ -82,22 +87,48 @@ export default function SignUp() {
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Confirm Password</div>
             <input
-              placeholder="***************"
+              placeholder="************                                            👁"
               type="password"
               className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
             />
           </div>
         </div>
-        {/* checkbox */}
-        {/* register button */}
+        <label
+          htmlFor="termsCheckbox"
+          className="text-[#002BC5] w-[509px] h-[69px] "
+        >
+          <input
+            type="checkbox"
+            id="termsCheckbox"
+            name="terms"
+            value="accepted"
+            className="w-[20px] h-[20px] "
+          />
+          Terms and conditions
+        </label>
 
-        <div className="flex flex-row items-center gap-6 mt-[2rem] font-[700]">
-          <hr className="border-[1px] border-black w-[48%] "/>
-          OR
-          <hr className="border-[1px] border-black w-[48%] "/>
+        <div className="flex justify-center">
+          <Link
+            href={data.registerForm.action.link}
+            className="bg-[#000] absolute bottom-[6rem] rounded-[7px] py-[0.5rem] text-[29px] flex justify-center text-white w-[213px] h-[66px]"
+          >
+            {data.registerForm.action.text}
+          </Link>
         </div>
-         {/* google logo */}
 
+        <div className="flex flex-row items-center gap-6 bottom-[5rem] font-[700]">
+          <hr className="border-[1px] border-black w-[48%] " />
+          OR
+          <hr className="border-[1px] border-black w-[48%] " />
+        </div>
+
+        <div className="fixed w-[40px] h-[40px] bottom-[0.2rem] ml-[21rem]">
+          <Image
+            src={data.registerForm.action.googlelogo}
+            alt={"google"}
+            fill
+          />
+        </div>
       </div>
     </div>
   );
