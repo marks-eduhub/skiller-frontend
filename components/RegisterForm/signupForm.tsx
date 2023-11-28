@@ -5,13 +5,13 @@ import Link from "next/link";
 
 export default function SignUp() {
   return (
-    <div className="bg-[#E9E9E9] h-screen  w-[100%] flex flex-col p-[1.5rem] text-black items-center">
+    <div className="bg-[#E9E9E9] h-screen  w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto">
       <h2 className="font-[600] text-[50px] mt-[1rem]">
         {data.registerForm.title}
       </h2>
       <div className="flex flex-col w-[100%] gap-[2.2rem] mt-[2rem]">
         {/* email and password */}
-        <div className="flex flex-row gap-[1.5rem] w-full">
+        <div className="flex flex-row justify-between w-full">
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Email</div>
             <input
@@ -37,7 +37,7 @@ export default function SignUp() {
           </div>
         </div>
         {/* gender and dob */}
-        <div className="flex flex-row gap-[1.5rem] w-full">
+        <div className="flex flex-row justify-between  w-full">
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Gender</div>
             <select
@@ -75,11 +75,11 @@ export default function SignUp() {
           </div>
         </div>
 
-        <div className="flex flex-row gap-[1.5rem] w-full">
+        <div className="flex flex-row justify-between w-full">
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Password</div>
             <input
-              placeholder="************                                            👁"
+              placeholder="************"
               type="password"
               className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
             />
@@ -87,7 +87,7 @@ export default function SignUp() {
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Confirm Password</div>
             <input
-              placeholder="************                                            👁"
+              placeholder="***********"
               type="password"
               className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem]"
             />
@@ -95,7 +95,7 @@ export default function SignUp() {
         </div>
         <label
           htmlFor="termsCheckbox"
-          className="text-[#002BC5] w-[509px] h-[69px] "
+          className="text-[#002BC5] "
         >
           <input
             type="checkbox"
@@ -110,7 +110,7 @@ export default function SignUp() {
         <div className="flex justify-center">
           <Link
             href={data.registerForm.action.link}
-            className="bg-[#000] absolute bottom-[6rem] rounded-[7px] py-[0.5rem] text-[29px] flex justify-center text-white w-[213px] h-[66px]"
+            className="bg-[#000]  rounded-[7px] py-[0.5rem] text-[29px] flex justify-center text-white w-[213px] h-[66px]"
           >
             {data.registerForm.action.text}
           </Link>
@@ -122,11 +122,12 @@ export default function SignUp() {
           <hr className="border-[1px] border-black w-[48%] " />
         </div>
 
-        <div className="fixed w-[40px] h-[40px] bottom-[0.2rem] ml-[21rem]">
+        <div className="relative w-[100%] flex justify-center bottom-[1rem] mt-2 cursor-pointer">
           <Image
             src={data.registerForm.action.googlelogo}
             alt={"google"}
-            fill
+            width={40}
+            height={40}
           />
         </div>
       </div>
