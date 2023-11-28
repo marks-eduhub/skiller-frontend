@@ -129,8 +129,8 @@ export default function SignUp() {
           <Image
             src={data.registerForm.action.googlelogo}
             alt={"google"}
-            width={40}
-            height={40}
+            width={80}
+            height={80}
           />
         </div>
       </div>

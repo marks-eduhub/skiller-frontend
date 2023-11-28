@@ -1,0 +1,12 @@
+{
+  "logo": "/logos/tempLogo.svg",
+  "tagline": "Let's help you, better you.",
+  "loginAction": {
+    "text": "Login",
+    "link": "/auth"
+  },
+  "registerAction": {
+    "text": "Register",
+    "link": "/auth/register"
+  }
+}
