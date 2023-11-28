@@ -1,3 +1,5 @@
-export default function Login() {
-    return <p>Login Page</p>;
+import Login from "@/components/Login/index";
+
+export default function LoginPage() {
+    return <Login/>;
   }
