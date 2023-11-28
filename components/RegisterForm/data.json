@@ -1,0 +1,17 @@
+{
+  "logo": "/logos/tempLogo.svg",
+  "tagline": "Let's help you, better you.",
+  "action": {
+    "text": "Login",
+    "link": "/auth"
+  },
+  "registerForm": {
+    "title": "Register",
+    "passwordsvg": "/logos/password.svg",
+    "action": {
+      "text": "Register",
+      "link": "/auth/register",
+      "googlelogo": "/logos/googlelogo.svg"
+    }
+  }
+}
