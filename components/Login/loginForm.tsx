@@ -10,7 +10,7 @@ export default function LogIn() {
           {data.loginForm.title}
         </h2>
         <div className="flex flex-col w-full gap-[2.2rem] mt-[2rem]">
-          {/* email and password */}
+          
           <div className="flex flex-row gap-[1.5rem] w-full">
             <div className="flex flex-col items-start">
               <div className="font-[400] text-[22px]">Email</div>
@@ -21,7 +21,7 @@ export default function LogIn() {
               />
             </div>
           </div>
-          {/* passwords */}
+          
           <div className="flex flex-row gap-[1.5rem] w-full">
             <div className="flex flex-col items-start">
               <div className="font-[400] text-[22px]">Password</div>
@@ -32,7 +32,7 @@ export default function LogIn() {
               />
             </div>
           </div>
-          {/* login button */}
+          
           <button
             type="button"
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
@@ -50,7 +50,7 @@ export default function LogIn() {
         <hr className="border-[1px] border-black flex-grow" />
       </div>
 
-      {/* Google logo */}
+      
      
       <div className="relative w-[100%] flex justify-center  mt-[2rem] cursor-pointer">
           <Image

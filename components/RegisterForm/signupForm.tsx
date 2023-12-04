@@ -5,15 +5,16 @@ import Link from "next/link";
 
 export default function SignUp() {
   return (
-    <div className="bg-[#E9E9E9] h-screen  w-[100%] flex flex-col p-[1.5rem] text-black items-center  overflow-y-auto overflow-x-hidden
+    <div
+      className="bg-[#E9E9E9] h-screen  w-[100%] flex flex-col p-[1.5rem] text-black items-center  overflow-y-auto overflow-x-hidden
     relative 
-    ">
-     <div className="fixed -top-[8rem] -right-[6.5rem] h-[14rem] w-[14rem]  bg-black opacity-[14%] transform rounded-full " />
+    "
+    >
+      <div className="fixed -top-[8rem] -right-[6.5rem] h-[14rem] w-[14rem]  bg-black opacity-[14%] transform rounded-full " />
       <h2 className="font-[600] text-[50px] mt-[1rem]">
         {data.registerForm.title}
       </h2>
       <div className="flex flex-col w-[100%] gap-[2.2rem] mt-[2rem]">
-        {/* email and password */}
         <div className="flex flex-row justify-between w-full">
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Email</div>
@@ -39,7 +40,7 @@ export default function SignUp() {
             </div>
           </div>
         </div>
-        {/* gender and dob */}
+
         <div className="flex flex-row justify-between  w-full">
           <div className="flex flex-col items-start">
             <div className="font-[400] text-[22px]">Gender</div>
@@ -96,10 +97,7 @@ export default function SignUp() {
             />
           </div>
         </div>
-        <label
-          htmlFor="termsCheckbox"
-          className="text-[#002BC5] "
-        >
+        <label htmlFor="termsCheckbox" className="text-[#002BC5] ">
           <input
             type="checkbox"
             id="termsCheckbox"
