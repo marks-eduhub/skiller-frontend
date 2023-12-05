@@ -37,13 +37,13 @@ const InputCode = ({ length, loading, onComplete }:any) => {
   };
 
   return (
-    <div className="flex items-center flex-row gap-6 justify-start">
+    <div className="flex items-center flex-row  gap-2 sm:gap-6 justify-start">
       {code.map((num, idx) => (
         <div key={idx} className="relative ">
           <input
             type="text"
             inputMode="numeric"
-            className="w-[4rem] h-[4rem] text-center text-xl border flex items-center rounded-md fieldBoxShadow"
+            className="sm:w-[4rem] sm:h-[4rem] w-[3rem] h-[3rem] text-center text-xl border flex items-center rounded-md fieldBoxShadow"
             maxLength={1}
             value={num}
             autoFocus={!code[0].length && idx === 0}
