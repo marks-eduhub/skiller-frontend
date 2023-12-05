@@ -2,11 +2,11 @@ import React from "react";
 
 export default function NewPasswordForm() {
   return (
-    <div className="bg-[#E9E9E9] w-full">
+    <div className="bg-[#E9E9E9] w-full h-screen ">
       <button className="rounded-[7px] border-4 border-solid border-black text-black text-[20px] w-[145px] h-[60px] mt-[2rem] absolute top-0 right-[2rem]">
         SKILLER
       </button>
-      <h2 className="font-[600] text-[25px] mt-[5rem] flex justify-center mb-2">
+      <h2 className="font-[600] text-[25px] pt-[5rem] flex justify-center mb-2">
         New Password
       </h2>
 
