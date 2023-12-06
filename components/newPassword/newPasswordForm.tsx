@@ -6,13 +6,13 @@ export default function NewPasswordForm() {
       <button className="rounded-[7px] border-4 border-solid border-black text-black text-[20px] w-[145px] h-[60px] mt-[2rem] absolute top-0 right-[2rem]">
         SKILLER
       </button>
-      <h2 className="font-[600] text-[25px] pt-[5rem] flex justify-center mb-2">
+      <h2 className="font-[600] text-[25px] pt-[6rem] flex justify-center mb-2 p-16">
         New Password
       </h2>
 
       <div className="flex flex-col items-center">
         <div className="mb-4">
-          <div className="font-[400] text-[22px]">Password</div>
+          <div className="font-[600] text-[20px]">Password</div>
           <input
             placeholder="************"
             type="password"
@@ -21,7 +21,7 @@ export default function NewPasswordForm() {
         </div>
 
         <div className="mb-8">
-          <div className="font-[400] text-[22px]">Repeat Password</div>
+          <div className="font-[600] text-[20px]">Repeat Password</div>
           <input
             placeholder="***********"
             type="password"
