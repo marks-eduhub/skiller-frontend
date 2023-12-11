@@ -8,9 +8,5 @@
   "registerAction": {
     "text": "Register",
     "link": "/auth/register"
-  },
-  "forgotPasswordAction":{
-    "text": "Forgot Password",
-    "link": "/auth/forgotpassword"
   }
 }

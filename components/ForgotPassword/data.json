@@ -1,6 +1,6 @@
 {
-   
     "forgotPassword":{
-        "title": "Forgot Password"
+        "title": "Forgot Password",
+        "whitelogo": "/logos/whiteLogo.svg"
     }
 }
