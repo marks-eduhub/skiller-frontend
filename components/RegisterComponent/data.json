@@ -3,6 +3,7 @@
   "registerForm": {
     "title": "Register",
     "passwordsvg": "/logos/password.svg",
+    "logo":"/logos/whiteLogo.svg",
     "action": {
       "text": "Register",
       "link": "/auth/register",

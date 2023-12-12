@@ -1,6 +1,8 @@
 {
    
     "loginForm":{
-        "title": "Login"
+        "title": "Login",
+        "logo": "/logos/whiteLogo.svg",
+        "WelcomeMsg": "Welcome Back!"
     }
 }
