@@ -4,7 +4,7 @@ import DrawerLayout from "../drawerLayout";
 
 export default function Login() {
   return (
-    <DrawerLayout > 
+    <DrawerLayout pageTo={"Register"} link={"/auth/register"}> 
       <LogIn />
     </DrawerLayout>         
   );
