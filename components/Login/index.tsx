@@ -1,8 +1,11 @@
 import React from "react";
 import LogIn from "./loginForm";
+import DrawerLayout from "../drawerLayout";
 
 export default function Login() {
-  return (    
-      <LogIn />     
+  return (
+    <DrawerLayout > 
+      <LogIn />
+    </DrawerLayout>         
   );
 }
