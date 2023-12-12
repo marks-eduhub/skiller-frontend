@@ -8,7 +8,7 @@ export default function LogIn() {
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
       <div className="sm:hidden flex flex-row justify-between items-center w-full px-[0.5rem]">
       <Link
-            href={"/auth"}
+            href={"/auth/register"}
             className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center  rounded-[12px] text-[17px] flex justify-center text-white"
           >
              Register
