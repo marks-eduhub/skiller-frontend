@@ -1,6 +1,7 @@
 {
     "whitelogo": "/logos/whiteLogo.svg",
     "errorImage": "/error.svg",
+    "backImage": "/back.svg",
     "tagline": "Sorry",
     "errorMessage": "Error Message",
     "buttonText": "Back to Courses"
