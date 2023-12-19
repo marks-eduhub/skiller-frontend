@@ -6,7 +6,10 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 // import { useRouter } from 'next/router';
 
-export default function NotFoundPage() {
+interface NotFoundPageProps {
+  errorMessage?: string;
+}
+const  NotFoundPage : React.FC<NotFoundPageProps> = ({errorMessage}) =>{
   // const router = useRouter(); // Access the router object
 
   // function handleOnClick(): void {
@@ -57,8 +60,8 @@ export default function NotFoundPage() {
         <div className="relative w-[18rem] h-[12rem] flex self-center justify-center">
           <Image src={data.errorImage} alt={"logo"} priority={true} fill />
         </div>
-        <div className=" text-[30px] md:text-[40px] mt-[2rem] text-black">
-          {data.errorMessage}
+        <div className=" text-[30px] md:text-[40px] mt-[2rem] text-black text-center">
+          {errorMessage || "An error has occurred"}
         </div>
         <Button size="lg">{data.buttonText}</Button>
       </div>
@@ -69,3 +72,4 @@ export default function NotFoundPage() {
     </div>
   );
 }
+export default NotFoundPage
