@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 interface NotFoundPageProps {
   errorMessage?: string;
 }
-const  NotFoundPage : React.FC<NotFoundPageProps> = ({errorMessage}) =>{
+const NotFoundPage: React.FC<NotFoundPageProps> = ({ errorMessage }) => {
   // const router = useRouter(); // Access the router object
 
   // function handleOnClick(): void {
@@ -68,8 +68,7 @@ const  NotFoundPage : React.FC<NotFoundPageProps> = ({errorMessage}) =>{
       <div className="md:w-20 md:h-300 md:row-span-4"></div>
 
       <div className="fixed left-1/8 w-[18rem] h-[18rem] bottom-[-14rem] md:left-1/6 md:bottom-[-40rem] md:h-[44rem] md:w-[44rem] lg:left-1/4  bg-black opacity-[14%] transform rounded-full " />
-
     </div>
   );
-}
-export default NotFoundPage
+};
+export default NotFoundPage;
