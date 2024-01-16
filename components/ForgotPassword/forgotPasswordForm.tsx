@@ -1,19 +1,29 @@
 import React from "react";
 import data from "./data.json";
-import Image from "@/node_modules/next/image";
+import Link from "@/node_modules/next/link";
+// import { ChevronLeftIcon } from "@radix-ui/react-icons";
+
 
 export default function ForgotPassword() {
   return (
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
       <div className="flex flex-col items-center max-w-md w-full">
-      <button className="rounded-[14px] border-4 border-solid border-black text-black text-[18px] w-[120px] h-[50px] mt-10 absolute top-0 right-10">
-          SKILLER
-      </button>
+        <Link
+          href={"#"}
+          className="rounded-[14px] border-[4px] border-black px-2 sm:py-3 font-[700] text-[18px] w-[58px] h-[52px] mt-10 absolute top-0 left-10">
+          {/* <ChevronLeftIcon width={60} height={30} fontWeight={100} classNmae=" w-[120px] h-[50px] mb-10"/> */}
+        </Link>
 
+        <div className="fixed -top-[17rem] -right-[4.5rem]  sm:-bottom-[9rem] sm:-right-[6.5rem] h-[20rem] w-[20rem]  bg-black opacity-[14%] transform rounded-full"/>
+      
+        <button className="rounded-[14px] border-4 border-solid border-black text-black text-[18px] w-[120px] h-[50px] mt-10 absolute top-0 right-10">
+          SKILLER
+        </button>
 
         <h2 className="font-[600] text-[30px] mt-[1rem] mb-20">
           {data.forgotPassword.title}
         </h2>
+        
         <div className="flex flex-col w-full gap-[2.2rem] mt-[2rem]">
           {/* email */}
           <div className="flex flex-row gap-[1.5rem] w-full">
