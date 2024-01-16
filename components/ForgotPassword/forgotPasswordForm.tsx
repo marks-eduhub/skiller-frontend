@@ -1,7 +1,7 @@
 import React from "react";
 import data from "./data.json";
 import Link from "@/node_modules/next/link";
-// import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import { MdArrowBackIosNew } from "react-icons/md";
 
 
 export default function ForgotPassword() {
@@ -10,8 +10,8 @@ export default function ForgotPassword() {
       <div className="flex flex-col items-center max-w-md w-full">
         <Link
           href={"#"}
-          className="rounded-[14px] border-[4px] border-black px-2 sm:py-3 font-[700] text-[18px] w-[58px] h-[52px] mt-10 absolute top-0 left-10">
-          {/* <ChevronLeftIcon width={60} height={30} fontWeight={100} classNmae=" w-[120px] h-[50px] mb-10"/> */}
+          className="flex justify-center items-center rounded-[8px] border-[4px] md:rounded-[14px] md:border-[4px] border-black px-2 sm:py-3 font-[700] text-[18px] w-[60px] h-[40px] md:w-[58px] h-[52px] mt-10 absolute top-0 left-10">
+          <MdArrowBackIosNew width={60} height={30} fontWeight={100}/>
         </Link>
 
         <div className="fixed -top-[17rem] -right-[4.5rem]  sm:-bottom-[9rem] sm:-right-[6.5rem] h-[20rem] w-[20rem]  bg-black opacity-[14%] transform rounded-full"/>
