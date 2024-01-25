@@ -20,36 +20,40 @@ export default function ForgotPassword() {
           SKILLER
         </button>
 
-        <h2 className="font-[600] text-[30px] mt-[1rem] mb-20">
-          {data.forgotPassword.title}
-        </h2>
-        
-        <div className="flex flex-col w-full gap-[2.2rem] mt-[2rem]">
-          {/* email */}
-          <div className="flex flex-row gap-[1.5rem] w-full">
-            <div className="flex flex-col items-start">
-              <div className="text-[18px] mx-auto mb-2">
-                Enter Registered Email
-              </div>
-              <input
-                placeholder="black@gmail.com"
-                type="text"
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[25rem]"
-              />
-            </div>
-          </div>
-          <div className="font-bold text-gray-500 text-lg mx-auto">
-            Back To Login?
-          </div>
+        <h2 className="font-[600] text-[30px] mt-[1rem] mb-20 text-center sm:text-left">
+  {data.forgotPassword.title}
+</h2>
 
-          <button
-            type="button"
-            className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
-          >
-            Continue
-          </button>
+<div className="flex flex-col w-full gap-[2.2rem] mt-[2rem]">
+  {/* email */}
+  <div className="flex flex-col items-center sm:flex-row sm:gap-[1.5rem] w-full">
+    <div className="flex flex-col items-start">
+      <div className="text-[18px] mx-auto mb-10">
+        Enter Registered Email
+      </div>
+      <input
+        placeholder="black@gmail.com"
+        type="text"
+        className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-full sm:w-[25rem]"
+      />
+    </div>
+  </div>
+
+  <button
+           type="button"
+           className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mt-[50px] mx-auto w-[100px]"
+         >
+           Continue
+  </button>
+
+  <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left mt-[50px]">
+    Back To Login?
+  </div>
+</div>
+
+
         </div>
       </div>
-    </div>
+    // </div>
   );
 }
