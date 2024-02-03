@@ -2,6 +2,7 @@ import React from "react";
 import data from "./data.json"
 import Image from "next/image";
 import Link from "next/link";
+// import Loader from "../loader";
 
 export default function LogIn() {
   return (
@@ -13,7 +14,7 @@ export default function LogIn() {
           >
              Register
           </Link>
-
+          
         <div className=" relative w-[8rem] h-[4rem]">
           <Image alt={"logo"} src={data.loginForm.logo} fill />
         </div>
@@ -23,7 +24,6 @@ export default function LogIn() {
           {data.loginForm.title}
         </h2>
         <div className="flex flex-col w-full gap-[2.2rem] mt-[2rem]">
-          
           <div className="flex flex-row gap-[1.5rem] w-full">
             <div className="flex flex-col items-start">
               <div className="font-[400] text-[14px] sm:text-[22px]">Email</div>
@@ -52,6 +52,8 @@ export default function LogIn() {
           >
             Login
           </button>
+          {/* for testing */}
+          {/* <Loader/> */}
           <div className="font-bold text-gray-500 text-lg mx-auto">Trouble logging in?</div>
         </div>
       </div>
