@@ -1,0 +1,12 @@
+{
+   "preference_options": [
+    "Poetry", "Art", "Programming", "Artificial Intelligence", "UI/UX", "Data Analysis", 
+    "Databases", "Music", "Design1", "Poetry2", "Art3", "Programming4", "Artificial Intelligence5", "UI/UX6", "Data Analysis7", 
+    "Databases8", "Music9", "Design10"
+],
+   "title": "Almost there, what's your taste ?",
+   "slider": "/slider_icon.svg",
+   "skip" : "Skip"
+
+}
+  
