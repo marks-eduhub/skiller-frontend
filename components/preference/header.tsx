@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import data from "./data.json";
 
 interface MyComponentProps {
@@ -11,7 +11,7 @@ const Header: React.FC<MyComponentProps> = ({ data2 }) => {
   return (
     <>
       <div className=""></div>
-      <div className="text-black mt-10 mb-10 font-semibold text-2xl col-span-2 flex justify-center self-center">
+      <div className=" text-black mt-10 mb-10 font-semibold text-2xl col-span-2 flex justify-center md:self-end">
         {data2.currentIndex === 0 && data.profileTitle}
         {data2.currentIndex === 1 && data.title}
         <div className="fixed right-1/8 w-[5rem] h-[5rem] top-[2rem] md:right-1/6 md:top-[14rem] md:h-[8rem] md:w-[8rem] lg:right-1/4 lg:top-[5rem] bg-black opacity-[14%] transform rounded-full " />
