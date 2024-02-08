@@ -1,23 +1,26 @@
+"use client"
 import Link from "next/link";
 import NavLinks from "@/app/dashboard/nav-links";
 import SkillerLogo from "@/components/ui/logo";
-// import { TiThMenuOutline } from "react-icons/ti";
 import { MdMenu } from "react-icons/md";
 import Image from "next/image";
 import { FaHome } from "react-icons/fa";
 import { GoPeople } from "react-icons/go";
 import { IoMdContact } from "react-icons/io";
-// import {useState} from "react"
-// import { useClient } from 'next/bridge';
+import {useState} from "react"
 
 export default function SideNav() {
-  // const [showDropdown, setShowDropdown] = useState(false);
-  // useClient(); 
+  const [collapsed, setCollapsed] = useState(false);
 
+  const toggleSidebar = () => {
+    console.log("Sidebar toggled")
+    setCollapsed(!collapsed);
+  };
+ 
   return (
-    <div className="flex h-full flex-col text-white">
-      <div className="flex items-center justify-between bg-black p-4 md:p-8">
-      <MdMenu className="text-gray-500 w-6 h-6 md:w-8 md:h-8" />
+    <div className={`flex h-full flex-col text-white  ${collapsed ? 'collapsed' : ''}`}>
+      <div className="flex items-center justify-between bg-black p-4 md:p-8 rounded-custom">
+      <MdMenu onClick={toggleSidebar} className="text-gray-500 w-6 h-6 md:w-8 md:h-8"/>
         <Link className="flex items-center space-x-2" href="/">
         <Image
         src="/logo.svg"
@@ -64,8 +67,27 @@ export default function SideNav() {
           <div className="hover:bg-gray-800 transition-colors duration-300 ease-in-out">
             <h2 className="md:block p-4">Inprogress</h2>
            </div> 
-           
-            
+           <div>
+<Link className="flex items-center space-x-2" href="/">
+            <Image
+            src="/side-menu/Typescript-Progress.webp"
+            alt="Skiller logo"
+            priority={true}
+            width={200}
+            height={80}
+          />
+            </Link>
+            <div style={{ marginBottom: '10px' }}></div>
+           <Link className="flex items-center space-x-2" href="/">
+            <Image
+            src="/side-menu/Malware-Progress.webp"
+            alt="Skiller logo"
+            priority={true}
+            width={200}
+            height={80}
+          />
+            </Link>
+           </div>
          
           </div>
      
