@@ -5,7 +5,9 @@
     "Databases8", "Music9", "Design10"
 ],
    "title": "Almost there, what's your taste ?",
+   "profileTitle": "How about a complete profile",
    "slider": "/slider_icon.svg",
+   "slider1": "/slider1_icon.svg",
    "skip" : "Skip"
 
 }

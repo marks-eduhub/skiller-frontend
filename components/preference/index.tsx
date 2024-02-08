@@ -8,6 +8,8 @@ import { TbArrowBadgeRight } from "react-icons/tb";
 import BottomSlider from "./bottom-slider";
 import Content from "./content";
 import Header from "./header";
+import  { useState } from 'react';
+
 
 
 interface PreferenceProps {
@@ -18,11 +20,20 @@ interface PreferenceProps {
 
 const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
 
-
+  const images = [data.slider, data.slider1];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+  
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
   return (
     <div className="relative flex flex-col justify-between md:flex md:flex-col md:justify-center md:grid md:grid-cols-4 md:grid-rows-3 md:gap-3 bg-grey h-screen p-4  overflow-y-auto">
       {/* row 1 */}
-      <Header data={data} />
+      <Header data2={{currentIndex}} />
       {/* <div className=""></div>
       <div className="text-black mt-10 mb-10 font-semibold text-2xl col-span-2 flex justify-center self-center">
         {data.title}
@@ -33,7 +44,7 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
       <div className=""></div> */}
 
       {/* row 2 */}
-      <Content data={data} />
+      <Content data2={{currentIndex}} />
       
       {/* <div className="col-span-1"></div>
       <div className="col-span-2">
@@ -44,7 +55,7 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
         <Image src={data.slider} alt={"slider icon"} priority={true} fill />
       </div> */}
       {/* row 3 */}
-      <BottomSlider data={data} />
+      <BottomSlider nextSlide={nextSlide} data2={{currentIndex}} />
       {/* <div className="hidden md:flex md:justify-end md:self-center md:col-span-1">
         <button className="rounded-[7px] border-4 border-solid border-black text-black text-[20px] w-[145px] h-[60px] ">
           <p className="break-all">{data.skip}</p>

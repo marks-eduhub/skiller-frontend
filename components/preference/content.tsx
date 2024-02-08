@@ -4,8 +4,8 @@ import { useState } from "react";
 import Profile from './profile';
 
 interface MyComponentProps {
-  data: {
-    slider: string;
+  data2: {
+    currentIndex: number;
   };
 }
 const Options: React.FC = () => {
@@ -36,17 +36,20 @@ const Options: React.FC = () => {
     );
   };
 
-const Content: React.FC<MyComponentProps> = ({ data }) => {
+const Content: React.FC<MyComponentProps> = ({ data2 }) => {
   return (
     <>
       <div className="col-span-1"></div>
       <div className="col-span-2">
-        <Options />
+        {data2.currentIndex === 1 && <Options />}
+        {data2.currentIndex === 0 && <Profile />}
         {/* <Profile /> */}
       </div>
       <div className="col-span-1"></div>
       <div className="relative w-24 h-24 col-span-2 h-[20px] flex justify-center self-center md:hidden">
-        <Image className="mt-50 mb-10 h-auto" src={data.slider} alt={"slider icon"} priority={true} fill />
+        {data2.currentIndex === 0 && <Image className="mt-50 mb-10 h-auto" src={data.slider1} alt={"slider icon"} priority={true} fill />}
+        {data2.currentIndex === 1 && <Image className="mt-50 mb-10 h-auto" src={data.slider} alt={"slider icon"} priority={true} fill />}
+
       </div>
     </>
   );
