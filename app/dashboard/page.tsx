@@ -1,3 +1,8 @@
+import SearchBar from "@/components/searchBar"
+
 export default function Page() {
-    return <p>Dashboard Page</p>;
+    return <div>
+      <SearchBar/>
+      Dashboard Page
+    </div>
   }
