@@ -7,7 +7,6 @@ import Link from "next/link";
 
 
 export default function AuthDrawer({pageTo, link}:{pageTo:string, link:string}) {
-  ;
   return (
     <div className="hidden md:flex w-full flex-col gap-[3rem] bg-black h-screen justify-center relative items-center text-white" >
       <div className="relative w-[22rem] h-[12rem]">
