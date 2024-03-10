@@ -1,25 +1,4 @@
 "use client";
-
-// import React from "react";
-// import data from "./data.json";
-// import Image from "next/image";
-// import { Button } from "../ui/button";
-// import { TbArrowBadgeRight } from "react-icons/tb";
-// import { useState } from "react";
-
-
-// const Splash: React.FC = () => {
-//   return (
-//     <div className="flex justify-center items-center h-screen bg-gray-200">
-//       <Image layout= 'intrinsic' width={375.99} height={618} src="/image.svg" alt="bulb" className="w-16 h-16" />
-//     </div>
-    
-//   );
-// };
-
-
-
-
 import React from "react";
 import data from "./data.json";
 import Image from "next/image";
