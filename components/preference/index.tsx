@@ -62,7 +62,12 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
       </div>
       <div className="col-span-1"></div>
       <div className="relative mt-10 mb-10 col-span-2 h-[20px] flex justify-center self-center md:hidden">
+
+      {/* Replace "/next-page" with the actual URL of the next page */}
+      
         <Image src={data.slider} alt={"slider icon"} priority={true} fill />
+          
+        
       </div>
       {/* row 3 */}
 
