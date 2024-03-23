@@ -24,6 +24,9 @@ const BottomSlider: React.FC<SliderProps> = ({ data2, nextSlide }) => {
         {data2.currentIndex === 1 && (
           <Image src={data.slider} alt={"slider icon"} priority={true} fill />
         )}
+        {data2.currentIndex === 2 && (
+          <Image src={data.slider2} alt={"slider icon"} priority={true} fill />
+        )}
       </div>
       <div className="hidden md:flex md:justify-start md:self-center md:col-span-1">
         <button

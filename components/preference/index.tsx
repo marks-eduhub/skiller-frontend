@@ -12,7 +12,7 @@ interface PreferenceProps {
 }
 
 const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
-  const images = [data.slider, data.slider1];
+  const images = [data.slider, data.slider1 , data.slider2 ];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
