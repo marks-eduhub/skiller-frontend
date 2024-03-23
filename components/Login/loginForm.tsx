@@ -86,12 +86,12 @@ import React, { useContext } from "react";
 import data from "./data.json";
 import Image from "next/image";
 import Link from "next/link";
-import { UserContext } from '../context/UserContext'; 
-import { UserProvider } from '../context/UserContext';
+// |import { UserContext } from '../context/UserContext'; 
+// import { UserProvider } from '../context/UserContext';
 // Import UserContext
 
 export default function LogIn() {
-  const { login } = useContext(UserContext); // Use useContext hook to access UserContext
+  // const { login } = useContext(UserContext); // Use useContext hook to access UserContext
 
   const handleLogin = () => {
     // Perform login logic here

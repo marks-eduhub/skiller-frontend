@@ -5,7 +5,10 @@
     "Databases8", "Music9", "Design10"
 ],
    "title": "Almost there, what's your taste ?",
+   "title2": "Almost there, Hello Nuhu ?",
    "slider": "/slider_icon.svg",
+   "buttonText": "Let's Start",
+   
    "skip" : "Skip"
 
 }
