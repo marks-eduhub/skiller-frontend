@@ -1,9 +1,14 @@
+"use client"
 import Link from "next/link";
 import NavLinks from "@/app/dashboard/nav-links";
 import SkillerLogo from "@/components/ui/logo";
 // import { TiThMenuOutline } from "react-icons/ti";
+import {  logout } from "../../lib/userSS";
+import { redirect } from "next/navigation";
+import { useRouter } from 'next/navigation'
 
 export default function SideNav() {
+  const router = useRouter()
   return (
     <div className="flex h-full flex-col text-white">
       <Link
@@ -23,7 +28,11 @@ export default function SideNav() {
         <NavLinks />
       </div>
 
-      <form>
+      <form onSubmit={async(e)=> {
+        e.preventDefault()
+        await logout()
+        router.push("/auth")
+        }}>
         <button className="flex h-[48px] w-full grow items-center justify-center bg-black p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
           <div className="md:block p-4">Sign Out</div>
         </button>
