@@ -1,6 +1,6 @@
 "use client"
 
-import AuthDrawer from "@/components/authDrawer";
+import AuthDrawer from "@/components/drawerLayout/authDrawer";
 export default function DrawerLayout({ children, pageTo, link }: { children: React.ReactNode, pageTo:string, link:string }) {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
