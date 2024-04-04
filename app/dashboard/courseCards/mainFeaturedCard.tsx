@@ -1,7 +1,7 @@
 // // FeaturedProduct.tsx
 'use client';
 
- import ProductDescriptionBar from './DescriptionBar';
+ import ProductDescriptionBar from './cardDescriptionBar';
 
 import React from 'react';
 

@@ -1,6 +1,6 @@
 // ProductList.tsx
 import React from 'react';
-import ProductCard from './ProductCard';
+import ProductCard from './courseCards';
 
 interface Product {
   id: number;
@@ -15,14 +15,15 @@ interface Product {
 
 interface ProductListProps {
   products: Product[];
+  containerWidth: string; 
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
+const ProductList: React.FC<ProductListProps> = ({ products ,containerWidth }) => {
   return (
     <div className="flex overflow-x-auto py-4">
       {products.map((product) => (
-        <div key={product.id} className="flex-none w-64 mx-4">
-          <ProductCard product={product} />
+        <div key={product.id} className="flex-none w-64 mx-4 mr-2">
+          <ProductCard product={product} containerWidth={containerWidth} />
         </div>
       ))}
     </div>
