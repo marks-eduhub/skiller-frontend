@@ -2,11 +2,14 @@
 import Link from "next/link";
 import NavLinks from "@/app/dashboard/nav-links";
 import SkillerLogo from "@/components/ui/logo";
+
 import { TiThMenuOutline } from "react-icons/ti";
 import {  logout } from "../../lib/userSS";
 import { redirect } from "next/navigation";
 import { useRouter } from 'next/navigation'
- import {  HamburgerMenuIcon   } from '@radix-ui/react-icons';
+import {  HamburgerMenuIcon   } from '@radix-ui/react-icons';
+// import { TiThMenuOutline } from "react-icons/ti";
+
 
 export default function SideNav() {
   const router = useRouter()
