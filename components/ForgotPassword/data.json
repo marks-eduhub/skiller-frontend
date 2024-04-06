@@ -1,6 +1,7 @@
 {
     "forgotPassword":{
         "title": "Forgot Password",
-        "whitelogo": "/logos/whiteLogo.svg"
+        "whitelogo": "/logos/whiteLogo.svg",
+        "buttonText": "Back to Courses"
     }
 }
