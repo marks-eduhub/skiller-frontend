@@ -15,6 +15,7 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
   const router = useRouter();
   const images = [data.slider, data.slider1 , data.slider2 ];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const totalSlides = 2; 
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -37,7 +38,8 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
       <Content data2={{ currentIndex }} />
 
       {/* row 2 */}
-      <BottomSlider nextSlide={nextSlide} skipToEnd={handleSkip} data2={{ currentIndex }} />
+       <BottomSlider nextSlide={nextSlide} skipToSplash={handleSkip} data2={{ currentIndex }}  /> 
+
     </div>
   );
 };
