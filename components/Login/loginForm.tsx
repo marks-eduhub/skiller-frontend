@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { useRouter } from 'next/navigation'
 import {  login } from "../../lib/userSS";
 
-export default async function LogIn() {
+export default function LogIn() {
   const router = useRouter()
   const handleLogin = async (e:any) => {
     e.preventDefault()
