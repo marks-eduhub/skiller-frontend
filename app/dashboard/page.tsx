@@ -157,13 +157,9 @@ const Page: React.FC = () => {
 <ProductContainer products={products} />
 
       <h2 className="text-lg font-semibold my-4"><b>Recently Accessed</b></h2>
-      {/* <ProductContainer products={products.slice(3, 6)} /> */}
-<ProductContainer products={products} />
-
-      <h2 className="text-lg font-semibold my-4"><b>The Weeks Picks</b></h2>
-      {/* <ProductContainer products={products.slice(6 , 9)} /> */}
-<ProductContainer products={products} />
-
+      <ProductContainer products={products.slice(3, 6)} />
+      <h2 className="text-lg font-semibold my-4"><b>The Week&apos;s Picks</b></h2>
+      <ProductContainer products={products.slice(6 , 9)} />
       <h2 className="text-lg font-semibold my-4"><b>New Arrivals</b></h2>
       {/* <ProductContainer products={products.slice(9)} /> */}
 <ProductContainer products={products} />
