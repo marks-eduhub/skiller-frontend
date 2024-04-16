@@ -114,12 +114,10 @@
 .sidebar {
   width: 250px; /* Normal width */
   transition: width 0.3s ease; 
-  border-radius: 0;
 }
 
 .sidebar.minimized {
   width: 150px; /* Minimized width */
-  border-radius: 12px !important;
 }
 @keyframes spin {
   0% {

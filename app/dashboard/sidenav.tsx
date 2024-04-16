@@ -8,7 +8,7 @@ import { logout } from "@/lib/userSS";
 
 export default function SideNav() {
   const router = useRouter();
-  const [sidebarMinimized, setSidebarMinimized] = useState(false); // State to control sidebar minimization
+  const [sidebarMinimized, setSidebarMinimized] = useState(false); 
 
   const toggleSidebar = () => {
     setSidebarMinimized(!sidebarMinimized);

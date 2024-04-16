@@ -35,7 +35,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
               }
             )}
           >
-            <LinkIcon className="w-10 h-7 mr-2" /> {/* Always show the icon */}
+            <LinkIcon className="w-10 h-7 mr-2" /> 
             <p className="md:block">{link.name}</p>
           </a>
         );
@@ -47,7 +47,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
           "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-sky-100 hover:text-blue-600 md:flex-none md:p-2 md:px-3", "mb-8"
         )}
       >
-        <AiOutlineTeam className="w-10 h-7 mr-2" /> {/* Always show the icon */}
+        <AiOutlineTeam className="w-10 h-7 mr-2" /> 
         <p className="md:block">{communityLink.name}</p>
       </a>
       {/* Horizontal line */}
@@ -57,7 +57,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
       </div>
       {/* Individual subscription entries */}
       {subscriptionLinks.map((subscription) => (
-        <div key={subscription.name} className="flex items-center justify-between bg-black p-2"> {/* Always show the icons */}
+        <div key={subscription.name} className="flex items-center justify-between bg-black p-2"> 
           <div className="flex items-center space-x-2">
             <subscription.icon className="w-6 h-6 text-white" />
             <p className="text-white">{subscription.name}</p>
@@ -70,12 +70,11 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
         <p className="text-white">In Progress</p>
       </div>
       {/* Progress bars */}
-      <div className="flex items-center space-x-2 bg-black p-2"> {/* Always show the icons */}
+      <div className="flex items-center space-x-2 bg-black p-2"> 
         <BsPhoneLandscapeFill className="w-6 h-6 text-white" />
         <progress value="80" max="100" className="w-full" />
       </div>
-      <div className="flex items-center space-x-2 bg-black p-2"> {/* Always show the icons */}
-        <BsPhoneLandscapeFill className="w-6 h-6 text-white" />
+      <div className="flex items-center space-x-2 bg-black p-2"> 
         <progress value="50" max="100" className="w-full" />
       </div>
     </>
