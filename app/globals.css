@@ -104,7 +104,21 @@
   transition: all ease;
   animation: spin 5s infinite; /* Use 'infinite' to repeat the animation */
 }
+.gradient-bg {
+  background-image: linear-gradient(to bottom, #225B9A, #000000);
+  color: white;
+}
+.top-gradient{
+  background-image: linear-gradient(to bottom, #A3CEFA , #FFF);
+}
+.sidebar {
+  width: 250px; /* Normal width */
+  transition: width 0.3s ease; 
+}
 
+.sidebar.minimized {
+  width: 150px; /* Minimized width */
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg) translateY(0px);

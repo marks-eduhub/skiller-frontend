@@ -1,5 +1,3 @@
-
-
 // import React from 'react';
 // // import ProductDescriptionBar from './DescriptionBar';
 
@@ -37,8 +35,7 @@
 
 // export default ProductCard;
 
-
-import React from 'react';
+import React from "react";
 
 interface Product {
   id: number;
@@ -53,21 +50,39 @@ interface Product {
 
 interface ProductCardProps {
   product: Product;
-  containerWidth: string; 
+  containerWidth: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product , containerWidth }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  containerWidth,
+}) => {
   return (
-    <div className="flex-none bg-white shadow-lg rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4" style={{ width: containerWidth, height: containerWidth }}>
+    <div
+      className="flex-none bg-white shadow-lg rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4"
+      style={{ width: containerWidth, height: '360px' }}
+    >
       <div className="overflow-hidden  border border-white-800 rounded-lg border-8">
-        <img src={product.image} alt={product.image} className="w-full object-cover" />
+        <img
+          src={product.image}
+          alt={product.image}
+          className="w-full object-cover"
+        />
       </div>
-      <div className="p-6 flex flex-col justify-between flex-1">
-        <div>
-          <h3 className="text-gray-800 font-semibold">{product.instructor}</h3>
-          <p className="mt-2 text-sm text-gray-500">{product.description}</p>
+      <div className="p-6 bg-black">
+        <div className="flex items-center justify-between">
+          <h3 className="text-gray-800 font-semibold text-white">{product.topic}</h3>
+          <p className="ml-4 text-sm text-gray-500 text-white">{product.description}</p>
         </div>
-        <p className="mt-auto text-gray-600">{product.rating}</p>
+
+        <div>
+          <p className="mt-auto text-gray-600 text-white">{product.instructor}</p>
+        </div>
+        <div className="flex flex-row justify-between gap-3 py-3">
+          <p className="mt-auto text-gray-600 text-white">{product.rating}</p>
+          <p className="mt-auto text-gray-600 text-white">{product.duration}</p>
+          <p className="mt-auto text-gray-600 text-white">{product.level}</p>
+        </div>
       </div>
     </div>
   );

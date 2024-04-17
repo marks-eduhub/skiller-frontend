@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
       <div className="sm:col-span-2 flex items-center justify-center rounded-full shadow bg-white text-black">
         Premium
       </div>
-      <div className="sm:col-span-2 flex items-center justify-between rounded-full shadow bg-black text-white">
+      <div className="sm:col-span-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer" >
         <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
         <span className="text-white">Norah</span>
         <TriangleDownIcon className="w-6 h-6 text-white mr-2" />

@@ -80,67 +80,67 @@ const products = [
     duration: '60 Hours ',
     description: ' 4 weeks ago',
     topic: 'Malware Analysis',
-    level: "",
+    level: "Beginner",
   },
   {
     id: 7,
     instructor: 'Dragule Swaib',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5,
-    duration: '',
-    description: '',
-    topic: '',
-    level: "",
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
+    level: "Advanced",
   },
   {
     id: 8,
     instructor: 'Micheal Kizito',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5,
-    duration: '',
-    description: '.',
-    topic: '',
-    level: "",
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
+    level: "Beginner",
   },
   {
     id: 9,
     instructor: 'Dragule Swaib',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5 ,
-    duration: '',
-    description: '',
-    topic: '',
-    level: "",
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Malware Analysis',
+    level: "Beginner",
   },
   {
     id: 10,
     instructor: 'Micheal Kizito',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5,
-    duration: '',
-    description: '',
-    topic: '',
-    level: "",
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Malware Analysis',
+    level: "Advanced",
   },
   {
     id: 11,
     instructor: 'Dragule Swaib',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5,
-    duration: '',
-    description: '.',
-    topic: '',
-    level: "",
+    duration: '60 Hours',
+    description: '3 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
+    level: "Beginner",
   },
   {
     id: 12,
     instructor: 'Micheal Kizito',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5,
-    duration: '',
-    description: '',
-    topic: '',
-    level: "",
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
+    level: "Advaned",
   },
 ];
 
@@ -153,13 +153,17 @@ const Page: React.FC = () => {
       <FeaturedProduct product={featuredProduct}
        />
       <h2 className="text-lg font-semibold my-4"><b>Featured Courses</b></h2>
-      <ProductContainer products={products.slice(0 ,3)} />
+      {/* <ProductContainer products={products.slice(0 ,3)} /> */}
+<ProductContainer products={products} />
+
       <h2 className="text-lg font-semibold my-4"><b>Recently Accessed</b></h2>
       <ProductContainer products={products.slice(3, 6)} />
-      <h2 className="text-lg font-semibold my-4"><b>The Weeks Picks</b></h2>
+      <h2 className="text-lg font-semibold my-4"><b>The Week&apos;s Picks</b></h2>
       <ProductContainer products={products.slice(6 , 9)} />
       <h2 className="text-lg font-semibold my-4"><b>New Arrivals</b></h2>
-      <ProductContainer products={products.slice(9)} />
+      {/* <ProductContainer products={products.slice(9)} /> */}
+<ProductContainer products={products} />
+
       <Footer />
     </div>
      
