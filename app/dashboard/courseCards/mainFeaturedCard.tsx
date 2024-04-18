@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import React from 'react';
 import ProductDescriptionBar from './cardDescriptionBar';
 import { Carousel } from 'react-responsive-carousel';
@@ -23,7 +23,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
   const images = [product.image, product.image, product.image]; 
 
   return (
-    <div className=" px-4 py-2 rounded-lg relative">
+    <div className=" px-4 py-2 relative">
       <div className="top-gradient shadow-lg rounded-lg overflow-hidden mx-2 ">
         <Carousel
           showThumbs={false} 
@@ -33,12 +33,12 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
           showStatus={false} 
         >
           {images.map((image, index) => (
-            <div key={index}>
-              <img src={image} alt={product.image} className="w-full object-cover rounded-lg h-64 pt-6 pr-6 pl-6 pb-0  " />
+            <div key={index} className="pt-8 pr-8 pl-8 pb-0 ">
+              <img src={image} alt={product.image} className="w-full object-cover h-64  " />
 
-              {/* <div className="absolute top-2 right-2  bg-white text-black px-2 py-1 rounded">
+              <div className="absolute top-2 right-12   bg-white text-black px-2 py-1 rounded">
                 Free
-              </div> */}
+              </div>
             </div>
           ))}
         </Carousel>
@@ -58,3 +58,4 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
 };
 
 export default FeaturedProduct;
+

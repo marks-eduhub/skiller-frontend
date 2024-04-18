@@ -36,6 +36,7 @@
 // export default ProductCard;
 
 import React from "react";
+import { PersonIcon, ClockIcon, StarFilledIcon } from '@radix-ui/react-icons';
 
 interface Product {
   id: number;
@@ -59,29 +60,37 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   return (
     <div
-      className="flex-none bg-white shadow-lg rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4"
+      className="flex-none shadow-lg rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4"
       style={{ width: containerWidth, height: '360px' }}
     >
-      <div className="overflow-hidden  border border-white-800 rounded-lg border-8">
+      <div className="overflow-hidden rounded-lg border-8 pt-4 pr-4 pl-4 pb-4 border-white">
         <img
           src={product.image}
           alt={product.image}
-          className="w-full object-cover"
+          className="w-full object-cover "
         />
       </div>
-      <div className="p-6 bg-black">
-        <div className="flex items-center justify-between">
+      <div className="p-6 bg-black ">
+        <div className="mb-4">
           <h3 className="text-gray-800 font-semibold text-white">{product.topic}</h3>
-          <p className="ml-4 text-sm text-gray-500 text-white">{product.description}</p>
         </div>
 
-        <div>
-          <p className="mt-auto text-gray-600 text-white">{product.instructor}</p>
+        <div className="flex items-center mb-4">
+          <PersonIcon className="w-6 h-6 text-white" />
+          <p className="ml-2 text-gray-600 text-white">{product.instructor}</p>
+          <p className="ml-8 flex-grow text-sm text-gray-500 text-white">{product.description}</p>
         </div>
-        <div className="flex flex-row justify-between gap-3 py-3">
-          <p className="mt-auto text-gray-600 text-white">{product.rating}</p>
-          <p className="mt-auto text-gray-600 text-white">{product.duration}</p>
-          <p className="mt-auto text-gray-600 text-white">{product.level}</p>
+
+        <div className="flex justify-between mt-3 gap-2">
+          <div className="flex gap-1">
+            <StarFilledIcon className="w-6 h-6 text-white" />
+            <p className="text-gray-600 text-white">{product.rating}</p>
+          </div>
+          <div className="flex gap-1 mb-3">
+            <ClockIcon className="w-6 h-6 text-white" />
+            <p className="text-gray-600 text-white">{product.duration}</p>
+          </div>
+          <p className="text-gray-600 text-white">{product.level}</p>
         </div>
       </div>
     </div>
