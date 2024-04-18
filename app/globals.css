@@ -131,6 +131,7 @@
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg) translateY(0px);
