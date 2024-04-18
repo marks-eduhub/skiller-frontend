@@ -1,4 +1,3 @@
-"use client"
 import React from 'react';
 import ProductDescriptionBar from './cardDescriptionBar';
 import { Carousel } from 'react-responsive-carousel';
@@ -9,7 +8,7 @@ interface Product {
   instructor: string;
   image: string;
   rating: number;
-  duration:string;
+  duration: string;
   description: string;
   topic: string;
   level: string;
@@ -20,24 +19,23 @@ interface FeaturedProductProps {
 }
 
 const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
-  const images = [product.image, product.image, product.image]; 
+  const images = [product.image, product.image, product.image];
 
   return (
-    <div className=" px-4 py-2 relative">
-      <div className="top-gradient shadow-lg rounded-lg overflow-hidden mx-2 ">
+    <div className="px-4 py-2 relative">
+      <div className="top-gradient shadow-lg rounded-corners overflow-hidden mx-2 relative">
         <Carousel
-          showThumbs={false} 
-          showArrows={false} 
-          infiniteLoop={true} 
-          autoPlay={true} 
-          showStatus={false} 
+          showThumbs={false}
+          showArrows={false}
+          infiniteLoop={true}
+          autoPlay={true}
+          showStatus={false}
         >
           {images.map((image, index) => (
-            <div key={index} className="pt-8 pr-8 pl-8 pb-0 ">
-              <img src={image} alt={product.image} className="w-full object-cover h-64  " />
-
-              <div className="absolute top-2 right-12   bg-white text-black px-2 py-1 rounded">
-                Free
+            <div key={index} className="pt-8 pr-8 pl-8 pb-0 relative">
+              <div className="relative">
+                <img src={image} alt={product.image} className="w-full object-cover h-64 rounded-t-custom" />
+                <p className="absolute top-3 right-4 bg-white px-4 py-0  rounded-tl-md rounded-tr-md ">Free</p>
               </div>
             </div>
           ))}
@@ -58,4 +56,3 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
 };
 
 export default FeaturedProduct;
-

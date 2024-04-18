@@ -1,40 +1,3 @@
-// import React from 'react';
-// // import ProductDescriptionBar from './DescriptionBar';
-
-// interface Product {
-//   id: number;
-//   instructor: string;
-//   image: string;
-//   rating: number;
-//   duration: string;
-//   description: string;
-//   topic: string;
-//   level: string;
-// }
-
-// interface ProductCardProps {
-//   product: Product;
-// }
-
-// const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-//   return (
-//     <div className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-full">
-//       <div className="overflow-x-auto">
-//       <img src={product.image} alt={product.image} className="w-full object-cover " />
-//       </div>
-//       <div className="p-6 relative flex-1 flex flex-col justify-between">
-//         <div>
-//           <h3 className="text-gray-800 font-semibold">{product.instructor}</h3>
-//           <p className="mt-2 text-sm text-gray-500">{product.description}</p>
-//         </div>
-//         <p className="absolute bottom-0 left-0 mt-2 text-gray-600">{product.rating}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductCard;
-
 import React from "react";
 import { PersonIcon, ClockIcon, StarFilledIcon } from '@radix-ui/react-icons';
 
@@ -60,16 +23,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   return (
     <div
-      className="flex-none shadow-lg rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4"
+      className="flex-none shadow-lg bg-custom-grey rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4"
       style={{ width: containerWidth, height: '360px' }}
     >
-      <div className="overflow-hidden rounded-lg border-8 pt-4 pr-4 pl-4 pb-4 border-white">
+      <div className="overflow-hidden rounded-lg border-8 pt-4 pr-4 pl-4 pb-2 border-white relative ">
+        {/* Image */}
         <img
           src={product.image}
           alt={product.image}
           className="w-full object-cover "
         />
+        {/* Text on the image */}
+        <p className="absolute top-4 right-8 mt-2 ml-2 text-black bg-white px-4 py-0 rounded-t rounded-b">Free</p>
       </div>
+      {/* Rest of the card content */}
       <div className="p-6 bg-black ">
         <div className="mb-4">
           <h3 className="text-gray-800 font-semibold text-white">{product.topic}</h3>

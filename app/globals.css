@@ -115,12 +115,21 @@
   width: 250px; /* Normal width */
   transition: width 0.3s ease; 
 }
-
 .sidebar.minimized {
   width: 150px; /* Minimized width */
 }
 .back-card{
   background-color: #A0A0A0;
+}
+.rounded-t-custom {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.rounded-corners{
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 @keyframes spin {
   0% {
