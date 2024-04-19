@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ProductDescriptionBar from './cardDescriptionBar';
 import { Carousel } from 'react-responsive-carousel';
@@ -37,6 +38,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
                 <img src={image} alt={product.image} className="w-full object-cover h-64 rounded-t-custom" />
                 <p className="absolute top-3 right-4 bg-white px-4 py-0  rounded-tl-md rounded-tr-md ">Free</p>
               </div>
+
             </div>
           ))}
         </Carousel>

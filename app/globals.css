@@ -132,6 +132,10 @@
 }
 
 
+
+.sidebar.minimized {
+  width: 150px; /* Minimized width */
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg) translateY(0px);

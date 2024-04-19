@@ -78,13 +78,13 @@ const products = [
   },
   {
     id: 6,
-    instructor: "Dragule Swaib",
-    image:
-      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
-    rating: 4.5,
-    duration: "60 Hours ",
-    description: " 4 weeks ago",
-    topic: "Malware Analysis",
+
+    instructor: 'Dragule Swaib',
+    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    rating: 4.5 ,
+    duration: '60 Hours ',
+    description: ' 4 weeks ago',
+    topic: 'Malware Analysis',
     level: "Beginner",
   },
   {
@@ -93,9 +93,10 @@ const products = [
     image:
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: "60 Hours",
-    description: "4 weeks ago",
-    topic: "Typescript Fundamentals in 20 days",
+
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
     level: "Advanced",
   },
   {
@@ -104,20 +105,21 @@ const products = [
     image:
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: "60 Hours",
-    description: "4 weeks ago",
-    topic: "Typescript Fundamentals in 20 days",
+
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
     level: "Beginner",
   },
   {
     id: 9,
-    instructor: "Dragule Swaib",
-    image:
-      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
-    rating: 4.5,
-    duration: "60 Hours",
-    description: "4 weeks ago",
-    topic: "Malware Analysis",
+
+    instructor: 'Dragule Swaib',
+    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    rating: 4.5 ,
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Malware Analysis',
     level: "Beginner",
   },
   {
@@ -126,9 +128,10 @@ const products = [
     image:
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: "60 Hours",
-    description: "4 weeks ago",
-    topic: "Malware Analysis",
+
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Malware Analysis',
     level: "Advanced",
   },
   {
@@ -137,9 +140,10 @@ const products = [
     image:
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: "60 Hours",
-    description: "3 weeks ago",
-    topic: "Typescript Fundamentals in 20 days",
+
+    duration: '60 Hours',
+    description: '3 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
     level: "Beginner",
   },
   {
@@ -148,9 +152,10 @@ const products = [
     image:
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: "60 Hours",
-    description: "4 weeks ago",
-    topic: "Typescript Fundamentals in 20 days",
+
+    duration: '60 Hours',
+    description: '4 weeks ago',
+    topic: 'Typescript Fundamentals in 20 days',
     level: "Advaned",
   },
 ];
@@ -188,6 +193,7 @@ const Page: React.FC = () => {
       </h2>
       {/* <ProductContainer products={products.slice(9)} /> */}
       <ProductContainer products={products} />
+
 
       <Footer />
     </div>

@@ -41,6 +41,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
     setProgressRed(value);
   };
   
+
   return (
     <>
       {minimized ? (
@@ -131,6 +132,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
           </div>
         </>
       )}
+
     </>
   );
 }
