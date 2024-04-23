@@ -1,4 +1,6 @@
 
+
+'use client';
 import React from 'react';
 import ProductDescriptionBar from './cardDescriptionBar';
 import { Carousel } from 'react-responsive-carousel';
