@@ -1,79 +1,84 @@
-
 // export default function Page() {
 //   return <p>Dashboard Page</p>;
 // }
-'use client';
-import React from 'react';
-import Navbar from './NavBar';
-import ProductList from './courseCards/cardContentList';
-import FeaturedProduct from './courseCards/mainFeaturedCard';
-import ProductContainer from './courseCards/cardContainer';
-import Footer from './Footer';
+"use client";
+import React from "react";
+import Navbar from "./NavBar";
+import ProductList from "./courseCards/cardContentList";
+import FeaturedProduct from "./courseCards/mainFeaturedCard";
+import ProductContainer from "./courseCards/cardContainer";
+import Footer from "./Footer";
 
 const featuredProduct = {
   id: 13,
-  instructor: 'Micheal Kizito',
-  image: 'https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg',
+  instructor: "Micheal Kizito",
+  image: "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg",
   rating: 4.5,
-  duration: '60 Hours',
-  description: ' 4 weeks ago',
-  topic: 'Typescript Fundamentals in 20 days',
+  duration: "60 Hours",
+  description: " 4 weeks ago",
+  topic: "Typescript Fundamentals in 20 days",
   level: "Beginner",
 };
 
 const products = [
   {
     id: 1,
-    instructor: 'Micheal Kizito',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Micheal Kizito",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: '60 Hours',
-    description: '4 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
-    level: 'Beginner ',
+    duration: "60 Hours",
+    description: "4 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
+    level: "Beginner ",
   },
   {
     id: 2,
-    instructor: 'Dragule Swaib',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Dragule Swaib",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: ' 60 Hours',
-    description: '4 weeks ago',
-    topic: 'Malware Analysis',
+    duration: " 60 Hours",
+    description: "4 weeks ago",
+    topic: "Malware Analysis",
     level: "Beginner",
   },
   {
     id: 3,
-    instructor: 'Micheal Kizito',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Micheal Kizito",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: '60 hours',
-    description: '4 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
+    duration: "60 hours",
+    description: "4 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
     level: "Beginner",
   },
   {
     id: 4,
-    instructor: 'Dragule Swaib',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Dragule Swaib",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: '60 Hours ',
-    description: '4 weeks ago',
-    topic: 'Malware Analysis',
+    duration: "60 Hours ",
+    description: "4 weeks ago",
+    topic: "Malware Analysis",
     level: "Beginner",
   },
   {
     id: 5,
-    instructor: 'Micheal Kizito',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Micheal Kizito",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
-    duration: '60 Hours',
-    description: ' 4 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
+    duration: "60 Hours",
+    description: " 4 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
     level: "Beginner",
   },
   {
     id: 6,
+
     instructor: 'Dragule Swaib',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5 ,
@@ -84,8 +89,9 @@ const products = [
   },
   {
     id: 7,
-    instructor: 'Dragule Swaib',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Dragule Swaib",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
     duration: '60 Hours',
     description: '4 weeks ago',
@@ -94,9 +100,11 @@ const products = [
   },
   {
     id: 8,
-    instructor: 'Micheal Kizito',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Micheal Kizito",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
+
     duration: '60 Hours',
     description: '4 weeks ago',
     topic: 'Typescript Fundamentals in 20 days',
@@ -104,6 +112,7 @@ const products = [
   },
   {
     id: 9,
+
     instructor: 'Dragule Swaib',
     image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
     rating: 4.5 ,
@@ -114,9 +123,11 @@ const products = [
   },
   {
     id: 10,
-    instructor: 'Micheal Kizito',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Micheal Kizito",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
+
     duration: '60 Hours',
     description: '4 weeks ago',
     topic: 'Malware Analysis',
@@ -124,9 +135,11 @@ const products = [
   },
   {
     id: 11,
-    instructor: 'Dragule Swaib',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Dragule Swaib",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
+
     duration: '60 Hours',
     description: '3 weeks ago',
     topic: 'Typescript Fundamentals in 20 days',
@@ -134,9 +147,11 @@ const products = [
   },
   {
     id: 12,
-    instructor: 'Micheal Kizito',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
+    instructor: "Micheal Kizito",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
+
     duration: '60 Hours',
     description: '4 weeks ago',
     topic: 'Typescript Fundamentals in 20 days',
@@ -149,141 +164,41 @@ const Page: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <h2 className="text-lg font-semibold my-4"><b>Top Programming Courses</b></h2>
-      <FeaturedProduct product={featuredProduct}
-       />
-      <h2 className="text-lg font-semibold my-4"><b>Featured Courses</b></h2>
-      {/* <ProductContainer products={products.slice(0 ,3)} /> */}
-<ProductContainer products={products} />
+      <h2 className="text-lg font-semibold my-4">
+        <b>Top Programming Courses</b>
+      </h2>
 
-      <h2 className="text-lg font-semibold my-4"><b>Recently Accessed</b></h2>
-      <ProductContainer products={products.slice(3, 6)} />
-      <h2 className="text-lg font-semibold my-4"><b>The Week&apos;s Picks</b></h2>
-      <ProductContainer products={products.slice(6 , 9)} />
-      <h2 className="text-lg font-semibold my-4"><b>New Arrivals</b></h2>
+      <FeaturedProduct product={featuredProduct} />
+      <h2 className="text-lg font-semibold my-4">
+        <b>Featured Courses</b>
+      </h2>
+      {/* <ProductContainer products={products.slice(0 ,3)} /> */}
+      <ProductContainer products={products} />
+
+      <h2 className="text-lg font-semibold my-4">
+        <b>Recently Accessed</b>
+      </h2>
+      <ProductContainer products={products} />
+     {/* <ProductContainer products={products.slice(3, 6)} /> */}
+
+      <h2 className="text-lg font-semibold my-4">
+        <b>The Week&apos;s Picks</b>
+      </h2>
+      <ProductContainer products={products} />
+     {/* <ProductContainer products={products.slice(6, 9)} /> */}
+     
+      <h2 className="text-lg font-semibold my-4">
+        <b>New Arrivals</b>
+      </h2>
       {/* <ProductContainer products={products.slice(9)} /> */}
-<ProductContainer products={products} />
+      <ProductContainer products={products} />
+
 
       <Footer />
     </div>
-     
-      
   );
 };
 export default Page;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React from "react";
 // import HorizontalScroll from "./HorizontalScroll/HorizontalScroll";
@@ -297,7 +212,7 @@ export default Page;
 // function App() {
 //   return (
 //     <div className="App">
-      
+
 //       <HorizontalScroll>
 //         .
 //         <section className="card-container">
@@ -350,4 +265,3 @@ export default Page;
 // }
 
 // export default App;
- 
