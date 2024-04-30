@@ -10,40 +10,33 @@ import Tabs from "./tabs";
 
 const NewPage: React.FC = () => {
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-      <div className="w-full flex-none md:w-64">
-        <SideNav />
-      </div>
-
-      <div className="flex-grow  md:overflow-y-auto md:p-12">
+    <div className="flex ">
         <div className="">
-          <Navbar />
+          <SideNav />
+        </div>
+        <div className="flex-grow">
+          <div className=" md:overflow-y-auto color3">
+            <Navbar />
+            <div className="flex pl-12">
 
-          <div className="flex-grow flex">
-            <div className="mr-6">
-              {" "}
-              {/* Added margin to create space */}
               <VideoCard />
-            </div>
-            <div className="">
+              <div className="ml-6">
               <TopicsCard />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="border-t border-gray-500 flex-grow"></div>
+          <div>
+            <Tabs />
+          </div>
+          <div>
+            <SimilarCourses courses={similarCoursesData} />
+          </div>
 
-        <div className="">
-          <Tabs />
-        </div>
-        <div className="p-6">
-          <SimilarCourses courses={similarCoursesData} />
-        </div>
-
-        <div className="p-6">
-          <Footer />
+          <div className="h-70">
+            <Footer />
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

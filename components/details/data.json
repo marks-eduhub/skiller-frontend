@@ -1,13 +1,14 @@
 [
+   
     {
       "id": 1,
-      "instructor": "Micheal Kizito",
-      "image": "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg",
+      "instructor": "Dragule Swaib",
+      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
-      "topic": "Typescript Fundamentals in 20 days",
-      "level": "Beginner"
+      "topic": "Malware Analysis",
+      "level": "Intermediate"
     },
     {
       "id": 2,
@@ -21,13 +22,14 @@
     },
     {
       "id": 3,
-      "instructor": "John Doe",
-      "image": "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg",
+      "instructor": "Dragule Swaib",
+      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
-      "topic": "Typescript Fundamentals in 20 days",
-      "level": "Advanced"
+      "topic": "Malware Analysis",
+      "level": "Intermediate"
     }
+    
   ]
   
