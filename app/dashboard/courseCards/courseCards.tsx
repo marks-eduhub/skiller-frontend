@@ -37,6 +37,7 @@ import { PersonIcon, ClockIcon, StarFilledIcon } from '@radix-ui/react-icons';
 
 // export default ProductCard;
 
+
 interface Product {
   id: number;
   instructor: string;

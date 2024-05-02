@@ -93,6 +93,7 @@ const products = [
     image:
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
+
     duration: '60 Hours',
     description: '4 weeks ago',
     topic: 'Typescript Fundamentals in 20 days',
