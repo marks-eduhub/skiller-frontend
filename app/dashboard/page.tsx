@@ -79,12 +79,13 @@ const products = [
   {
     id: 6,
 
-    instructor: 'Dragule Swaib',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
-    rating: 4.5 ,
-    duration: '60 Hours ',
-    description: ' 4 weeks ago',
-    topic: 'Malware Analysis',
+    instructor: "Dragule Swaib",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+    rating: 4.5,
+    duration: "60 Hours ",
+    description: " 4 weeks ago",
+    topic: "Malware Analysis",
     level: "Beginner",
   },
   {
@@ -94,9 +95,9 @@ const products = [
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
 
-    duration: '60 Hours',
-    description: '4 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
+    duration: "60 Hours",
+    description: "4 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
     level: "Advanced",
   },
   {
@@ -106,20 +107,21 @@ const products = [
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
 
-    duration: '60 Hours',
-    description: '4 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
+    duration: "60 Hours",
+    description: "4 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
     level: "Beginner",
   },
   {
     id: 9,
 
-    instructor: 'Dragule Swaib',
-    image: 'https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg',
-    rating: 4.5 ,
-    duration: '60 Hours',
-    description: '4 weeks ago',
-    topic: 'Malware Analysis',
+    instructor: "Dragule Swaib",
+    image:
+      "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+    rating: 4.5,
+    duration: "60 Hours",
+    description: "4 weeks ago",
+    topic: "Malware Analysis",
     level: "Beginner",
   },
   {
@@ -129,9 +131,9 @@ const products = [
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
 
-    duration: '60 Hours',
-    description: '4 weeks ago',
-    topic: 'Malware Analysis',
+    duration: "60 Hours",
+    description: "4 weeks ago",
+    topic: "Malware Analysis",
     level: "Advanced",
   },
   {
@@ -141,9 +143,9 @@ const products = [
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
 
-    duration: '60 Hours',
-    description: '3 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
+    duration: "60 Hours",
+    description: "3 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
     level: "Beginner",
   },
   {
@@ -153,9 +155,9 @@ const products = [
       "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
     rating: 4.5,
 
-    duration: '60 Hours',
-    description: '4 weeks ago',
-    topic: 'Typescript Fundamentals in 20 days',
+    duration: "60 Hours",
+    description: "4 weeks ago",
+    topic: "Typescript Fundamentals in 20 days",
     level: "Advaned",
   },
 ];
@@ -164,7 +166,7 @@ const products = [
 const Page: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar showGreeting />
       <h2 className="text-lg font-semibold my-4">
         <b>Top Programming Courses</b>
       </h2>
@@ -180,20 +182,19 @@ const Page: React.FC = () => {
         <b>Recently Accessed</b>
       </h2>
       <ProductContainer products={products} />
-     {/* <ProductContainer products={products.slice(3, 6)} /> */}
+      {/* <ProductContainer products={products.slice(3, 6)} /> */}
 
       <h2 className="text-lg font-semibold my-4">
         <b>The Week&apos;s Picks</b>
       </h2>
       <ProductContainer products={products} />
-     {/* <ProductContainer products={products.slice(6, 9)} /> */}
-     
+      {/* <ProductContainer products={products.slice(6, 9)} /> */}
+
       <h2 className="text-lg font-semibold my-4">
         <b>New Arrivals</b>
       </h2>
       {/* <ProductContainer products={products.slice(9)} /> */}
       <ProductContainer products={products} />
-
 
       <Footer />
     </div>

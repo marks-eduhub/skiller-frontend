@@ -4,6 +4,7 @@ const nextConfig = {
         serverActions: true,
     },
     redirects: async () => {
+      
         // permanently has us in the right route
         const defaultRedirects = [
           {
@@ -15,6 +16,9 @@ const nextConfig = {
 
     
         return defaultRedirects;
+      },
+      images: {
+        domains: ['img-c.udemycdn.com', 'kinsta.com'],
       },
 }
 

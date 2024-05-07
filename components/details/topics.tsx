@@ -17,24 +17,36 @@ const TopicsCard: React.FC = () => {
   ];
 
   return (
-    <div className="topics-card shadow-md flex flex-col">
-      {/* Card title */}
-      <div className="p-4">
-        <h2 className="text-xl text-right font-bold text-white">Topics</h2>
+    <div>
+      <div className="topics-card shadow-md flex flex-col ">
+        <div className="p-4">
+          <h2 className="text-xl text-right font-bold text-white">
+            {topics.length} Topics
+          </h2>
+        </div>
+        <ul className="p-4 flex flex-col">
+          {topics.map((topic, index) => (
+            <li
+              key={index}
+              className="flex justify-between items-center px-4 py-3 rounded hover:bg-zinc-600 transition duration-300 ease-in-out"
+            >
+              <span className="text-white">{`${index + 1}. ${
+                topic.name
+              }`}</span>
+              <span className="text-white ml-auto">{topic.time}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      {/* Topics list */}
-      <ul className="p-4 flex flex-col">
-        {topics.map((topic, index) => (
-          <li
-            key={index}
-            className="flex justify-between items-center px-4 py-3 rounded hover:bg-zinc-600 transition duration-300 ease-in-out"
-          >
-            <span className="text-white">{`${index + 1}. ${topic.name}`}</span>
-            <span className="text-white ml-auto">{topic.time}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-4 font-bold text-white">
+        <h2>Progress</h2>
+      </div>
+      <div className="mt-1 flex flex-row space-x-4 items-center">
+        <div className="w-80 h-4 bg-gray-300 flex flex-row">
+          <div className="h-full bg-[#1C4E85]" style={{ width: "30%" }}></div>
+        </div>
+        <span className="text-white">30%</span>
+      </div>
     </div>
   );
 };

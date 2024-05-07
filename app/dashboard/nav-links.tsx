@@ -2,10 +2,12 @@ import clsx from "clsx";
 import { useState } from "react";
 import { AiFillHome, AiOutlineTeam, AiOutlineUser } from "react-icons/ai";
 import MinimizedNavLinks from "./minimized-sidenav";
-
+import Image from "next/image";
+import Link from "next/link";
 
 const blueImage = "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg";
-const redImage = "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg";
+const redImage =
+  "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg";
 
 const links = [
   { name: "Home", href: "/dashboard", icon: AiFillHome },
@@ -16,31 +18,40 @@ const links = [
   // },
   // { name: "Completed", href: "/dashboard/completed", icon: AiFillHome },
 ];
-const communityLink = { name: "Community", href: "/dashboard/community", icon: AiOutlineTeam };
+const communityLink = {
+  name: "Community",
+  href: "/dashboard/community",
+  icon: AiOutlineTeam,
+};
 
 const subscriptionLinks: NavLinks[] = [
-  { name: "Micheal Kizito", href: "/subscription/micheal", icon: AiOutlineUser },
+  {
+    name: "Micheal Kizito",
+    href: "/subscription/micheal",
+    icon: AiOutlineUser,
+  },
   { name: "Dragule Swaib", href: "/subscription/dragule", icon: AiOutlineUser },
 ];
 
-
 export default function NavLinks({ minimized }: { minimized: boolean }) {
-  
   const [progressBlue, setProgressBlue] = useState<number>(0);
   const [progressRed, setProgressRed] = useState<number>(0);
 
-  const handleProgressBlueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProgressBlueChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = parseInt(event.target.value);
     // console.log("Blue progress value:", value);
     setProgressBlue(value);
   };
-  
-  const handleProgressRedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleProgressRedChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = parseInt(event.target.value);
     // console.log("Red progress value:", value);
     setProgressRed(value);
   };
-  
 
   return (
     <>
@@ -59,7 +70,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
           {links.map((link) => {
             const LinkIcon = link.icon;
             return (
-              <a
+              <Link
                 key={link.name}
                 href={link.href}
                 className={clsx(
@@ -72,10 +83,10 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
               >
                 <LinkIcon className="w-10 h-7 mr-2 text-gray-600" />
                 <p className="md:block">{link.name}</p>
-              </a>
+              </Link>
             );
           })}
-          <a
+          <Link
             key={communityLink.name}
             href={communityLink.href}
             className={clsx(
@@ -85,7 +96,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
           >
             <AiOutlineTeam className="w-10 h-7 mr-2 text-gray-600 " />
             <p className="md:block">{communityLink.name}</p>
-          </a>
+          </Link>
           {/* Horizontal line */}
           <hr className="my-4 border-gray-300" />
           <div className="bg-black p-4">
@@ -93,7 +104,10 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
           </div>
           {/* Individual subscription entries */}
           {subscriptionLinks.map((subscription) => (
-            <div key={subscription.name} className="flex items-center justify-between bg-black p-2">
+            <div
+              key={subscription.name}
+              className="flex items-center justify-between bg-black p-2"
+            >
               <div className="flex items-center space-x-2">
                 <subscription.icon className="w-6 h-6 " />
                 <p className="text-white">{subscription.name}</p>
@@ -106,8 +120,17 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
             <p className="text-white">In Progress</p>
           </div>
           {/* Progress bars with range inputs and images */}
-          <div className="flex items-center space-x-2 bg-black p-2 rounded-full">
-            <img src={blueImage} alt="Image" className="w-14 h-14 rounded-full" />
+          <div className="flex items-center space-x-2 bg-black p-2 rounded-full gap-2">
+            <div className="w-[5rem] relative h-[3rem]">
+              <Image
+                alt={"Image"}
+                src={blueImage}
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="rounded-full"
+              />
+            </div>
             <input
               type="range"
               min="0"
@@ -116,10 +139,19 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
               onChange={handleProgressBlueChange}
               className="w-full h-2 rounded-full"
             />
-            <div className="h-fullrounded-full" style={{ width: "15px"}}></div>
+            <div className="h-fullrounded-full" style={{ width: "15px" }}></div>
           </div>
-          <div className="flex items-center space-x-2 bg-black p-2 rounded-full">
-            <img src={redImage} alt="Image" className="w-14 h-14 rounded-full" />
+          <div className="flex items-center space-x-2 bg-black p-2 rounded-full ">
+            <div className="w-[5rem] relative h-[3rem]">
+              <Image
+                alt={"Image"}
+                src={redImage}
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="rounded-full"
+              />
+            </div>
             <input
               type="range"
               min="0"
@@ -128,16 +160,18 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
               onChange={handleProgressRedChange}
               className="w-full h-2 rounded-full"
             />
-            <div className="h-full rounded-full" style={{ width: "15px"}}></div>
+            <div
+              className="h-full rounded-full"
+              style={{ width: "15px" }}
+            ></div>
           </div>
         </>
       )}
-
     </>
   );
 }
 export interface NavLinks {
   name: string;
-  href:string
+  href: string;
   icon: React.ComponentType<{ className?: string }>;
 }

@@ -10,33 +10,23 @@ import Tabs from "./tabs";
 
 const NewPage: React.FC = () => {
   return (
-    <div className="flex ">
-        <div className="">
-          <SideNav />
-        </div>
-        <div className="flex-grow">
-          <div className=" md:overflow-y-auto color3">
-            <Navbar />
-            <div className="flex pl-12">
-
-              <VideoCard />
-              <div className="ml-6">
-              <TopicsCard />
-              </div>
-            </div>
-          </div>
-          <div>
-            <Tabs />
-          </div>
-          <div>
-            <SimilarCourses courses={similarCoursesData} />
-          </div>
-
-          <div className="h-70">
-            <Footer />
-          </div>
-        </div>
+    <div className="flex  h-screen md:overflow-hidden ">
+      <div className="">
+        <SideNav />
       </div>
+      <div className=" flex-1 overflow-y-auto">
+        <div className=" flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4 ">
+          <Navbar />
+          <div className="video-area">
+            <VideoCard />
+            <TopicsCard />
+          </div>
+        </div>
+        <Tabs />
+        <SimilarCourses courses={similarCoursesData} />
+        <Footer />
+      </div>
+    </div>
   );
 };
 
