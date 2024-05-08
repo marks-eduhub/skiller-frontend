@@ -1,6 +1,5 @@
-
-
 'use client';
+import Image from "next/image";
 import React from 'react';
 import ProductDescriptionBar from './cardDescriptionBar';
 import { Carousel } from 'react-responsive-carousel';
@@ -26,7 +25,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
 
   return (
     <div className="px-4 py-2 relative">
-      <div className="top-gradient shadow-lg rounded-corners overflow-hidden mx-2 relative">
+      <div className="top-gradient shadow-lg rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl overflow-hidden mx-2 relative">
         <Carousel
           showThumbs={false}
           showArrows={false}
@@ -35,9 +34,9 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
           showStatus={false}
         >
           {images.map((image, index) => (
-            <div key={index} className="pt-8 pr-8 pl-8 pb-0 relative">
+            <div key={index} className="pt-4 pr-8 pl-8 pb-0 relative">
               <div className="relative">
-                <img src={image} alt={product.image} className="w-full object-cover h-64 rounded-t-custom" />
+                <Image src={image} alt={product.image} height={256} width={800} className="w-full object-cover h-64 rounded-tl-2xl rounded-tr-2xl" />
                 <p className="absolute top-3 right-4 bg-white px-4 py-0  rounded-tl-md rounded-tr-md ">Free</p>
               </div>
 

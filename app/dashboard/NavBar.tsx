@@ -1,12 +1,15 @@
-import { MagnifyingGlassIcon ,ShadowInnerIcon, TriangleDownIcon } from '@radix-ui/react-icons';
-import { Link } from 'lucide-react';
-import React from 'react';
+import {
+  MagnifyingGlassIcon,
+  ShadowInnerIcon,
+  TriangleDownIcon,
+} from "@radix-ui/react-icons";
+import { Link } from "lucide-react";
+import React from "react";
 
 // export default function Navbar()
-const Navbar: React.FC = () => {
+const Navbar = ({ showGreeting = false }) => {
   return (
-    
-    <nav className="m-4 grid grid-cols-2 gap-4 sm:grid-cols-12">
+    <nav className="grid grid-cols-2 gap-4 sm:grid-cols-12">
       <div className="sm:col-span-8 flex items-center rounded-full shadow bg-white p-2">
         <MagnifyingGlassIcon className="w-6 h-6 text-gray-500 mr-2" />
         <input
@@ -19,19 +22,22 @@ const Navbar: React.FC = () => {
       <div className="sm:col-span-2 flex items-center justify-center rounded-full shadow bg-white text-black">
         Premium
       </div>
-      <div className="sm:col-span-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer" >
+      <div className="sm:col-span-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
         <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
         <span className="text-white">Norah</span>
         <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
       </div>
-      <div className="sm:col-span-12  flex flex-col justify-end items-end text-lg font-semibold ">
-        <div className="text-right mr-10 text-black" style={{ whiteSpace: 'nowrap' }}><b>Good morning Norah</b></div>
-      </div>
+      {showGreeting && (
+        <div className="sm:col-span-12  flex flex-col justify-end items-end text-lg font-semibold ">
+          <div
+            className="text-right mr-10 text-black"
+            style={{ whiteSpace: "nowrap" }}
+          >
+            <b>Good morning Norah</b>
+          </div>
+        </div>
+      )}
     </nav>
   );
-}
+};
 export default Navbar;
-
-
-
-
