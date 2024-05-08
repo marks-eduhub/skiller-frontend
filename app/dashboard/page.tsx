@@ -4,9 +4,9 @@
 "use client";
 import React from "react";
 import Navbar from "./NavBar";
-import ProductList from "./courseCards/cardContentList";
-import FeaturedProduct from "./courseCards/mainFeaturedCard";
-import ProductContainer from "./courseCards/cardContainer";
+import ProductList from "../../components/courseCards/cardContentList";
+import FeaturedProduct from "../../components/courseCards/mainFeaturedCard";
+import ProductContainer from "../../components/courseCards/cardContainer";
 import Footer from "./Footer";
 
 const featuredProduct = {

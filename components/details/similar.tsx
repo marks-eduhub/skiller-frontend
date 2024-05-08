@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import ProductContainer from '../../app/dashboard/courseCards/cardContainer';
+import ProductContainer from '../courseCards/cardContainer';
 type Course = {
   id: number;
   instructor: string;
