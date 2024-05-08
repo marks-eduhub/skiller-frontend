@@ -8,12 +8,9 @@ import similarCoursesData from "./data.json";
 import TopicsCard from "./topics";
 import Tabs from "./tabs";
 
-const NewPage: React.FC = () => {
+const DetailsPage: React.FC = () => {
   return (
-    <div className="flex  h-screen md:overflow-hidden ">
-      <div className="">
-        <SideNav />
-      </div>
+
       <div className=" flex-1 overflow-y-auto">
         <div className=" flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4 ">
           <Navbar />
@@ -26,8 +23,8 @@ const NewPage: React.FC = () => {
         <SimilarCourses courses={similarCoursesData} />
         <Footer />
       </div>
-    </div>
+
   );
 };
 
-export default NewPage;
+export default DetailsPage;
