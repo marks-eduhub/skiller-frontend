@@ -10,20 +10,22 @@ import Tabs from "./tabs";
 
 const DetailsPage: React.FC = () => {
   return (
-
-      <div className=" flex-1 overflow-y-auto">
-        <div className=" flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4 ">
-          <Navbar />
-          <div className="video-area">
+    <div className=" flex-1 overflow-y-auto">
+      <div className=" flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4 ">
+        <Navbar />
+        <div className=" grid grid-cols-6 gap-4 ">
+          <div className="col-span-4">
             <VideoCard />
+          </div>
+          <div className="col-span-2">
             <TopicsCard />
           </div>
         </div>
-        <Tabs />
-        <SimilarCourses courses={similarCoursesData} />
-        <Footer />
       </div>
-
+      <Tabs />
+      <SimilarCourses courses={similarCoursesData} />
+      <Footer />
+    </div>
   );
 };
 

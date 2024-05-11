@@ -29,7 +29,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
   };
 
   return (
-    <div className=" bg-white shadow-lg rounded-lg overflow-hidden mx-6 relative">
+    <div className=" bg-[#999] shadow-lg rounded-lg relative mx-4  overflow-hidden">
       <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden">
         <div className="flex p-4">
           {products

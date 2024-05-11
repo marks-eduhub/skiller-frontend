@@ -13,7 +13,7 @@ type Course = {
 };
 const SimilarCourses: React.FC<{ courses: Course[] }> = ({ courses }) => {
   return (
-    <div className='shadow-md bg-white'>
+    <div className='shadow-md bg-white '>
       <h2 className="text-lg font-semibold ml-10 pt-10"><b>Similar Courses</b></h2>
       <ProductContainer products={courses} />
 

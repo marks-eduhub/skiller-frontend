@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   return (
     <div
-      className="flex-none gap-4 shadow-lg bg-custom-grey rounded-lg overflow-hidden flex-shrink-0 mr-4 mb-4"
+      className="flex-none gap-4 shadow-lg bg-custom-grey rounded-lg overflow-hidden flex-shrink-0 mr-4 "
       // style={{ width: containerWidth, height: "360px" }}
     >
       <div className="border-8 border-white ">
