@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavLinks from "@/app/dashboard/nav-links";
 import SkillerLogo from "@/components/ui/logo";
@@ -13,6 +13,10 @@ export default function SideNav() {
   const toggleSidebar = () => {
     setSidebarMinimized(!sidebarMinimized);
   };
+  useEffect(() => {
+    // Update localStorage whenever sidebarMinimized changes
+    localStorage.setItem("sidebarMinimized", `${sidebarMinimized}`);
+  }, [sidebarMinimized]);
 
   return (
     <div

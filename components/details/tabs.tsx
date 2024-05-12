@@ -84,14 +84,14 @@ const Tabs: React.FC = () => {
         </div>
       </div>
       <div className="bg-gray-300 pt-12 pb-20">
-        {activeTab === "Description" && (
+      {activeTab === "Description" && (
           <div className="flex gap-9">
             <div
               className=" mb-6 ml-9 mt-2 bg-[#a8a8a8] "
               style={{ width: 800, height: 600 }}
             >
             </div>
-            <div className="flex flex-col mr-15">
+            <div className="flex flex-col mr-8">
               <div className="flex items-center justify-between gap-12">
                 <button className="rounded-t-md rounded-b-md bg-white px-20 py-2 hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsBookmarkCheck className="text-lg" />
@@ -100,12 +100,13 @@ const Tabs: React.FC = () => {
                 <button className="rounded-t-md rounded-b-md bg-white px-20 py-2 hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsFillShareFill className="text-lg " />
                   <span className="ml-2">Share</span>
-                </button>
+                  </button>
               </div>
               <div
                 className="bg-[#a8a8a8] flex flex-col justify-center items-center mt-7"
                 style={{ width: 570, height: 540 }}
               >
+                {/* Content for second card */}
                 <h2 className="font-bold">Screenshots go here</h2>
               </div>
             </div>

@@ -2,7 +2,7 @@
 //   return <p>Dashboard Page</p>;
 // }
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./NavBar";
 import ProductList from "../../components/courseCards/cardContentList";
 import FeaturedProduct from "../../components/courseCards/mainFeaturedCard";
@@ -164,8 +164,11 @@ const products = [
 
 // Usage of HorizontalCard component
 const Page: React.FC = () => {
+
+  
   return (
-      <div className="flex flex-col min-h-screen container mx-auto shadow-lg rounded-2xl">
+    <div className="">
+      <div className="flex flex-col min-h-screen container mx-auto pb-9 rounded-2xl shadow-2xl">
         <Navbar showGreeting />
         <h2 className="text-lg font-semibold my-4">
           <b>Top Programming Courses</b>
@@ -195,9 +198,9 @@ const Page: React.FC = () => {
         </h2>
         {/* <ProductContainer products={products.slice(9)} /> */}
         <ProductContainer products={products} />
-
-        <Footer />
       </div>
+      <Footer />
+    </div>
   );
 };
 export default Page;
