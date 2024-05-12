@@ -165,39 +165,39 @@ const products = [
 // Usage of HorizontalCard component
 const Page: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar showGreeting />
-      <h2 className="text-lg font-semibold my-4">
-        <b>Top Programming Courses</b>
-      </h2>
+      <div className="flex flex-col min-h-screen container mx-auto shadow-lg rounded-2xl">
+        <Navbar showGreeting />
+        <h2 className="text-lg font-semibold my-4">
+          <b>Top Programming Courses</b>
+        </h2>
 
-      <FeaturedProduct product={featuredProduct} />
-      <h2 className="text-lg font-semibold my-4">
-        <b>Featured Courses</b>
-      </h2>
-      {/* <ProductContainer products={products.slice(0 ,3)} /> */}
-      <ProductContainer products={products} />
+        <FeaturedProduct product={featuredProduct} />
+        <h2 className="text-lg font-semibold my-4">
+          <b>Featured Courses</b>
+        </h2>
+        {/* <ProductContainer products={products.slice(0 ,3)} /> */}
+        <ProductContainer products={products} />
 
-      <h2 className="text-lg font-semibold my-4">
-        <b>Recently Accessed</b>
-      </h2>
-      <ProductContainer products={products} />
-      {/* <ProductContainer products={products.slice(3, 6)} /> */}
+        <h2 className="text-lg font-semibold my-4">
+          <b>Recently Accessed</b>
+        </h2>
+        <ProductContainer products={products} />
+        {/* <ProductContainer products={products.slice(3, 6)} /> */}
 
-      <h2 className="text-lg font-semibold my-4">
-        <b>The Week&apos;s Picks</b>
-      </h2>
-      <ProductContainer products={products} />
-      {/* <ProductContainer products={products.slice(6, 9)} /> */}
+        <h2 className="text-lg font-semibold my-4">
+          <b>The Week&apos;s Picks</b>
+        </h2>
+        <ProductContainer products={products} />
+        {/* <ProductContainer products={products.slice(6, 9)} /> */}
 
-      <h2 className="text-lg font-semibold my-4">
-        <b>New Arrivals</b>
-      </h2>
-      {/* <ProductContainer products={products.slice(9)} /> */}
-      <ProductContainer products={products} />
+        <h2 className="text-lg font-semibold my-4">
+          <b>New Arrivals</b>
+        </h2>
+        {/* <ProductContainer products={products.slice(9)} /> */}
+        <ProductContainer products={products} />
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
   );
 };
 export default Page;

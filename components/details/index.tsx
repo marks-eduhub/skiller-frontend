@@ -10,7 +10,7 @@ import Tabs from "./tabs";
 
 const DetailsPage: React.FC = () => {
   return (
-
+<div className="container mx-auto">
       <div className=" flex-1 overflow-y-auto">
         <div className=" flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4 ">
           <Navbar />
@@ -23,7 +23,7 @@ const DetailsPage: React.FC = () => {
         <SimilarCourses courses={similarCoursesData} />
         <Footer />
       </div>
-
+      </div>
   );
 };
 

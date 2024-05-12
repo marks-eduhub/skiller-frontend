@@ -90,7 +90,6 @@ const Tabs: React.FC = () => {
               className=" mb-6 ml-9 mt-2 bg-[#a8a8a8] "
               style={{ width: 800, height: 600 }}
             >
-              {/* Content for first card */}
             </div>
             <div className="flex flex-col mr-15">
               <div className="flex items-center justify-between gap-12">
@@ -107,7 +106,6 @@ const Tabs: React.FC = () => {
                 className="bg-[#a8a8a8] flex flex-col justify-center items-center mt-7"
                 style={{ width: 570, height: 540 }}
               >
-                {/* Content for second card */}
                 <h2 className="font-bold">Screenshots go here</h2>
               </div>
             </div>
