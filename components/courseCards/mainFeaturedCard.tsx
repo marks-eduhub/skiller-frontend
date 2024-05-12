@@ -32,6 +32,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
           infiniteLoop={true}
           autoPlay={true}
           showStatus={false}
+          className="responsive-carousel"
         >
           {images.map((image, index) => (
             <div key={index} className="pt-4 pr-8 pl-8 pb-0 relative">
@@ -43,7 +44,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
             </div>
           ))}
         </Carousel>
-        <div className="relative">
+        <div className="relative product">
           <ProductDescriptionBar
             instructor={product.instructor}
             duration={product.duration}
@@ -52,6 +53,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
             topic={product.topic}
             level={product.level}
           />
+         
         </div>
       </div>
     </div>

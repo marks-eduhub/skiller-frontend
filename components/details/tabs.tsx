@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import { BsFillShareFill } from "react-icons/bs";
 import { BsBookmarkCheck } from "react-icons/bs";
@@ -15,7 +15,7 @@ const Tabs: React.FC = () => {
 
   return (
     <>
-      <div className="font-bold flex mt-6 mb-6 ml-3 justify-start gap-10">
+      <div className="font-bold flex mt-6 mb-6 ml-3 overflow-x-auto justify-start gap-10">
         <div
           className={`cursor-pointer ml-6 first-tab ${
             activeTab === "Description" ? "text-blue-600" : ""
@@ -100,7 +100,7 @@ const Tabs: React.FC = () => {
                 <button className="rounded-t-md rounded-b-md bg-white px-20 py-2 hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsFillShareFill className="text-lg " />
                   <span className="ml-2">Share</span>
-                </button>
+                  </button>
               </div>
               <div
                 className="bg-[#a8a8a8] flex flex-col justify-center items-center mt-7"
@@ -119,15 +119,17 @@ const Tabs: React.FC = () => {
                 Instructions on how to use resouces
               </h2>
             </div>
-            {resources.map((resource, index) => (
-              <div
-                key={index}
-                className="h-20 mt-10 bg-[#424242] text-white flex items-center justify-between"
-              >
-                <h2 className="ml-6">{resource}</h2>
-                <BiSolidDownArrow className="text-white mr-6" />
-              </div>
-            ))}
+            <div className="overflow-x-auto">
+              {resources.map((resource, index) => (
+                <div
+                  key={index}
+                  className="h-20 mt-10 bg-[#424242] text-white flex items-center justify-between"
+                >
+                  <h2 className="ml-6">{resource}</h2>
+                  <BiSolidDownArrow className="text-white mr-6" />
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {activeTab === "Discussions" && (

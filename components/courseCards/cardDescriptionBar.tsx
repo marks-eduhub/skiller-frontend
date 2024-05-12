@@ -21,7 +21,7 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
     <>
       <div className="gradient-bg text-white ">
         <div className="relative bg-gradient-to-r from-indigo-500 to-black px-4 py-2 rounded-lg">
-          <div className="relative">
+          <div className="relative small-screen">
             <h3 className="absolute bottom-0 right-0  font-semibold text-white">
               {level}
             </h3>
@@ -43,7 +43,7 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
               <h3 className="text-white font-semibold">{instructor}</h3>
             </div>
 
-            <div className="absolute bottom-0 left-0 flex items-center">
+            <div className="absolute bottom-0 left-0 flex items-center  ">
               <StarFilledIcon className="w-6 h-6 mr-2" />
               <h3 className="text-white font-semibold">{rating}</h3>
             </div>

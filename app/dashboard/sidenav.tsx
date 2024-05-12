@@ -13,7 +13,10 @@ export default function SideNav() {
   const toggleSidebar = () => {
     setSidebarMinimized(!sidebarMinimized);
   };
-
+  const [isOpen, setIsOpen] = useState(false); // State for small screen sidebar
+  const screenSidebar = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <div
       className={`flex h-full flex-col text-white sidebar ${
@@ -27,17 +30,30 @@ export default function SideNav() {
           }`}
           onClick={toggleSidebar}
         >
-          <HamburgerMenuIcon
-            className={`w-6 h-6 text-white ${
-              sidebarMinimized ? "rotate-90 " : ""
-            }`}
-          />
-          <div className="w-28 text-white md:w-30">
-            <SkillerLogo minimized={sidebarMinimized} />
+          <div
+            className="flex items-center space-x-6 cursor-pointer sidebar-header"
+            onClick={screenSidebar}
+          >
+            <HamburgerMenuIcon
+              className={`w-6 h-6 text-white ${
+                sidebarMinimized ? "rotate-90 " : ""
+              }`}
+            />
+            <div
+              className={`w-28 text-white md:block md:w-30 ${
+                isOpen ? "block" : "hidden"
+              }`}
+            >
+              <SkillerLogo minimized={sidebarMinimized} />
+            </div>
           </div>
         </div>
       </div>
-      <div className="h-auto w-full grow md:block bg-black">
+      <div
+        className={`h-auto w-full grow md:block bg-black ${
+          isOpen ? "block" : "hidden"
+        }`}
+      >
         <NavLinks minimized={sidebarMinimized} />
       </div>
       <form
@@ -48,7 +64,9 @@ export default function SideNav() {
         }}
       >
         <button className="flex h-[48px] w-full grow items-center justify-center bg-black p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-          <div className="md:block p-4">Sign Out</div>
+          <div className={`md:block p-4 ${isOpen ? "block" : "hidden"}`}>
+            Sign Out
+          </div>
         </button>
       </form>
     </div>
