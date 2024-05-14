@@ -24,7 +24,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
   const images = [product.image, product.image, product.image];
 
   return (
-    <div className="px-4 py-2 relative">
+    <div className="px-4 py-2 relative max-md:p-0">
       <div className="top-gradient shadow-lg rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl overflow-hidden mx-2 relative">
         <Carousel
           showThumbs={false}

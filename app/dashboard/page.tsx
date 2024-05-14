@@ -166,7 +166,7 @@ const products = [
 const Page: React.FC = () => {
   return (
     <div className="">
-      <div className="flex flex-col min-h-screen px-4 pb-12 pt-6 rounded-2xl shadow-2xl">
+      <div className="flex flex-col min-h-screen px-4 pb-12 pt-6 rounded-2xl shadow-2xl max-md:p-0  max-md:shadow-none max-md:m-0">
         <Navbar showGreeting />
         <h2 className="text-lg font-semibold my-4">
           <b>Top Programming Courses</b>
