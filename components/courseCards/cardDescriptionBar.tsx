@@ -30,7 +30,7 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
               {topic}
             </h3>
 
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col md:items-center mb-2 mt-2 ">
               <div className="flex items-center">
                 <ClockIcon className="w-6 h-6 mr-2" />
                 <p className="text-white">{duration}</p>

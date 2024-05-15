@@ -31,7 +31,8 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
   // Update maxCardsPerPage based on screen width
   const updateMaxCardsPerPage = () => {
     const screenWidth = window.innerWidth;
-    if (screenWidth < 768) { // Adjust this value to your desired breakpoint
+    if (screenWidth < 768) {
+      // Adjust this value to your desired breakpoint
       setMaxCardsPerPage(1);
     } else {
       setMaxCardsPerPage(3);
@@ -48,9 +49,9 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
   }, []);
 
   return (
-    <div className="bg-[#999] shadow-lg rounded-lg relative overflow-hidden mx-4 ">
-      <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden">
-        <div className="flex p-4 cards">
+    <div className="bg-[#999] shadow-lg rounded-lg relative overflow-hidden  max-md:p-2">
+      <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden ">
+        <div className="flex md:p-4 mt-2 mb-2 cards">
           {products
             .slice(startIndex, startIndex + maxCardsPerPage)
             .map((product) => (
@@ -72,4 +73,4 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
   );
 };
 
-export default ProductContainer
+export default ProductContainer;

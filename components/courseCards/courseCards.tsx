@@ -64,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       // style={{ width: containerWidth, height: "360px" }}
     >
       <div className="border-8 border-white ">
-        <div className="rounded-lg relative h-[180px] w-[400px]">
+        <div className="rounded-lg relative h-[180px] w-[300px]">
           <Image
             src={product.image}
             alt={product.image}

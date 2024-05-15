@@ -16,6 +16,7 @@ const DetailsPage: React.FC = () => {
         <Navbar />
         <div className="video-area">
             <VideoCard />
+
             <TopicsCard />
           </div>
       </div>

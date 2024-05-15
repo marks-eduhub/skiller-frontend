@@ -160,7 +160,7 @@
     height:250px;
     margin-bottom: 20px;
   }
-  /* .small-screen{
+ .small-screen{
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -171,9 +171,9 @@
 
 .small{
   display: flex;
-}  */
+}  
   .cards {
-    width:300px;
+    width:335px;
   }
   .screen{
     height: auto;
