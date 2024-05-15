@@ -10,7 +10,7 @@ const SmallScreenSideNav = () => {
   };
 
   return (
-<div className={`flex h-full flex-col text-white  ${sidebarOpen ? 'w-64' : 'w-0'}`}>    
+<div className={`flex h-full flex-col text-white  ${sidebarOpen ? 'w-64' : 'w-0' }`}>    
       <div
         className={`flex items-center justify-start space-x-6 ${
           sidebarOpen ? "bg-black" : ""
