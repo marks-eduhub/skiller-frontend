@@ -1,8 +1,7 @@
 import React from "react";
-import SideNav from "@/app/dashboard/sidenav";
-import Navbar from "@/app/dashboard/NavBar";
+import SideNav from "@/components/dashboadLayout/sidenav";
+import Navbar from "@/components/dashboadLayout/NavBar";
 import VideoCard from "./videocard";
-import Footer from "@/app/dashboard/Footer";
 import SimilarCourses from "./similar";
 import similarCoursesData from "./data.json";
 import TopicsCard from "./topics";
@@ -23,7 +22,6 @@ const DetailsPage: React.FC = () => {
       </div>
       <Tabs />
       <SimilarCourses courses={similarCoursesData} />
-      <Footer />
     </div>
     </div>
   );

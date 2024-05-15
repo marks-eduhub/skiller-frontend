@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import NavLinks from "@/app/dashboard/nav-links";
+import NavLinks from "@/components/dashboadLayout/nav-links";
 
 const SmallScreenSideNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

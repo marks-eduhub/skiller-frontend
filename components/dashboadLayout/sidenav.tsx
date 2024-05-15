@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NavLinks from "@/app/dashboard/nav-links";
+import NavLinks from "@/components/dashboadLayout/nav-links";
 import SkillerLogo from "@/components/ui/logo";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { logout } from "@/lib/userSS";

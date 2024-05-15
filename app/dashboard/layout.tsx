@@ -1,16 +1,16 @@
-import SideNav from '@/app/dashboard/sidenav';
-import { getSession } from '../../lib/userSS';
+import SideNav from '@/components/dashboadLayout/sidenav';
+// import { getSession } from '../../lib/userSS';
 import { redirect } from 'next/navigation';
-import Navbar from './NavBar';
-import Footer from "./Footer";
+import Navbar from '../../components/dashboadLayout/NavBar';
+import Footer from '@/components/footer';
 
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   //will always redirect to auth
-  const session = await getSession();
-      if (!session) {
-        redirect('/auth'); 
-      }
+  // const session = await getSession();
+  //     if (!session) {
+  //       redirect('/auth'); 
+  //     }
   return (
     <div className="flex h-screen  flex-col md:flex-row md:overflow-hidden">
 

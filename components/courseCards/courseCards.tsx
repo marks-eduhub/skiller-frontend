@@ -68,9 +68,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <Image
             src={product.image}
             alt={product.image}
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
+            fill
+            className="object-cover object-center"
           />
           <p className="absolute top-4 right-8 mt-1 ml-1 text-black bg-white px-4 py-0 rounded-t rounded-b">
             Free
