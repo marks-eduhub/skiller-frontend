@@ -1,6 +1,4 @@
-// export default function Page() {
-//   return <p>Dashboard Page</p>;
-// }
+
 "use client";
 import React, { useEffect, useState } from "react";
 

@@ -17,7 +17,7 @@ export default function SideNav() {
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   return (
-    <div className={`flex h-full flex-col text-white sidebar ${sidebarMinimized ? "minimized rounded-tr-lg rounded-br-lg" : ""}`}>
+    <div className={`hidden sm:flex h-full flex-col text-white sidebar ${sidebarMinimized ? "minimized rounded-tr-lg rounded-br-lg" : ""}`}>
       {isSmallScreen ? (
         <SmallScreenSideNav />
       ) : (
