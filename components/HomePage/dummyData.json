@@ -1,0 +1,155 @@
+{
+    "courses":[
+        {
+          "id": 1,
+          "instructor": "Micheal Kizito",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": "60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Beginner "
+        },
+        {
+          "id": 2,
+          "instructor": "Dragule Swaib",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": " 60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Malware Analysis",
+          "level": "Beginner"
+        },
+        {
+          "id": 3,
+          "instructor": "Micheal Kizito",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": "60 hours",
+          "description": "4 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Beginner"
+        },
+        {
+          "id": 4,
+          "instructor": "Dragule Swaib",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": "60 Hours ",
+          "description": "4 weeks ago",
+          "topic": "Malware Analysis",
+          "level": "Beginner"
+        },
+        {
+          "id": 5,
+          "instructor": "Micheal Kizito",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": "60 Hours",
+          "description": " 4 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Beginner"
+        },
+        {
+          "id": 6,
+      
+          "instructor": "Dragule Swaib",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": "60 Hours ",
+          "description": " 4 weeks ago",
+          "topic": "Malware Analysis",
+          "level": "Beginner"
+        },
+        {
+          "id": 7,
+          "instructor": "Dragule Swaib",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+      
+          "duration": "60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Advanced"
+        },
+        {
+          "id": 8,
+          "instructor": "Micheal Kizito",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+      
+          "duration": "60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Beginner"
+        },
+        {
+          "id": 9,
+      
+          "instructor": "Dragule Swaib",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+          "duration": "60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Malware Analysis",
+          "level": "Beginner"
+        },
+        {
+          "id": 10,
+          "instructor": "Micheal Kizito",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+      
+          "duration": "60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Malware Analysis",
+          "level": "Advanced"
+        },
+        {
+          "id": 11,
+          "instructor": "Dragule Swaib",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+      
+          "duration": "60 Hours",
+          "description": "3 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Beginner"
+        },
+        {
+          "id": 12,
+          "instructor": "Micheal Kizito",
+          "image":
+            "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+          "rating": 4.5,
+      
+          "duration": "60 Hours",
+          "description": "4 weeks ago",
+          "topic": "Typescript Fundamentals in 20 days",
+          "level": "Advaned"
+        }
+      ],
+
+      "featuredProduct" : {
+  "id": 13,
+  "instructor": "Micheal Kizito",
+  "image": "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg",
+  "rating": 4.5,
+  "duration": "60 Hours",
+  "description": " 4 weeks ago",
+  "topic": "Typescript Fundamentals in 20 days",
+  "level": "Beginner"
+}
+
+}
