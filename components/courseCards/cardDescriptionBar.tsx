@@ -19,7 +19,7 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
 }) => {
   return (
     <>
-      <div className="gradient-bg text-white ">
+      <div className="gradient-bg text-white max-md:hidden ">
         <div className="relative bg-gradient-to-r from-indigo-500 to-black px-4 py-2 rounded-lg">
           <div className="relative small-screen">
             <h3 className="absolute bottom-0 right-0  font-semibold text-white">
@@ -47,6 +47,29 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
               <StarFilledIcon className="w-6 h-6 mr-2" />
               <h3 className="text-white font-semibold">{rating}</h3>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="gradient-bg text-white sm:hidden relative bg-gradient-to-r from-indigo-500 to-black px-4  py-3  ">
+        <div className="flex flex-row justify-between mb-4">
+          <div className="font-semibold text-white">
+            <h3>{topic}</h3>
+          </div>
+          <div className="flex items-center">
+            <ClockIcon className="w-6 h-6 mr-2" />
+            <p className="text-white">{duration}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-row justify-between ">
+          <div className="flex font-semibold text-white">
+            <PersonIcon className="w-6 h-6 mr-2" />
+            <h3 className="text-white font-semibold">{instructor}</h3>
+          </div>
+          <div className="flex items-center">
+            <StarFilledIcon className="w-6 h-6 mr-2" />
+            <h3 className="text-white font-semibold">{rating}</h3>
           </div>
         </div>
       </div>

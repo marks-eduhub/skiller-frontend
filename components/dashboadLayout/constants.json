@@ -1,6 +1,23 @@
 {
-    "mobileScreen":{
-    "logo": "/logos/tempLogo.svg",
-    "title": "skiller"
-}
-}
+    "mobileScreen": {
+      "logo": "/logos/tempLogo.svg",
+      "title": "skiller"
+    },
+    "home": {
+      "logo": "/home.svg",
+      "title": "Home"
+    },
+    "community": {
+      "logo": "/community.svg",
+      "title": "Community" 
+    },
+    "progress": {
+      "logo": "/progress.svg",
+      "title": "Progress"
+    },
+    "subscriptions": {
+        "logo": "/Rectangle 35.svg",
+        "title": "Subscriptions"
+      }
+  }
+  
