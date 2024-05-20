@@ -147,26 +147,6 @@
   background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(27,27,27,27)); 
 }
 
-
-
-@media (max-width: 768px) {
- 
-
-.small{
-  display: flex;
-}  
-  .cards {
-    width:335px;
-  }
-  .screen{
-    height: auto;
-    width: 100%;
-  }
-
-}
-
-
-
 @keyframes spin {
   0% {
     transform: rotate(0deg) translateY(0px);

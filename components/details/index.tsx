@@ -8,14 +8,12 @@ import Tabs from "./tabs";
 import Navbar from "../dashboadLayout/NavBar";
 
 const DetailsPage: React.FC = () => {
-  // const [localStorageValue, setLocalStorageValue] = useState<string | null>("");
   useEffect(() => {
     localStorage.setItem("hideNavLayout", "true");
-    // let hideNavLayout = localStorage.getItem("hideNavLayout");
   });
 
   return (
-    <div className=" flex-1 overflow-y-auto container mx-auto">
+    <div className=" flex-1 overflow-y-auto sm:container sm:mx-auto">
       <div className=" flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4">
         <Navbar showGreeting={false} />
         <div className="grid grid-cols-6 gap-4 max-md:grid-cols-1 ">

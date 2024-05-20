@@ -49,7 +49,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
   return (
     <>
       <div className="flex px-4 max-md:hidden">
-        <div className="bg-[#999] shadow-lg rounded-lg relative overflow-hidden justify-center items-center ">
+        <div className="bg-[#D9D9D9] shadow-lg rounded-lg relative overflow-hidden justify-center items-center ">
           <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden ml-2">
             <div className="flex mt-3 mb-3 mr-4">
               {products
@@ -72,11 +72,10 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
         </div>
       </div>
 
-      <div className="bg-[#999] shadow-lg rounded-lg relative overflow-hidden  sm:hidden ">
-        <div className="w-full h-full flex flex-col items-center justify-center overflow-hidden">
-          <div className="flex flex-col mt-2 mb-2">
+       <div className=" bg-[#D9D9D9] shadow-lg rounded-lg relative  sm:hidden ">
+        <div className="w-full h-full flex flex-col items-center justify-center  "> 
+          <div className="flex flex-col w-full mt-2 mb-2">
             {products
-              .slice(startIndex, startIndex + maxCardsPerPage)
               .map((product) => (
                 <ProductCard
                   key={product.id}
@@ -85,13 +84,8 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
                 />
               ))}
           </div>
-          <div
-            className="absolute right-0 top-1/2 transform -translate-y-1/2  cursor-pointer"
-            onClick={handleNextPage}
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </div>
-        </div>
+         
+         </div>
       </div>
     </>
   );

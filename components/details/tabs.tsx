@@ -87,21 +87,21 @@ const Tabs: React.FC = () => {
         {activeTab === "Description" && (
           <div className="flex flex-col md:flex-row gap-9 ">
             <div
-              className="mb-6 ml-9 mt-2 bg-[#a8a8a8] max-md:w-[353px] w-[800px] h-[600px] max-md:ml-5"
+              className="mb-6 ml-9 mt-2 bg-[#a8a8a8] max-md:w-[320px] w-[800px] h-[600px] max-md:ml-5"
             ></div>
-            <div className="flex flex-col  mr-8">
-              <div className="flex items-center justify-between gap-12 max-md:ml-4">
-                <button className="rounded-t-md rounded-b-md bg-white px-10 py-2 ml-2  md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
+            <div className="flex flex-col mr-8">
+              <div className="flex items-center justify-between gap-8 ">
+                <button className="rounded-t-md rounded-b-md bg-white px-8 py-2 ml-5   md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsBookmarkCheck className="text-lg" />
                   <span className="ml-2">Save</span> 
                 </button>
-                <button className="rounded-t-md rounded-b-md bg-white px-10 py-2 md:p-20 md:py-2  hover:bg-gray-600 focus:outline-none flex items-center">
+                <button className="rounded-t-md rounded-b-md bg-white px-8 py-2 md:p-20 md:py-2  hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsFillShareFill className="text-lg " />
                   <span className="ml-2">Share</span>
                   </button>
               </div>
               <div
-                className="bg-[#a8a8a8] flex flex-col justify-center md:w-570 h-[540px] items-center mt-7 max-md:w-[353px] max-md:ml-5"
+                className="bg-[#a8a8a8] flex flex-col justify-center md:w-570 h-[540px] items-center mt-7 max-md:w-[320px] max-md:ml-5"
               >
                 <h2 className="font-bold">Screenshots go here</h2>
               </div>

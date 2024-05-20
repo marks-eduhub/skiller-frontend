@@ -125,7 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <PersonIcon className="w-4 h-4 text-white" />
             <p className="ml-2">{product.instructor}</p>
           </div>
-          <p className="mb-2 text-sm">{product.description}</p>{" "}
+          <p className="mb-2 text-sm">{product.description}</p>
           <div className="flex justify-between mt-2 text-[0.8rem] gap-1">
             <div className="flex items-center gap-1">
               <StarFilledIcon className="w-4 h-4 text-white" />
