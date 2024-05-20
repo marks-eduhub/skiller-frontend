@@ -14,16 +14,16 @@ interface Product {
 }
 
 interface ProductListProps {
-  products: Product[];
+  courses: Product[];
   containerWidth: string; 
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products ,containerWidth }) => {
+const ProductList: React.FC<ProductListProps> = ({ courses ,containerWidth }) => {
   return (
     <div className="flex overflow-x-auto py-4">
-      {products.map((product) => (
-        <div key={product.id} className="flex-none w-64 mx-4 mr-2">
-          <ProductCard product={product} containerWidth={containerWidth} />
+      {courses.map((course) => (
+        <div key={course.id} className="flex-none w-64 mx-4 mr-2">
+          <ProductCard course={course} containerWidth={containerWidth} />
         </div>
       ))}
     </div>

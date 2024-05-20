@@ -15,17 +15,17 @@ interface Product {
 }
 
 interface ProductContainerProps {
-  products: Product[];
+  courses: Product[];
 }
 
-const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
+const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
   const containerWidth = "415px";
   const [maxCardsPerPage, setMaxCardsPerPage] = useState(3); // Maximum number of cards to display per page
   const [startIndex, setStartIndex] = useState(0);
 
   const handleNextPage = () => {
     const newStartIndex = startIndex + maxCardsPerPage;
-    setStartIndex(newStartIndex >= products.length ? 0 : newStartIndex);
+    setStartIndex(newStartIndex >= courses.length ? 0 : newStartIndex);
   };
 
   // Update maxCardsPerPage based on screen width
@@ -52,12 +52,12 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
         <div className="bg-[#D9D9D9] shadow-lg rounded-lg relative overflow-hidden justify-center items-center ">
           <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden ml-2">
             <div className="flex mt-3 mb-3 mr-4">
-              {products
+              {courses
                 .slice(startIndex, startIndex + maxCardsPerPage)
-                .map((product) => (
+                .map((course) => (
                   <ProductCard
-                    key={product.id}
-                    product={product}
+                    key={course.id}
+                    course={course}
                     containerWidth={containerWidth}
                   />
                 ))}
@@ -73,13 +73,13 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
       </div>
 
        <div className=" bg-[#D9D9D9] shadow-lg rounded-lg relative  sm:hidden ">
-        <div className="w-full h-full flex flex-col items-center justify-center  "> 
+        <div className="w-full h-full flex flex-col items-center justify-center bg-transparent "> 
           <div className="flex flex-col w-full mt-2 mb-2">
-            {products
-              .map((product) => (
+            {courses
+              .map((course) => (
                 <ProductCard
-                  key={product.id}
-                  product={product}
+                  key={course.id}
+                  course={course}
                   containerWidth={containerWidth}
                 />
               ))}

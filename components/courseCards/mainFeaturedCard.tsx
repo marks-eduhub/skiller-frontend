@@ -17,11 +17,11 @@ interface Product {
 }
 
 interface FeaturedProductProps {
-  product: Product;
+  course: Product;
 }
 
-const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
-  const images = [product.image, product.image, product.image];
+const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
+  const images = [course.image, course.image, course.image];
 
   return (
     <div>
@@ -39,12 +39,12 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
                 <div className="relative">
                   <Image
                     src={image}
-                    alt={product.image}
+                    alt={course.image}
                     height={256}
                     width={800}
                     className="w-full object-cover h-64 rounded-tl-2xl rounded-tr-2xl"
                   />
-                  <p className="absolute top-3 right-4 bg-white px-4 py-0  rounded-tl-md rounded-tr-md ">
+                  <p className="absolute top-6 right-8 bg-white px-6 rounded-tl-3xl rounded-tr-3xl">
                     Free
                   </p>
                 </div>
@@ -53,12 +53,12 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
           </Carousel>
           <div className="relative">
             <ProductDescriptionBar
-              instructor={product.instructor}
-              duration={product.duration}
-              rating={product.rating}
-              description={product.description}
-              topic={product.topic}
-              level={product.level}
+              instructor={course.instructor}
+              duration={course.duration}
+              rating={course.rating}
+              description={course.description}
+              topic={course.topic}
+              level={course.level}
             />
           </div>
         </div>
@@ -78,13 +78,13 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
                 <div className="">
                   <Image
                     src={image}
-                    alt={product.image}
+                    alt={course.image}
                     height={300}
                     width={300}
                     className="w-full object-cover h-56 rounded-tl-2xl rounded-tr-2xl"
                   />
 
-                  <p className="absolute top-6 right-8 bg-white px-6 rounded-tl-3xl rounded-tr-3xl roun">
+                  <p className="absolute top-6 right-8 bg-white px-6 rounded-tl-3xl rounded-tr-3xl">
                     Free
                   </p>
                 </div>
@@ -93,12 +93,12 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ product }) => {
           </Carousel>
           <div className="relative ">
             <ProductDescriptionBar
-              instructor={product.instructor}
-              duration={product.duration}
-              rating={product.rating}
-              description={product.description}
-              topic={product.topic}
-              level={product.level}
+              instructor={course.instructor}
+              duration={course.duration}
+              rating={course.rating}
+              description={course.description}
+              topic={course.topic}
+              level={course.level}
             />
           </div>
         </div>

@@ -50,12 +50,12 @@ interface Product {
 }
 
 interface ProductCardProps {
-  product: Product;
+  course: Product;
   containerWidth: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  product,
+  course,
   containerWidth,
 }) => {
   return (
@@ -66,8 +66,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="border-8 border-white ">
           <div className="rounded-lg relative h-[180px] w-[320px]">
             <Image
-              src={product.image}
-              alt={product.image}
+              src={course.image}
+              alt={course.image}
               fill
               className="object-cover object-center"
             />
@@ -78,35 +78,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
         <div className="p-4 bg-black text-white">
           <div className="mb-4">
-            <h3 className="font-semibold">{product.topic}</h3>
+            <h3 className="font-semibold">{course.topic}</h3>
           </div>
 
           <div className="flex items-center mb-4">
             <PersonIcon className="w-6 h-6 text-white" />
-            <p className="ml-2">{product.instructor}</p>
-            <p className="ml-8 flex-grow text-sm">{product.description}</p>
+            <p className="ml-2">{course.instructor}</p>
+            <p className="ml-8 flex-grow text-sm">{course.description}</p>
           </div>
 
           <div className="flex justify-between mt-3 gap-2 text-[0.8rem]">
             <div className="flex gap-1">
               <StarFilledIcon className="w-4 h-4 text-white" />
-              <p>{product.rating}</p>
+              <p>{course.rating}</p>
             </div>
             <div className="flex gap-1">
               <ClockIcon className="w-4 h-4 text-white" />
-              <p>{product.duration}</p>
+              <p>{course.duration}</p>
             </div>
-            <p>{product.level}</p>
+            <p>{course.level}</p>
           </div>
         </div>
       </div>
 
-      <div className="flex-none gap-2 shadow-lg  rounded-lg overflow-hidden flex-shrink-0 mb-2 ml-6 mr-8 my-1 sm:hidden">
+      <div className="shadow-lg rounded-lg overflow-hidden mb-6 mx-6 mt-3  sm:hidden">
         <div className="border-8 border-white ">
           <div className="rounded-lg relative h-[180px] w-full">
             <Image
-              src={product.image}
-              alt={product.image}
+              src={course.image}
+              alt={course.image}
               fill
               className="object-cover object-center"
             />
@@ -118,24 +118,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="p-2 bg-black text-white">
           <div className="mb-2">
             <h3 className="font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
-              {product.topic}
+              {course.topic}
             </h3>
           </div>
           <div className="flex items-center mb-2">
             <PersonIcon className="w-4 h-4 text-white" />
-            <p className="ml-2">{product.instructor}</p>
+            <p className="ml-2">{course.instructor}</p>
           </div>
-          <p className="mb-2 text-sm">{product.description}</p>
+          <p className="mb-2 text-sm">{course.description}</p>
           <div className="flex justify-between mt-2 text-[0.8rem] gap-1">
             <div className="flex items-center gap-1">
               <StarFilledIcon className="w-4 h-4 text-white" />
-              <p>{product.rating}</p>
+              <p>{course.rating}</p>
             </div>
             <div className="flex items-center gap-1">
               <ClockIcon className="w-4 h-4 text-white" />
-              <p>{product.duration}</p>
+              <p>{course.duration}</p>
             </div>
-            <p>{product.level}</p>
+            <p>{course.level}</p>
           </div>
         </div>
       </div>
