@@ -15,10 +15,11 @@ export async function encrypt(payload: any) {
 }
 
 export async function decrypt(input: string): Promise<any> {
-  const { payload } = await jwtVerify(input, key, {
-    algorithms: ["HS256"],
-  });
-  return payload;
+    const { payload } = await jwtVerify(input, key, {
+      algorithms: ["HS256"],
+    });
+    return payload;
+ 
 }
 
 export async function login(formData: FormData) {
@@ -27,7 +28,7 @@ export async function login(formData: FormData) {
   const user = { email: formData.get("email"), name: "John" };
 
   // Create the session
-  const expires = new Date(Date.now() + 10 * 100000);
+  const expires = new Date(Date.now() + 10 * 100000000);
   const session = await encrypt({ user, expires });
 
   // Save the session in a cookie
@@ -48,10 +49,10 @@ export async function getSession() {
 export async function updateSession(request: NextRequest) {
   const session = request.cookies.get("session")?.value;
   if (!session) return;
-
+  // console.log(session)
   // Refresh the session so it doesn't expire
   const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 1000);
+  parsed.expires = new Date(Date.now() + 10 * 100000000);
   const res = NextResponse.next();
   res.cookies.set({
     name: "session",

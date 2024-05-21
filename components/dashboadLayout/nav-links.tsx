@@ -125,10 +125,8 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
               <Image
                 alt={"Image"}
                 src={blueImage}
-                layout="fill"
-                objectFit="cover"
-                objectPosition="center"
-                className="rounded-full"
+                fill
+                className="object-cover object-center rounded-full"
               />
             </div>
             <input
@@ -146,10 +144,8 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
               <Image
                 alt={"Image"}
                 src={redImage}
-                layout="fill"
-                objectFit="cover"
-                objectPosition="center"
-                className="rounded-full"
+                fill
+                className="object-cover object-center rounded-full"
               />
             </div>
             <input
