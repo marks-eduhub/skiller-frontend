@@ -15,7 +15,7 @@ const Tabs: React.FC = () => {
 
   return (
     <>
-      <div className="font-bold flex mt-6 mb-6 ml-3 justify-start gap-10">
+      <div className="font-bold flex mt-6 mb-6 ml-3 overflow-x-auto justify-start gap-10">
         <div
           className={`cursor-pointer ml-6 first-tab ${
             activeTab === "Description" ? "text-blue-600" : ""
@@ -83,30 +83,26 @@ const Tabs: React.FC = () => {
           </h2>
         </div>
       </div>
-      <div className="bg-gray-300 pt-12 pb-20">
-      {activeTab === "Description" && (
-          <div className="flex gap-9">
+      <div className="bg-gray-300 pt-9 pb-20 md:pt-12">
+        {activeTab === "Description" && (
+          <div className="flex flex-col md:flex-row gap-9 ">
             <div
-              className=" mb-6 ml-9 mt-2 bg-[#a8a8a8] "
-              style={{ width: 800, height: 600 }}
-            >
-            </div>
+              className="mb-6 ml-9 mt-2 bg-[#a8a8a8] max-md:w-[320px] w-[800px] h-[600px] max-md:ml-5"
+            ></div>
             <div className="flex flex-col mr-8">
-              <div className="flex items-center justify-between gap-12">
-                <button className="rounded-t-md rounded-b-md bg-white px-20 py-2 hover:bg-gray-600 focus:outline-none flex items-center">
+              <div className="flex items-center justify-between gap-8 ">
+                <button className="rounded-t-md rounded-b-md bg-white px-8 py-2 ml-5   md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsBookmarkCheck className="text-lg" />
-                  <span className="ml-2">Save</span>
+                  <span className="ml-2">Save</span> 
                 </button>
-                <button className="rounded-t-md rounded-b-md bg-white px-20 py-2 hover:bg-gray-600 focus:outline-none flex items-center">
+                <button className="rounded-t-md rounded-b-md bg-white px-8 py-2 md:p-20 md:py-2  hover:bg-gray-600 focus:outline-none flex items-center">
                   <BsFillShareFill className="text-lg " />
                   <span className="ml-2">Share</span>
                   </button>
               </div>
               <div
-                className="bg-[#a8a8a8] flex flex-col justify-center items-center mt-7"
-                style={{ width: 570, height: 540 }}
+                className="bg-[#a8a8a8] flex flex-col justify-center md:w-570 h-[540px] items-center mt-7 max-md:w-[320px] max-md:ml-5"
               >
-                {/* Content for second card */}
                 <h2 className="font-bold">Screenshots go here</h2>
               </div>
             </div>
@@ -115,19 +111,19 @@ const Tabs: React.FC = () => {
         {activeTab === "Resources" && (
           <div className="ml-6 mr-6">
             <div className="h-60 bg-[#a8a8a8] mt-3 font-bold text-black flex flex-row items-center justify-center">
-              <h2 className="">
-                Instructions on how to use resouces
-              </h2>
+              <h2 className="">Instructions on how to use resouces</h2>
             </div>
-            {resources.map((resource, index) => (
-              <div
-                key={index}
-                className="h-20 mt-10 bg-[#424242] text-white flex items-center justify-between"
-              >
-                <h2 className="ml-6">{resource}</h2>
-                <BiSolidDownArrow className="text-white mr-6" />
-              </div>
-            ))}
+            <div className="overflow-x-auto">
+              {resources.map((resource, index) => (
+                <div
+                  key={index}
+                  className="h-20 mt-10 bg-[#424242] text-white flex items-center justify-between"
+                >
+                  <h2 className="ml-6">{resource}</h2>
+                  <BiSolidDownArrow className="text-white mr-6" />
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {activeTab === "Discussions" && (

@@ -142,18 +142,9 @@
   width: 130px; 
 }
 .topics-card {
-  height: 475px; 
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  display: flex;
-  background-color: #282828;
+ 
   background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(27,27,27,27)); 
-}
-
-.video-area{
-  display: grid;
-  grid-template-columns: 4fr 2fr;
-  gap: 1rem;
 }
 
 @keyframes spin {

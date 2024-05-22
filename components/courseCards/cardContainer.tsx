@@ -15,41 +15,79 @@ interface Product {
 }
 
 interface ProductContainerProps {
-  products: Product[];
+  courses: Product[];
 }
 
-const ProductContainer: React.FC<ProductContainerProps> = ({ products }) => {
-  const containerWidth = "415px"; // Set the width of the container here
-  const maxCardsPerPage = 3; // Maximum number of cards to display per page
+const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
+  const containerWidth = "415px";
+  const [maxCardsPerPage, setMaxCardsPerPage] = useState(3); // Maximum number of cards to display per page
   const [startIndex, setStartIndex] = useState(0);
 
   const handleNextPage = () => {
     const newStartIndex = startIndex + maxCardsPerPage;
-    setStartIndex(newStartIndex >= products.length ? 0 : newStartIndex);
+    setStartIndex(newStartIndex >= courses.length ? 0 : newStartIndex);
   };
 
+  // Update maxCardsPerPage based on screen width
+  const updateMaxCardsPerPage = () => {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 768) {
+      setMaxCardsPerPage(1);
+    } else {
+      setMaxCardsPerPage(3);
+    }
+  };
+
+  React.useEffect(() => {
+    updateMaxCardsPerPage();
+    window.addEventListener("resize", updateMaxCardsPerPage);
+    return () => {
+      window.removeEventListener("resize", updateMaxCardsPerPage);
+    };
+  }, []);
+
   return (
-    <div className=" bg-[#999] shadow-lg rounded-lg overflow-hidden  relative mx-auto">
-      <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden">
-        <div className="flex p-4">
-          {products
-            .slice(startIndex, startIndex + maxCardsPerPage)
-            .map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                containerWidth={containerWidth}
-              />
-            ))}
-        </div>
-        <div
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer"
-          onClick={handleNextPage}
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
+    <>
+      <div className="flex px-4 max-md:hidden">
+        <div className="bg-[#D9D9D9] shadow-lg rounded-lg relative overflow-hidden justify-center items-center ">
+          <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden ml-2">
+            <div className="flex mt-3 mb-3 mr-4">
+              {courses
+                .slice(startIndex, startIndex + maxCardsPerPage)
+                .map((course) => (
+                  <ProductCard
+                    key={course.id}
+                    course={course}
+                    containerWidth={containerWidth}
+                  />
+                ))}
+            </div>
+            <div
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer"
+              onClick={handleNextPage}
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+       <div className=" bg-[#D9D9D9] shadow-lg rounded-lg relative  sm:hidden ">
+        <div className="w-full h-full flex flex-col items-center justify-center bg-transparent "> 
+          <div className="flex flex-col w-full mt-2 mb-2">
+            {courses
+              .map((course) => (
+                <ProductCard
+                  key={course.id}
+                  course={course}
+                  containerWidth={containerWidth}
+                />
+              ))}
+          </div>
+         
+         </div>
+      </div>
+    </>
   );
 };
 

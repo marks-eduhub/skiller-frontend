@@ -1,15 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Navbar from "../dashboadLayout/NavBar";
 const ProfilePage: React.FC = () => {
   const [selectedTab, setselectedTab] = useState("Profile Picture");
 
   const handleClick = (tabName: string) => {
     setselectedTab(tabName);
   };
+  useEffect(() => {
+    localStorage.setItem("hideNavLayout", "true");
+  });
   return (
     <div className="">
-      <h2 className="font-bold text-[30px] mb-10">Profile</h2>
+    <Navbar  showGreeting={false} />
+
+      <h2 className="font-bold text-[30px] mt-8 mb-10">Profile</h2>
       <div className="flex flex-row gap-20  mt-10 mb-10 border-b w-1/5 border-gray-500  ">
         <div
           className={`cursor-pointer ${
