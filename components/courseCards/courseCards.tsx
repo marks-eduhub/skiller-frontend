@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <>
       <div
-        className="mx-auto flex-none gap-4 shadow-lg bg-custom-grey rounded-lg overflow-hidden  flex-shrink-0 mr-4 max-md:hidden "
+        className="mx-auto flex-none gap-4 shadow-lg  rounded-lg overflow-hidden  flex-shrink-0 mr-4 max-md:hidden "
       >
         <div className="border-8 border-white ">
           <div className="rounded-lg relative h-[180px] w-[380px]">

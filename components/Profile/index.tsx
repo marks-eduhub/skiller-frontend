@@ -53,7 +53,7 @@ const ProfilePage: React.FC = () => {
         <div>
           <div className="flex flex-col mt-10">
             <h2 className="font-bold">Image Preview</h2>
-            <h5 className="mt-2">Minimum Pixels[], Maximum Pixels[]</h5>
+            <h5 className="mt-2">Minimum Pixels 10, Maximum Pixels 30</h5>
           </div>
 
           <div className="flex mb-6 mt-2 bg-[#D9D9D9] border border-black w-[700px] h-[300px] items-center justify-center flex-col overflow-hidden">

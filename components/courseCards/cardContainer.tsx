@@ -63,13 +63,13 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
               ))}
           </div>
         </div>
-        <div
+        {/* <div
           className="absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer"
         >
           <Link href="/dashboard/coursePage">
             <FontAwesomeIcon icon={faChevronRight} className="text-gray-600" />
           </Link>
-        </div>
+        </div> */}
       </div>
 
       <div className=" bg-[#A0A0A0] shadow-lg rounded-lg relative  sm:hidden ">
