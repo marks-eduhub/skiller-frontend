@@ -11,7 +11,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 const HomePage: React.FC = () => {
   const router = useRouter();
   const handleNavigation = (category: string) => {
-    router.push(`/dashboard/courses/${category}`);
+    router.push(`/dashboard/coursePage/${category}`);
   };
 
   const categories = [
