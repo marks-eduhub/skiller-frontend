@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import {tests, quizzes} from "../../components/details/tabs.json"
+import { tests, quizzes } from "../../components/details/tabs.json";
 
 const Knowledge = () => {
   const [selectedTab, setselectedTab] = useState("Tests");
@@ -9,11 +9,13 @@ const Knowledge = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <div className="flex w-full border-b-2 border-black mb-4 cursor-pointer">
         <div
           className={`bg-[#a8a8a8] justify-center items-center flex w-1/2 h-full ${
-            selectedTab === "Tests" ? "bg-black text-white" : ""
+            selectedTab === "Tests"
+              ? "bg-black text-white transition-all duration-300 ease-in-out"
+              : ""
           }`}
           onClick={() => handleselectedClick("Tests")}
         >
@@ -30,7 +32,9 @@ const Knowledge = () => {
 
         <div
           className={`bg-[#a8a8a8] justify-center items-center flex w-1/2 h-full ${
-            selectedTab === "Quizzes" ? "bg-black text-white" : ""
+            selectedTab === "Quizzes"
+              ? "bg-black text-white transition-all duration-100 ease-in-out"
+              : ""
           }`}
           onClick={() => handleselectedClick("Quizzes")}
         >
@@ -48,7 +52,7 @@ const Knowledge = () => {
 
       {selectedTab === "Tests" &&
         tests.map((test, index) => (
-          <div key={index} className="w-full p-6 rounded-lg">
+          <div key={index} className="w-full p-6">
             <div className="flex rounded-lg">
               <div className="bg-white w-1/3">
                 <h1 className="font-bold text-[15px] p-6">{test.Test}</h1>
@@ -87,7 +91,9 @@ const Knowledge = () => {
                 </h1>
               </div>
               <div className="bg-white w-1/4">
-                <h1 className="font-bold text-[15px] p-6">{quizzes.actionText}</h1>
+                <h1 className="font-bold text-[15px] p-6">
+                  {quizzes.actionText}
+                </h1>
               </div>
               <div className="bg-black w-1/6">
                 <h1 className="text-white font-bold text-[15px] p-6">
