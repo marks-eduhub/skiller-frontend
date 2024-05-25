@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ProductCard from "./courseCards";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -48,34 +49,11 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
 
   return (
     <>
-      <div className="flex px-4 max-md:hidden">
-        <div className="bg-[#D9D9D9] shadow-lg rounded-lg relative overflow-hidden justify-center items-center ">
-          <div className="w-full h-full flex flex-row items-center justify-center overflow-hidden ml-2">
-            <div className="flex mt-3 mb-3 mr-4">
-              {courses
-                .slice(startIndex, startIndex + maxCardsPerPage)
-                .map((course) => (
-                  <ProductCard
-                    key={course.id}
-                    course={course}
-                    containerWidth={containerWidth}
-                  />
-                ))}
-            </div>
-            <div
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer"
-              onClick={handleNextPage}
-            >
-              <FontAwesomeIcon icon={faChevronRight} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-       <div className=" bg-[#D9D9D9] shadow-lg rounded-lg relative  sm:hidden ">
-        <div className="w-full h-full flex flex-col items-center justify-center bg-transparent "> 
-          <div className="flex flex-col w-full mt-2 mb-2">
+      <div className="relative flex px-4 container mx-auto max-md:hidden">
+        <div className="bg-[#A0A0A0] shadow-lg rounded-lg relative overflow-hidden justify-center items-center">
+          <div className="flex mt-3 mb-3 mr-4 ml-4 ">
             {courses
+              .slice(startIndex, startIndex + maxCardsPerPage)
               .map((course) => (
                 <ProductCard
                   key={course.id}
@@ -84,8 +62,28 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
                 />
               ))}
           </div>
-         
-         </div>
+        </div>
+        {/* <div
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer"
+        >
+          <Link href="/dashboard/coursePage">
+            <FontAwesomeIcon icon={faChevronRight} className="text-gray-600" />
+          </Link>
+        </div> */}
+      </div>
+
+      <div className=" bg-[#A0A0A0] shadow-lg rounded-lg relative  sm:hidden ">
+        <div className="w-full h-full flex flex-col items-center justify-center bg-transparent ">
+          <div className="flex flex-col w-full mt-2 mb-2">
+            {courses.map((course) => (
+              <ProductCard
+                key={course.id}
+                course={course}
+                containerWidth={containerWidth}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );

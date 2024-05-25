@@ -3,17 +3,18 @@ import {
   ShadowInnerIcon,
   TriangleDownIcon,
 } from "@radix-ui/react-icons";
-import { Link } from "lucide-react";
+// import { Link } from "lucide-react";
 import React from "react";
 import constants from "./constants.json";
 import Image from "next/image";
 import { CiHome } from "react-icons/ci";
+import Link from "next/link";
 interface NavBarProps {
   showGreeting: boolean;
   containNav?: boolean;
 }
 
-const Navbar: React.FC<NavBarProps> = ({ showGreeting, containNav  }) => {
+const Navbar: React.FC<NavBarProps> = ({ showGreeting, containNav }) => {
   return (
     <>
       <nav className="hidden sm:grid grid-cols-1 gap-4 sm:grid-cols-12 max-md:gap-2 ">
@@ -30,7 +31,9 @@ const Navbar: React.FC<NavBarProps> = ({ showGreeting, containNav  }) => {
         </div>
         <div className="sm:col-span-2 mt-4 sm:mt-0 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
           <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
-          <span className="text-white">Norah</span>
+          <Link href="/dashboard/profile" className="text-white">
+            Norah
+          </Link>
           <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
         </div>
         {showGreeting && (

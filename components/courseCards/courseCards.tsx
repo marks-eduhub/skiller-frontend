@@ -1,42 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { PersonIcon, ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
-// import React from 'react';
-// // import ProductDescriptionBar from './DescriptionBar';
-
-// interface Product {
-//   id: number;
-//   instructor: string;
-//   image: string;
-//   rating: number;
-//   duration: string;
-//   description: string;
-//   topic: string;
-//   level: string;
-// }
-
-// interface ProductCardProps {
-//   product: Product;
-// }
-
-// const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-//   return (
-//     <div className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-full">
-//       <div className="overflow-x-auto">
-//       <img src={product.image} alt={product.image} className="w-full object-cover " />
-//       </div>
-//       <div className="p-6 relative flex-1 flex flex-col justify-between">
-//         <div>
-//           <h3 className="text-gray-800 font-semibold">{product.instructor}</h3>
-//           <p className="mt-2 text-sm text-gray-500">{product.description}</p>
-//         </div>
-//         <p className="absolute bottom-0 left-0 mt-2 text-gray-600">{product.rating}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductCard;
+import { PersonIcon, ClockIcon, StarFilledIcon } from "@radix-ui/react-icons"
 
 interface Product {
   id: number;
@@ -61,10 +25,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <>
       <div
-        className="mx-auto flex-none gap-4 shadow-lg bg-custom-grey rounded-lg overflow-hidden  flex-shrink-0 mr-4 max-md:hidden"
+        className="mx-auto flex-none gap-4 shadow-lg  rounded-lg overflow-hidden  flex-shrink-0 mr-4 max-md:hidden "
       >
         <div className="border-8 border-white ">
-          <div className="rounded-lg relative h-[180px] w-[320px]">
+          <div className="rounded-lg relative h-[180px] w-[380px]">
             <Image
               src={course.image}
               alt={course.image}
@@ -144,3 +108,4 @@ const ProductCard: React.FC<ProductCardProps> = ({
 };
 
 export default ProductCard;
+
