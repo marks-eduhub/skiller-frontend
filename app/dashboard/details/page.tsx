@@ -1,4 +1,4 @@
-import NewPage from "@/components/details";
+import NewPage from "@/components/Student/details";
 export default function details() {
-    return <NewPage/>
+  return <NewPage />;
 }

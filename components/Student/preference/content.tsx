@@ -4,7 +4,6 @@ import { useState } from "react";
 import Profile from "./profile";
 import Splash from "../splash"; // Import the SplashScreen component
 
-
 interface MyComponentProps {
   data2: {
     currentIndex: number;
@@ -50,10 +49,9 @@ const Content: React.FC<MyComponentProps> = ({ data2 }) => {
       </div>
       <div className="col-span-1  row-span-2"></div>
       <div className="mt-10 relative w-24 h-24 col-span-2 h-[20px] flex justify-center self-center md:hidden">
-
-      {/* <div className="mt-[100px] relative w-24 h-24 col-span-2 h-[20px] flex justify-center self-center md:hidden"> */}
+        {/* <div className="mt-[100px] relative w-24 h-24 col-span-2 h-[20px] flex justify-center self-center md:hidden"> */}
         {data2.currentIndex === 0 && (
-          <Image 
+          <Image
             className="mt-50 mb-10 h-auto relative"
             src={data.slider1}
             alt={"slider icon"}
@@ -70,8 +68,8 @@ const Content: React.FC<MyComponentProps> = ({ data2 }) => {
             fill
           />
         )}
-        {data2.currentIndex === 2 && ( 
-           <Image
+        {data2.currentIndex === 2 && (
+          <Image
             className="mt-50 mb-10 h-auto relative"
             src={data.slider2}
             alt={"slider icon"}

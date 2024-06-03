@@ -1,7 +1,7 @@
-import Preference from "@/components/preference/";
+import Preference from "@/components/Student/preference";
 
 export default function PreferencePage() {
-    return <Preference/>;
+  return <Preference />;
 }
 
 // import Preference from "@/components/preference/";
@@ -23,4 +23,3 @@ export default function PreferencePage() {
 //         </div>
 //     );
 // }
-

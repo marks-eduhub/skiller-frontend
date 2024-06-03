@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import NavLinks from "@/components/dashboadLayout/nav-links";
+import NavLinks from "@/components/Student/dashboadLayout/nav-links";
 
 const SmallScreenSideNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -10,7 +10,11 @@ const SmallScreenSideNav = () => {
   };
 
   return (
-<div className={`flex h-full flex-col text-white  ${sidebarOpen ? 'w-64' : 'w-0' }`}>    
+    <div
+      className={`flex h-full flex-col text-white  ${
+        sidebarOpen ? "w-64" : "w-0"
+      }`}
+    >
       <div
         className={`flex items-center justify-start space-x-6 ${
           sidebarOpen ? "bg-black" : ""

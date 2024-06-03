@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import constants from "../../../../components/HomePage/dummyData.json";
-import ProductContainer from "@/components/courseCards/cardContainer";
-import Navbar from "@/components/dashboadLayout/NavBar";
+import constants from "../../../../components/Student/HomePage/dummyData.json";
+import ProductContainer from "@/components/Student/courseCards/cardContainer";
+import Navbar from "@/components/Student/dashboadLayout/NavBar";
 
 interface Course {
   id: number;

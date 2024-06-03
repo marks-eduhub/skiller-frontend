@@ -12,7 +12,7 @@ const DetailsPage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("hideNavLayout", "true");
     return () => {
-      localStorage.removeItem("hideNavLayout");  // Clean up when component unmounts
+      localStorage.removeItem("hideNavLayout"); // Clean up when component unmounts
     };
   }, []);
 

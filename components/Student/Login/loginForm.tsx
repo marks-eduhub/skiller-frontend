@@ -5,19 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 // import Loader from "../loader";
 import { redirect } from "next/navigation";
-import { useRouter } from 'next/navigation'
-import {  login } from "../../lib/userSS";
+import { useRouter } from "next/navigation";
+import { login } from "../../../lib/userSS";
 
 export default function LogIn() {
-  const router = useRouter()
-  const handleLogin = async (e:any) => {
-    e.preventDefault()
-   const formData = new FormData();
-   formData.append("email", e.target.email.value);
-   formData.append("password", e.target.password.value);
-   await login(formData);
-  router.push("/dashboard");
-  }
+  const router = useRouter();
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("email", e.target.email.value);
+    formData.append("password", e.target.password.value);
+    await login(formData);
+    router.push("/dashboard");
+  };
 
   return (
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">

@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import React from "react";
 import data from "./data.json";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { TbArrowBadgeRight } from "react-icons/tb";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {  login } from "../../lib/userSS";
+import { login } from "../../../lib/userSS";
 
 const Splash: React.FC = () => {
   const router = useRouter();
@@ -18,21 +18,19 @@ const Splash: React.FC = () => {
     // const formData = new FormData();
     // // // here we can pick the email from the user profile setup
     // formData.append("email", "black@gmail.com");
-    // // // here we could use a default password 
+    // // // here we could use a default password
     // formData.append("password", "123456");
     // // // perform default login action
     // await login(formData);
     // // finally redirect user to dashboard
     // // setButton(true);
-    
+
     const isLoggedIn = sessionStorage.getItem("isLoggedIn");
     if (isLoggedIn === "true") {
-
       router.push("/dashboard");
+    } else {
+      router.push("/auth");
     }
-  else{
-    router.push("/auth");
-  }
   };
 
   // useEffect(() => {

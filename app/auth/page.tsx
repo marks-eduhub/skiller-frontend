@@ -1,5 +1,5 @@
-import Login from "@/components/Login/index";
+import Login from "@/components/Student/Login/index";
 
 export default function LoginPage() {
-    return <Login/>;
-  }
+  return <Login />;
+}
