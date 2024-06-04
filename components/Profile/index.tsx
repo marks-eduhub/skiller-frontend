@@ -10,7 +10,7 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("hideNavLayout", "true");
     return () => {
-      localStorage.removeItem("hideNavLayout");  
+      localStorage.removeItem("hideNavLayout");
     };
   }, []);
 
@@ -31,18 +31,22 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="max-md:p-0 max-md:pr-4 ">
       <Navbar showGreeting={false} />
-      <h2 className="font-bold text-[30px] mt-8 mb-10">Profile</h2>
-      <div className="flex flex-row gap-20 mt-10 mb-10 border-b w-1/4 border-gray-500">
+      <h2 className="font-bold text-[30px] mt-8 mb-10 max-md:mt-0">Profile</h2>
+      <div className="flex flex-row gap-20 mt-10 mb-10 border-b w-1/4 border-gray-500 max-md:w-auto">
         <div
-          className={`cursor-pointer ${selectedTab === "Profile Picture" ? "border-b-2 border-black" : ""}`}
+          className={`cursor-pointer ${
+            selectedTab === "Profile Picture" ? "border-b-2 border-black" : ""
+          }`}
           onClick={() => handleClick("Profile Picture")}
         >
           <h2>Profile Picture</h2>
         </div>
         <div
-          className={`cursor-pointer ${selectedTab === "Bio" ? "border-b-2 border-black" : ""}`}
+          className={`cursor-pointer ${
+            selectedTab === "Bio" ? "border-b-2 border-black" : ""
+          }`}
           onClick={() => handleClick("Bio")}
         >
           <h2>Bio</h2>
@@ -56,15 +60,27 @@ const ProfilePage: React.FC = () => {
             <h5 className="mt-2">Minimum Pixels 10, Maximum Pixels 30</h5>
           </div>
 
-          <div className="flex mb-6 mt-2 bg-[#D9D9D9] border border-black w-[700px] h-[300px] items-center justify-center flex-col overflow-hidden">
+          <div className="flex mb-6 mt-2 bg-[#D9D9D9] border border-black w-[700px] h-[300px] max-md:w-[350px] max-md:mt-4 items-center justify-center flex-col overflow-hidden">
             {imagePreview ? (
-              <Image src={imagePreview} alt="Profile" width={200} height={200} className="object-cover" />
+              <Image
+                src={imagePreview}
+                alt="Profile"
+                width={200}
+                height={200}
+                className="object-cover"
+              />
             ) : (
-              <Image src="/Vector.svg" alt="Profile" width={200} height={200} className="object-cover" />
+              <Image
+                src="/Vector.svg"
+                alt="Profile"
+                width={200}
+                height={200}
+                className="object-cover"
+              />
             )}
           </div>
           <div className="flex mb-6 mt-2">
-            <div className="flex items-center pl-4 bg-[#D9D9D9] border border-black w-[500px] h-[50px] mt-3">
+            <div className="flex items-center pl-4 bg-[#D9D9D9] border border-black w-[500px] max-md:w-[300px] h-[50px] mt-3">
               {imagePreview ? "File selected" : "No file selected"}
             </div>
             <div className="relative flex items-center justify-center border border-black w-[200px] h-[50px] mt-3 bg-[#D9D9D9] cursor-pointer">
@@ -86,9 +102,12 @@ const ProfilePage: React.FC = () => {
       {selectedTab === "Bio" && (
         <div>
           <form className="space-y-4">
-            <div className="flex space-x-10">
+            <div className="flex flex-col md:flex-row md:space-x-10">
               <div className="flex-1">
-                <label htmlFor="first-name" className="block text-sm font-medium">
+                <label
+                  htmlFor="first-name"
+                  className="block text-sm font-medium"
+                >
                   First Name
                 </label>
                 <input
@@ -99,7 +118,10 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div className="flex-1">
-                <label htmlFor="last-name" className="block text-sm font-medium">
+                <label
+                  htmlFor="last-name"
+                  className="block text-sm font-medium"
+                >
                   Last Name
                 </label>
                 <input
@@ -111,11 +133,12 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
           </form>
+
           <div>
             <h2>Biography</h2>
           </div>
-          <div className="border-2 border-black w-[700px] h-[350px] mt-3 mb-9">
-            <div className="items-center border border-b-2 border-black w-[698px] h-[40px] py-2">
+          <div className="border-2 border-black sm:w-[700px] h-[350px] mt-3 mb-9">
+            <div className="items-center border border-b-2 border-black sm:w-[698px] h-[40px] py-2">
               <span className="italic font-bold ml-7">B</span>
               <span className="italic font-bold ml-7">I</span>
             </div>

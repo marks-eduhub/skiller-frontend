@@ -12,11 +12,11 @@ const VideoCard: React.FC = () => {
         </video>
       </div>
 
-      <div className="text-left mt-4 text-white ">
+      <div className="text-left mt-4 text-white max-md:text-lg">
         <h2 className="text-md font-bold">
           Typescript Fundamentals in 20 days
         </h2>
-        <p className="text-md">Michael Kizito : Software Engineer, Lecturer</p>
+        <p className="text-md max-md:mt-4">Michael Kizito : Software Engineer, Lecturer</p>
       </div>
     </div>
   );

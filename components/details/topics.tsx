@@ -18,9 +18,9 @@ const TopicsCard: React.FC = () => {
 
   return (
     <div>
-      <div className="topics-card h-[370px] max-md:h-[400px] shadow-md flex flex-col overflow-y-auto bg-[#282828] ">
-        <div className="p-4">
-          <h2 className="text-xl text-right font-bold text-white">
+      <div className="topics-card h-[370px] max-md:h-[400px] shadow-md flex flex-col overflow-y-auto scroll bg-[#282828] ">
+        <div className="sm:p-4 ">
+          <h2 className="text-xl text-right font-bold text-white max-md:mr-4">
             {topics.length} Topics
           </h2>
         </div>
