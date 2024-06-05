@@ -7,8 +7,8 @@ const page = () => {
     
 
     <div className="flex h-screen items-center justify-center pr-8">
-      <div className="flex flex-col items-center text-center">
-        <h3 className="font-bold text-[190px] mt-20 text-transparent outline mb-20">
+      <div className="flex flex-col items-center text-center pt-20">
+        <h3 className="font-bold text-[150px] pt-20 text-transparent outline mb-20">
           WELCOME
         </h3>
         <div className="flex flex-col items-center justify-center pb-40">
