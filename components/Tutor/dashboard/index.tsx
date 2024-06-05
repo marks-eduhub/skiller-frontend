@@ -4,6 +4,15 @@ import Image from "next/image";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const options = [
+    "A-Z",
+    "Z-A",
+    "Newest",
+    "Oldest",
+    "Published",
+    "Drafted",
+    "Unpublished",
+  ];
   const toggleicon = () => {
     setIsOpen(!isOpen);
   };
@@ -14,9 +23,9 @@ const HomePage = () => {
           <Image src="/plus.svg" alt="plus" width={30} height={30} />
           <h1 className="text-white">New Course</h1>
         </div>
-       
-         <div className="bg-[#E9E9E9] rounded-lg items-center p-4 w-1/2 flex gap-8 " >
-        {/* <Image src="/search.svg" alt="search icon" width={20} height={20}  /> */}
+
+        <div className="bg-[#E9E9E9] rounded-lg items-center p-4 w-1/2 flex gap-8 ">
+          {/* <Image src="/search.svg" alt="search icon" width={20} height={20}  /> */}
 
           <MagnifyingGlassIcon className="w-6 h-6 text-gray-500 mr-2" />
           <input
@@ -27,32 +36,24 @@ const HomePage = () => {
         </div>
         <div className="relative bg-[#D9D9D9] rounded-lg p-4 w-1/5 flex gap-2">
           <h1>Filter</h1>
-          <Image src="/dropdown.svg" alt="dropdown" width={10} height={10} onClick={toggleicon}/>
+          <Image
+            src="/dropdown.svg"
+            alt="dropdown"
+            width={10}
+            height={10}
+            onClick={toggleicon}
+          />
           {isOpen && (
             <div className="absolute top-full mt-2 w-[200px] bg-[#E9E9E9] rounded-lg shadow-lg z-50">
-              <ul className="py-2 ">
-                <li className="px-2 py-1  hover:bg-white rounded-lg  cursor-pointer">
-                  A-Z
-                </li>
-                <li className="px-2 py-1 hover:bg-white rounded-lg  cursor-pointer">
-                  Z-A
-                </li>
-                <li className="px-2 py-1 hover:bg-white rounded-lg cursor-pointer">
-                  Newest
-                </li>
-                <li className="px-2 py-1 hover:bg-white rounded-lg  cursor-pointer">
-                  Oldest
-                </li>
-
-                <li className="px-2 py-1 hover:bg-white rounded-lg cursor-pointer">
-                  Published
-                </li>
-                <li className="px-2 py-1 hover:bg-white rounded-lg cursor-pointer">
-                  Drafted
-                </li>
-                <li className="px-2 py-1 hover:bg-white rounded-lg cursor-pointer">
-                  Unpublished
-                </li>
+              <ul className="py-2">
+                {options.map((option, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-white rounded-lg cursor-pointer"
+                  >
+                    {option}
+                  </li>
+                ))}
               </ul>
             </div>
           )}
@@ -105,7 +106,7 @@ const HomePage = () => {
         </div>
       </div>
 
-       <div className="relative flex mt-8">
+      <div className="relative flex mt-8">
         <div className="absolute inset-x-0 bottom-0 h-7 bg-[#db4444c2]  flex justify-end items-center px-4">
           <h1 className="text-white">UNPUBLISHED</h1>
         </div>
@@ -151,7 +152,7 @@ const HomePage = () => {
         </div>
       </div>
 
-       <div className="relative flex mt-8">
+      <div className="relative flex mt-8">
         <div className="absolute inset-x-0 bottom-0 h-7 bg-[#eaff04bb]  flex justify-end items-center px-4">
           <h1 className="text-white">PENDING</h1>
         </div>
@@ -197,7 +198,7 @@ const HomePage = () => {
         </div>
       </div>
 
-       <div className="relative flex mt-8">
+      <div className="relative flex mt-8">
         <div className="absolute inset-x-0 bottom-0 h-7 bg-[#64d355b0]  flex justify-end items-center px-4">
           <h1 className="text-white">DRAFT</h1>
         </div>
