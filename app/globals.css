@@ -104,7 +104,11 @@
   transition: all ease;
   animation: spin 5s infinite; /* Use 'infinite' to repeat the animation */
 }
+.outline{
+  
+    -webkit-text-stroke: 2px black; 
 
+}
 .gradient-bg {
   background-image: linear-gradient(to bottom, #225B9A, #000000);
 }
@@ -119,6 +123,10 @@
 }
 .topics-card::-webkit-scrollbar-thumb {
   background-color: #999; 
+}
+.font{
+  font-family: 'Poppins', sans-serif;
+
 }
 .active-tab {
   display: inline-block;
