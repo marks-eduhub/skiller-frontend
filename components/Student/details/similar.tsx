@@ -17,6 +17,7 @@ const SimilarCourses: React.FC<{ courses: Course[] }> = ({ courses }) => {
       <h2 className="text-lg font-semibold ml-10 pt-10">
         <b>Similar Courses</b>
       </h2>
+
       <ProductContainer courses={courses} />
     </div>
   );

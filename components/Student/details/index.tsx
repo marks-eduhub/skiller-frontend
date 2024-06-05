@@ -12,7 +12,7 @@ const DetailsPage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("hideNavLayout", "true");
     return () => {
-      localStorage.removeItem("hideNavLayout"); // Clean up when component unmounts
+      localStorage.removeItem("hideNavLayout");  
     };
   }, []);
 
@@ -21,10 +21,10 @@ const DetailsPage: React.FC = () => {
       <div className="flex flex-col gap-6 md:overflow-y-auto bg-[#282828] p-4">
         <Navbar showGreeting={false} />
         <div className="grid grid-cols-6 gap-4 max-md:grid-cols-1 container mx-auto">
-          <div className="col-span-4">
+          <div className="sm:col-span-4">
             <VideoCard />
           </div>
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <TopicsCard />
           </div>
         </div>

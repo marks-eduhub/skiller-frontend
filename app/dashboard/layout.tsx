@@ -26,9 +26,9 @@ export default async function Layout({
         {children}
         <Footer />
       </div> */}
-      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
-        <ClientLayout>{children}</ClientLayout>{" "}
-        {/* Render the client-side layout */}
+      
+       <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+        <ClientLayout>{children}</ClientLayout> 
       </div>
     </div>
   );
