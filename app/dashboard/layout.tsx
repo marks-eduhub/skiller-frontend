@@ -1,8 +1,8 @@
-import SideNav from "@/components/dashboadLayout/sidenav";
+import SideNav from "@/components/Student/dashboadLayout/sidenav";
 // import { getSession } from '../../lib/userSS';
 import { redirect } from "next/navigation";
-import Navbar from "../../components/dashboadLayout/NavBar";
-import Footer from "@/components/footer";
+import Navbar from "../../components/Student/dashboadLayout/NavBar";
+import Footer from "@/components/Student/footer";
 import ClientLayout from "./Clientlayout";
 
 export default async function Layout({
@@ -26,6 +26,7 @@ export default async function Layout({
         {children}
         <Footer />
       </div> */}
+      
        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
         <ClientLayout>{children}</ClientLayout> 
       </div>

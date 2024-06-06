@@ -1,6 +1,5 @@
- import Splash from "@/components/splash";
-
+import Splash from "@/components/Student/splash";
 
 export default function SplashPage() {
-     return <Splash/>;
+  return <Splash />;
 }
