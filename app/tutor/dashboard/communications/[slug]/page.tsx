@@ -1,17 +1,15 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // Correct import from next/navigation
+import TutorNav from "@/components/Tutor/dashboard/tutor-nav";
 
 const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
-  const router = useRouter();
   const { slug } = params;
 
-  // Define content for each sub-option
   const subOptionsContent: { [key: string]: JSX.Element } = {
     QA: (
-      <div className="items-center justify-center">
-        <div className="flex flex-col items-center justify-center mt-7">
+      <div className="items-center justify-center cursor-pointer">
+        <div className="flex flex-col items-center justify-center mt-20 ">
           <Image src="/QandA.svg" alt="QandA" width={300} height={300} />
           <h1 className="text-2xl font-bold mt-6 mb-4">No questions yet</h1>
           <h1 className="text-gray-500">
@@ -21,7 +19,7 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
             questions, hear your responses and respond to one
           </h1>
           <h1 className="text-gray-500">
-            another. Here is where you will see your coursess Q&A threads
+            another. Here is where you will see your courses Q&A threads
           </h1>
         </div>
       </div>
@@ -29,7 +27,7 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
 
     Messages: (
       <div className="items-center justify-center">
-        <div className="flex flex-col items-center justify-center mt-7">
+        <div className="flex flex-col items-center justify-center mt-20">
           <Image src="/QandA.svg" alt="QandA" width={300} height={300} />
           <h1 className="text-2xl font-bold mt-6 mb-4">No new messages</h1>
           <h1 className="text-gray-500">
@@ -43,18 +41,23 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
       </div>
     ),
     Assignments: (
-      <div className="items-center justify-center">
-        <div className="flex ">
-            <div className="flex gap-1 ml-8 ">
-            <input type="checkbox"  />
-        
+      <div className="items-center justify-center cursor-pointer">
+        <div className="flex justify-between items-center ">
+          <div className="flex gap-1 ml-8 items-center">
+            <input type="checkbox" className="appearance-none border border-black  h-4 w-4 mr-1 " />
+
             <label className="font-semibold">Unread(0)</label>
-            </div>
-            <div className="ml-10">
-                <h1>Sortby: Newest First</h1>
-            </div>
+            <h1 className="ml-10 font-medium">Sortby: Newest First</h1>
+            <Image src="/dropdown.svg" alt="dropdown" width={10} height={10} />
+          </div>
+
+          <div className=" bg-black justify-end rounded-lg items-center p-3 w-1/5 flex gap-4">
+            <Image src="/plus.svg" alt="plus" width={30} height={30} />
+            <h1 className="text-white">New Assignment</h1>
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center mt-7">
+
+        <div className="flex flex-col items-center justify-center mt-10">
           <Image src="/assigments.svg" alt="QandA" width={300} height={300} />
           <h1 className="text-2xl font-bold mt-6 mb-4">No results</h1>
           <h1 className="text-gray-500">Try a different filter </h1>
@@ -63,7 +66,7 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
     ),
     Announcements: (
       <div className="items-center justify-center">
-        <div className="flex flex-col items-center justify-center mt-7">
+        <div className="flex flex-col items-center justify-center mt-20">
           <Image src="/QandA.svg" alt="QandA" width={300} height={300} />
           <h1 className="text-2xl font-bold mt-6 mb-4">No announcements yet</h1>
           <h1 className="text-gray-500">
@@ -88,8 +91,9 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mt-6 ml-8 mb-10">{slug}</h1>
+    <div className="pt-5">
+      <TutorNav />
+      <h1 className="text-3xl font-bold mt-6 ml-8 mb-5">{slug}</h1>
       {content}
     </div>
   );

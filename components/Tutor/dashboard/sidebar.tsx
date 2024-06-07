@@ -10,7 +10,8 @@ export default function SideBar() {
   const router = useRouter();
 
   return (
-    <div className="fixed h-full flex flex-col w-[250px] text-white bg-black">
+    <>
+    <div className="max-md:hidden fixed h-full flex flex-col w-[250px] text-white bg-black">
       <div className="flex items-center justify-start space-x-6 p-4">
         <div className="flex items-center space-x-6 cursor-pointer">
           <HamburgerMenuIcon className="w-6 h-6 text-white" />
@@ -23,5 +24,8 @@ export default function SideBar() {
         <SideLinks />
       </div>
     </div>
+
+    
+    </>
   );
 }

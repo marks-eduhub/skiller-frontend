@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import TutorNav from "./tutor-nav";
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const options = [
@@ -17,8 +18,10 @@ const HomePage = () => {
     setIsOpen(!isOpen);
   };
   return (
+    <>
     <div className="w-ful h-full pt-10 px-4 pb-3 container cursor-pointer">
-      <div className=" flex justify-between w-full items-center">
+      <TutorNav/>
+      <div className=" flex justify-between w-full items-center mt-6 max-md:hidden">
         <div className=" bg-black rounded-lg items-center p-4 w-1/5 flex gap-4">
           <Image src="/plus.svg" alt="plus" width={30} height={30} />
           <h1 className="text-white">New Course</h1>
@@ -60,23 +63,23 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="relative flex mt-8 ">
+      <div className="relative flex mt-8 max-md:p-0 ">
         <div className="absolute inset-x-0 bottom-0 h-7 z-20 bg-[#64d355b0]  flex justify-end items-center px-4">
           <h1 className="text-white">PUBLISHED</h1>
         </div>
 
-        <div className=" flex-1 mr-2 relative">
+        <div className=" flex-1 mr-2 max-md:mr-1 relative">
           <div
             className="w-full h-[170px] flex items-center justify-center bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: `url("/cake.svg")` }}
           >
-            <h1 className="text-white font-bold text-[30px]">
+            <h1 className="text-white font-bold sm:text-[30px] text-[23px] max-md:px-2">
               CAKE MAKING IN 45 MINUTES
             </h1>
           </div>
         </div>
 
-        <div className="w-[15%] bg-black flex flex-col ">
+        <div className="sm:w-[15%] w-[42%] bg-black flex flex-col ">
           <div className="flex gap-4 mt-4">
             <h1 className="text-white ml-4"> 45</h1>
             <div className="flex gap-1">
@@ -116,13 +119,13 @@ const HomePage = () => {
             className="w-full h-[170px] flex items-center justify-center bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: `url("/repair.svg")` }}
           >
-            <h1 className="text-white font-bold text-[30px]">
+            <h1 className="text-white font-bold sm:text-[30px] text-[23px] max-md:px-2">
               CAR REPAIR IN 48 DAYS
             </h1>
           </div>
         </div>
 
-        <div className="w-[15%] bg-black flex flex-col ">
+        <div className="sm:w-[15%] w-[42%] bg-black flex flex-col ">
           <div className="flex gap-4 mt-4">
             <h1 className="text-white ml-4"> 45</h1>
             <div className="flex gap-1">
@@ -162,13 +165,13 @@ const HomePage = () => {
             className="w-full h-[170px] flex items-center justify-center bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: `url("/car.svg")` }}
           >
-            <h1 className="text-white font-bold text-[30px]">
+            <h1 className="text-white font-bold sm:text-[30px] text-[23px] max-md:px-2">
               CAR REPAIR IN 48 DAYS
             </h1>
           </div>
         </div>
 
-        <div className="w-[15%] bg-black flex flex-col ">
+        <div className="sm:w-[15%] w-[42%] bg-black flex flex-col ">
           <div className="flex gap-4 mt-4">
             <h1 className="text-white ml-4"> 45</h1>
             <div className="flex gap-1">
@@ -208,13 +211,13 @@ const HomePage = () => {
             className="w-full h-[170px] flex items-center justify-center bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: `url("/cake.svg")` }}
           >
-            <h1 className="text-white font-bold text-[30px]">
+            <h1 className="text-white font-bold sm:text-[30px] text-[23px] max-md:px-2">
               CAKE MAKING IN 45 MINUTES
             </h1>
           </div>
         </div>
 
-        <div className="w-[15%] bg-black flex flex-col ">
+        <div className="sm:w-[15%] w-[42%] bg-black flex flex-col ">
           <div className="flex gap-4 mt-4">
             <h1 className="text-white ml-4"> 45</h1>
             <div className="flex gap-1">
@@ -244,6 +247,7 @@ const HomePage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

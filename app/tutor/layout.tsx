@@ -12,8 +12,8 @@ export default async function Layout({
       <div className="w-full md:w-64">
         <SideBar />
       </div>
-      <div className="flex-1 flex flex-col pr-12">
-        <TutorNav />
+      <div className="flex-1 flex flex-col sm:pr-12 pr-3 pb-4">
+        {/* <TutorNav /> */}
         {children}
       </div>
     </div>
