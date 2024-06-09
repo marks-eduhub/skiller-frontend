@@ -27,7 +27,7 @@ const TutorProfile = () => {
   return (
     <div className=" sm:pl-8 p-6 ">
       <TutorNav/>
-      <h2 className="font-bold text-[30px] mt-8 mb-10 max-md:mt-0">Profile</h2>
+      <h2 className="font-bold text-[30px] sm:mt-8 sm:pt-0 pt-20 mb-10 max-md:mt-0">Profile</h2>
       <div className="flex flex-row gap-20 mt-10 mb-10 border-b w-1/4 border-gray-500 max-md:w-auto">
         <div
           className={`cursor-pointer ${

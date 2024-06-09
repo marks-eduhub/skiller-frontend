@@ -4,7 +4,7 @@ import Curriculum from "./curriculum";
 import Overview from "./overview";
 import Image from "next/image";
 import TutorNav from "./tutor-nav";
-import Link from "next/link"
+import Link from "next/link";
 
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
@@ -12,11 +12,12 @@ const CoursePage = () => {
     setTab(tabName);
   };
   return (
-    <div className="px-5 py-7 relative h-full w-full cursor-pointer">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 items-center">
+    <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
+      
+      <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
+        <div className="flex gap-2 items-center sm:mr-[450px]">
           <Link href="/tutor/dashboard">
-          <Image src="/backarrow.svg" alt="back" width={20} height={20} />
+            <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
           <div className="flex pl-5 gap-1">
             <h1>4.5</h1>
@@ -30,25 +31,20 @@ const CoursePage = () => {
           </div>
           <div className="flex pl-5 gap-1">
             <h1>45</h1>
-            <Image
-              src="/learners.svg"
-              alt="learners"
-              width={20}
-              height={20}
-            />
+            <Image src="/learners.svg" alt="learners" width={20} height={20} />
             <h1>Learners</h1>
           </div>
         </div>
-
         <TutorNav />
       </div>
+
       <div
         className="w-full h-[350px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
         style={{ backgroundImage: `url("/CAKE.svg")` }}
       >
         <div className="absolute inset-0 flex">
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-white font-bold text-[30px]">
+            <h1 className="text-white font-bold sm:text-[30px] text-[20px] sm:mx-0 mx-2 ">
               CAKE MAKING IN 45 MINUTES
             </h1>
           </div>
@@ -59,7 +55,7 @@ const CoursePage = () => {
               </div>
             </div>
             <div className="flex-1 flex justify-center mt-[95px]">
-              <h1 className="text-white font-bold text-[30px]">
+              <h1 className="text-white font-bold sm:text-[30px] text-[20px]">
                 DESCRIPTION GOES HERE
               </h1>
             </div>
@@ -67,12 +63,12 @@ const CoursePage = () => {
         </div>
       </div>
 
-      <div className="flex gap-[100px] mb-10">
+      <div className="flex gap-[100px] mb-10 sm:overflow-hidden items-center overflow-x-auto">
         <div
           className={`cursor-pointer ${
             Tab === "Course Overview"
-              ? "bg-[#D9D9D9] rounded-sm px-4 py-1"
-              : "bg-[#F4F4F4] rounded-sm px-4 py-1"
+              ? "bg-[#D9D9D9] rounded-sm sm:px-4 px-10 sm:py-1 py-3 "
+              : "bg-[#F4F4F4] rounded-sm sm:px-4 px-10 sm:py-1 py-3"
           }`}
           onClick={() => handleClicks("Course Overview")}
         >
@@ -81,8 +77,8 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Curriculum"
-              ? "bg-[#D9D9D9] rounded-sm px-4 py-1 "
-              : "bg-[#F4F4F4] rounded-sm px-4 py-1 "
+              ? "bg-[#D9D9D9] rounded-sm sm:px-4 px-10 sm:py-1 py-3 "
+              : "bg-[#F4F4F4] rounded-sm sm:px-4 px-10 sm:py-1 py-3"
           }`}
           onClick={() => handleClicks("Curriculum")}
         >
@@ -91,8 +87,8 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Assessments"
-              ? "bg-[#D9D9D9] rounded-sm px-4 py-1 "
-              : "bg-[#F4F4F4] rounded-sm px-4 py-1 "
+              ? "bg-[#D9D9D9] rounded-sm sm:px-4 px-10 sm:py-1 py-3 "
+              : "bg-[#F4F4F4] rounded-sm sm:px-4 px-10 sm:py-1 py-3"
           }`}
           onClick={() => handleClicks("Assessments")}
         >
@@ -101,8 +97,8 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Analytics"
-              ? "bg-[#D9D9D9] rounded-sm px-5 py-1 "
-              : "bg-[#F4F4F4] rounded-sm px-5 py-1 "
+              ? "bg-[#D9D9D9] rounded-sm sm:px-5 px-10 sm:py-1 py-3"
+              : "bg-[#F4F4F4] rounded-sm sm:px-5 px-10 sm:py-1 py-3"
           }`}
           onClick={() => handleClicks("Analytics")}
         >
@@ -112,6 +108,10 @@ const CoursePage = () => {
       {Tab === "Curriculum" && <Curriculum />}
 
       {Tab === "Course Overview" && <Overview />}
+
+      {Tab === "Assessments" && 
+      <div className="items-center font-bold flex justify-center text-lg">ASSESSMENTS</div>}
+      {Tab === "Analytics" && <div className="items-center font-bold flex justify-center text-lg">ANALYTICS</div>}
     </div>
   );
 };

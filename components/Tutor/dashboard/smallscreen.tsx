@@ -18,7 +18,7 @@ const SmallScreen = () => {
   };
 
   return (
-    <div className="sm:hidden flex items-center justify-between py-4">
+    <div className="sm:hidden absolute top-0 left-5 right-5 z-50  flex items-center justify-between pt-6">
       <HamburgerMenuIcon
         className="w-6 h-6 cursor-pointer text-black"
         onClick={toggleSidebar}

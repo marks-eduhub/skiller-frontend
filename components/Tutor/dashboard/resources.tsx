@@ -3,7 +3,7 @@ import Image from "next/image";
 import TutorNav from "./tutor-nav";
 const Resources = () => {
   return (
-    <div className=" pl-9 pt-6 ">
+    <div className=" pl-9 sm:pt-10 pt-20 ">
       <TutorNav />
 
       <div className="sm:flex w-full justify-between sm:pt-20 p-10 ">
