@@ -4,6 +4,7 @@ import Curriculum from "./curriculum";
 import Overview from "./overview";
 import Image from "next/image";
 import TutorNav from "./tutor-nav";
+import Link from "next/link"
 
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
@@ -11,10 +12,12 @@ const CoursePage = () => {
     setTab(tabName);
   };
   return (
-    <div className="px-5 py-7 relative h-full w-full">
+    <div className="px-5 py-7 relative h-full w-full cursor-pointer">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
+          <Link href="/tutor/dashboard">
           <Image src="/backarrow.svg" alt="back" width={20} height={20} />
+          </Link>
           <div className="flex pl-5 gap-1">
             <h1>4.5</h1>
             <Image src="/star.svg" alt="star" width={15} height={15} />

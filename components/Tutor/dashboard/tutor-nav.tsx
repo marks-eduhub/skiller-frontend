@@ -5,9 +5,11 @@ import {
     ShadowInnerIcon,
     TriangleDownIcon,
   } from "@radix-ui/react-icons";
+import SmallScreen from './smallscreen';
 const TutorNav = () => {
   return (
-    <div className="flex justify-end">
+    <>
+    <div className="sm:flex hidden justify-end">
         <div className="flex flex-row gap-4  items-center">
           <div className="flex flex-row gap-4  max-md:mt-5 items-center">
             <h2 className="font-bold text-[16px]">Student</h2>
@@ -23,7 +25,11 @@ const TutorNav = () => {
         </div>
         </Link>
         </div>
+    </div>  
+    <div >
+      <SmallScreen/>
     </div>
+    </>
   )
 }
 
