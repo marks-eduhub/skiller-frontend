@@ -20,10 +20,10 @@ const SmallScreen = () => {
   return (
     <div className="sm:hidden absolute top-0 left-5 right-5 z-50  flex items-center justify-between pt-6">
       <HamburgerMenuIcon
-        className="w-6 h-6 cursor-pointer text-black"
+        className="w-6 h-6 cursor-pointer text-black rotate-90  "
         onClick={toggleSidebar}
       />
-
+    
       {isSidebar && (
         <div className="fixed inset-0 bg-black bg-opacity-75 z-50">
           <div className="fixed top-0 left-0 h-full w-[250px] bg-black text-white">
@@ -41,24 +41,23 @@ const SmallScreen = () => {
           </div>
         </div>
       )}
-          <div className="flex flex-row gap-4 items-center">
-            <h2 className="font-bold text-[16px]">Student</h2>
-            <Image
-              src="/Notification-Button.svg"
-              alt="notification"
-              width={20}
-              height={20}
-            />
-            <Link href="/tutor/profile">
-            <div className="sm:col-span-2  sm:mt-0 flex items-center justify-between p-1 rounded-full shadow bg-black text-white cursor-pointer">
-              <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
-              <div className="text-white">Norah</div>
-              <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
-            </div>
-          </Link>
-        </div>
+      <div className="flex flex-row gap-4 items-center">
+        <h2 className="font-bold text-[16px]">Student</h2>
+        <Image
+          src="/Notification-Button.svg"
+          alt="notification"
+          width={20}
+          height={20}
+        />
+        <Link href="/tutor/profile">
+          <div className="sm:col-span-2  sm:mt-0 flex items-center justify-between p-1 rounded-full shadow bg-black text-white cursor-pointer">
+            <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
+            <div className="text-white">Norah</div>
+            <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
           </div>
-          
+        </Link>
+      </div>
+    </div>
   );
 };
 

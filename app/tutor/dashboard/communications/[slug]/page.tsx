@@ -7,7 +7,7 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
   const subOptionsContent: { [key: string]: JSX.Element } = {
-    QA: (
+    QandA: (
       <div className="items-center justify-center cursor-pointer">
         <div className="flex flex-col items-center justify-center mt-20 px-4 sm:px-0">
           <Image src="/QandA.svg" alt="QandA" width={300} height={300} />
