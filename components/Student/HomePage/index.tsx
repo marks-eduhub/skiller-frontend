@@ -26,8 +26,8 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col sm:min-h-screen container mx-auto pb-9 rounded-2xl shadow-2xl max-md:pl-2">
-        <h2 className="text-lg font-semibold my-4">
+      <div className="flex flex-col sm:min-h-screen  mx-auto pb-9 max-md:pl-2">
+        <h2 className="text-lg font-300 my-4">
           <b>Top Programming Courses</b>
         </h2>
         <FeaturedProduct course={constants.featuredProduct} />
@@ -35,7 +35,7 @@ const HomePage: React.FC = () => {
         <div className="max-md:hidden">
           {categories.map((item, index) => (
             <div key={index} className="relative">
-              <h2 className="text-lg font-semibold my-4">
+              <h2 className="text-lg font-300 my-4">
                 <b>{item.title}</b>
               </h2>
               <ProductContainer

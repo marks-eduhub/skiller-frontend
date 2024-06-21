@@ -9,15 +9,7 @@ const blueImage = "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg";
 const redImage =
   "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg";
 
-const links = [
-  { name: "Home", href: "/dashboard", icon: AiFillHome },
-  // {
-  //   name: "In Progress",
-  //   href: "/dashboard/inProgress",
-  //   icon: AiFillHome,
-  // },
-  // { name: "Completed", href: "/dashboard/completed", icon: AiFillHome },
-];
+const links = [{ name: "Home", href: "/dashboard", icon: AiFillHome }];
 const communityLink = {
   name: "Community",
   href: "/dashboard/community",
@@ -37,22 +29,6 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
   const [progressBlue, setProgressBlue] = useState<number>(0);
   const [progressRed, setProgressRed] = useState<number>(0);
 
-  const handleProgressBlueChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = parseInt(event.target.value);
-    // console.log("Blue progress value:", value);
-    setProgressBlue(value);
-  };
-
-  const handleProgressRedChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = parseInt(event.target.value);
-    // console.log("Red progress value:", value);
-    setProgressRed(value);
-  };
-
   return (
     <>
       {minimized ? (
@@ -60,10 +36,6 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
           links={links}
           communityLink={communityLink}
           subscriptionLinks={subscriptionLinks}
-          progressBlue={progressBlue}
-          progressRed={progressRed}
-          handleProgressBlueChange={handleProgressBlueChange}
-          handleProgressRedChange={handleProgressRedChange}
         />
       ) : (
         <>
@@ -74,14 +46,14 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
                 key={link.name}
                 href={link.href}
                 className={clsx(
-                  "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-sky-100 hover:rounded-md hover:text-blue-600 md:flex-none md:p-2 md:px-3",
+                  "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-sky-100 hover:rounded-md hover:text-blue-600 md:flex-none md:p-2 ",
                   {
                     "ml-2": link.name === "Home",
                     "ml-20": link.name !== "Home",
                   }
                 )}
               >
-                <LinkIcon className="w-10 h-7 mr-2 text-gray-600" />
+                <LinkIcon className="w-10 h-6 mr-2 text-white" />
                 <p className="md:block">{link.name}</p>
               </Link>
             );
@@ -91,75 +63,41 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
             href={communityLink.href}
             className={clsx(
               "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-sky-100 hover:rounded-md hover:text-blue-600 md:flex-none md:p-2 md:px-3",
-              "mb-8"
+              "mb-3"
             )}
           >
-            <AiOutlineTeam className="w-10 h-7 mr-2 text-gray-600 " />
+            <AiOutlineTeam className="w-10 h-7 mr-2 text-white " />
             <p className="md:block">{communityLink.name}</p>
           </Link>
-          {/* Horizontal line */}
-          <hr className="my-4 border-gray-300" />
-          <div className="bg-black p-4">
-            <p className="text-white">Subscriptions</p>
-          </div>
-          {/* Individual subscription entries */}
+          <hr className=" border-gray-600" />
+          <p className="text-white p-4">Subscriptions</p>
           {subscriptionLinks.map((subscription) => (
             <div
               key={subscription.name}
-              className="flex items-center justify-between bg-black p-2"
+              className="flex items-center justify-between bg-black pl-4 pb-4"
             >
               <div className="flex items-center space-x-2">
-                <subscription.icon className="w-6 h-6 " />
+                <Image src="/subscriptions.svg" alt="" width={20} height={20} />
+                {/* <subscription.icon className="w-6 h-6 " /> */}
                 <p className="text-white">{subscription.name}</p>
               </div>
             </div>
           ))}
-          {/* Horizontal line */}
-          <hr className="my-4 border-gray-300" />
-          <div className="bg-black p-4">
-            <p className="text-white">In Progress</p>
-          </div>
-          {/* Progress bars with range inputs and images */}
-          <div className="flex items-center space-x-2 bg-black p-2 rounded-full gap-2">
-            <div className="w-[5rem] relative h-[3rem]">
-              <Image
-                alt={"Image"}
-                src={blueImage}
-                fill
-                className="object-cover object-center rounded-full"
-              />
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={progressBlue}
-              onChange={handleProgressBlueChange}
-              className="w-full h-2 rounded-full"
+          <hr className="my-4 border-gray-600" />
+          <div className="flex  items-center space-x-2 pl-3  mb-6">
+            <Image
+              src="/mylearning.svg"
+              alt="learning"
+              width={20}
+              height={20}
             />
-            <div className="h-fullrounded-full" style={{ width: "15px" }}></div>
+
+            <p>My Learning</p>
           </div>
-          <div className="flex items-center space-x-2 bg-black p-2 rounded-full ">
-            <div className="w-[5rem] relative h-[3rem]">
-              <Image
-                alt={"Image"}
-                src={redImage}
-                fill
-                className="object-cover object-center rounded-full"
-              />
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={progressRed}
-              onChange={handleProgressRedChange}
-              className="w-full h-2 rounded-full"
-            />
-            <div
-              className="h-full rounded-full"
-              style={{ width: "15px" }}
-            ></div>
+          <div className="flex  items-center space-x-2 pl-3">
+            <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} />
+
+            <p>Wishlist</p>
           </div>
         </>
       )}

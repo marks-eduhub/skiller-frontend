@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import { PersonIcon, ClockIcon, StarFilledIcon } from "@radix-ui/react-icons"
+import { CiHeart } from "react-icons/ci";
+
 
 interface Product {
   id: number;
@@ -25,42 +27,47 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <>
       <div
-        className="mx-auto flex-none gap-4 shadow-lg  rounded-lg overflow-hidden  flex-shrink-0 mr-4 max-md:hidden "
+        className="mx-auto flex-none gap-4 shadow-lg  overflow-hidden  flex-shrink-0 mr-4 max-md:hidden "
       >
-        <div className="border-8 border-white ">
-          <div className="rounded-lg relative h-[180px] w-[380px]">
+        <div className="border border-gray-400">
+          <div className="rounded-lg flex relative h-[180px] w-[375px]">
             <Image
               src={course.image}
               alt={course.image}
               fill
-              className="object-cover object-center"
+              className="object-cover object-center p-1"
             />
-            <p className="absolute top-4 right-8 mt-1 ml-1 text-black bg-white px-4 py-0 rounded-t rounded-b">
+            <div className="flex items-center absolute justify-between p-2 w-full">
+
+            <Image src="/like button.svg" alt="like button" width={25} height={25} />
+
+            <p className=" text-black bg-white px-4 py-0 rounded-t rounded-b">
               Free
             </p>
+            </div>
           </div>
         </div>
-        <div className="p-4 bg-black text-white">
+        <div className="p-2 bg-[#F3F4F3] text-black">
           <div className="mb-4">
             <h3 className="font-semibold">{course.topic}</h3>
           </div>
 
           <div className="flex items-center mb-4">
-            <PersonIcon className="w-6 h-6 text-white" />
-            <p className="ml-2">{course.instructor}</p>
-            <p className="ml-8 flex-grow text-sm">{course.description}</p>
+            {/* <PersonIcon className="w-6 h-6 text-black" /> */}
+            <p >{course.instructor}</p>
+            {/* <p className="ml-8 flex-grow text-sm">{course.description}</p> */}
           </div>
 
           <div className="flex justify-between mt-3 gap-2 text-[0.8rem]">
             <div className="flex gap-1">
-              <StarFilledIcon className="w-4 h-4 text-white" />
+              <StarFilledIcon className="w-4 h-4 text-black" />
               <p>{course.rating}</p>
             </div>
             <div className="flex gap-1">
-              <ClockIcon className="w-4 h-4 text-white" />
+              <ClockIcon className="w-4 h-4 text-black" />
               <p>{course.duration}</p>
             </div>
-            <p>{course.level}</p>
+            {/* <p>{course.level}</p> */}
           </div>
         </div>
       </div>

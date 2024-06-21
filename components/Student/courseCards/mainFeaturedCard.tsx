@@ -14,6 +14,7 @@ interface Product {
   description: string;
   topic: string;
   level: string;
+  days: string;
 }
 
 interface FeaturedProductProps {
@@ -35,7 +36,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
             showStatus={false}
           >
             {images.map((image, index) => (
-              <div key={index} className="pt-4 pr-8 pl-8 pb-0 relative">
+              <div key={index} className="relative">
                 <div className="relative">
                   <Image
                     src={image}
@@ -44,7 +45,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
                     width={800}
                     className="w-full object-cover h-64 rounded-tl-2xl rounded-tr-2xl"
                   />
-                  <p className="absolute top-6 right-8 bg-white px-6 rounded-tl-3xl rounded-tr-3xl">
+                  <p className="absolute top-6 right-8 bg-white px-6 rounded-lg">
                     Free
                   </p>
                 </div>
@@ -59,6 +60,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
               description={course.description}
               topic={course.topic}
               level={course.level}
+              days={course.days}
             />
           </div>
         </div>
@@ -99,6 +101,8 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
               description={course.description}
               topic={course.topic}
               level={course.level}
+              days={course.days}
+
             />
           </div>
         </div>

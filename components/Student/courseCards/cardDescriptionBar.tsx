@@ -1,5 +1,5 @@
 import { PersonIcon, ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
-
+import Image from "next/image"
 interface ProductDetails {
   instructor: string;
   duration: string;
@@ -7,6 +7,7 @@ interface ProductDetails {
   description: string;
   topic: string;
   level: string;
+  days: string;
 }
 
 const ProductDescriptionBar: React.FC<ProductDetails> = ({
@@ -16,14 +17,15 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
   description,
   topic,
   level,
+  days,
 }) => {
   return (
     <>
       <div className="gradient-bg text-white max-md:hidden ">
-        <div className="relative bg-gradient-to-r from-indigo-500 to-black px-4 py-2 rounded-lg">
+        <div className="relative bg-black px-4 py-2 ">
           <div className="relative small-screen">
             <h3 className="absolute bottom-0 right-0  font-semibold text-white">
-              {level}
+              {days}
             </h3>
 
             <h3 className="absolute top-0 right-0  font-semibold text-white">
@@ -35,11 +37,11 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
                 <ClockIcon className="w-6 h-6 mr-2" />
                 <p className="text-white">{duration}</p>
               </div>
-              <p className="text-sm text-white mt-2">{description}</p>
+              <p className="text-sm text-white mt-2">{level}</p>
             </div>
 
             <div className="flex items-center mb-4 absolute top-0 left-0 ">
-              <PersonIcon className="w-6 h-6 mr-2" />
+              <Image src="/person.svg" alt="person" width={20} height={20} className="w-6 h-6 mr-2"/>
               <h3 className="text-white font-semibold">{instructor}</h3>
             </div>
 
@@ -64,6 +66,7 @@ const ProductDescriptionBar: React.FC<ProductDetails> = ({
 
         <div className="flex flex-row justify-between ">
           <div className="flex font-semibold text-white">
+            
             <PersonIcon className="w-6 h-6 mr-2" />
             <h3 className="text-white font-semibold">{instructor}</h3>
           </div>

@@ -49,9 +49,9 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
 
   return (
     <>
-      <div className="relative flex px-4 container mx-auto max-md:hidden">
-  <div className="bg-[#D9D9D9] shadow-lg rounded-lg relative overflow-hidden justify-center items-center">
-    <div className="flex mt-3 mb-4 pb-2 mr-4 ml-4 cards overflow-x-auto">
+      <div className="relative flex px-4   mx-auto max-md:hidden">
+  {/* <div className="bg-[#D9D9D9] shadow-lg rounded-lg relative overflow-hidden justify-center items-center"> */}
+    <div className="flex mt-3 mb-4 pb-2 mr-4  ">
       {courses
         .slice(startIndex, startIndex + maxCardsPerPage)
         .map((course) => (
@@ -62,7 +62,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
           />
         ))}
     </div>
-  </div>
+  {/* </div> */}
 </div>
 
 

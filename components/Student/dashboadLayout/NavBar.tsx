@@ -3,7 +3,6 @@ import {
   ShadowInnerIcon,
   TriangleDownIcon,
 } from "@radix-ui/react-icons";
-// import { Link } from "lucide-react";
 import React from "react";
 import constants from "./constants.json";
 import Image from "next/image";
