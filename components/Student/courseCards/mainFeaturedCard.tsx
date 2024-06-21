@@ -26,8 +26,8 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
 
   return (
     <div>
-      <div className="px-4 py-2 relative  max-md:hidden">
-        <div className="top-gradient shadow-lg rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl overflow-hidden mx-2 relative">
+      <div className=" py-2 relative sm:pl-0 pl-2 ">
+        <div className="shadow-lg sm:rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl  max-md:rounded-lg overflow-hidden mx-2 relative">
           <Carousel
             showThumbs={false}
             showArrows={false}
@@ -65,48 +65,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
           </div>
         </div>
       </div>
-
-      <div className="sm:hidden pl-2">
-        <div className="top-gradient shadow-lg rounded-lg overflow-hidden  relative w-[330px] h-[345px]">
-          <Carousel
-            showThumbs={false}
-            showArrows={false}
-            infiniteLoop={true}
-            autoPlay={true}
-            showStatus={false}
-          >
-            {images.map((image, index) => (
-              <div key={index} className="pt-2 pr-4 pl-4 pb-0 relative">
-                <div className="">
-                  <Image
-                    src={image}
-                    alt={course.image}
-                    height={300}
-                    width={300}
-                    className="w-full object-cover h-56 rounded-tl-2xl rounded-tr-2xl"
-                  />
-
-                  <p className="absolute top-6 right-8 bg-white px-6 rounded-tl-3xl rounded-tr-3xl">
-                    Free
-                  </p>
-                </div>
-              </div>
-            ))}
-          </Carousel>
-          <div className="relative ">
-            <ProductDescriptionBar
-              instructor={course.instructor}
-              duration={course.duration}
-              rating={course.rating}
-              description={course.description}
-              topic={course.topic}
-              level={course.level}
-              days={course.days}
-
-            />
-          </div>
-        </div>
-      </div>
+  
     </div>
   );
 };
