@@ -8,6 +8,7 @@ import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
 
+
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
   const handleClicks = (tabName: string) => {
@@ -113,6 +114,7 @@ const CoursePage = () => {
 
       {Tab === "Assessments" && <Assessments />}
       {Tab === "Analytics" && <Analytics />}
+
     </div>
   );
 };
