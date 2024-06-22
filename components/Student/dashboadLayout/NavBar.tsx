@@ -3,7 +3,6 @@ import {
   ShadowInnerIcon,
   TriangleDownIcon,
 } from "@radix-ui/react-icons";
-// import { Link } from "lucide-react";
 import React from "react";
 import constants from "./constants.json";
 import Image from "next/image";
@@ -17,35 +16,48 @@ interface NavBarProps {
 const Navbar: React.FC<NavBarProps> = ({ showGreeting, containNav }) => {
   return (
     <>
-      <nav className="hidden sm:grid grid-cols-1 gap-4 sm:grid-cols-12 max-md:gap-2 ">
-        <div className="sm:col-span-8 flex items-center rounded-full shadow bg-white p-2">
-          <MagnifyingGlassIcon className="w-6 h-6 text-gray-500 mr-2" />
+      <nav className="max-md:hidden ">
+       
+        {showGreeting && (
+          <div className="flex items-center justify-between w-full">
+            <p className="text-black font-semibold text-[20px]">
+              Good Morning Norah
+            </p>
+            <div className="flex items-center gap-10">
+              <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                Premium
+              </p>
+              <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
+                <Image
+                  src="/Ellipse 1.svg"
+                  alt="variant"
+                  width={20}
+                  height={20}
+                  className="  ml-2"
+                />
+                <Link href="/dashboard/profile" className="text-white">
+                  Norah
+                </Link>
+                <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="sm:col-span-8 w-1/2 my-6 flex items-center rounded-lg shadow bg-white p-2 cursor-pointer">
+          <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
           <input
             type="text"
             placeholder="Search for classes or tutors"
             className="flex-1 outline-none bg-transparent"
           />
+          <Image
+            src="/filter-variant.svg"
+            alt="filter"
+            width={20}
+            height={20}
+          />
         </div>
-        <div className="sm:col-span-2 mt-4 sm:mt-0 flex items-center justify-center rounded-full shadow bg-white text-black">
-          Premium
-        </div>
-        <div className="sm:col-span-2 mt-4 sm:mt-0 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
-          <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
-          <Link href="/dashboard/profile" className="text-white">
-            Norah
-          </Link>
-          <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
-        </div>
-        {showGreeting && (
-          <div className="sm:col-span-12 flex flex-col justify-end items-end text-lg font-semibold mt-4 max-md:text-[17px] max-md:mt-2 max-md:mb-2">
-            <div
-              className="text-right mr-10 text-black"
-              style={{ whiteSpace: "nowrap" }}
-            >
-              <b>Good morning Norah</b>
-            </div>
-          </div>
-        )}
       </nav>
       <nav className="flex flex-col  sm:hidden">
         <div className="flex flex-row justify-between ">

@@ -109,12 +109,7 @@
     -webkit-text-stroke: 2px black; 
 
 }
-.gradient-bg {
-  background-image: linear-gradient(to bottom, #225B9A, #000000);
-}
-.top-gradient{
-  background-image: linear-gradient(to bottom, #A3CEFA , #FFF);
-}
+
 .video-overlay {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 8)); 
 }

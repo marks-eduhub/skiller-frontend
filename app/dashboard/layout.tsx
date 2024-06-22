@@ -27,7 +27,7 @@ export default async function Layout({
         <Footer />
       </div> */}
       
-       <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+       <div className="flex-grow p-6 md:overflow-y-auto pr-10 container mx-auto ">
         <ClientLayout>{children}</ClientLayout> 
       </div>
     </div>
