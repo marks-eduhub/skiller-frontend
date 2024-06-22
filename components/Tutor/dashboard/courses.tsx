@@ -5,6 +5,9 @@ import Overview from "./overview";
 import Image from "next/image";
 import TutorNav from "./tutor-nav";
 import Link from "next/link";
+import Assessments from "./assessments";
+import Analytics from "./analytics";
+
 
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
@@ -109,9 +112,9 @@ const CoursePage = () => {
 
       {Tab === "Course Overview" && <Overview />}
 
-      {Tab === "Assessments" && 
-      <div className="items-center font-bold flex justify-center text-lg">ASSESSMENTS</div>}
-      {Tab === "Analytics" && <div className="items-center font-bold flex justify-center text-lg">ANALYTICS</div>}
+      {Tab === "Assessments" && <Assessments />}
+      {Tab === "Analytics" && <Analytics />}
+
     </div>
   );
 };
