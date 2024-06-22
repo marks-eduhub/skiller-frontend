@@ -1,9 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { BsFillShareFill } from "react-icons/bs";
-import { BsBookmarkCheck } from "react-icons/bs";
-import { BiSolidDownArrow } from "react-icons/bi";
-import { RxAvatar } from "react-icons/rx";
 import Description from "./description";
 import Resources from "./resources";
 import Discussion from "./discussion";

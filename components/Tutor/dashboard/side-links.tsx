@@ -24,7 +24,7 @@ const SideLinks = () => {
   ];
 
   const subOptions = {
-    Communications: ["QA", "Messages", "Assignments", "Announcements"],
+    Communications: ["QandA", "Messages", "Assignments", "Announcements"],
   };
 
   const [openSubOptions, setOpenSubOptions] = useState<string | null>(null);
