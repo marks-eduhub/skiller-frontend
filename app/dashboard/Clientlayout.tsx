@@ -18,7 +18,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
 
   return (
     <div>
-      {!hideNavLayout && <Navbar showGreeting />}
+      {/* {!hideNavLayout && <Navbar showGreeting />} */}
       {children}
       <Footer />
     </div>

@@ -1,67 +1,102 @@
+import React from "react";
 import {
   MagnifyingGlassIcon,
-  ShadowInnerIcon,
   TriangleDownIcon,
+  ShadowInnerIcon,
 } from "@radix-ui/react-icons";
-import React from "react";
-import constants from "./constants.json";
 import Image from "next/image";
-import { CiHome } from "react-icons/ci";
 import Link from "next/link";
+import constants from "./constants.json";
+import SkillerLogo from "@/components/ui/logo";
+
 interface NavBarProps {
-  showGreeting: boolean;
-  containNav?: boolean;
+  sidebarMinimized: boolean;
+  showGreeting?: boolean;
 }
 
-const Navbar: React.FC<NavBarProps> = ({ showGreeting, containNav }) => {
+const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
   return (
     <>
-      <nav className="max-md:hidden ">
-       
-        {showGreeting && (
-          <div className="flex items-center justify-between w-full">
-            <p className="text-black font-semibold text-[20px]">
-              Good Morning Norah
-            </p>
-            <div className="flex items-center gap-10">
-              <p className="rounded-full px-6 py-2 shadow text-black bg-white">
-                Premium
+      <nav className="max-md:hidden">
+        <div className="flex items-center justify-between w-full">
+          {!sidebarMinimized ? (
+            <>
+              <p className="text-black font-semibold text-[20px]">
+                Good Morning Norah
               </p>
-              <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
-                <Image
-                  src="/Ellipse 1.svg"
-                  alt="variant"
-                  width={20}
-                  height={20}
-                  className="  ml-2"
+              <div className="flex items-center gap-10">
+                <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                  Premium
+                </p>
+                <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
+                  <Image
+                    src="/Ellipse 1.svg"
+                    alt="variant"
+                    width={20}
+                    height={20}
+                    className="ml-2"
+                  />
+                  <Link href="/dashboard/profile" className="text-white">
+                    Norah
+                  </Link>
+                  <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="w-full flex items-center justify-between mt-3 mb-6">
+              <div className="w-32 h-10 ">
+              <SkillerLogo />
+              </div>
+              <div className="sm:col-span-8 w-1/2  flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
+                <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+                <input
+                  type="text"
+                  placeholder="Search for classes or tutors"
+                  className="flex-1 outline-none bg-transparent"
                 />
-                <Link href="/dashboard/profile" className="text-white">
-                  Norah
-                </Link>
-                <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
+              </div>
+              <div className="flex items-center gap-10">
+                <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                  Premium
+                </p>
+                <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
+                  <Image
+                    src="/Ellipse 1.svg"
+                    alt="variant"
+                    width={20}
+                    height={20}
+                    className="ml-2"
+                  />
+                  <Link href="/dashboard/profile" className="text-white">
+                    Norah
+                  </Link>
+                  <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
+                </div>
               </div>
             </div>
+          )}
+        </div>
+        {!sidebarMinimized && (
+          <div className="sm:col-span-8 w-1/2 my-6 flex items-center rounded-lg shadow bg-white p-2 cursor-pointer">
+            <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+            <input
+              type="text"
+              placeholder="Search for classes or tutors"
+              className="flex-1 outline-none bg-transparent"
+            />
+            <Image
+              src="/filter-variant.svg"
+              alt="filter"
+              width={20}
+              height={20}
+            />
           </div>
         )}
-
-        <div className="sm:col-span-8 w-1/2 my-6 flex items-center rounded-lg shadow bg-white p-2 cursor-pointer">
-          <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
-          <input
-            type="text"
-            placeholder="Search for classes or tutors"
-            className="flex-1 outline-none bg-transparent"
-          />
-          <Image
-            src="/filter-variant.svg"
-            alt="filter"
-            width={20}
-            height={20}
-          />
-        </div>
       </nav>
-      <nav className="flex flex-col  sm:hidden">
-        <div className="flex flex-row justify-between ">
-          <div className="relative h-[2rem] w-[4.5rem] ">
+      <nav className="flex flex-col sm:hidden">
+        <div className="flex flex-row justify-between">
+          <div className="relative h-[2rem] w-[4.5rem]">
             <Image
               src={constants.mobileScreen.logo}
               alt={constants.mobileScreen.title}
@@ -75,7 +110,6 @@ const Navbar: React.FC<NavBarProps> = ({ showGreeting, containNav }) => {
             <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
           </div>
         </div>
-
         <div className="flex flex-row justify-between mt-10">
           <div className="flex flex-col items-center h-[4.5rem] w-[4.5rem]">
             <div className="relative h-[2rem] w-[2rem]">

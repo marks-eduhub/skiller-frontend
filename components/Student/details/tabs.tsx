@@ -15,6 +15,7 @@ const Tabs: React.FC = () => {
   return (
     <>
       <div className="font-bold flex mt-6 mb-6  overflow-x-auto justify-start gap-10">
+        <div className="flex gap-10 w-full p-4">
         <div
           className={`cursor-pointer ml-6 first-tab ${
             activeTab === "Description" ? "text-blue-600" : ""
@@ -82,8 +83,9 @@ const Tabs: React.FC = () => {
           </h2>
         </div>
       </div>
+      </div>
 
-      <div className="bg-gray-300 pb-20 ">
+      <div className=" pb-6 ">
         {activeTab === "Description" &&(
         <Description/>
 

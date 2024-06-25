@@ -3,7 +3,7 @@
     {
       "id": 1,
       "instructor": "Dragule Swaib",
-      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+      "image": "/card1.svg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
@@ -13,7 +13,7 @@
     {
       "id": 2,
       "instructor": "Dragule Swaib",
-      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+      "image": "/card2.svg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
@@ -23,7 +23,7 @@
     {
       "id": 3,
       "instructor": "Dragule Swaib",
-      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+      "image": "/card3.svg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
@@ -33,7 +33,7 @@
     {
       "id": 4,
       "instructor": "Dragule Swaib",
-      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+      "image": "/card1.svg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
@@ -43,7 +43,7 @@
     {
       "id": 5,
       "instructor": "Dragule Swaib",
-      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+      "image": "/card2.svg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",
@@ -53,7 +53,7 @@
     {
       "id": 5,
       "instructor": "Dragule Swaib",
-      "image": "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg",
+      "image": "/card3.svg",
       "rating": 4.5,
       "duration": "60 Hours",
       "description": "4 weeks ago",

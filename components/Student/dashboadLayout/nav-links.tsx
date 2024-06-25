@@ -4,10 +4,7 @@ import { AiFillHome, AiOutlineTeam, AiOutlineUser } from "react-icons/ai";
 import MinimizedNavLinks from "./minimized-sidenav";
 import Image from "next/image";
 import Link from "next/link";
-
-const blueImage = "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg";
-const redImage =
-  "https://kinsta.com/wp-content/uploads/2023/04/what-is-typescript.jpeg";
+import { usePathname } from "next/navigation";
 
 const links = [{ name: "Home", href: "/dashboard", icon: AiFillHome }];
 const communityLink = {
@@ -26,9 +23,7 @@ const subscriptionLinks: NavLinks[] = [
 ];
 
 export default function NavLinks({ minimized }: { minimized: boolean }) {
-  const [progressBlue, setProgressBlue] = useState<number>(0);
-  const [progressRed, setProgressRed] = useState<number>(0);
-
+  const pathname = usePathname();
   return (
     <>
       {minimized ? (
@@ -46,10 +41,11 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
                 key={link.name}
                 href={link.href}
                 className={clsx(
-                  "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-sky-100 hover:rounded-md hover:text-blue-600 md:flex-none md:p-2 ",
+                  "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 ",
                   {
                     "ml-2": link.name === "Home",
                     "ml-20": link.name !== "Home",
+                    "bg-gray-600 text-white rounded-lg": pathname === link.href,
                   }
                 )}
               >
@@ -62,7 +58,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
             key={communityLink.name}
             href={communityLink.href}
             className={clsx(
-              "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-sky-100 hover:rounded-md hover:text-blue-600 md:flex-none md:p-2 md:px-3",
+              "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3",
               "mb-3"
             )}
           >

@@ -3,16 +3,14 @@ import React from "react";
 const VideoCard: React.FC = () => {
   const videoFilePath = "/Video1.mp4";
   const thumbnail =
-    "https://img-c.udemycdn.com/course/750x422/986406_89c5_3.jpg";
+    "/Thumb Nail.svg";
   return (
-    <div className="relative">
-      <div className=" relative w-full ">
-        <video controls poster={thumbnail} className="w-full ">
-          <source src={videoFilePath} type="video/mp4" />
+    <div className="relative  w-full rounded-lg  ">
+        <video controls poster={thumbnail} className="w-full rounded-lg">
+          <source src={videoFilePath} type="video/mp4"/>
         </video>
-      </div>
 
-      <div className="text-left mt-4 text-white max-md:text-lg">
+      <div className="text-left mt-4 text-black max-md:text-lg">
         <h2 className="text-md font-bold">
           Typescript Fundamentals in 20 days
         </h2>

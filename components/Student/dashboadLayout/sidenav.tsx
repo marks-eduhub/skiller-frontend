@@ -1,46 +1,47 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NavLinks from "@/components/Student/dashboadLayout/nav-links";
-import SkillerLogo from "@/components/ui/logo";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { logout } from "@/lib/userSS";
 import SmallScreenSideNav from "./side";
 import { useMediaQuery } from "@mui/material";
+import SkillerLogo from "@/components/ui/logo";
 
-export default function SideNav() {
+interface SideNavProps {
+  sidebarMinimized: boolean;
+  toggleSidebar: () => void;
+}
+const SideNav = ({ sidebarMinimized, toggleSidebar }: SideNavProps) => {
+  
+
   const router = useRouter();
-  const [sidebarMinimized, setSidebarMinimized] = useState(false);
-  const toggleSidebar = () => {
-    setSidebarMinimized(!sidebarMinimized);
-  };
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
   return (
     <div
-      className={`hidden sm:flex h-full flex-col text-white sidebar ${
-        sidebarMinimized ? "minimized rounded-tr-lg rounded-br-lg" : ""
-      }`}
+      className={`${
+        sidebarMinimized ? "w-[130px] " : "w-[250px]"
+      } transition-width duration-300 ease rounded-br-[20px] rounded-tr-[20px] bg-black hidden sm:flex h-full flex-col text-white`}
     >
       {isSmallScreen ? (
         <SmallScreenSideNav />
       ) : (
-        <div className="flex items-center justify-start space-x-6 bg-black p-4 md:justify-left">
-          <div
-            className={`flex items-center space-x-6 cursor-pointer sidebar-header ${
-              sidebarMinimized ? "rounded-tr-full rounded-br-full pl-9" : ""
+        <div
+          className={`flex items-center justify-start space-x-6 cursor-pointer bg-black p-4 md:justify-left ${
+            sidebarMinimized ? "pl-9" : ""
+          }`}
+        >
+          <HamburgerMenuIcon
+            className={`w-6 h-6 text-white ${
+              sidebarMinimized ? "rotate-90 mt-2 ml-4" : ""
             }`}
             onClick={toggleSidebar}
-          >
-            <HamburgerMenuIcon
-              className={`w-6 h-6 text-white ${
-                sidebarMinimized ? "rotate-90" : ""
-              }`}
-            />
+          />
+          {!sidebarMinimized && (
             <div className="w-28 text-white md:w-30">
-              <SkillerLogo minimized={sidebarMinimized} />
+              <SkillerLogo />
             </div>
-          </div>
+          )}
         </div>
       )}
       {isSmallScreen ? null : (
@@ -55,10 +56,12 @@ export default function SideNav() {
           router.push("/auth");
         }}
       >
-        {/* <button className="flex h-[48px] w-full grow items-center justify-center bg-black p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+        <button className="flex h-[48px] w-full grow items-center justify-center bg-black p-3 text-sm font-medium hover:bg-gray-900 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
           <div className="md:block p-4">Sign Out</div>
-        </button> */}
+        </button>
       </form>
     </div>
   );
 }
+
+export default SideNav;

@@ -11,14 +11,11 @@ const TopicsCard: React.FC = () => {
     { name: "Topic 7", time: "5:00" },
     { name: "Topic 8", time: "5:00" },
     { name: "Topic 9", time: "5:00" },
-    { name: "Topic 10", time: "5:00" },
-    { name: "Topic 11", time: "5:00" },
-    { name: "Topic 12", time: "5:00" },
   ];
 
   return (
     <div>
-      <div className="topics-card h-[370px] max-md:h-[400px] shadow-md flex flex-col overflow-y-auto scroll bg-[#282828] ">
+      <div className="h-auto max-md:h-[400px] rounded-lg flex flex-col overflow-y-auto scroll bg-gray-900 ">
         <div className="sm:p-4 ">
           <h2 className="text-xl text-right font-bold text-white max-md:mr-4">
             {topics.length} Topics
@@ -38,7 +35,7 @@ const TopicsCard: React.FC = () => {
           ))}
         </ul>
       </div>
-      <div className="mt-4 font-bold text-white">
+      <div className="mt-4 font-bold text-black">
         <h2>Progress</h2>
       </div>
       <div className="mt-1 flex flex-row space-x-4 items-center">
