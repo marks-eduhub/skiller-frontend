@@ -80,6 +80,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
             </div>
           ))}
           <hr className="my-4 border-gray-600" />
+          <Link href="/dashboard/learning">
           <div className="flex  items-center space-x-2 pl-3  mb-6">
             <Image
               src="/mylearning.svg"
@@ -90,6 +91,7 @@ export default function NavLinks({ minimized }: { minimized: boolean }) {
 
             <p>My Learning</p>
           </div>
+          </Link>
           <div className="flex  items-center space-x-2 pl-3">
             <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} />
 

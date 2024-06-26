@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import ProductCard from "./courseCards";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
+
 
 interface Product {
   id: number;
@@ -20,7 +18,7 @@ interface ProductContainerProps {
 }
 
 const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
-  const containerWidth = "";
+  const containerWidth = "415px";
   const [maxCardsPerPage, setMaxCardsPerPage] = useState(3); // Maximum number of cards to display per page
   const [startIndex, setStartIndex] = useState(0);
 

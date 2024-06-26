@@ -32,7 +32,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="max-md:p-0 max-md:pr-4 ">
-      <Navbar showGreeting={false} />
+      {/* <Navbar showGreeting={false} /> */}
       <h2 className="font-bold text-[30px] mt-8 mb-10 max-md:mt-0">Profile</h2>
       <div className="flex flex-row gap-20 mt-10 mb-10 border-b w-1/4 border-gray-500 max-md:w-auto">
         <div
