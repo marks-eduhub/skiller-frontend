@@ -47,7 +47,7 @@ const CoursecategoryPage = ({ params }: { params: { slug: string } }) => {
   return (
     <>
       <div className="pl-3 pr-2 container mx-auto">
-        <Navbar showGreeting={false} />
+        {/* <Navbar showGreeting={false} /> */}
         <h1 className="mb-4 font-bold text-[20px] ml-2 mt-10">
           {categoryTitle}
         </h1>

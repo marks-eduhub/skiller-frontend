@@ -46,12 +46,12 @@ const HomePage: React.FC = () => {
               />
                
               <div
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
                 onClick={() => handleNavigation(item.category)}
               >
                 <FontAwesomeIcon
                   icon={faChevronRight}
-                  className="text-gray-600"
+                  className="text-gray-600 "
                 />
               </div>
             </div>

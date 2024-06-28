@@ -27,6 +27,9 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ course }) => {
             height={180}
             className="object-cover object-center p-1"
           />
+           <p className=" text-black absolute top-3 right-0 mr-3 bg-white px-4 py-0 rounded-t rounded-b">
+                Free
+              </p>
         </div>
       </div>
       <div className="p-2 bg-[#F3F4F3] text-black">
