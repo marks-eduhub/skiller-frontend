@@ -1,4 +1,5 @@
-import React from "react";
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from "react";
 import {
   MagnifyingGlassIcon,
   TriangleDownIcon,
@@ -15,16 +16,28 @@ interface NavBarProps {
 }
 
 const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
+  const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const hiddenRoutes = ['/dashboard/profile']; 
+  const hideGreetingAndSearch = isMounted && hiddenRoutes.includes(pathname);
+
   return (
     <>
       <nav className="max-md:hidden">
-        <div className="flex items-center justify-between w-full">
+        <div className={`flex items-center justify-between w-full ${hideGreetingAndSearch ? '' : ''}`}>
           {!sidebarMinimized ? (
             <>
-              <p className="text-black font-semibold text-[20px]">
-                Good Morning Norah
-              </p>
-              <div className="flex items-center gap-10">
+              {!hideGreetingAndSearch && (
+                <p className="text-black font-semibold text-[20px]">
+                  Good Morning Norah
+                </p>
+              )}
+              <div className="flex items-center gap-10 ml-auto">
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p>
@@ -44,18 +57,18 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
               </div>
             </>
           ) : (
-            <div className="w-full flex items-center justify-between mt-3 mb-6">
-              <div className="w-32 h-10 ">
-              <SkillerLogo />
+            <div className="w-full flex items-center justify-between mt-3 mb-10">
+              <div className="w-32 h-10 mr-10">
+                <SkillerLogo />
               </div>
-              <div className="sm:col-span-8 w-1/2  flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
-                <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
-                <input
-                  type="text"
-                  placeholder="Search for classes or tutors"
-                  className="flex-1 outline-none bg-transparent"
-                />
-              </div>
+                <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
+                  <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+                  <input
+                    type="text"
+                    placeholder="Search for classes or tutors"
+                    className="flex-1 outline-none bg-transparent"
+                  />
+                </div>
               <div className="flex items-center gap-10">
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
@@ -77,7 +90,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
             </div>
           )}
         </div>
-        {!sidebarMinimized && (
+        {!sidebarMinimized && !hideGreetingAndSearch && (
           <div className="sm:col-span-8 w-1/2 my-6 flex items-center rounded-lg shadow bg-white p-2 cursor-pointer">
             <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
             <input
