@@ -1,0 +1,60 @@
+{ "myprogress" : [
+  {
+    "id": 1,
+    "image": "/card1.svg",
+    "topic": "Music Basics",
+    "instructor": "Dragule Swaib",
+    "rating": 4.5,
+    "progress": 40
+  },
+  {
+    "id": 2,
+
+    "image": "/card2.svg",
+    "topic": "Music Basics",
+    "instructor": "Dragule Swaib",
+    "rating": 4.5,
+    "progress": 60
+  },
+  {
+    "id": 3,
+
+    "image": "/card3.svg",
+    "topic": "Music Basics",
+    "instructor": "Dragule Swaib",
+    "rating": 4.5,
+    "progress": 23
+  },
+
+  {
+    "id": 4,
+
+    "image": "/card1.svg",
+    "topic": "Music Basics",
+    "instructor": "Dragule Swaib",
+    "rating": 4.5,
+    "progress": 39
+  },
+
+  {
+    "id": 5,
+
+    "image": "/card2.svg",
+    "topic": "Music Basics",
+    "instructor": "Dragule Swaib",
+    "rating": 4.5,
+    "progress": 90
+  },
+
+  {
+    "id": 6,
+
+    "image": "/card3.svg",
+    "topic": "Music Basics",
+    "instructor": "Dragule Swaib",
+    "rating": 4.5,
+    "progress": 10
+  }
+  
+]
+}

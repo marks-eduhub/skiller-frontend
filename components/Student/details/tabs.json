@@ -7,28 +7,28 @@
       "topic": "Topics 1-5",
       "actionText": "Take Test Again",
       "score": "100%",
-      "status": "Pass"
+      "status": "Passed"
     },
     {
       "Test": "Test 2:Varibales and Types",
       "topic": "Topics 6-10",
      "actionText": "Take Test Again",
      "score": "100%",
-     "status": "Pass"
+     "status": "Failed"
     },
     {
      "Test": "Test 3:Operators and User function",
       "topic": "Topics 11-15",
      "actionText": "Take Test Again",
      "score": "100%",
-     "status": "Pass"
+     "status": "Failed"
     },
     {
       "Test": "Test 4:Control Flow",
      "topic": "Topics 16-20",
      "actionText": "Take Test Again",
      "score": "100%",
-     "status": "Pass"
+     "status": "Passed"
     }
   ],
 
@@ -39,28 +39,28 @@
      "topic": "Topics 1",
      "actionText": "Redo",
      "score": "100%",
-     "status": "Pass"
+     "status": "Passed"
     },
     {
       "Quizz": "QUIZZ 2",
       "topic": "Topics 2",
       "actionText": "Redo",
       "score": "100%",
-      "status": "Pass"
+      "status": "Passed"
     },
     {
      "Quizz": "QUIZZ 3",
      "topic": "Topics 3",
      "actionText": "Redo",
      "score": "100%",
-     "status": "Pass"
+     "status": "Failed"
     },
     {
       "Quizz": "QUIZZ 4",
       "topic": "Topics 4",
       "actionText": "Redo",
       "score": "100%",
-      "status": "Pass"
+      "status": "Passed"
     }
   ]
 }

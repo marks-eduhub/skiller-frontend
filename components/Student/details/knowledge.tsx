@@ -9,13 +9,13 @@ const Knowledge = () => {
   };
 
   return (
-    <div className="flex flex-col ">
-      <div className="flex w-full border-b-2 border-black mb-4 cursor-pointer">
+    <div className="flex flex-col rounded-lg ">
+      <div className="flex w-full  mb-4 cursor-pointer">
         <div
-          className={`bg-[#a8a8a8] justify-center items-center flex w-1/2 h-full ${
+          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full${
             selectedTab === "Tests"
-              ? "bg-black text-white transition-all duration-300 ease-in-out"
-              : ""
+              ? " text-black transition-all duration-300 ease-in-out border-b-2 border-black"
+              : "text-gray-400"
           }`}
           onClick={() => handleselectedClick("Tests")}
         >
@@ -31,10 +31,10 @@ const Knowledge = () => {
         </div>
 
         <div
-          className={`bg-[#a8a8a8] justify-center items-center flex w-1/2 h-full ${
+          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full ${
             selectedTab === "Quizzes"
-              ? "bg-black text-white transition-all duration-100 ease-in-out"
-              : ""
+              ? " text-black transition-all duration-100 ease-in-out border-b-2 border-black"
+              : "text-gray-400"
           }`}
           onClick={() => handleselectedClick("Quizzes")}
         >
@@ -52,57 +52,63 @@ const Knowledge = () => {
 
       {selectedTab === "Tests" &&
         tests.map((test, index) => (
-          <div key={index} className="w-full p-6">
+          <div key={index} className="w-full py-6 ">
             <div className="flex rounded-lg">
-              <div className="bg-white w-1/3">
+              <div className="bg-gray-200 w-1/3">
                 <h1 className="font-bold text-[15px] p-6">{test.Test}</h1>
               </div>
-              <div className="bg-black w-1/4">
+              <div className="bg-gray-700 w-1/4">
                 <h1 className="text-white font-bold text-[15px] p-6">
                   {test.topic}
                 </h1>
               </div>
-              <div className="bg-white w-1/4">
+              <div className="bg-gray-200 w-1/4">
                 <h1 className="font-bold text-[15px] p-6">{test.actionText}</h1>
               </div>
-              <div className="bg-black w-1/6">
+              <div className="bg-gray-700 w-1/6">
                 <h1 className="text-white font-bold text-[15px] p-6">
                   {test.score}
                 </h1>
               </div>
-              <div className="bg-white w-1/6 flex ">
+              <div className="bg-gray-200 w-1/6 flex flex-col items-center justify-center py-3">
                 <h1 className="font-bold text-[15px] p-6">{test.status}</h1>
-                <Image src="/tick.svg" alt="tick" width={20} height={20} />
+                {test.status === "Passed" ? (
+                  <Image src="/tick.svg" alt="tick" width={20} height={20} />
+                ) : (
+                  <Image src="/fail.svg" alt="fail" width={20} height={20} />
+                )}
               </div>
             </div>
           </div>
         ))}
 
       {selectedTab === "Quizzes" &&
-        quizzes.map((quizzes, index) => (
-          <div key={index} className="w-full p-6 rounded-lg">
+        quizzes.map((quiz, index) => (
+          <div key={index} className="w-full py-6 rounded-lg">
             <div className="flex rounded-lg">
-              <div className="bg-white w-1/3">
-                <h1 className="font-bold text-[15px] p-6">{quizzes.Quizz}</h1>
+              <div className="bg-gray-200 w-1/3">
+                <h1 className="font-bold text-[15px] p-6">{quiz.Quizz}</h1>
               </div>
-              <div className="bg-black w-1/4">
+              <div className="bg-gray-700 w-1/4">
                 <h1 className="text-white font-bold text-[15px] p-6">
-                  {quizzes.topic}
+                  {quiz.topic}
                 </h1>
               </div>
-              <div className="bg-white w-1/4">
-                <h1 className="font-bold text-[15px] p-6">
-                  {quizzes.actionText}
-                </h1>
+              <div className="bg-gray-200 w-1/4">
+                <h1 className="font-bold text-[15px] p-6">{quiz.actionText}</h1>
               </div>
-              <div className="bg-black w-1/6">
+              <div className="bg-gray-700 w-1/6">
                 <h1 className="text-white font-bold text-[15px] p-6">
-                  {quizzes.score}
+                  {quiz.score}
                 </h1>
               </div>
-              <div className="bg-white w-1/6 flex ">
-                <h1 className="font-bold text-[15px] p-6">{quizzes.status}</h1>
-                <Image src="/tick.svg" alt="tick" width={20} height={20} />
+              <div className="bg-gray-200 w-1/6 flex flex-col items-center justify-center py-3">
+                <h1 className="font-bold text-[15px] p-6">{quiz.status}</h1>
+                {quiz.status === "Passed" ? (
+                  <Image src="/tick.svg" alt="tick" width={20} height={20} />
+                ) : (
+                  <Image src="/fail.svg" alt="fail" width={20} height={20} />
+                )}
               </div>
             </div>
           </div>

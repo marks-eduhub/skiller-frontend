@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { PersonIcon, ClockIcon, StarFilledIcon } from "@radix-ui/react-icons"
-import { CiHeart } from "react-icons/ci";
-
+import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
 
 interface Product {
   id: number;
@@ -18,32 +16,41 @@ interface Product {
 interface ProductCardProps {
   course: Product;
   containerWidth: string;
+  sidebarMinimized?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   course,
   containerWidth,
+  sidebarMinimized,
 }) => {
   return (
     <>
       <div
-        className=" mx-auto flex-none gap-4  overflow-hidden  flex-shrink-0 mr-4 max-md:pb-10 "
+        className={`mx-auto grow gap-4  overflow-hidden flex-shrink-0 mr-4 max-md:pb-10 ${
+          sidebarMinimized ? "w-[390px]" : "w-[370px]"
+        } `}
       >
         <div className="border border-gray-400">
-          <div className="rounded-lg flex relative h-[180px] w-[370px] ">
+          <div className="rounded-lg flex relative overflow-hidden h-[180px]">
             <Image
               src={course.image}
               alt={course.image}
-              fill
+              width={sidebarMinimized ? 390 : 370}
+              height={180}
               className="object-cover object-center p-1"
             />
             <div className="flex items-center absolute justify-between p-2 w-full">
+              <Image
+                src="/like button.svg"
+                alt="like button"
+                width={25}
+                height={25}
+              />
 
-            <Image src="/like button.svg" alt="like button" width={25} height={25} />
-
-            <p className=" text-black bg-white px-4 py-0 rounded-t rounded-b">
-              Free
-            </p>
+              <p className=" text-black bg-white px-4 py-0 rounded-t rounded-b">
+                Free
+              </p>
             </div>
           </div>
         </div>
@@ -53,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           <div className="flex items-center mb-4">
-            <p >{course.instructor}</p>
+            <p>{course.instructor}</p>
           </div>
 
           <div className="flex justify-between mt-3 gap-2 text-[0.8rem]">
@@ -68,11 +75,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         </div>
       </div>
-
-     
     </>
   );
 };
 
 export default ProductCard;
-

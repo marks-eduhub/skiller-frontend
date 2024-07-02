@@ -9,17 +9,12 @@ interface MinimizedNavLinksProps {
   links: NavLinks[];
   communityLink: NavLinks;
   subscriptionLinks: NavLinks[];
-
-  
 }
-
 
 export default function MinimizedNavLinks({
   links,
   communityLink,
   subscriptionLinks,
-
- 
 }: MinimizedNavLinksProps) {
   return (
     <>
@@ -55,9 +50,20 @@ export default function MinimizedNavLinks({
       <div className="flex items-center justify-center" title="Subscriptions">
         <SubscriptionsIcon className="w-10 h-7 mb-1 text-gray-600" />
       </div>
+      <div className="flex  items-center  ml-14 mt-9 mb-10">
+            <Image
+              src="/mylearning.svg"
+              alt="learning"
+              width={20}
+              height={20}
+              title="My Learning"
+            />
 
-     
-        
+          </div>
+          <div className="flex  items-center ml-14">
+            <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} title="Wishlist" />
+
+          </div>
     </>
   );
 }
