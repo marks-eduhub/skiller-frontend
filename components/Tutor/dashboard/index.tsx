@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import TutorNav from "./tutor-nav";
+import Link from "next/link"
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const options = [
@@ -23,8 +24,10 @@ const HomePage = () => {
         <TutorNav />
         <div className="flex flex-col sm:flex-row justify-between w-full items-center sm:mt-6 mt-10 space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="bg-black rounded-lg items-center p-4 sm:w-1/5 w-full flex gap-4">
+          <Link href="/tutor/dashboard/courseUpload" className="flex gap-2 items-center">
             <Image src="/plus.svg" alt="plus" width={30} height={30} />
             <h1 className="text-white">New Course</h1>
+            </Link>
           </div>
 
           <div className="bg-[#E9E9E9] rounded-lg items-center p-4 sm:w-1/2 w-full flex gap-8">
