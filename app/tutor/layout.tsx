@@ -1,6 +1,5 @@
-import TutorNav from "@/components/Tutor/dashboard/tutor-nav";
-import Navbar from "../../components/Student/dashboadLayout/NavBar";
 import SideBar from "@/components/Tutor/dashboard/sidebar";
+
 
 export default async function Layout({
   children,

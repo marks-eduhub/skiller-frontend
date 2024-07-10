@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import TutorNav from "./tutor-nav";
 import Link from "next/link"
+import TutorNav from "./tutor-nav";
 const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const options = [

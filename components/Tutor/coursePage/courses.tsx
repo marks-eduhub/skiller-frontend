@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import Curriculum from "./curriculum";
 import Overview from "./overview";
 import Image from "next/image";
-import TutorNav from "./tutor-nav";
 import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
+import TutorNav from "../dashboard/tutor-nav";
 
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
