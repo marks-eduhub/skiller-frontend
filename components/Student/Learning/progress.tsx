@@ -15,7 +15,7 @@ myprogress: Progress[]
 }
 const Progress: React.FC<ProgressProps> = ({myprogress}) => {
   return (
-    <div className="container mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 pl-0 py-6 gap-6 ">
       {myprogress.map((course) => (
         <ProgressCard
           key={course.id}

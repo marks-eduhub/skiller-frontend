@@ -1,5 +1,3 @@
-import Footer from "@/components/Student/footer";
-import ClientLayout from "./Clientlayout";
 import ClientWrapper from "./ClientWrapper";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
@@ -11,8 +9,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <ClientWrapper>
-      <ClientLayout>{children}</ClientLayout>
-      {/* <Footer /> */}
+     {children}
     </ClientWrapper>
   );
 }

@@ -6,7 +6,8 @@ const VideoCard: React.FC = () => {
     "/Thumb Nail.svg";
   return (
     <div className="relative  w-full rounded-lg  ">
-        <video controls poster={thumbnail} className="w-full rounded-lg">
+        {/* <video controls poster={thumbnail} className="w-full rounded-lg"> */}
+        <video controls className="w-full rounded-lg">
           <source src={videoFilePath} type="video/mp4"/>
         </video>
 

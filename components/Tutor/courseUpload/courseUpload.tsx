@@ -6,20 +6,24 @@ import Topic from "./topic";
 import TutorNav from "../dashboard/tutor-nav";
 
 const CourseUpload = () => {
-  const topics = [
-    { name: "Topic 1" },
-    { name: "Topic 2" },
-    { name: "Topic 3" },
-   
-  ];
+  // const [topics, setTopics] = useState([]);
+  const [topics, setTopics] = useState<string[]>([]);
+
+  const [showForm, setShowForm] = useState(false);
+
+  const addTopic = () => {
+    setShowForm(true);
+  };
+
+  const saveTopic = (newTopic: string) => {
+    setTopics([...topics, newTopic]);
+    setShowForm(false);
+  };
 
   return (
     <div className="p-4">
-
       <div className="w-full sm:mt-2 flex items-center justify-between">
-        <h1 className="font-semibold text-[20px] sm:flex hidden">
-          Upload Course
-        </h1>
+        <h1 className="font-semibold text-[20px] sm:flex hidden">Upload Course</h1>
         <div className="justify-end">
           <TutorNav />
         </div>
@@ -32,11 +36,10 @@ const CourseUpload = () => {
           <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
         </div>
       </div>
+
       <div className="flex flex-col sm:flex-row sm:justify-between my-5 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex-1">
-          <label htmlFor="name" className="block font-semibold mb-1">
-            Name:
-          </label>
+          <label htmlFor="name" className="block font-semibold mb-1">Name:</label>
           <input
             type="text"
             id="name"
@@ -46,9 +49,7 @@ const CourseUpload = () => {
           />
         </div>
         <div className="flex-1">
-          <label htmlFor="description" className="block font-semibold mb-1">
-            Description:
-          </label>
+          <label htmlFor="description" className="block font-semibold mb-1">Description:</label>
           <input
             type="text"
             id="description"
@@ -58,6 +59,7 @@ const CourseUpload = () => {
           />
         </div>
       </div>
+
       <div className="flex flex-col">
         <h1 className="font-semibold">Topics</h1>
         <div className="flex gap-2 items-center">
@@ -65,11 +67,22 @@ const CourseUpload = () => {
           <p>Tip: courses are made of topics</p>
         </div>
       </div>
-      {topics.map((topic, index) => (
-        <Topic key={index} name={topic.name} />
-      ))}
+
+      {topics.length === 0 ? (
+        <p>No topics. Create one.</p>
+      ) : (
+        topics.map((topic, index) => (
+          <Topic key={index} name={`Topic ${index + 1}`} onSave={() => {}} />
+        ))
+      )}
+
+      {showForm && <Topic name={`Topic ${topics.length + 1}`} onSave={saveTopic} />}
+
       <div className="flex mt-7 mb-5 justify-end">
-        <div className="flex gap-2 bg-black w-[180px] h-[40px] px-9 py-7 items-center justify-center rounded-lg">
+        <div
+          onClick={addTopic}
+          className="flex gap-2 bg-black w-[180px] h-[40px] px-9 py-7 items-center justify-center rounded-lg cursor-pointer"
+        >
           <Image src="/plus.svg" alt="add topic" width={20} height={20} />
           <p className="text-white">Add topic</p>
         </div>

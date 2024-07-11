@@ -17,14 +17,13 @@ interface WishlistCardProps {
 
 const WishlistCard: React.FC<WishlistCardProps> = ({ course }) => {
   return (
-    <div className="mx-auto grow gap-4  overflow-hidden flex-shrink-0 mr-4 max-md:pb-10 ">
+    <div className="">
       <div className="border border-gray-400">
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
             src={course.image}
             alt={"image"}
-            width={370}
-            height={180}
+            fill
             className="object-cover object-center p-1"
           />
            <p className=" text-black absolute top-3 right-0 mr-3 bg-white px-4 py-0 rounded-t rounded-b">

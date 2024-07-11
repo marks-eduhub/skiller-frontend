@@ -9,12 +9,15 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface TopicProps {
   name: string;
+  onSave: (newTopic: any) => void;
 }
 
-const Topic: React.FC<TopicProps> = ({ name }) => {
+const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
   const [overview, setOverview] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const [title, setTitle] = useState("");
+  const [goal, setGoal] = useState("");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,7 +38,16 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
     setExpanded(!expanded);
   };
 
-  
+  const handleSave = () => {
+    const newTopic = {
+      title,
+      goal,
+      overview,
+      image,
+    };
+    onSave(newTopic);
+    setExpanded(false);
+  };
 
   return (
     <div className="flex flex-col mt-5 mb-5 cursor-pointer">
@@ -66,6 +78,8 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
                 type="text"
                 id="title"
                 placeholder="Get Started"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="w-full h-[60px] mt-1 mb-6 px-3 py-2 border border-black rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -77,6 +91,8 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
                 type="text"
                 id="topic-goal"
                 placeholder="understand baking basics"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
                 className="rounded-lg px-3 py-2 border border-black h-[60px] focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -119,6 +135,8 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
               <textarea
                 id="overview"
                 placeholder="In this topic, our focus will be..."
+                value={overview}
+                onChange={(e) => setOverview(e.target.value)}
                 className="px-3 py-2 border border-black h-[140px] rounded-lg focus:outline-none focus:border-blue-500"
                 rows={4}
               />
@@ -154,6 +172,7 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
               />
             </div>
           </div>
+          <button onClick={handleSave} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Save</button>
         </div>
       )}
     </div>

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import NavLinks from "@/components/Student/dashboadLayout/nav-links";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { logout } from "@/lib/userSS";
-import SmallScreenSideNav from "./side";
+import SmallScreenSideNav from "./smallscreens";
 import { useMediaQuery } from "@mui/material";
 import SkillerLogo from "@/components/ui/logo";
 
