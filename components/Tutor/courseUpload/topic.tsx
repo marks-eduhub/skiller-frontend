@@ -9,15 +9,14 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface TopicProps {
   name: string;
-  onSave: (newTopic: any) => void;
+  onSave: (overview: string) => void;
 }
 
 const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
   const [overview, setOverview] = useState("");
+  const [richText, setRichText] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
-  const [title, setTitle] = useState("");
-  const [goal, setGoal] = useState("");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -30,23 +29,20 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
     }
   };
 
-  const handleOverviewChange = (value: string) => {
-    setOverview(value);
+  const handleOverviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setOverview(e.target.value);
+  };
+
+  const handleRichTextChange = (value: string) => {
+    setRichText(value);
   };
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
 
-  const handleSave = () => {
-    const newTopic = {
-      title,
-      goal,
-      overview,
-      image,
-    };
-    onSave(newTopic);
-    setExpanded(false);
+  const saveTopic = () => {
+    onSave(overview); 
   };
 
   return (
@@ -78,8 +74,6 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
                 type="text"
                 id="title"
                 placeholder="Get Started"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
                 className="w-full h-[60px] mt-1 mb-6 px-3 py-2 border border-black rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -91,8 +85,6 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
                 type="text"
                 id="topic-goal"
                 placeholder="understand baking basics"
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
                 className="rounded-lg px-3 py-2 border border-black h-[60px] focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -106,11 +98,11 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
                   onChange={handleImageChange}
                 >
                   <GrCloudUpload className="text-blue-800 w-10 h-10" />
-                   {image && (
-                  <div className="mt-4">
-                    <Image src={image} alt="Selected" width={100} height={100} />
-                  </div>
-                )}
+                  {image && (
+                    <div className="mt-4">
+                      <Image src={image} alt="Selected" width={100} height={100} />
+                    </div>
+                  )}
                   <span className="text-gray-500">
                     Drag & drop files or
                     <span className="text-blue-500 ml-1 cursor-pointer">
@@ -123,9 +115,7 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
                       onChange={handleImageChange}
                     />
                   </span>
-                 
                 </div>
-                
               </div>
             </div>
             <div className="flex flex-col">
@@ -134,9 +124,9 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
               </label>
               <textarea
                 id="overview"
-                placeholder="In this topic, our focus will be..."
                 value={overview}
-                onChange={(e) => setOverview(e.target.value)}
+                onChange={handleOverviewChange}
+                placeholder="In this topic, our focus will be..."
                 className="px-3 py-2 border border-black h-[140px] rounded-lg focus:outline-none focus:border-blue-500"
                 rows={4}
               />
@@ -150,8 +140,8 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
             <h1 className="font-semibold mt-3">Content</h1>
             <div className="w-full bg-white rounded-lg mt-3">
               <ReactQuill
-                value={overview}
-                onChange={handleOverviewChange}
+                value={richText}
+                onChange={handleRichTextChange}
                 className="bg-white"
                 theme="snow"
                 modules={{
@@ -172,7 +162,9 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
               />
             </div>
           </div>
-          <button onClick={handleSave} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Save</button>
+          <button onClick={saveTopic} className="mt-4 bg-[#483EA8]  text-white px-4 py-2 rounded">
+            Save Topic
+          </button>
         </div>
       )}
     </div>

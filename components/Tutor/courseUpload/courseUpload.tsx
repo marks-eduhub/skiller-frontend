@@ -6,12 +6,12 @@ import Topic from "./topic";
 import TutorNav from "../dashboard/tutor-nav";
 
 const CourseUpload = () => {
-  // const [topics, setTopics] = useState([]);
   const [topics, setTopics] = useState<string[]>([]);
-
   const [showForm, setShowForm] = useState(false);
+  const [isAdding, setIsAdding] = useState(false); // Track if a new topic is being added
 
   const addTopic = () => {
+    setIsAdding(true);
     setShowForm(true);
   };
 
@@ -68,15 +68,20 @@ const CourseUpload = () => {
         </div>
       </div>
 
-      {topics.length === 0 ? (
-        <p>No topics. Create one.</p>
-      ) : (
-        topics.map((topic, index) => (
-          <Topic key={index} name={`Topic ${index + 1}`} onSave={() => {}} />
-        ))
+      {topics.length === 0 && !isAdding && (
+        <p className="font-bold items-center justify-center flex text-[20px] mt-10">No topics! Create one.</p>
       )}
 
-      {showForm && <Topic name={`Topic ${topics.length + 1}`} onSave={saveTopic} />}
+      {topics.map((topic, index) => (
+        <Topic key={index} name={`Topic ${index + 1}`} onSave={() => {}} />
+      ))}
+
+      {showForm && (
+        <Topic
+          name={`Topic ${topics.length + 1}`}
+          onSave={saveTopic}
+        />
+      )}
 
       <div className="flex mt-7 mb-5 justify-end">
         <div
