@@ -51,25 +51,25 @@ const Enroll = ({ course }: { course: string }) => {
       </div>
       <div className="flex w-full justify-around items-center mt-10 ">
         <div
-          className={`cursor-pointer flex w-1/4 h-full ${
+          className={`cursor-pointer flex sm:w-1/4 h-full ${
             tab === "Course Overview"
               ? "text-black transition-all duration-300 ease-in-out border-b-2 border-black"
               : "text-gray-500"
           } `}
           onClick={() => handleTab("Course Overview")}
         >
-          <h1 className="font-semibold text-[20px] ml-20">Course Overview</h1>
+          <h1 className="font-semibold sm:text-[20px] text-[17px] sm:ml-20">Course Overview</h1>
         </div>
 
         <div
-          className={`cursor-pointer items-center justify-center flex w-1/4 ${
+          className={`cursor-pointer items-center justify-center flex sm:w-1/4 ${
             tab === "Course Reviews"
               ? "text-black transition-all duration-300 ease-in-out border-b-2 border-black"
               : "text-gray-500"
           } `}
           onClick={() => handleTab("Course Reviews")}
         >
-          <h1 className="font-semibold text-[20px]">Course Reviews</h1>
+          <h1 className="font-semibold sm:text-[20px] text-[17px]">Course Reviews</h1>
         </div>
       </div>
       {tab === "Course Overview" ? <CourseOverview /> : <CourseReview reviews={reviews.Reviews}  />}

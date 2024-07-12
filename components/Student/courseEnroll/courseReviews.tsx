@@ -18,7 +18,7 @@ const CourseReview: React.FC<CourseReviewProps> = ({ reviews }) => {
   }
   return (
     <div className="w-full">
-      <h1 className="mt-3 font-bold text-xl">
+      <h1 className="sm:mt-3 mt-5 font-bold text-xl">
         No. of reviews: {reviews.length}
       </h1>
       <Image src="/reviews1.svg" alt="reviews" width={120} height={120} />
