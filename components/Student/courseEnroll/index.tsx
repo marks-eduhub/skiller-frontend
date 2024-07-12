@@ -6,7 +6,7 @@ import CourseReview from "./courseReviews";
 import similarCoursesData from "../details/data.json";
 import reviews from "./data.json";
 
-const Enroll = ({ course }: { course: string }) => {
+const Enroll = () => {
   const [tab, setTab] = useState("Course Overview");
   const handleTab = (tabName: string) => {
     setTab(tabName);
