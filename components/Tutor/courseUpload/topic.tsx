@@ -9,40 +9,14 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface TopicProps {
   name: string;
-  onSave: (overview: string) => void;
 }
 
-const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
-  const [overview, setOverview] = useState("");
-  const [richText, setRichText] = useState("");
+const Topic: React.FC<TopicProps> = ({ name }) => {
   const [image, setImage] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleOverviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setOverview(e.target.value);
-  };
-
-  const handleRichTextChange = (value: string) => {
-    setRichText(value);
-  };
-
   const toggleExpanded = () => {
     setExpanded(!expanded);
-  };
-
-  const saveTopic = () => {
-    onSave(overview); 
   };
 
   return (
@@ -93,14 +67,16 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
                 Course Video
               </label>
               <div className="w-full px-3 py-6 bg-white h-[140px] rounded-md text-center cursor-pointer hover:border-blue-500">
-                <div
-                  className="flex flex-col items-center justify-center border border-dashed border-black p-3"
-                  onChange={handleImageChange}
-                >
+                <div className="flex flex-col items-center justify-center border border-dashed border-black p-3">
                   <GrCloudUpload className="text-blue-800 w-10 h-10" />
                   {image && (
                     <div className="mt-4">
-                      <Image src={image} alt="Selected" width={100} height={100} />
+                      <Image
+                        src={image}
+                        alt="Selected"
+                        width={100}
+                        height={100}
+                      />
                     </div>
                   )}
                   <span className="text-gray-500">
@@ -108,12 +84,7 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
                     <span className="text-blue-500 ml-1 cursor-pointer">
                       Browse
                     </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageChange}
-                    />
+                    <input type="file" accept="image/*" className="hidden" />
                   </span>
                 </div>
               </div>
@@ -124,8 +95,6 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
               </label>
               <textarea
                 id="overview"
-                value={overview}
-                onChange={handleOverviewChange}
                 placeholder="In this topic, our focus will be..."
                 className="px-3 py-2 border border-black h-[140px] rounded-lg focus:outline-none focus:border-blue-500"
                 rows={4}
@@ -140,8 +109,7 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
             <h1 className="font-semibold mt-3">Content</h1>
             <div className="w-full bg-white rounded-lg mt-3">
               <ReactQuill
-                value={richText}
-                onChange={handleRichTextChange}
+                placeholder="Write content here"
                 className="bg-white"
                 theme="snow"
                 modules={{
@@ -162,9 +130,6 @@ const Topic: React.FC<TopicProps> = ({ name, onSave }) => {
               />
             </div>
           </div>
-          <button onClick={saveTopic} className="mt-4 bg-[#483EA8]  text-white px-4 py-2 rounded">
-            Save Topic
-          </button>
         </div>
       )}
     </div>

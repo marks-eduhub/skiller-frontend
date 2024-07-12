@@ -8,16 +8,12 @@ import TutorNav from "../dashboard/tutor-nav";
 const CourseUpload = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [isAdding, setIsAdding] = useState(false); // Track if a new topic is being added
+  const [isAdding, setIsAdding] = useState(false);
 
   const addTopic = () => {
     setIsAdding(true);
     setShowForm(true);
-  };
-
-  const saveTopic = (newTopic: string) => {
-    setTopics([...topics, newTopic]);
-    setShowForm(false);
+    setTopics([...topics, `Topic ${topics.length + 1}`]);
   };
 
   return (
@@ -73,15 +69,8 @@ const CourseUpload = () => {
       )}
 
       {topics.map((topic, index) => (
-        <Topic key={index} name={`Topic ${index + 1}`} onSave={() => {}} />
+        <Topic key={index} name={topic} />
       ))}
-
-      {showForm && (
-        <Topic
-          name={`Topic ${topics.length + 1}`}
-          onSave={saveTopic}
-        />
-      )}
 
       <div className="flex mt-7 mb-5 justify-end">
         <div
