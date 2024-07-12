@@ -12,7 +12,6 @@ interface TopicProps {
 }
 
 const Topic: React.FC<TopicProps> = ({ name }) => {
-  const [image, setImage] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -69,16 +68,7 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
               <div className="w-full px-3 py-6 bg-white h-[140px] rounded-md text-center cursor-pointer hover:border-blue-500">
                 <div className="flex flex-col items-center justify-center border border-dashed border-black p-3">
                   <GrCloudUpload className="text-blue-800 w-10 h-10" />
-                  {image && (
-                    <div className="mt-4">
-                      <Image
-                        src={image}
-                        alt="Selected"
-                        width={100}
-                        height={100}
-                      />
-                    </div>
-                  )}
+
                   <span className="text-gray-500">
                     Drag & drop files or
                     <span className="text-blue-500 ml-1 cursor-pointer">
