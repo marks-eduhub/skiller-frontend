@@ -1,45 +1,45 @@
 {
     "Reviews": [
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
+            "name": "Jane Doe ",
+            "image": "/Ellipse 445.webp",
             "rating": 4.5,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         },
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
-            "rating": 4.5,
+            "name": "Savannah Nyugen",
+            "image": "/savannah.webp",
+            "rating": 3.5,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         },
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
-            "rating": 4.5,
+            "name": "Leslie Alexander",
+            "image": "/Ellipse 21.webp",
+            "rating": 2.0,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         },
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
-            "rating": 4.5,
+            "name": "Mark Ellis",
+            "image": "/mark.webp",
+            "rating": 1.5,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         },
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
-            "rating": 4.5,
+            "name": "Cameron Williamson",
+            "image": "/cameron.webp",
+            "rating": 5.0,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         },
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
-            "rating": 4.5,
+            "name": "Brooklyn Simmons",
+            "image": "/brooklyn.webp",
+            "rating": 5.0,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         },
         {
-            "name": "Micheal Kizito",
-            "image": "/swaib.svg",
-            "rating": 4.5,
+            "name": "Jerome Bell",
+            "image": "/jerome.webp",
+            "rating": 3.0,
             "comment": "Lorem ipsum dolor sit amet consectetur. Nascetur et nunc interdum malesuada interdum leo blandit in. Dolor sed donec viverra ultrices senectus vulputate. enenatis sagittis viverra. Nunc eu lorem magna hendrerit vitae imperdiet diam."
         }
 

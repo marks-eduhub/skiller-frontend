@@ -13,15 +13,29 @@ interface CourseReviewProps {
 }
 
 const CourseReview: React.FC<CourseReviewProps> = ({ reviews }) => {
+  if (reviews.length === 0) {
+    return <div>No reviews available.</div>;
+  }
   return (
     <div className="w-full">
-      <h1 className="mt-3 font-bold text-xl">No. of reviews: {reviews.length}</h1>
+      <h1 className="mt-3 font-bold text-xl">
+        No. of reviews: {reviews.length}
+      </h1>
       <Image src="/reviews1.svg" alt="reviews" width={120} height={120} />
       <div className="mt-10 space-y-6">
         {reviews.map((review) => (
-          <div key={review.name} className="w-full h-auto border border-gray-300 rounded-lg p-4">
+          <div
+            key={review.name}
+            className="w-full h-auto border border-gray-300 rounded-lg p-4"
+          >
             <div className="flex items-center mb-2">
-              <Image src={review.image} alt={review.name} width={40} height={40} className="rounded-full" />
+              <Image
+                src={review.image}
+                alt={review.name}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
               <div className="ml-3">
                 <h2 className="font-semibold">{review.name}</h2>
                 <div className="flex items-center">
@@ -29,7 +43,11 @@ const CourseReview: React.FC<CourseReviewProps> = ({ reviews }) => {
                     <svg
                       key={index}
                       aria-hidden="true"
-                      className={`w-5 h-5 ${index < Math.floor(review.rating) ? 'text-yellow-300' : 'text-gray-300'}`}
+                      className={`w-5 h-5 ${
+                        index < Math.floor(review.rating)
+                          ? "text-yellow-300"
+                          : "text-gray-300"
+                      }`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                       xmlns="http://www.w3.org/2000/svg"
