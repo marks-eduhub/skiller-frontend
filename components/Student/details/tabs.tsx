@@ -4,10 +4,11 @@ import Description from "./description";
 import Resources from "./resources";
 import Discussion from "./discussion";
 import Knowledge from "./knowledge";
+import Transcript from "./transcript";
 
 const Tabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Description");
-  
+
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
@@ -16,90 +17,64 @@ const Tabs: React.FC = () => {
     <>
       <div className="font-bold flex mt-6 mb-6  overflow-x-auto justify-start gap-10">
         <div className="flex gap-10 w-full p-4">
-        <div
-          className={`cursor-pointer ml-6 first-tab ${
-            activeTab === "Description" ? "text-blue-600" : ""
-          }`}
-          onClick={() => handleTabClick("Description")}
-        >
-          <h2 className={`${activeTab === "Description" ? "active-tab" : ""}`}>
-            Description
-          </h2>
-        </div>
-        <div
-          className={`cursor-pointer ${
-            activeTab === "Reviews" ? "text-blue-600" : ""
-          }`}
-          onClick={() => handleTabClick("Reviews")}
-        >
-          <h2 className={`${activeTab === "Reviews" ? "active-tab" : ""}`}>
-            Reviews
-          </h2>
-        </div>
-        <div
-          className={`cursor-pointer ${
-            activeTab === "Discussions" ? "text-blue-600" : ""
-          }`}
-          onClick={() => handleTabClick("Discussions")}
-        >
-          <h2 className={`${activeTab === "Discussions" ? "active-tab" : ""}`}>
-            Discussions
-          </h2>
-        </div>
-        <div
-          className={`cursor-pointer ${
-            activeTab === "Resources" ? "text-blue-600" : ""
-          }`}
-          onClick={() => handleTabClick("Resources")}
-        >
-          <h2 className={`${activeTab === "Resources" ? "active-tab" : ""}`}>
-            Resources
-          </h2>
-        </div>
-        <div
-          className={`cursor-pointer ${
-            activeTab === "Tests and Assignment" ? "text-blue-600" : ""
-          }`}
-          onClick={() => handleTabClick("Tests and Assignment")}
-        >
-          <h2
-            className={`${
+          <div
+            className={`cursor-pointer  first-tab ${
+              activeTab === "Description" ? "active-tab" : ""
+            }`}
+            onClick={() => handleTabClick("Description")}
+          >
+            <h2>Description</h2>
+          </div>
+          <div
+            className={`cursor-pointer ${
+              activeTab === "Transcript" ? "active-tab" : ""
+            }`}
+            onClick={() => handleTabClick("Transcript")}
+          >
+            <h2>Transcript</h2>
+          </div>
+          <div
+            className={`cursor-pointer ${
+              activeTab === "Discussions" ? "active-tab" : ""
+            }`}
+            onClick={() => handleTabClick("Discussions")}
+          >
+            <h2>Discussions</h2>
+          </div>
+          <div
+            className={`cursor-pointer ${
+              activeTab === "Resources" ? "active-tab" : ""
+            }`}
+            onClick={() => handleTabClick("Resources")}
+          >
+            <h2>Resources</h2>
+          </div>
+
+          <div
+            className={`cursor-pointer ${
               activeTab === "Tests and Assignment" ? "active-tab" : ""
             }`}
+            onClick={() => handleTabClick("Tests and Assignment")}
           >
-            Tests and Assignment
-          </h2>
-        </div>
-        <div
-          className={`cursor-pointer ${
-            activeTab === "Knowledge Check" ? "text-blue-600" : ""
-          }`}
-          onClick={() => handleTabClick("Knowledge Check")}
-        >
-          <h2
-            className={`${activeTab === "Knowledge Check" ? "active-tab" : ""}`}
+            <h2>Tests and Assignment</h2>
+          </div>
+          <div
+            className={`cursor-pointer ${
+              activeTab === "Knowledge Check" ? "active-tab" : ""
+            }`}
+            onClick={() => handleTabClick("Knowledge Check")}
           >
-            Knowledge Check
-          </h2>
+            <h2>Knowledge Check</h2>
+          </div>
         </div>
-      </div>
       </div>
 
       <div className=" pb-6 ">
-        {activeTab === "Description" &&(
-        <Description/>
-
-        )}
-        {activeTab === "Resources" && (
-        <Resources/>
-
-        )}
-        {activeTab === "Discussions" && (
-        <Discussion/>  
-        )}
-        {activeTab === "Knowledge Check" && (
-         <Knowledge/>
-        )}
+        {activeTab === "Description" && <Description />}
+        {activeTab === "Resources" && <Resources />}
+        {activeTab === "Discussions" && <Discussion />}
+        {activeTab === "Knowledge Check" && <Knowledge />}
+        {activeTab === "Transcript" && <Transcript />}
       </div>
     </>
   );
