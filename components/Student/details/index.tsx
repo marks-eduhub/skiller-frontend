@@ -6,7 +6,6 @@ import SimilarCourses from "./similar";
 import similarCoursesData from "./data.json";
 import TopicsCard from "./topics";
 import Tabs from "./tabs";
-import Navbar from "../dashboadLayout/NavBar";
 
 const DetailsPage: React.FC = () => {
   useEffect(() => {

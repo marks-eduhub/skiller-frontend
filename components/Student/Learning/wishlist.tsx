@@ -16,7 +16,7 @@ interface Wishlist{
 
 const Wishlist: React.FC<WishlistProps> = ({ courses }) => {
   return (
-    <div className="container mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="py-6 grid grid-cols-1 md:grid-cols-3 gap-6">
       {courses.map((course) => (
         <WishlistCard
           key={course.id}

@@ -3,11 +3,10 @@ import React, { useState } from "react";
 import Curriculum from "./curriculum";
 import Overview from "./overview";
 import Image from "next/image";
-import TutorNav from "./tutor-nav";
 import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
-
+import TutorNav from "../dashboard/tutor-nav";
 
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
@@ -16,9 +15,8 @@ const CoursePage = () => {
   };
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
-      
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
-        <div className="flex gap-2 items-center sm:mr-[450px]">
+        <div className="flex gap-2 items-center ">
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
@@ -38,7 +36,9 @@ const CoursePage = () => {
             <h1>Learners</h1>
           </div>
         </div>
-        <TutorNav />
+        <div className="justify-end">
+          <TutorNav />
+        </div>
       </div>
 
       <div
@@ -114,7 +114,6 @@ const CoursePage = () => {
 
       {Tab === "Assessments" && <Assessments />}
       {Tab === "Analytics" && <Analytics />}
-
     </div>
   );
 };

@@ -12,7 +12,7 @@ const TutorNav = () => {
     <div className="sm:flex hidden justify-end">
         <div className="flex flex-row gap-4  items-center">
           <div className="flex flex-row gap-4  max-md:mt-5 items-center">
-            <h2 className="font-bold text-[16px]">Student</h2>
+            <h2 className="font-bold text-[16px]">Tutor</h2>
             <Image src="/Notification-Button.svg" alt="notification" width={20} height={20}/>
             </div>
             <Link href="/tutor/profile">

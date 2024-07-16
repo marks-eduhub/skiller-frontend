@@ -10,7 +10,7 @@ export const Learning = () => {
     setClicked(value);
   };
   return (
-    <div className="">
+    <div className="sm:pl-0">
       <div className="flex gap-3 items-center border-t-2 border-t-gray-300  w-full ">
         <div
           className={`rounded-md px-6 py-3 shadow-lg mt-5  cursor-pointer ${

@@ -89,6 +89,7 @@ const ProfilePage: React.FC = () => {
                 id="first-name"
                 required
                 className="mt-1 w-[300px] rounded-lg block px-3 py-2 border border-gray-200 mb-6 bg-inherit"
+                style={{ outline: "none", borderColor: "black" }}
               />
             </div>
             <div className="flex-1">
@@ -103,6 +104,7 @@ const ProfilePage: React.FC = () => {
                 id="last-name"
                 required
                 className="mt-1 w-[300px] block rounded-lg px-3 py-2 border border-gray-200 mb-6 bg-inherit"
+                style={{ outline: "none", borderColor: "black" }}
               />
             </div>
           </div>
@@ -129,6 +131,7 @@ const ProfilePage: React.FC = () => {
                 id="email"
                 placeholder="placeholder"
                 className="rounded-lg px-3 py-2 border border-gray-300"
+                style={{ outline: "none", borderColor: "black" }}
               />
             </div>
             <div className="flex flex-col">
@@ -140,6 +143,7 @@ const ProfilePage: React.FC = () => {
                 id="facebook"
                 placeholder="placeholder"
                 className="rounded-lg px-3 py-2 border border-gray-300"
+                style={{ outline: "none", borderColor: "black" }}
               />
             </div>
             <div className="flex flex-col">
@@ -151,6 +155,7 @@ const ProfilePage: React.FC = () => {
                 id="twitter"
                 placeholder="placeholder"
                 className="rounded-lg px-3 py-2 border border-gray-300"
+                style={{ outline: "none", borderColor: "black" }}
               />
             </div>
             <div className="flex flex-col">
@@ -162,6 +167,7 @@ const ProfilePage: React.FC = () => {
                 id="linkedin"
                 placeholder="placeholder"
                 className="rounded-lg px-3 py-2 border border-gray-300"
+                style={{ outline: "none", borderColor: "black" }}
               />
             </div>
           </div>

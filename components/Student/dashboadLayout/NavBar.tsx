@@ -1,4 +1,4 @@
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
   MagnifyingGlassIcon,
@@ -12,7 +12,6 @@ import SkillerLogo from "@/components/ui/logo";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
-  showGreeting?: boolean;
 }
 
 const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
@@ -23,13 +22,17 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
     setIsMounted(true);
   }, []);
 
-  const hiddenRoutes = ['/dashboard/profile']; 
+  const hiddenRoutes = ["/dashboard/profile"];
   const hideGreetingAndSearch = isMounted && hiddenRoutes.includes(pathname);
 
   return (
     <>
       <nav className="max-md:hidden">
-        <div className={`flex items-center justify-between w-full ${hideGreetingAndSearch ? '' : ''}`}>
+        <div
+          className={`flex items-center justify-between w-full ${
+            hideGreetingAndSearch ? "" : ""
+          }`}
+        >
           {!sidebarMinimized ? (
             <>
               {!hideGreetingAndSearch && (
@@ -41,7 +44,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p>
-                <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
+                <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
                   <Image
                     src="/Ellipse 1.svg"
                     alt="variant"
@@ -61,14 +64,14 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
               <div className="w-32 h-10 mr-10">
                 <SkillerLogo />
               </div>
-                <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
-                  <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
-                  <input
-                    type="text"
-                    placeholder="Search for classes or tutors"
-                    className="flex-1 outline-none bg-transparent"
-                  />
-                </div>
+              <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
+                <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+                <input
+                  type="text"
+                  placeholder="Search for classes or tutors"
+                  className="flex-1 outline-none bg-transparent"
+                />
+              </div>
               <div className="flex items-center gap-10">
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium

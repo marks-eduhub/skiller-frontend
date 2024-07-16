@@ -1,5 +1,5 @@
-import CoursePage from "@/components/Tutor/dashboard/courses";
+import CoursePage from "@/components/Tutor/coursePage/courses";
 
-export default function courses(){
-    return <CoursePage/>
+export default function courses() {
+  return <CoursePage />;
 }

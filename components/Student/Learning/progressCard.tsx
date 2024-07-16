@@ -16,14 +16,13 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
  myprogress
 }) => {
   return (
-    <div className="mx-auto grow gap-4  overflow-hidden flex-shrink-0 mr-4 max-md:pb-10 ">
+    <div className="max-md:pb-10 overflow-hidden flex-shrink-0 ">
       <div className="border border-gray-400">
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
             src={myprogress.image}
             alt={"image"}
-            width={370}
-            height={180}
+           fill
             className="object-cover object-center p-1"
           />
         </div>

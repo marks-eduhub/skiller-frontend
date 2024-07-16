@@ -123,6 +123,20 @@
   font-family: 'Poppins', sans-serif;
 
 }
+.ql-container {
+  border: none;
+}
+
+/* Remove the inner border inside the editor */
+.ql-editor {
+  border: none;
+  padding: 0;
+}
+
+/* Remove the border of the toolbar */
+.ql-toolbar.ql-snow {
+  border: none;
+}
 .active-tab {
   display: inline-block;
   padding: 0.3rem 0.3rem;

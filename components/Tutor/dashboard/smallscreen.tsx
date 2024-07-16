@@ -42,7 +42,7 @@ const SmallScreen = () => {
         </div>
       )}
       <div className="flex flex-row gap-4 items-center">
-        <h2 className="font-bold text-[16px]">Student</h2>
+        <h2 className="font-bold text-[16px]">Tutor</h2>
         <Image
           src="/Notification-Button.svg"
           alt="notification"

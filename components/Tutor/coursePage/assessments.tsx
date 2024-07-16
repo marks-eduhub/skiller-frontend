@@ -44,7 +44,7 @@ const Assessments = () => {
       <div className="relative w-full mt-10">
         <div
           className="relative h-[90px] bg-cover bg-center"
-          style={{ backgroundImage: `url("/cake.svg")` }}
+          style={{ backgroundImage: `url("/cake.webp")` }}
         >
           <div className="absolute inset-0 bg-[#1a1b1ab0] flex items-center justify-between px-6">
             <h1 className="text-white">
