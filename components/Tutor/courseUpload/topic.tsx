@@ -9,17 +9,27 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface TopicProps {
   name: string;
-  deleteTopic : () => void
+  deleteTopic: () => void;
 }
 
 const Topic: React.FC<TopicProps> = ({ name, deleteTopic }) => {
   const [expanded, setExpanded] = useState(false);
+  const [uploadImage, setUploadImage] = useState<string | null>(null);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
 
-  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; 
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="flex flex-col mt-5 mb-5 cursor-pointer">
@@ -71,13 +81,16 @@ const Topic: React.FC<TopicProps> = ({ name, deleteTopic }) => {
               <div className="w-full px-3 py-6 bg-white h-[140px] rounded-md text-center cursor-pointer hover:border-blue-500">
                 <div className="flex flex-col items-center justify-center border border-dashed border-black p-3">
                   <GrCloudUpload className="text-blue-800 w-10 h-10" />
-
                   <span className="text-gray-500">
-                    Drag & drop files or
+                    Drag & drop files or{" "}
                     <span className="text-blue-500 ml-1 cursor-pointer">
                       Browse
                     </span>
-                    <input type="file" accept="image/*" className="hidden" />
+                    <input
+                      type="file"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={handleImageChange}
+                    />
                   </span>
                 </div>
               </div>
@@ -123,7 +136,7 @@ const Topic: React.FC<TopicProps> = ({ name, deleteTopic }) => {
               />
             </div>
             <button
-              onClick={deleteTopic} 
+              onClick={deleteTopic}
               className="px-6 py-2 bg-[#483EA8] text-white rounded-lg mt-5"
             >
               Delete Topic
