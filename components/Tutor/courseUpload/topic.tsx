@@ -9,14 +9,17 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface TopicProps {
   name: string;
+  deleteTopic : () => void
 }
 
-const Topic: React.FC<TopicProps> = ({ name }) => {
+const Topic: React.FC<TopicProps> = ({ name, deleteTopic }) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
+
+  
 
   return (
     <div className="flex flex-col mt-5 mb-5 cursor-pointer">
@@ -119,6 +122,12 @@ const Topic: React.FC<TopicProps> = ({ name }) => {
                 }}
               />
             </div>
+            <button
+              onClick={deleteTopic} 
+              className="px-6 py-2 bg-[#483EA8] text-white rounded-lg mt-5"
+            >
+              Delete Topic
+            </button>
           </div>
         </div>
       )}
