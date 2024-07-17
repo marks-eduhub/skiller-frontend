@@ -1,0 +1,71 @@
+{
+  "data": {
+    "members": [
+      {
+        "Question": "What is the difference between UI and UX?",
+        "name": "By Dylan Parker",
+        "image": "/albert.svg",
+        "name2": "Albert Flores",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      },
+      {
+        "Question": "What is the difference between UI nad UX?",
+        "name": "By Dylan Parker",
+        "image": "/swaib.svg",
+        "name2": "Floyd Miles",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      },
+      {
+        "Question": "What is the difference between UI nad UX?",
+        "name": "By Dylan Parker",
+        "image": "/jenny.svg",
+        "name2": "Jenny Wilson",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      },
+      {
+        "Question": "What is the difference between UI nad UX?",
+        "name": "By Dylan Parker",
+        "image": "/wade.svg",
+        "name2": "Wade Warren",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      },
+      {
+        "Question": "What is the difference between UI nad UX?",
+        "name": "By Dylan Parker",
+        "image": "/ester.svg",
+        "name2": "Ester Howard",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      },
+      {
+        "Question": "What is the difference between UI nad UX?",
+        "name": "By Dylan Parker",
+        "image": "/pic.svg",
+        "name2": "Savanah Nguyen",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      },
+      {
+        "Question": "What is the difference between UI nad UX?",
+        "name": "By Dylan Parker",
+        "image": "/marvin.svg",
+        "name2": "Marvin McKinney",
+        "answer": "Lorem ipsum dolor sit amet consectetur. Quam tristique faucibus nulla magna vel molestie quam neque. Sed vulputate in ac purus ac sed nullam tristique. Fermentum sagittis et diam velit nec duis see more...",
+        "other": "see 12 more responses"
+      }
+    ],
+    "categories": [
+      "Artificial Intelligence",
+      "Agriculture",
+      "Fashion and Design",
+      "Music",
+      "Art",
+      "Programming",
+      "UI/UX"
+    ]
+  }
+}
