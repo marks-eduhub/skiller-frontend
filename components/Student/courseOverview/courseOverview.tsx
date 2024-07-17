@@ -1,22 +1,9 @@
 import React from "react";
 import Image from "next/image";
+import {content} from "./data.json"
 
 const CourseOverview = () => {
-  const content = [
-    { title: "Getting started in UI/UX Design", duration: "10:12" },
-    {
-      title:
-        "Difference between user interface design and user experience design",
-      duration: "10:00",
-    },
-    { title: "Design Thinking process", duration: "15:30" },
-    { title: "The empathize phase", duration: "12:00" },
-    { title: "Define phase", duration: "17:00" },
-    { title: "The ideate phase", duration: "25:10" },
-    { title: "Prototype phase", duration: "30:00" },
-    { title: "Testing phase", duration: "17:39" },
-    { title: "Principles of design", duration: "22:25" },
-  ];
+  
   return (
     <div className="">
       <div className="flex flex-col gap-2">

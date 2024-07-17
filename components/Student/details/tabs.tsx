@@ -19,7 +19,9 @@ const Tabs: React.FC = () => {
         <div className="flex gap-10 w-full p-4">
           <div
             className={`cursor-pointer  first-tab ${
-              activeTab === "Description" ? "active-tab" : ""
+              activeTab === "Description"
+                ? "inline-block p-1 text-center font-semibold text-black transition-colors duration-300 border-l-4 border-b-4 border-black shadow-md rounded-md"
+                : ""
             }`}
             onClick={() => handleTabClick("Description")}
           >
@@ -27,7 +29,9 @@ const Tabs: React.FC = () => {
           </div>
           <div
             className={`cursor-pointer ${
-              activeTab === "Transcript" ? "active-tab" : ""
+              activeTab === "Transcript"
+                ? "inline-block p-1 text-center font-semibold text-black transition-colors duration-300 border-l-4 border-b-4 border-black shadow-md rounded-md"
+                : ""
             }`}
             onClick={() => handleTabClick("Transcript")}
           >
@@ -35,7 +39,9 @@ const Tabs: React.FC = () => {
           </div>
           <div
             className={`cursor-pointer ${
-              activeTab === "Discussions" ? "active-tab" : ""
+              activeTab === "Discussions"
+                ? "inline-block p-1 text-center font-semibold text-black transition-colors duration-300 border-l-4 border-b-4 border-black shadow-md rounded-md"
+                : ""
             }`}
             onClick={() => handleTabClick("Discussions")}
           >
@@ -43,7 +49,9 @@ const Tabs: React.FC = () => {
           </div>
           <div
             className={`cursor-pointer ${
-              activeTab === "Resources" ? "active-tab" : ""
+              activeTab === "Resources"
+                ? "inline-block p-1 text-center font-semibold text-black transition-colors duration-300 border-l-4 border-b-4 border-black shadow-md rounded-md"
+                : ""
             }`}
             onClick={() => handleTabClick("Resources")}
           >
