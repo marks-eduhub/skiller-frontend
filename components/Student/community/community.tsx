@@ -6,8 +6,8 @@ const Community = () => {
   const { members, categories } = data.data;
 
   return (
-    <div className="flex gap-10 mt-10 w-full">
-      <div className="w-[80%]">
+    <div className="flex sm:flex-row flex-col gap-10 mt-10 w-full">
+      <div className="sm:w-[80%]">
         {members.map((member, index) => (
           <div
             key={index}
@@ -19,22 +19,23 @@ const Community = () => {
               </h1>
               <p className="text-gray-500">{member.name}</p>
             </div>
-            <div className="flex mt-5 relative items-center pl-3">
+            <div className="flex mt-5 relative items-center pl-3  ">
+              <div className="h-[70px] w-[70px] relative ">
               <Image
                 src={member.image}
                 alt={member.name}
-                width={70}
-                height={70}
+                fill
                 className="rounded-full"
               />
-              <p className="pl-3">{member.name2}</p>
+              </div>
+              <p className="pl-3 ">{member.name2}</p>
             </div>
             <h1 className="mt-5 pl-3">{member.answer}</h1>
-            <p className="text-gray-400 pl-3 underline">{member.other}</p>
+            <p className="text-gray-400 pl-3 underline cursor-pointer sm:mt-0 mt-2 hover:text-blue-500">{member.other}</p>
           </div>
         ))}
       </div>
-      <div className="w-[20%] h-[500px] border border-black">
+      <div className="sm:w-[20%] h-[500px] border border-black">
         <div className="flex flex-col">
           <h1 className="bg-gray-300 p-3">Course Categories</h1>
           <div className="p-2">
