@@ -23,7 +23,7 @@ const subscriptionOptions = {
 export default function NavLinks({ minimized }: { minimized?: boolean }) {
   const pathname = usePathname();
 
-  const isSubscriptionActive = pathname.startsWith('/dashboard/subscriptions');
+  const isSubscriptionActive = pathname.startsWith("/dashboard/subscriptions");
 
   return (
     <>
@@ -46,7 +46,8 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
                   {
                     "ml-2": link.name === "Home",
                     "ml-20": link.name !== "Home",
-                    "bg-gray-600 text-white rounded-lg " : pathname === link.href,
+                    "bg-gray-600 text-white rounded-lg ":
+                      pathname === link.href,
                   }
                 )}
               >
@@ -60,35 +61,66 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
             href={communityLink.href}
             className={clsx(
               "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3",
-              "mb-3"
+
+              "mb-3",
+              {
+                "bg-gray-600 text-white rounded ":
+                  pathname === communityLink.href,
+              }
             )}
           >
             <AiOutlineTeam className="w-10 h-7 mr-2 text-white " />
             <p className="md:block">{communityLink.name}</p>
           </Link>
           <hr className="border-gray-600" />
-          <p className="text-white  p-4 cursor-pointer hover:bg-gray-900"
+          <p
+            className="text-white  p-4 cursor-pointer hover:bg-gray-900"
             // className={clsx("text-white  p-4 cursor-pointer hover:bg-gray-900", {
             //   "bg-gray-600 rounded-md my-2  ": isSubscriptionActive,
             // })}
           >
             Subscriptions
           </p>
-          {subscriptionLinks.map((subscription) => (
-            subscriptionOptions.subscriptionLinks.includes(subscription.name) && (
-              <Link key={subscription.name} href={`/dashboard/subscriptions/${subscription.slug}`}>
-                <div className="flex items-center justify-between bg-black pl-4 pb-4 cursor-pointer">
-                  <div className="flex items-center space-x-2">
-                    <Image src="/subscriptions.svg" alt="" width={20} height={20} />
-                    <p className="text-white">{subscription.name}</p>
+          {subscriptionLinks.map(
+            (subscription) =>
+              subscriptionOptions.subscriptionLinks.includes(
+                subscription.name
+              ) && (
+                <Link
+                  key={subscription.name}
+                  href={`/dashboard/subscriptions/${subscription.slug}`}
+                >
+                  <div
+                    className={clsx(
+                      "flex items-center justify-between bg-black pl-4 pb-4 p-3 cursor-pointer",
+                      {
+                        "bg-gray-600 text-white rounded ":
+                          pathname ===
+                          `/dashboard/subscriptions/${subscription.slug}`,
+                      }
+                    )}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Image
+                        src="/subscriptions.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                      />
+                      <p className="text-white">{subscription.name}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            )
-          ))}
+                </Link>
+              )
+          )}
           <hr className="my-4 border-gray-600" />
           <Link href="/dashboard/learning">
-            <div className="flex items-center space-x-2 pl-3 mb-6">
+            <div
+              className={clsx("flex items-center space-x-2 pl-3 mb-6 p-3", {
+                "bg-gray-600 text-white rounded ":
+                  pathname === "/dashboard/learning",
+              })}
+            >
               <Image
                 src="/mylearning.svg"
                 alt="learning"
