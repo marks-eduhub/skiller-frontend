@@ -11,8 +11,8 @@ const SideLinks = () => {
   };
 
   const links = [
-    { src: "/course.svg", alt: "courses", name: "Courses", path: "/tutor/dashboard/courses" },
-    { src: "/people.svg", alt: "community", name: "Community", path: "/tutor/dashboard/community" },
+    { src: "/course.svg", alt: "courses", name: "Courses", path: "/tutor/dashboard/courseview" },
+    { src: "/people.svg", alt: "community", name: "Community", path: "/tutor/dashboard/courses" },
     { src: "/tools.svg", alt: "tools", name: "Tools", path: "/tutor/dashboard/tools" },
     { src: "/performance.svg", alt: "performance", name: "Performance", path: "/tutor/dashboard/performance" },
     {
