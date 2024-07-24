@@ -46,7 +46,7 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
                   {
                     "ml-2": link.name === "Home",
                     "ml-20": link.name !== "Home",
-                    "bg-gray-600 text-white rounded-lg ":
+                    "bg-gray-700 text-white rounded-lg ":
                       pathname === link.href,
                   }
                 )}
@@ -64,7 +64,7 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
 
               "mb-3",
               {
-                "bg-gray-600 text-white rounded ":
+                "bg-gray-700 text-white rounded ":
                   pathname === communityLink.href,
               }
             )}
@@ -73,51 +73,56 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
             <p className="md:block">{communityLink.name}</p>
           </Link>
           <hr className="border-gray-600" />
-          <p
-            className="text-white  p-4 cursor-pointer hover:bg-gray-900"
-            // className={clsx("text-white  p-4 cursor-pointer hover:bg-gray-900", {
-            //   "bg-gray-600 rounded-md my-2  ": isSubscriptionActive,
-            // })}
-          >
-            Subscriptions
-          </p>
-          {subscriptionLinks.map(
-            (subscription) =>
-              subscriptionOptions.subscriptionLinks.includes(
-                subscription.name
-              ) && (
-                <Link
-                  key={subscription.name}
-                  href={`/dashboard/subscriptions/${subscription.slug}`}
-                >
-                  <div
-                    className={clsx(
-                      "flex items-center justify-between bg-black pl-4 pb-4 p-3 cursor-pointer",
-                      {
-                        "bg-gray-600 text-white rounded ":
-                          pathname ===
-                          `/dashboard/subscriptions/${subscription.slug}`,
-                      }
-                    )}
+          <div className="">
+            <Link href="/dashboard/tutorspage">
+              <div
+                className={clsx("flex items-center mt-2 p-3 cursor-pointer", {
+                  "bg-gray-700 text-white rounded ": pathname === "/dashboard/tutorspage",
+                })}
+              >
+              <p className="  hover:bg-gray-900">
+                Tutors
+              </p>
+              </div>
+            </Link>
+            {subscriptionLinks.map(
+              (subscription) =>
+                subscriptionOptions.subscriptionLinks.includes(
+                  subscription.name
+                ) && (
+                  <Link
+                    key={subscription.name}
+                    href={`/dashboard/subscriptions/${subscription.slug}`}
                   >
-                    <div className="flex items-center space-x-2">
-                      <Image
-                        src="/subscriptions.svg"
-                        alt=""
-                        width={20}
-                        height={20}
-                      />
-                      <p className="text-white">{subscription.name}</p>
+                    <div
+                      className={clsx(
+                        "flex items-center justify-between bg-black pl-4 pb-4 p-3 cursor-pointer",
+                        {
+                          "bg-gray-700 text-white rounded ":
+                            pathname ===
+                            `/dashboard/subscriptions/${subscription.slug}`,
+                        }
+                      )}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Image
+                          src="/subscriptions.svg"
+                          alt=""
+                          width={20}
+                          height={20}
+                        />
+                        <p className="text-white">{subscription.name}</p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              )
-          )}
+                  </Link>
+                )
+            )}
+          </div>
           <hr className="my-4 border-gray-600" />
           <Link href="/dashboard/learning">
             <div
               className={clsx("flex items-center space-x-2 pl-3 mb-6 p-3", {
-                "bg-gray-600 text-white rounded ":
+                "bg-gray-700 text-white rounded ":
                   pathname === "/dashboard/learning",
               })}
             >
