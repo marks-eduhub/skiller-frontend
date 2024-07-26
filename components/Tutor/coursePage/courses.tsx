@@ -42,36 +42,35 @@ const CoursePage = () => {
       </div>
 
       <div
-        className="w-full h-[350px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url("/CAKE.svg")` }}
+        className="w-full h-[450px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
+        style={{ backgroundImage: `url("/keyboard.webp")` }}
       >
-        <div className="absolute inset-0 flex">
-          <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-white font-bold sm:text-[30px] text-[20px] sm:mx-0 mx-2 ">
-              CAKE MAKING IN 45 MINUTES
-            </h1>
-          </div>
-          <div className="w-1/2 bg-black bg-opacity-70 rounded-2xl flex flex-col justify-center p-4">
-            <div className="flex justify-end mb-auto">
-              <div className="rounded-3xl w-[100px] h-[40px] border-2 flex items-center justify-center">
-                <h1 className="text-white">Edit</h1>
-              </div>
-            </div>
-            <div className="flex-1 flex justify-center mt-[95px]">
-              <h1 className="text-white font-bold sm:text-[30px] text-[20px]">
-                DESCRIPTION GOES HERE
-              </h1>
-            </div>
-          </div>
+        <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl"></div>
+        <div className="p-6 z-20 w-full relative">
+          <h1 className="text-white font-bold sm:text-[50px] sm:w-1/4 mb-10 text-[20px] sm:mx-0 mx-2">
+            FUNDAMENTALS OF DESIGN
+          </h1>
+          <p className="text-white mt-6">
+            Lorem ipsum dolor sit amet consectetur. Orci faucibus proin interdum
+            eleifend condimentum tellus. Purus ut rutrum ultrices malesuada
+            purus tempor massa sagittis. Vulputate at ut vitae vitae vel
+            odio.osuere tellus suspendisse.
+          </p>
+          <p className="text-white mt-6">
+            A quisque metus maecenas diam viverra facilisis ultricies. Massa
+            enim faucibus eu iaculis integer eget. Turpis ultricies faucibus
+            elementum aliquet viverra eget enim scelerisque. Rhoncus diam amet
+            et at ut tincidunt varius viverra.
+          </p>
         </div>
       </div>
 
-      <div className="flex gap-[100px] mb-10 sm:overflow-hidden items-center overflow-x-auto">
+      <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center overflow-x-auto">
         <div
           className={`cursor-pointer ${
             Tab === "Course Overview"
-              ? "bg-[#D9D9D9] rounded-sm sm:px-4 px-10 sm:py-1 py-3 "
-              : "bg-[#F4F4F4] rounded-sm sm:px-4 px-10 sm:py-1 py-3"
+              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Course Overview")}
         >
@@ -80,8 +79,8 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Curriculum"
-              ? "bg-[#D9D9D9] rounded-sm sm:px-4 px-10 sm:py-1 py-3 "
-              : "bg-[#F4F4F4] rounded-sm sm:px-4 px-10 sm:py-1 py-3"
+              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md "
+              : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Curriculum")}
         >
@@ -90,8 +89,8 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Assessments"
-              ? "bg-[#D9D9D9] rounded-sm sm:px-4 px-10 sm:py-1 py-3 "
-              : "bg-[#F4F4F4] rounded-sm sm:px-4 px-10 sm:py-1 py-3"
+              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Assessments")}
         >
@@ -100,8 +99,8 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Analytics"
-              ? "bg-[#D9D9D9] rounded-sm sm:px-5 px-10 sm:py-1 py-3"
-              : "bg-[#F4F4F4] rounded-sm sm:px-5 px-10 sm:py-1 py-3"
+              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              : " sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Analytics")}
         >

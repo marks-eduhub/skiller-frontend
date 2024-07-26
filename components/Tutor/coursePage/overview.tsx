@@ -10,7 +10,7 @@ const Overview = () => {
     { student: "Number of Tests:", number: "15" },
   ];
   return (
-    <div className="bg-[#D9D9D9] w-full sm:h-[350px] sm:px-0 px-10 sm:py-4 py-10 items-center rounded-lg  ">
+    <div className="bg-gray-100 mb-10 w-full sm:h-[350px] sm:px-0 px-10 sm:py-4 py-10 items-center rounded-lg  ">
       {courses.map((course, index) => (
         <div
           key={index}

@@ -40,14 +40,15 @@ const Assessments = () => {
   };
 
   return (
-    <div className="relative w-full bg-[#E7E8EA] px-8 pt-1 pb-7">
-      <div className="relative w-full mt-10">
+    <div className="relative w-full bg-[#E7E8EA] px-4 pt-4 pb-6 border border-gray-300">
+      <div className="relative w-full ">
         <div
-          className="relative h-[90px] bg-cover bg-center"
-          style={{ backgroundImage: `url("/cake.webp")` }}
+          className={`${
+            isOpen ? "bg-gray-300" : "w-full h-[90px]  bg-gray-700"
+          }`}
         >
-          <div className="absolute inset-0 bg-[#1a1b1ab0] flex items-center justify-between px-6">
-            <h1 className="text-white">
+          <div className=" flex items-center justify-between p-6">
+            <h1 className={isOpen ? "text-black" : "text-white"}>
               Quizzes: {isOpen ? quizzes.length : 20}
             </h1>
             <div onClick={toggleQuizList} className="cursor-pointer">
@@ -57,20 +58,66 @@ const Assessments = () => {
                 width={20}
                 height={20}
                 className={`transition-transform duration-200 transform ${
-                  isOpen ? "rotate-180" : ""
+                  isOpen ? "rotate-180 " : ""
                 }`}
               />
             </div>
           </div>
         </div>
         {isOpen && (
-          <div className="bg-gray-300 p-4 space-y-2">
+          <div className="bg-gray-100 p-4 space-y-2">
             {quizzes.map((quiz, index) => (
               <div
                 key={index}
-                className="bg-gray-400 p-4 flex justify-between items-center"
+                className="bg-gray-300  p-4 flex justify-between items-center"
               >
-                <span className="text-white">{quiz}</span>
+                <span className="text-black">{quiz}</span>
+                <div className="flex items-center space-x-2">
+                  <div className="bg-gray-700  text-white px-3 py-2 rounded flex items-center cursor-pointer">
+                    <Image src="/plus.svg" alt="plus" width={15} height={15} />
+                    <span className="ml-2  font-semibold">Add Content</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="relative w-full mt-10">
+        <div className="h-[90px] bg-gray-700">
+          <div className="flex items-center justify-between p-6">
+            <h1 className="text-white">Tests:{isDown ? Tests.length : 15} </h1>
+            <div className="flex items-center">
+              {isDown && (
+                <div className="flex flex-row bg-black p-4 rounded-xl mr-4 gap-2 items-center">
+                  <Image src="/plus.svg" alt="plus" width={30} height={30} />
+                  <h1 className="text-white">New Assignment</h1>
+                </div>
+              )}
+              <Image
+                src="/drop.svg"
+                alt="plus"
+                width={20}
+                height={20}
+                onClick={toggleDown}
+                className={`transition-transform duration-200 transform cursor-pointer ${
+                  isDown ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+          </div>
+        </div>
+        {isDown && (
+          <div
+            className="p-4 space-y-2"
+            style={{ backgroundImage: `url("/cake.svg")` }}
+          >
+            {Tests.map((test, index) => (
+              <div
+                key={index}
+                className="bg-[#1a1b1ab0] p-4 flex justify-between items-center"
+              >
+                <span className="text-white">{test}</span>
                 <div className="flex items-center space-x-2">
                   <div className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer">
                     <Image src="/pluss.svg" alt="plus" width={10} height={10} />
@@ -83,53 +130,10 @@ const Assessments = () => {
           </div>
         )}
       </div>
-      <div className="relative w-full mt-10">
-      <div className="relative h-[90px] bg-cover bg-center" style={{ backgroundImage: `url("/cake.svg")` }}>
-        <div className="absolute inset-0 bg-[#1a1b1ab0] flex items-center justify-between px-6">
-          <h1 className="text-white">Tests:{isDown ? Tests.length : 15} </h1>
-          <div className="flex items-center">
-
-          {isDown && (
-              <div className="flex flex-row bg-black p-4 rounded-xl mr-4 gap-2 items-center">
-                <Image src="/plus.svg" alt="plus" width={30} height={30} />
-                <h1 className="text-white">New Assignment</h1>
-              </div>
-            )}
-            <Image
-              src="/drop.svg"
-              alt="plus"
-              width={20}
-              height={20}
-              onClick={toggleDown}
-              className={`transition-transform duration-200 transform cursor-pointer ${isDown ? "rotate-180" : ""}`}
-            />
-          </div>
-        </div>
-      </div>
-      {isDown && (
-        <div className="p-4 space-y-2" style={{ backgroundImage: `url("/cake.svg")` }}>
-          {Tests.map((test, index) => (
-            <div key={index} className="bg-[#1a1b1ab0] p-4 flex justify-between items-center">
-              <span className="text-white">{test}</span>
-              <div className="flex items-center space-x-2">
-                <div className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer">
-                  <Image src="/pluss.svg" alt="plus" width={10} height={10} />
-                  <span className="ml-2 text-sm font-semibold">Content</span>
-                </div>
-                <Image src="/drop.svg" alt="toggle" width={15} height={15} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
 
       <div className="relative w-full mt-10">
-        <div
-          className="relative h-[90px] bg-cover bg-center"
-          style={{ backgroundImage: `url("/cake.svg")` }}
-        >
-          <div className="absolute inset-0 bg-[#1a1b1ab0] flex items-center justify-between px-6">
+        <div className="relative h-[90px] bg-gray-700">
+          <div className=" flex items-center justify-between p-6">
             <h1 className="text-white">
               Challenges: {isArrowOpen ? Challenges.length : 10}
             </h1>
@@ -146,10 +150,7 @@ const Assessments = () => {
           </div>
         </div>
         {isArrowOpen && (
-          <div
-            className="p-4 space-y-2"
-            style={{ backgroundImage: `url("/cake.svg")` }}
-          >
+          <div className="p-4 space-y-2 bg-gray-700">
             {Challenges.map((challenge, index) => (
               <div
                 key={index}
@@ -168,6 +169,10 @@ const Assessments = () => {
           </div>
         )}
       </div>
+      <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300  flex items-center justify-center cursor-pointer">
+          <Image src="/pluss.svg" alt="plus" width={20} height={20} />
+          <h1 className="text-black text-[20px]">Add a quiz, test or challenge</h1>
+        </div>
     </div>
   );
 };
