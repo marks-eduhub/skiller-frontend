@@ -65,11 +65,11 @@ const CoursePage = () => {
         </div>
       </div>
 
-      <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center overflow-x-auto">
+      <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center hide-scrollbar overflow-x-scroll">
         <div
           className={`cursor-pointer ${
             Tab === "Course Overview"
-              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
               : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Course Overview")}
@@ -79,7 +79,7 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Curriculum"
-              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md "
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md "
               : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Curriculum")}
@@ -89,7 +89,7 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Assessments"
-              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
               : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Assessments")}
@@ -99,7 +99,7 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Analytics"
-              ? "inline-block py-2 px-12 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
               : " sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Analytics")}

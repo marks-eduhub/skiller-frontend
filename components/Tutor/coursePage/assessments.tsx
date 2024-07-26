@@ -69,13 +69,13 @@ const Assessments = () => {
             {quizzes.map((quiz, index) => (
               <div
                 key={index}
-                className="bg-gray-300  p-4 flex justify-between items-center"
+                className="bg-gray-300 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0"
               >
-                <span className="text-black">{quiz}</span>
+                <span className="text-black sm:text-base text-sm">{quiz}</span>
                 <div className="flex items-center space-x-2">
-                  <div className="bg-gray-700  text-white px-3 py-2 rounded flex items-center cursor-pointer">
+                  <div className="bg-gray-700 text-white px-3 py-2 rounded flex items-center cursor-pointer sm:text-base text-sm">
                     <Image src="/plus.svg" alt="plus" width={15} height={15} />
-                    <span className="ml-2  font-semibold">Add Content</span>
+                    <span className="ml-2 font-semibold">Add Content</span>
                   </div>
                 </div>
               </div>
@@ -170,9 +170,11 @@ const Assessments = () => {
         )}
       </div>
       <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300  flex items-center justify-center cursor-pointer">
-          <Image src="/pluss.svg" alt="plus" width={20} height={20} />
-          <h1 className="text-black text-[20px]">Add a quiz, test or challenge</h1>
-        </div>
+        <Image src="/pluss.svg" alt="plus" width={20} height={20} />
+        <h1 className="text-black sm:text-[20px]">
+          Add a quiz, test or challenge
+        </h1>
+      </div>
     </div>
   );
 };
