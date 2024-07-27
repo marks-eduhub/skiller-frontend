@@ -9,17 +9,23 @@ const CourseUpload = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  
 
   const addTopic = () => {
     setIsAdding(true);
     setShowForm(true);
     setTopics([...topics, `Topic ${topics.length + 1}`]);
   };
+  const deleteTopic = (indexToDelete: number) => {
+    setTopics(topics.filter((topic, index) => index !== indexToDelete));
+  };
 
   return (
     <div className="p-4">
       <div className="w-full sm:mt-2 flex items-center justify-between">
-        <h1 className="font-semibold text-[20px] sm:flex hidden">Upload Course</h1>
+        <h1 className="font-semibold text-[20px] sm:flex hidden">
+          Upload Course
+        </h1>
         <div className="justify-end">
           <TutorNav />
         </div>
@@ -35,7 +41,9 @@ const CourseUpload = () => {
 
       <div className="flex flex-col sm:flex-row sm:justify-between my-5 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex-1">
-          <label htmlFor="name" className="block font-semibold mb-1">Name:</label>
+          <label htmlFor="name" className="block font-semibold mb-1">
+            Name:
+          </label>
           <input
             type="text"
             id="name"
@@ -45,7 +53,9 @@ const CourseUpload = () => {
           />
         </div>
         <div className="flex-1">
-          <label htmlFor="description" className="block font-semibold mb-1">Description:</label>
+          <label htmlFor="description" className="block font-semibold mb-1">
+            Description:
+          </label>
           <input
             type="text"
             id="description"
@@ -65,11 +75,17 @@ const CourseUpload = () => {
       </div>
 
       {topics.length === 0 && !isAdding && (
-        <p className="font-bold items-center justify-center flex text-[20px] mt-10">No topics! Create one.</p>
+        <p className="font-bold items-center justify-center flex text-[20px] mt-10">
+          No topics! Create one.
+        </p>
       )}
 
       {topics.map((topic, index) => (
-        <Topic key={index} name={topic} />
+        <Topic
+          key={index}
+          name={topic}
+          deleteTopic={() => deleteTopic(index)}
+        />
       ))}
 
       <div className="flex mt-7 mb-5 justify-end">
