@@ -1,43 +1,40 @@
-import React from 'react'
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
 const Curriculum = () => {
-    const topics = [
-        "Topic 1: (Topic Title)",
-        "Topic 2: (Topic Title)",
-        "Topic 3: (Topic Title)",
-        "Topic 4: (Topic Title)",
-        "Topic 5: (Topic Title)",
-        "Topic 6: (Topic Title)",
-        "Topic 7: (Topic Title)",
-        "Topic 8: (Topic Title)",
-      ];
+  const topics = [
+    "Topic 1: How to get started in design",
+    "Topic 2: Figma Basics",
+    "Topic 3: Layout grids, columns and rows",
+    "Topic 4: Creating components and variants",
+    "Topic 5: Creating onboarding screens",
+    "Topic 6: How to make a navigation bar",
+    "Topic 7: How to design for desktop",
+    "Topic 8: Creating a design for case study",
+  ];
   return (
     <div>
-        {topics.map((topic, index) => (
-          <div
-            key={index}
-            className="relative w-full bg-[#E7E8EA] px-8 pt-1 pb-7 "
-          >
-            <div
-              className="relative w-full h-[90px] mt-10"
-              style={{ backgroundImage: `url("/cake.svg")` }}
-            >
-              <div className="absolute inset-0 bg-[#1a1b1ab0] flex items-center justify-between px-4">
+      {topics.map((topic, index) => (
+        <div key={index}>
+          <div className="relative w-full bg-[#E7E8EA] py-2 px-4">
+            <div className="w-full h-[90px] mt-4 bg-gray-700 pt-7">
+              <div className=" flex items-center justify-between px-4">
                 <h1 className="text-white">{topic}</h1>
-                <div className="flex items-center justify-center">
-                  <div className="w-[100px] h-7 mr-5 bg-white flex items-center justify-center gap-2 font-semi-bold p-2">
-                    <Image src="/pluss.svg" alt="plus" width={10} height={10} />
-                    <h1 className="text-[15px]">Content</h1>
-                  </div>
-                  <Image src="/drop.svg" alt="plus" width={15} height={15} />
-                </div>
               </div>
             </div>
           </div>
-        ))}
+         
+        </div>
+      ))}
+      <div className="relative w-full bg-[#E7E8EA] pt-2 pb-4 px-4 mb-4">
+        <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300  flex items-center justify-center cursor-pointer">
+          <Image src="/pluss.svg" alt="plus" width={20} height={20} />
+          <h1 className="text-black text-[20px]">Add a topic</h1>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Curriculum
+export default Curriculum;
+
