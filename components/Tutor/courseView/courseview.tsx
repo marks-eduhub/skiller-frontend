@@ -4,6 +4,8 @@ import TutorNav from "../dashboard/tutor-nav";
 import overview from "./data.json";
 import Image from "next/image";
 import { StarFilledIcon } from "@radix-ui/react-icons";
+import Link  from "next/link";
+
 
 interface Courseview{
   image: string;
@@ -39,15 +41,18 @@ const Courseview = () => {
           <div className="flex flex-col ">
             <h1 className="font-medium text-[25px] mb-5">Welcome!</h1>
             <p className="text-[20px] mb-5">Educate others by creating a course</p>
+            <Link href="/tutor/dashboard/courseUpload">
             <div
-              className="w-[30%] h-[400px] bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer"
-              onClick={addCourse}
+              className="w-[30%] h-[350px] bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer"
+              // onClick={addCourse}
             >
               <div className="rounded-3xl bg-gray-300 flex px-8 py-5 items-center justify-center">
                 <Image src="/Vector.png" alt="plus" width={30} height={30} />
               </div>
               <p className="mt-5">Add a course</p>
             </div>
+            </Link>
+
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
