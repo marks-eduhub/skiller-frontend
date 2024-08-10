@@ -24,6 +24,6 @@ export interface User {
   
   export const AuthContext = createContext<AuthContextType>({
     user: undefined,
-    setUser: () => {}, // Set an empty function initially
+    setUser: () => {}, 
     isLoading: false,
   });

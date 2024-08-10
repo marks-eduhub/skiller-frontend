@@ -22,23 +22,23 @@ export async function decrypt(input: string): Promise<any> {
  
 }
 
-export async function login(formData: FormData) {
-  // Verify credentials && get the user
+// export async function login(formData: FormData) {
+//   // Verify credentials && get the user
 
-  const user = { email: formData.get("email"), name: "John" };
+//   const user = { email: formData.get("email"), name: "John" };
 
-  // Create the session
-  const expires = new Date(Date.now() + 10 * 100000000);
-  const session = await encrypt({ user, expires });
+//   // Create the session
+//   const expires = new Date(Date.now() + 10 * 100000000);
+//   const session = await encrypt({ user, expires });
 
-  // Save the session in a cookie
-  cookies().set("session", session, { expires, httpOnly: true });
-}
+//   // Save the session in a cookie
+//   cookies().set("session", session, { expires, httpOnly: true });
+// }
 
-export async function logout() {
-  // Destroy the session
-  cookies().set("session", "", { expires: new Date(0) });
-}
+// export async function logout() {
+//   // Destroy the session
+//   cookies().set("session", "", { expires: new Date(0) });
+// }
 
 export async function getSession() {
   const session = cookies().get("session")?.value;

@@ -1,22 +1,48 @@
 "use client";
-import React from "react";
-import data from "./data.json";
+import React, { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { login } from "../../../lib/login";
+import { setToken } from "@/lib/helpers";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-// import Loader from "../loader";
-import { redirect } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { login } from "../../../lib/userSS";
+import data from "./data.json";
+import { dotPulse } from "ldrs";
+import { useAuthContext } from "@/Context/AuthContext";
+
+dotPulse.register();
 
 export default function LogIn() {
+
+  const { setUser } = useAuthContext();
+
   const router = useRouter();
-  const handleLogin = async (e: any) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    const form = e.target as HTMLFormElement;
     const formData = new FormData();
-    formData.append("email", e.target.email.value);
-    formData.append("password", e.target.password.value);
-    await login(formData);
-    router.push("/dashboard");
+    formData.append("identifier", form.email.value);
+    formData.append("password", form.password.value);
+
+    try {
+      const response = await login(formData);
+      
+      if (response?.error) {
+        throw new Error(response.error.message);
+      }
+      setToken(response.jwt);
+      setUser(response.user);
+      setIsLoading(true);
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Login failed:", error);
+      setError(error.message || "Something went wrong!");
+    }
   };
 
   return (
@@ -37,6 +63,8 @@ export default function LogIn() {
         <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
           {data.loginForm.title}
         </h2>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+
         <form
           className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"
           onSubmit={handleLogin}
@@ -47,6 +75,7 @@ export default function LogIn() {
               <input
                 placeholder="black@gmail.com"
                 type="email"
+                required
                 name="email"
                 className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem] sm:w-[25rem]"
               />
@@ -61,6 +90,7 @@ export default function LogIn() {
               <input
                 placeholder="***************"
                 type="password"
+                required
                 name="password"
                 className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
               />
@@ -70,12 +100,12 @@ export default function LogIn() {
           <button
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
             type="submit"
-            // onClick={() => handleLogin()}
           >
-            Login
+            <span className="pr-4">Login</span>
+            {isLoading && (
+              <l-dot-pulse size="15" speed="2.5" color="white"></l-dot-pulse>
+            )}
           </button>
-          {/* for testing */}
-          {/* <Loader/> */}
           <div className="font-bold text-gray-500 text-lg mx-auto">
             Trouble logging in?
           </div>
@@ -102,3 +132,5 @@ export default function LogIn() {
     </div>
   );
 }
+
+

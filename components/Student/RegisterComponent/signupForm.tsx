@@ -6,8 +6,13 @@ import Link from "next/link";
 import data from "./data.json";
 import { API } from "../../../lib/constants";
 import { setToken } from "../../../lib/helpers";
+import { useAuthContext } from "../../../Context/AuthContext";
+import { message } from "antd";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function SignUp() {
+  const { setUser } = useAuthContext();
+
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -39,11 +44,9 @@ export default function SignUp() {
       }));
     }
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
 
+const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       const response = await fetch(`${API}/api/auth/local/register`, {
         method: "POST",
@@ -54,7 +57,6 @@ export default function SignUp() {
           email: formData.email,
           username: formData.username,
           phone: formData.phone,
-          // gender: formData.gender,
           dob: `${formData.dob.year}-${formData.dob.month}-${formData.dob.day}`,
           password: formData.password,
         }),
@@ -64,11 +66,13 @@ export default function SignUp() {
         const errorData = await response.json();
         throw new Error(errorData.message || "Registration failed");
       }
-
+      setIsLoading(true);
+      setError("");
+      
       const data = await response.json();
       setToken(data.jwt);
-      router.push("/dashboard");
-      // Assuming setToken saves the JWT in localStorage or similar
+      setUser(data.user);
+      router.push("/auth");
     } catch (error: any) {
       setError(error.message || "Something went wrong!");
     } finally {
@@ -95,6 +99,8 @@ export default function SignUp() {
       <h2 className="font-[600] sm:text-[50px] mt-[1rem] text-[38px]">
         {data.registerForm.title}
       </h2>
+      {error && <p className="text-red-500">{error}</p>}
+
       <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[2.2rem] mt-[2rem]">
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start">
@@ -102,6 +108,7 @@ export default function SignUp() {
             <input
               type="email"
               name="email"
+              required
               placeholder="black@gmail.com"
               value={formData.email}
               onChange={handleChange}
@@ -149,6 +156,7 @@ export default function SignUp() {
                 placeholder="username"
                 type="text"
                 name="username"
+                required
                 value={formData.username}
                 onChange={handleChange}
                 className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
@@ -200,6 +208,7 @@ export default function SignUp() {
               placeholder="************"
               type="password"
               name="password"
+              required
               value={formData.password}
               onChange={handleChange}
               className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
@@ -212,6 +221,7 @@ export default function SignUp() {
             <input
               placeholder="***********"
               type="password"
+              required
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
@@ -219,15 +229,18 @@ export default function SignUp() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center ">
           <input
             type="checkbox"
             id="termsCheckbox"
             name="terms"
             value="accepted"
+            required
             className="w-[20px] h-[20px] mr-1 "
           />
-          <label className="text-[#002BC5]">Terms and Conditions</label>
+          <label htmlFor="termsCheckbox" className="text-[#002BC5]">
+            Terms and Conditions
+          </label>
         </div>
 
         <div className="flex justify-center">
@@ -247,7 +260,6 @@ export default function SignUp() {
             </button>
           </Link>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
 
         <div className="flex flex-row items-center gap-6 bottom-[5rem] font-[700]">
           <hr className="border-[1px] border-black w-[48%] " />
