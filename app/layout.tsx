@@ -4,9 +4,8 @@ import React, { ReactNode } from 'react';
 import ClientWrap from './clientwrap';
 import AuthProvider from "../components/AuthProvider/AuthProvider";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import queryClient from '@/lib/queyClient';
 
-// Create a QueryClient instance
-const queryClient = new QueryClient();
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

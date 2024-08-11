@@ -14,7 +14,8 @@ import { login } from "../../../lib/login";
 dotPulse.register();
 
 export default function LogIn() {
-  const { setUser } = useAuthContext();
+  const authContext = useAuthContext();
+  const { setUser } = authContext || {};
   const router = useRouter();
   const[isLoading,setLoading]=useState(false)
   const [error, setError] = useState("");
@@ -31,7 +32,9 @@ export default function LogIn() {
       setError("");
     },
     onSuccess: (data) => {
-      setUser(data.user);
+      if (setUser) {
+        setUser(data.user); 
+      }
       setLoading(true)
       router.push("/dashboard");
     },

@@ -11,7 +11,9 @@ import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 
 export default function SignUp() {
-  // const { setUser } = useAuthContext();
+  
+  const authContext = useAuthContext();
+  const { setUser } = authContext || {};
   const router = useRouter();
 const[isLoading,setLoading]=useState(false)
   const [formData, setFormData] = useState({
@@ -49,7 +51,9 @@ const[isLoading,setLoading]=useState(false)
     onSuccess: (data) => {
       setToken(data.jwt);
       setLoading(true)
-      // setUser(data.user);
+      if (setUser) {
+        setUser(data.user); 
+      }
       router.push("/auth");
     },
     onError: (error) => {
