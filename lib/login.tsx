@@ -1,3 +1,4 @@
+
 export const login = async (formData: FormData) => {
   
     try {
@@ -9,9 +10,7 @@ export const login = async (formData: FormData) => {
       const data = await response.json();
   
       if (response.ok) {
-        // Save the token and any user data you need
-        localStorage.setItem('AUTH_TOKEN', data.jwt);
-        // Optionally save user data
+         localStorage.setItem('token', data.jwt);
         localStorage.setItem('USER', JSON.stringify(data.user));
         return data;
       } else {

@@ -15,7 +15,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchLoggedInUser = async (token: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API}/users/me`, {
+      const response = await fetch(`${API}/api/users/me`, {
         headers: { Authorization: `${BEARER} ${token}` },
       });
       const data = await response.json();
@@ -40,7 +40,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ user: userData ? userData : undefined, setUser: handleUser, isLoading }}>
+    <AuthContext.Provider value={{ user:  userData , setUser: handleUser, isLoading }}>
 
     {children}
   </AuthContext.Provider>

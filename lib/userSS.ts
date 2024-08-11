@@ -35,10 +35,11 @@ export async function decrypt(input: string): Promise<any> {
 //   cookies().set("session", session, { expires, httpOnly: true });
 // }
 
-// export async function logout() {
-//   // Destroy the session
-//   cookies().set("session", "", { expires: new Date(0) });
-// }
+export async function logout() {
+  // Destroy the session
+   cookies().set("session", "", { expires: new Date(0) });
+ 
+}
 
 export async function getSession() {
   const session = cookies().get("session")?.value;

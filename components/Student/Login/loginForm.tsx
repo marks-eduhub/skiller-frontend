@@ -1,7 +1,7 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "../../../lib/login";
+import { useMutation } from "@tanstack/react-query";
 import { setToken } from "@/lib/helpers";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -9,40 +9,45 @@ import Link from "next/link";
 import data from "./data.json";
 import { dotPulse } from "ldrs";
 import { useAuthContext } from "@/Context/AuthContext";
+import { login } from "../../../lib/login";
 
 dotPulse.register();
 
 export default function LogIn() {
-
   const { setUser } = useAuthContext();
-
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const[isLoading,setLoading]=useState(false)
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const response = await login(formData);
+      if (response?.error) {
+        throw new Error(response.error.message);
+      }
+      return response;
+    },
+    onMutate: () => {
+      setError("");
+    },
+    onSuccess: (data) => {
+      setUser(data.user);
+      setLoading(true)
+      router.push("/dashboard");
+    },
+    onError: (error: any) => {
+      setError(error.message || "Something went wrong!");
+    },
+  });
+
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     const form = e.target as HTMLFormElement;
     const formData = new FormData();
     formData.append("identifier", form.email.value);
     formData.append("password", form.password.value);
 
-    try {
-      const response = await login(formData);
-      
-      if (response?.error) {
-        throw new Error(response.error.message);
-      }
-      setToken(response.jwt);
-      setUser(response.user);
-      setIsLoading(true);
-
-      router.push("/dashboard");
-    } catch (error: any) {
-      console.error("Login failed:", error);
-      setError(error.message || "Something went wrong!");
-    }
+    mutation.mutate(formData);
   };
 
   return (
@@ -50,12 +55,12 @@ export default function LogIn() {
       <div className="sm:hidden flex flex-row justify-between items-center w-full px-[0.5rem]">
         <Link
           href={"/auth/register"}
-          className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center  rounded-[12px] text-[17px] flex justify-center text-white"
+          className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center rounded-[12px] text-[17px] flex justify-center text-white"
         >
           Register
         </Link>
 
-        <div className=" relative w-[8rem] h-[4rem]">
+        <div className="relative w-[8rem] h-[4rem]">
           <Image alt={"logo"} src={data.loginForm.logo} fill />
         </div>
       </div>
@@ -100,6 +105,7 @@ export default function LogIn() {
           <button
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
             type="submit"
+            disabled={isLoading} 
           >
             <span className="pr-4">Login</span>
             {isLoading && (
@@ -118,7 +124,7 @@ export default function LogIn() {
         <hr className="border-[1px] border-black flex-grow" />
       </div>
 
-      <div className="relative w-[100%] flex justify-center  mt-[2rem] cursor-pointer">
+      <div className="relative w-[100%] flex justify-center mt-[2rem] cursor-pointer">
         <Image
           src="/logos/googleLogo.svg"
           alt={"google"}
@@ -132,5 +138,3 @@ export default function LogIn() {
     </div>
   );
 }
-
-

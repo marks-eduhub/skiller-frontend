@@ -2,10 +2,11 @@
 import { useRouter } from "next/navigation";
 import NavLinks from "@/components/Student/dashboadLayout/nav-links";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { logout } from "@/lib/userSS";
+// import { logout } from "@/lib/userSS";
 import SmallScreenSideNav from "./smallscreens";
 import { useMediaQuery } from "@mui/material";
 import SkillerLogo from "@/components/ui/logo";
+import { logout } from "@/lib/helpers";
 
 interface SideNavProps {
   sidebarMinimized: boolean;
@@ -50,9 +51,9 @@ const SideNav = ({ sidebarMinimized, toggleSidebar }: SideNavProps) => {
         </div>
       )}
       <form
-        onSubmit={async (e) => {
+        onSubmit={(e) => {
           e.preventDefault();
-          await logout();
+         logout();
           router.push("/auth");
         }}
       >
