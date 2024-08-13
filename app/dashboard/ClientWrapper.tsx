@@ -20,7 +20,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
         />
       </div>
       <div
-        className={`flex-grow p-6 md:overflow-y-auto hide-scrollbar pr-10 container mx-auto ${
+        className={`flex-grow py-6 md:overflow-y-auto hide-scrollbar pr-10 container mx-auto ${
           sidebarMinimized ? "ml-[90px]" : "ml-0"
         }`}
       >

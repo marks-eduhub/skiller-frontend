@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import constants from "./constants.json";
 import SkillerLogo from "@/components/ui/logo";
+import { useAuthContext } from "@/Context/AuthContext";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
@@ -17,6 +18,8 @@ interface NavBarProps {
 const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
+  const { user } = useAuthContext();
+  const username = user?.username || '';
 
   useEffect(() => {
     setIsMounted(true);
@@ -37,7 +40,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
             <>
               {!hideGreetingAndSearch && (
                 <p className="text-black font-semibold text-[20px]">
-                  Good Morning Norah
+                  Good Morning {username}
                 </p>
               )}
               <div className="flex items-center gap-10 ml-auto">
@@ -53,7 +56,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     className="ml-2"
                   />
                   <Link href="/dashboard/profile" className="text-white">
-                    Norah
+                  {username}
                   </Link>
                   <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
                 </div>
@@ -85,7 +88,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     className="ml-2"
                   />
                   <Link href="/dashboard/profile" className="text-white">
-                    Norah
+                    {username}
                   </Link>
                   <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
                 </div>
@@ -122,7 +125,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
           <MagnifyingGlassIcon className="w-8 h-8 text-gray-500 mr-2" />
           <div className="flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
             <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
-            <span className="text-white">Norah</span>
+            <span className="text-white">{username}</span>
             <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
           </div>
         </div>

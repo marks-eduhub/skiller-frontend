@@ -1,22 +1,56 @@
 "use client";
-import React from "react";
-import data from "./data.json";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { setToken } from "@/lib/helpers";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-// import Loader from "../loader";
-import { redirect } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { login } from "../../../lib/userSS";
+import data from "./data.json";
+import { dotPulse } from "ldrs";
+import { useAuthContext } from "@/Context/AuthContext";
+import { login } from "../../../lib/login";
+
+dotPulse.register();
 
 export default function LogIn() {
+  const authContext = useAuthContext();
+  const { setUser } = authContext || {};
   const router = useRouter();
-  const handleLogin = async (e: any) => {
+  const[isLoading,setLoading]=useState(false)
+  const [error, setError] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const response = await login(formData);
+      if (response?.error) {
+        throw new Error(response.error.message);
+      }
+      return response;
+    },
+    onMutate: () => {
+      setError("");
+    },
+    onSuccess: (data) => {
+      if (setUser) {
+        setUser(data.user); 
+      }
+      setLoading(true)
+      router.push("/dashboard");
+    },
+    onError: (error: any) => {
+      setError(error.message || "Something went wrong!");
+    },
+  });
+
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
     const formData = new FormData();
-    formData.append("email", e.target.email.value);
-    formData.append("password", e.target.password.value);
-    await login(formData);
-    router.push("/dashboard");
+    formData.append("identifier", form.email.value);
+    formData.append("password", form.password.value);
+
+    mutation.mutate(formData);
   };
 
   return (
@@ -24,12 +58,12 @@ export default function LogIn() {
       <div className="sm:hidden flex flex-row justify-between items-center w-full px-[0.5rem]">
         <Link
           href={"/auth/register"}
-          className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center  rounded-[12px] text-[17px] flex justify-center text-white"
+          className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center rounded-[12px] text-[17px] flex justify-center text-white"
         >
           Register
         </Link>
 
-        <div className=" relative w-[8rem] h-[4rem]">
+        <div className="relative w-[8rem] h-[4rem]">
           <Image alt={"logo"} src={data.loginForm.logo} fill />
         </div>
       </div>
@@ -37,6 +71,8 @@ export default function LogIn() {
         <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
           {data.loginForm.title}
         </h2>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+
         <form
           className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"
           onSubmit={handleLogin}
@@ -47,6 +83,7 @@ export default function LogIn() {
               <input
                 placeholder="black@gmail.com"
                 type="email"
+                required
                 name="email"
                 className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem] sm:w-[25rem]"
               />
@@ -61,6 +98,7 @@ export default function LogIn() {
               <input
                 placeholder="***************"
                 type="password"
+                required
                 name="password"
                 className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
               />
@@ -70,12 +108,13 @@ export default function LogIn() {
           <button
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
             type="submit"
-            // onClick={() => handleLogin()}
+            disabled={isLoading} 
           >
-            Login
+            <span className="pr-4">Login</span>
+            {isLoading && (
+              <l-dot-pulse size="15" speed="2.5" color="white"></l-dot-pulse>
+            )}
           </button>
-          {/* for testing */}
-          {/* <Loader/> */}
           <div className="font-bold text-gray-500 text-lg mx-auto">
             Trouble logging in?
           </div>
@@ -88,7 +127,7 @@ export default function LogIn() {
         <hr className="border-[1px] border-black flex-grow" />
       </div>
 
-      <div className="relative w-[100%] flex justify-center  mt-[2rem] cursor-pointer">
+      <div className="relative w-[100%] flex justify-center mt-[2rem] cursor-pointer">
         <Image
           src="/logos/googleLogo.svg"
           alt={"google"}
