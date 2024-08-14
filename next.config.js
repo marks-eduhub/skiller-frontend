@@ -9,7 +9,7 @@ const nextConfig = {
         const defaultRedirects = [
           {
             source: "/",
-            destination: "/dashboard",
+            destination: "/auth",
             permanent: true,
           },
         ];
