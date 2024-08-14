@@ -25,7 +25,7 @@ export default function LogIn() {
       router.push("/dashboard");
     },
     onError: (error: any) => {
-      console.error(error.message || "Something went wrong!");
+      error(error.message || "Something went wrong!");
     },
   });
 
