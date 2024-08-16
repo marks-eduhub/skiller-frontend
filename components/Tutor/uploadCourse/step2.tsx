@@ -49,7 +49,7 @@ const Step2 = () => {
           <div>
            
             <div className="mt-20">
-              <h1>Upload Course Image</h1>
+              <h1>Upload Video</h1>
               <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
                 <GrCloudUpload className="text-blue-800 w-10 h-10" />
                 <span className="text-gray-500">
