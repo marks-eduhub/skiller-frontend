@@ -11,12 +11,10 @@ const Step3 = () => {
     setIsModalOpen(false);
   };
 
-  //useCallback ensures that this function is not recreated on every render, which helps prevent unnecessary re-renders.
   const imageHandler = useCallback(() => {
     setIsModalOpen(true); 
   }, []);
 
-  //Memoizes the modules object to ensure it doesn't get recreated on every render. It only updates if imageHandler changes, which helps maintain stable references and prevents unnecessary re-renders of ReactQuill.
   const modules = useMemo(() => ({
     toolbar: {
       container: [
