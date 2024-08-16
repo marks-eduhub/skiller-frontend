@@ -1,14 +1,13 @@
-import React, { ReactNode, useState } from "react";
-import { AuthContext } from "../../Context/AuthContext";
+import React, { ReactNode, useState, useEffect } from "react";
+import { AuthContext } from "../../Context/AuthContext"
 import { message } from "antd";
 import { API, BEARER } from "../../lib/constants";
-import { useEffect } from "react";
 import { getToken } from "../../lib/helpers";
 import { User } from "@/lib/types";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<User | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); 
 
   const authToken = getToken();
 
@@ -36,14 +35,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (authToken) {
       fetchLoggedInUser(authToken);
+    } else {
+      setIsLoading(false); 
     }
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ user:  userData , setUser: handleUser, isLoading }}>
-
-    {children}
-  </AuthContext.Provider>
+    <AuthContext.Provider value={{ user: userData, setUser: handleUser, isLoading }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

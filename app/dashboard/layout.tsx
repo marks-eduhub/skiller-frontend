@@ -1,17 +1,40 @@
-import { getSession } from "@/lib/userSS";
+"use client"
+import React from 'react';
 import ClientWrapper from "./ClientWrapper";
-import { redirect } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/Context/AuthContext';
+import Loader from '@/components/Student/loader';
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-  // will always redirect to auth
-  // const session = await getSession();
-  // if (!session) {
-  //   redirect('/auth');
-  // }
+const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, isLoading } = useAuthContext();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/auth'); 
+    }
+  }, [user, isLoading, router]);
+
+  
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex  items-center justify-center bg-white z-50">
+        <div className="text-center">
+          <Loader />
+          <p className="mt-4 text-lg text-gray-600">Redirecting to login page...</p>
+        </div>
+      </div>
+    );
+  }
+  if (!user) {
+    return null;
+  }
 
   return (
-    <ClientWrapper>
-     {children}
-    </ClientWrapper>
-  );
-}
+      <ClientWrapper>
+         {children}
+       </ClientWrapper>
+      );
+};
+
+export default DashboardLayout;
