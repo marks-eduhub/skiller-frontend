@@ -1,9 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { setToken } from "@/lib/helpers";
-import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import data from "./data.json";
@@ -17,29 +15,17 @@ export default function LogIn() {
   const authContext = useAuthContext();
   const { setUser } = authContext || {};
   const router = useRouter();
-  const[isLoading,setLoading]=useState(false)
-  const [error, setError] = useState("");
 
-  const mutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const response = await login(formData);
-      if (response?.error) {
-        throw new Error(response.error.message);
-      }
-      return response;
-    },
-    onMutate: () => {
-      setError("");
-    },
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: login,
     onSuccess: (data) => {
       if (setUser) {
-        setUser(data.user); 
+        setUser(data.user);
       }
-      setLoading(true)
       router.push("/dashboard");
     },
     onError: (error: any) => {
-      setError(error.message || "Something went wrong!");
+      error(error.message || "Something went wrong!");
     },
   });
 
@@ -50,7 +36,7 @@ export default function LogIn() {
     formData.append("identifier", form.email.value);
     formData.append("password", form.password.value);
 
-    mutation.mutate(formData);
+    mutate(formData);
   };
 
   return (
@@ -71,7 +57,7 @@ export default function LogIn() {
         <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
           {data.loginForm.title}
         </h2>
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        {isError && <p className="text-red-500 mt-4">{error.message || "Login failed"}</p>}
 
         <form
           className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"
@@ -108,10 +94,10 @@ export default function LogIn() {
           <button
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
             type="submit"
-            disabled={isLoading} 
+            disabled={isPending} 
           >
             <span className="pr-4">Login</span>
-            {isLoading && (
+            {isPending && (
               <l-dot-pulse size="15" speed="2.5" color="white"></l-dot-pulse>
             )}
           </button>
