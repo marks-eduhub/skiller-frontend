@@ -6,4 +6,11 @@ export const AuthContext = createContext<{
   setUser: (user: User) => void;
   isLoading: boolean;
 } | undefined>(undefined);
-export const useAuthContext = () => useContext(AuthContext);
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuthContext must be used within an AuthProvider');
+  }
+  return context;
+};
