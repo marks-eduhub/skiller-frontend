@@ -17,13 +17,13 @@ const SideLinks = () => {
       src: "/course.svg",
       alt: "courses",
       name: "Courses",
-      path: "/tutor/dashboard/uploadCourse",
+      path: "/tutor/dashboard/courses",
     },
     {
       src: "/people.svg",
       alt: "community",
       name: "Community",
-      path: "/tutor/dashboard/courses",
+      path: "/tutor/dashboard/courseview",
     },
     {
       src: "/tools.svg",

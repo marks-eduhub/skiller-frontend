@@ -42,11 +42,20 @@ const UploadCourse = () => {
 
   return (
     <div className="p-6 w-full flex flex-col">
-      <h1 className="text-[25px] mb-6">Upload a course</h1>
+        {currentStep === 1 && (
+        <h1 className="text-[20px] mb-6">Upload a Course</h1>
+      )}
+      {currentStep === 2 && (
+        <h1 className="text-[20px] mb-6">Upload a topic</h1>
+      )}
+      {currentStep === 3 && (
+        <h1 className="text-[20px] mb-6">Upload a resource</h1>
+      )}
       <StepTracker currentStep={currentStep} />
 
       {currentStep === 1 && (
         <div>
+
           <div className="mt-5 flex items-center w-full">
             <label className="flex-shrink-0">Course name</label>
             <input
@@ -68,54 +77,52 @@ const UploadCourse = () => {
             />
           </div>
           <div>
-          <div className="mb-6 mt-10">
-            <label className="block text-sm font-medium mb-4 mt-20">
-              What will the student learn?
-            </label>
-            <ReactQuill
-              value={courseLearning}
-              onChange={setCourseLearning}
-              className="h-40"
-            />
-          </div>
-        </div>
-        <div>
-          <div className="mb-6 mt-6">
-            <label className="block text-sm font-medium mb-4 mt-20">
-              Course Requirements
-            </label>
-            <ReactQuill
-              value={courseRequirements}
-              onChange={setCourseRequirements}
-              className="h-40"
-            />
-          </div>
-          <div className="mt-20">
-            <h1>Upload Course Image</h1>
-            <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
-              <GrCloudUpload className="text-blue-800 w-10 h-10" />
-              <span className="text-gray-500">
-                Drag & drop files or
-                <span className="text-blue-500 ml-1 cursor-pointer">Browse</span>
-              </span>
-              <input
-                type="file"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={handleImageChange}
+            <div className="mb-6 mt-10">
+              <label className="block text-sm font-medium mb-4 mt-20">
+                What will the student learn?
+              </label>
+              <ReactQuill
+                value={courseLearning}
+                onChange={setCourseLearning}
+                className="h-40"
               />
             </div>
           </div>
-        </div>
+          <div>
+            <div className="mb-6 mt-6">
+              <label className="block text-sm font-medium mb-4 mt-20">
+                Course Requirements
+              </label>
+              <ReactQuill
+                value={courseRequirements}
+                onChange={setCourseRequirements}
+                className="h-40"
+              />
+            </div>
+            <div className="mt-20">
+              <h1>Upload Course Image</h1>
+              <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
+                <GrCloudUpload className="text-blue-800 w-10 h-10" />
+                <span className="text-gray-500">
+                  Drag & drop files or
+                  <span className="text-blue-500 ml-1 cursor-pointer">
+                    Browse
+                  </span>
+                </span>
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleImageChange}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
-      {currentStep === 2 && (
-        <Step2/>
-      )}
+      {currentStep === 2 && <Step2 />}
 
-      {currentStep === 3 && (
-        <Step3/>
-      )}
+      {currentStep === 3 && <Step3 />}
 
       <div className="mt-5 flex items-center justify-between">
         {currentStep > 1 && (
@@ -130,6 +137,7 @@ const UploadCourse = () => {
           className="bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white"
           onClick={handleNextStep}
         >
+          {/* <h1>Continue</h1> */}
           {currentStep === 3 ? "Upload" : "Continue"}
         </button>
       </div>

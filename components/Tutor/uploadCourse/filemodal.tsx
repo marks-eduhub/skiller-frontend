@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+
 interface FileModalProps {
   isModalOpen: boolean;
   closeModal: () => void;
-  confirmType: () => void;
+  confirmType: (fileType: string) => void;
 }
+
 const FileModal = ({
   isModalOpen,
   closeModal,
   confirmType,
 }: FileModalProps) => {
+  const [selectedFileType, setSelectedFileType] = useState<string>("");
+
+  const handleFileTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFileType(e.target.value);
+  };
+
+  const handleConfirm = () => {
+    confirmType(selectedFileType);
+    closeModal();
+  };
+
   if (!isModalOpen) return null;
 
   return (
@@ -22,6 +35,7 @@ const FileModal = ({
             name="fileType"
             id="link"
             value="link"
+            onChange={handleFileTypeChange}
             className="mr-2"
           />
           <label htmlFor="link">Link</label>
@@ -30,7 +44,8 @@ const FileModal = ({
             type="radio"
             name="fileType"
             id="powerpoint"
-            value="powerpoint"
+            value="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            onChange={handleFileTypeChange}
             className="mr-2"
           />
           <label htmlFor="powerpoint">PowerPoint Presentation</label>
@@ -39,7 +54,8 @@ const FileModal = ({
             type="radio"
             name="fileType"
             id="doc"
-            value="doc"
+            value="application/pdf"
+            onChange={handleFileTypeChange}
             className="mr-2"
           />
           <label htmlFor="doc">Document (PDF)</label>
@@ -48,6 +64,7 @@ const FileModal = ({
 
         <div className="flex justify-center items-center mt-4">
           <button
+            onClick={handleConfirm}
             className="px-4 py-2 bg-black text-white rounded"
           >
             Continue
