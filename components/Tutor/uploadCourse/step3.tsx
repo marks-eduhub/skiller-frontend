@@ -76,7 +76,7 @@ const Step3 = () => {
           className="bg-white h-40 mb-10"
         />
       </div>
-      <div className="w-full h-[100px] bg-gray-300 cursor-pointer">
+      <div className="w-full sm:h-[100px] h-[90px] sm:mt-0 mt-10 bg-gray-300 cursor-pointer">
         <div
           className="flex items-center justify-center gap-1 p-9"
           onClick={() => setIsModalOpen(true)}

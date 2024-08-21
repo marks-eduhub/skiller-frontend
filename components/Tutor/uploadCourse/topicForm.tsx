@@ -44,7 +44,7 @@ const TopicForm: React.FC<TopicProps> = ({ name, deleteTopic }) => {
   };
   return (
     <div className="flex flex-col mt-5 mb-5 cursor-pointer">
-      <div className="w-full h-[100px] bg-gray-300 mt-3 ">
+      <div className="w-full sm:h-[100px] h-[90px] bg-gray-300 sm:mt-3">
         <div
           onClick={toggleExpanded}
           className="flex items-center justify-between p-9 relative"
@@ -122,7 +122,7 @@ const TopicForm: React.FC<TopicProps> = ({ name, deleteTopic }) => {
                 Delete Topic
               </button>
 
-              <button className="border border-black justify-end mb-4 py-2 px-4 flex items-center  rounded w-[150px] ">
+              <button className="border border-black justify-end mb-4  sm:mt-0 mt-4 py-2 px-4 flex items-center  rounded w-[150px] ">
                 Save changes
               </button>
             </div>

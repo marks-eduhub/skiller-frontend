@@ -25,11 +25,11 @@ const Step2 = () => {
       ))}
         <div className="border border-gray w-full mt-6 p-3">
           <div
-            className="w-full bg-gray-200 h-[90px] cursor-pointer flex items-center justify-center gap-2"
+            className="w-full bg-gray-200 sm:h-[90px] h-[70px] cursor-pointer flex items-center justify-center gap-2"
             onClick={addTopic}
           >
             <Image src="/pluss.svg" alt="pluss" width={20} height={20} />
-            <p>Add your topics</p>
+            <p >Add your topics</p>
           </div>
         </div>
       </div>

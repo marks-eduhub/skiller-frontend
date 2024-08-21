@@ -9,6 +9,7 @@ import { dotPulse } from "ldrs";
 import { useAuthContext } from "@/Context/AuthContext";
 import { login } from "../../../lib/login";
 import { message } from "antd";
+import dynamic from "next/dynamic";
 
 dotPulse.register();
 

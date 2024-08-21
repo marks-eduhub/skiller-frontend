@@ -127,7 +127,7 @@ const UploadCourse = () => {
       <div className="mt-5 flex items-center justify-between">
         {currentStep > 1 && (
           <button
-            className="bg-black py-2 px-4 flex items-center justify-center rounded w-[150px] text-white"
+            className="bg-black py-2 px-4 sm:mt-0 mt-4 flex items-center justify-center rounded w-[150px] text-white"
             onClick={handlePreviousStep}
           >
             Back
@@ -137,7 +137,6 @@ const UploadCourse = () => {
           className="bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white"
           onClick={handleNextStep}
         >
-          {/* <h1>Continue</h1> */}
           {currentStep === 3 ? "Upload" : "Continue"}
         </button>
       </div>
