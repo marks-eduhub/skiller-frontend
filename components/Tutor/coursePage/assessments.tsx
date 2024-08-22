@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-
+import Link from "next/link";
 const Assessments = () => {
   const quizzes = [
     "Quiz 1: (Quiz Title)",
@@ -169,12 +169,14 @@ const Assessments = () => {
           </div>
         )}
       </div>
+      <Link href="/tutor/dashboard/setQuiz">
       <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300  flex items-center justify-center cursor-pointer">
         <Image src="/pluss.svg" alt="plus" width={20} height={20} />
         <h1 className="text-black sm:text-[20px]">
           Add a quiz, test or challenge
         </h1>
       </div>
+      </Link>
     </div>
   );
 };
