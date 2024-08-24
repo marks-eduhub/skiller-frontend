@@ -7,16 +7,24 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const Step3 = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [fileInputAccept, setFileInputAccept] = useState("");
+  const [uploadFile, setUploadFile] = useState<string | null>(null);
+
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadFile(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleTextChange = (text: string) => {
+    console.log("Received text input:", text);
+  };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-  };
-
-  const handleFileTypeSelection = (fileType: string) => {
-    setFileInputAccept(fileType);
-    setIsModalOpen(false);
-    document.getElementById("fileInput")?.click();
   };
 
   const imageHandler = useCallback(() => {
@@ -30,7 +38,12 @@ const Step3 = () => {
           [{ header: "1" }, { header: "2" }, { font: [] }],
           [{ size: [] }],
           ["bold", "italic", "underline", "strike", "blockquote"],
-          [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+          [
+            { list: "ordered" },
+            { list: "bullet" },
+            { indent: "-1" },
+            { indent: "+1" },
+          ],
           ["link", "image"],
           ["clean"],
         ],
@@ -41,14 +54,6 @@ const Step3 = () => {
     }),
     [imageHandler]
   );
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    // if (file) {
-    //   // Handle file upload logic here
-    //   console.log("Selected file:", file);
-    // }
-  };
 
   return (
     <div className="relative flex flex-col">
@@ -79,23 +84,17 @@ const Step3 = () => {
       <div className="w-full sm:h-[100px] h-[90px] sm:mt-0 mt-10 bg-gray-300 cursor-pointer">
         <div
           className="flex items-center justify-center gap-1 p-9"
-          onClick={() => setIsModalOpen(true)}
         >
           <Image src="/pluss.svg" alt="plus" width={20} height={20} />
           <h1 className="font-semibold text-[18px]">Add resources</h1>
         </div>
       </div>
-      <input
-        type="file"
-        id="fileInput"
-        accept={fileInputAccept}
-        onChange={handleFileChange}
-        style={{ display: "none" }}
-      />
+
       {isModalOpen && (
         <FileModal
           closeModal={handleModalClose}
-          confirmType={handleFileTypeSelection}
+          handleFileChange={handleFileChange} 
+          handleTextChange={handleTextChange} 
           isModalOpen={isModalOpen}
         />
       )}

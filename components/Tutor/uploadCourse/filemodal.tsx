@@ -3,26 +3,34 @@ import React, { useState } from "react";
 interface FileModalProps {
   isModalOpen: boolean;
   closeModal: () => void;
-  confirmType: (fileType: string) => void;
+  handleFileChange: (file: File | null) => void;
+  handleTextChange: (text: string) => void;
 }
 
 const FileModal = ({
+  handleFileChange,
+  handleTextChange,
   isModalOpen,
   closeModal,
-  confirmType,
 }: FileModalProps) => {
   const [selectedFileType, setSelectedFileType] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
+  const [text, setText] = useState<string>("");
 
-  const handleFileTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFileType(e.target.value);
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFile(selectedFile);
   };
 
-  const handleConfirm = () => {
-    confirmType(selectedFileType);
-    closeModal();
+  const handleContinue = () => {
+    if (selectedFileType === "link") {
+      handleTextChange(text);
+    } else {
+      handleFileChange(file);
+    }
+    closeModal(); 
   };
 
-  if (!isModalOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -35,8 +43,8 @@ const FileModal = ({
             name="fileType"
             id="link"
             value="link"
-            onChange={handleFileTypeChange}
             className="mr-2"
+            onChange={() => setSelectedFileType("link")}
           />
           <label htmlFor="link">Link</label>
           <br />
@@ -44,9 +52,8 @@ const FileModal = ({
             type="radio"
             name="fileType"
             id="powerpoint"
-            value="application/vnd.openxmlformats-officedocument.presentationml.presentation"
-            onChange={handleFileTypeChange}
             className="mr-2"
+            onChange={() => setSelectedFileType("powerpoint")}
           />
           <label htmlFor="powerpoint">PowerPoint Presentation</label>
           <br />
@@ -54,17 +61,45 @@ const FileModal = ({
             type="radio"
             name="fileType"
             id="doc"
-            value="application/pdf"
-            onChange={handleFileTypeChange}
             className="mr-2"
+            onChange={() => setSelectedFileType("doc")}
           />
           <label htmlFor="doc">Document (PDF)</label>
           <br />
         </div>
 
+        {selectedFileType === "link" && (
+          <div className="mt-4">
+            <input
+              type="text"
+              placeholder="Enter URL"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="mt-2 w-full p-2 border rounded"
+            />
+          </div>
+        )}
+
+        {selectedFileType !== "link" && selectedFileType && (
+          <div className="mt-4">
+            <input
+              type="file"
+              onChange={handleFileInputChange}
+              accept={
+                selectedFileType === "doc"
+                  ? "application/pdf"
+                  : selectedFileType === "powerpoint"
+                  ? "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                  : undefined
+              }
+              className="mt-2"
+            />
+          </div>
+        )}
+
         <div className="flex justify-center items-center mt-4">
           <button
-            onClick={handleConfirm}
+            onClick={handleContinue}
             className="px-4 py-2 bg-black text-white rounded"
           >
             Continue
