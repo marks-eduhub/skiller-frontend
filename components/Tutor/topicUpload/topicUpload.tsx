@@ -5,7 +5,7 @@ import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Topic from "./topic";
 import TutorNav from "../dashboard/tutor-nav";
 
-const CourseUpload = () => {
+const TopicUpload = () => {
   const [topics, setTopics] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -101,4 +101,4 @@ const CourseUpload = () => {
   );
 };
 
-export default CourseUpload;
+export default TopicUpload;

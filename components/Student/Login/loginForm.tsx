@@ -8,6 +8,8 @@ import data from "./data.json";
 import { dotPulse } from "ldrs";
 import { useAuthContext } from "@/Context/AuthContext";
 import { login } from "../../../lib/login";
+import { message } from "antd";
+import dynamic from "next/dynamic";
 
 dotPulse.register();
 
@@ -19,6 +21,8 @@ export default function LogIn() {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      message.success(`Welcome back ${data.user.username}`);
+
       if (setUser) {
         setUser(data.user);
       }

@@ -11,11 +11,9 @@ import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 
 export default function SignUp() {
-  
   const authContext = useAuthContext();
   const { setUser } = authContext || {};
   const router = useRouter();
-const[isLoading,setLoading]=useState(false)
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -24,9 +22,8 @@ const[isLoading,setLoading]=useState(false)
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
 
-  const mutation = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async () => {
       const response = await fetch(`${API}/api/auth/local/register`, {
         method: "POST",
@@ -50,14 +47,14 @@ const[isLoading,setLoading]=useState(false)
     },
     onSuccess: (data) => {
       setToken(data.jwt);
-      setLoading(true)
+      message.success(`Welcome ${data.user.username}`);
       if (setUser) {
-        setUser(data.user); 
+        setUser(data.user);
       }
-      router.push("/auth");
+      router.push("/dashboard");
     },
     onError: (error) => {
-      setError((error as Error).message || "Something went wrong!");
+      message.error((error as Error).message || "Something went wrong!");
     },
   });
 
@@ -81,9 +78,17 @@ const[isLoading,setLoading]=useState(false)
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate();
+
+    if (formData.password !== formData.confirmPassword) {
+      message.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      await mutate();
+    } catch (error) {}
   };
 
   return (
@@ -105,7 +110,7 @@ const[isLoading,setLoading]=useState(false)
       <h2 className="font-[600] sm:text-[50px] mt-[1rem] text-[38px]">
         {data.registerForm.title}
       </h2>
-      {error && <p className="text-red-500">{error}</p>}
+      {isError && <p className="text-red-500">{isError}</p>}
 
       <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[2.2rem] mt-[2rem]">
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
@@ -207,7 +212,9 @@ const[isLoading,setLoading]=useState(false)
 
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start">
-            <div className="font-[400] text-[14px] sm:text-[22px]">Password</div>
+            <div className="font-[400] text-[14px] sm:text-[22px]">
+              Password
+            </div>
             <input
               type="password"
               name="password"
@@ -239,9 +246,9 @@ const[isLoading,setLoading]=useState(false)
             onClick={handleSubmit}
             type="submit"
             className="bg-black text-white rounded-lg py-3 text-xl flex justify-center w-52"
-            disabled={isLoading} 
+            disabled={isPending}
           >
-            {isLoading ? "Loading..." : "Register"}
+            {isPending ? "Loading..." : "Register"}
           </button>
         </div>
 
