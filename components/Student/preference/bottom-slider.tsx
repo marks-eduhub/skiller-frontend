@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { TbArrowBadgeRight } from "react-icons/tb";
 import data from "./data.json";
+import withAuth from "@/components/AuthProvider/Auth";
 
 interface SliderProps {
   data2: {
@@ -52,4 +53,4 @@ const BottomSlider: React.FC<SliderProps> = ({ data2, nextSlide, skipToSplash })
   );
 };
 
-export default BottomSlider;
+export default withAuth(BottomSlider);
