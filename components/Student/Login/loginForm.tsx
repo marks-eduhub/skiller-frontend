@@ -11,6 +11,9 @@ import { login } from "../../../lib/login";
 import { message } from "antd";
 import dynamic from "next/dynamic";
 
+// const DotPulse = dynamic(() => import('ldrs').then(mod => mod.dotPulse), { ssr: false });
+
+
 dotPulse.register();
 
 export default function LogIn() {
@@ -69,34 +72,34 @@ export default function LogIn() {
         >
           <div className="flex flex-row gap-[1.5rem] w-full">
             <div className="flex flex-col items-start">
-              <div className="font-[400] text-[14px] sm:text-[22px]">Email</div>
+              <label className=" my-2 sm:text-[22px]">Email</label>
               <input
                 placeholder="black@gmail.com"
                 type="email"
                 required
                 name="email"
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem] w-[20rem] sm:w-[25rem]"
+                className=" bg-inherit rounded-md border border-gray-600 px-3 py-[1.3rem] w-[20rem] sm:w-[25rem]"
               />
             </div>
           </div>
 
           <div className="flex flex-row gap-[1.5rem] w-full">
             <div className="flex flex-col items-start">
-              <div className="font-[400] text-[14px] sm:text-[22px]">
+              <label className=" my-2 sm:text-[22px]">
                 Password
-              </div>
+              </label>
               <input
                 placeholder="***************"
                 type="password"
                 required
                 name="password"
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
+                className=" bg-inherit rounded-md border border-gray-600 px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
               />
             </div>
           </div>
 
           <button
-            className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[100px]"
+            className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto mt-5 w-[300px]"
             type="submit"
             disabled={isPending} 
           >
