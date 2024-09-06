@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
@@ -10,13 +10,15 @@ import { useAuthContext } from "@/Context/AuthContext";
 import { login } from "../../../lib/login";
 import { message } from "antd";
 import dynamic from "next/dynamic";
-
-// const DotPulse = dynamic(() => import('ldrs').then(mod => mod.dotPulse), { ssr: false });
-
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 dotPulse.register();
 
+const DotPulseWrapper = dynamic(() => import('@/hooks/pulse'), { ssr: false });
+
 export default function LogIn() {
+  const [showPassword, setShowPassword] = useState(false);
+  const handlePassword = () => setShowPassword(!showPassword);
+
   const authContext = useAuthContext();
   const { setUser } = authContext || {};
   const router = useRouter();
@@ -48,23 +50,13 @@ export default function LogIn() {
 
   return (
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
-      <div className="sm:hidden flex flex-row justify-between items-center w-full px-[0.5rem]">
-        <Link
-          href={"/auth/register"}
-          className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center rounded-[12px] text-[17px] flex justify-center text-white"
-        >
-          Register
-        </Link>
-
-        <div className="relative w-[8rem] h-[4rem]">
-          <Image alt={"logo"} src={data.loginForm.logo} fill />
-        </div>
-      </div>
       <div className="flex flex-col items-center">
         <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
           {data.loginForm.title}
         </h2>
-        {isError && <p className="text-red-500 mt-4">{error.message || "Login failed"}</p>}
+        {isError && (
+          <p className="text-red-500 mt-4">{error.message || "Login failed"}</p>
+        )}
 
         <form
           className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"
@@ -83,34 +75,37 @@ export default function LogIn() {
             </div>
           </div>
 
-          <div className="flex flex-row gap-[1.5rem] w-full">
-            <div className="flex flex-col items-start">
-              <label className=" my-2 sm:text-[22px]">
-                Password
-              </label>
-              <input
-                placeholder="***************"
-                type="password"
-                required
-                name="password"
-                className=" bg-inherit rounded-md border border-gray-600 px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
-              />
-            </div>
+          <div className="flex flex-col items-start relative">
+            <label className=" my-2 sm:text-[22px]">Password</label>
+            <input
+              placeholder="***************"
+              type={showPassword ? "text" : "password"}
+              required
+              name="password"
+              className=" bg-inherit rounded-md border border-gray-600 px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
+            />
+            <span
+              onClick={handlePassword}
+              className="absolute right-3 top-[70%] transform -translate-y-[50%] cursor-pointer"
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </span>
           </div>
-
+          <h1 className="text-blue-600">Forgot Password?</h1>
           <button
-            className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto mt-5 w-[300px]"
+            className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[300px]"
             type="submit"
-            disabled={isPending} 
+            disabled={isPending}
           >
             <span className="pr-4">Login</span>
             {isPending && (
+              //  <DotPulseWrapper size="15" speed="2.5" color="white" />
               <l-dot-pulse size="15" speed="2.5" color="white"></l-dot-pulse>
             )}
           </button>
-          <div className="font-bold text-gray-500 text-lg mx-auto">
+          {/* <div className="font-bold text-gray-500 text-lg mx-auto">
             Trouble logging in?
-          </div>
+          </div> */}
         </form>
       </div>
 
@@ -122,14 +117,19 @@ export default function LogIn() {
 
       <div className="relative w-[100%] flex justify-center mt-[2rem] cursor-pointer">
         <Image
-          src="/logos/googleLogo.svg"
+          src="/logos/google.png"
           alt={"google"}
-          width={80}
-          height={80}
+          width={130}
+          height={130}
         />
       </div>
-      <div className="flex sm:hidden items-center font-[600] justify-center text-white text-[24px] bottom-0 w-full h-[11rem] bg-black mt-[10px]">
-        {data.loginForm.WelcomeMsg}
+      <div className="flex sm:hidden items-center  justify-center w-full  mt-10">
+        <h1>
+          Dont have an account?{" "}
+          <Link href="/auth/register" className="text-blue-600">
+            Sign Up
+          </Link>
+        </h1>
       </div>
     </div>
   );

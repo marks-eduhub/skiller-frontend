@@ -30,7 +30,7 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
     );
   };
   return (
-    <div className="relative flex flex-col justify-center md:flex md:flex-col md:justify-center md:grid md:grid-cols-4 md:grid-rows-4 md:gap-2 bg-grey h-screen p-4  overflow-y-auto">
+    <div className="relative flex flex-col justify-center md:flex-col md:justify-center md:grid md:grid-cols-4 md:grid-rows-4 md:gap-2 bg-grey h-screen p-4  overflow-y-auto">
       {/* row 1 */}
       <Header data2={{ currentIndex }} />
 

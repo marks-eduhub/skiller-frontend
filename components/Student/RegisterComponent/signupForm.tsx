@@ -227,6 +227,10 @@ const SignupForm = () => {
             <p className="text-[16px]">Sign in with Google</p>
           </button>
         </div>
+
+        <div className="sm:hidden flex items-center ">
+          <h1>Already have an account? <Link href="/auth" className="text-blue-600">Login</Link></h1>
+        </div>
       </div>
     
     </div>
