@@ -29,9 +29,9 @@ const Description = () => {
             </h1>
           </div>
         </div>
-        <div className="flex flex-col mr-8">
-          <div className="flex items-center justify-between gap-8 ">
-            <button className="rounded-t-md rounded-b-md border border-black bg-white px-8 py-2 ml-5   md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
+        <div className="flex flex-col mr-8 pb-10">
+          <div className="flex items-center justify-between gap-8 sm:mt-0 mt-20">
+            <button className="rounded-t-md  rounded-b-md border border-black bg-white px-8 py-2 ml-5   md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
               <BsBookmarkCheck className="text-lg" />
               <span className="ml-2">Save</span>
             </button>
