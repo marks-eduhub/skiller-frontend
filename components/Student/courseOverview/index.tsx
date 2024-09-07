@@ -14,7 +14,7 @@ const Enroll = () => {
   return (
     <div className="">
       <div
-        className="w-full relative rounded-lg h-[500px]"
+        className="w-full relative rounded-lg sm:h-[500px] h-[300px]"
         style={{
           backgroundImage: `url("/enroll.webp")`,
           backgroundSize: "cover",
@@ -27,27 +27,31 @@ const Enroll = () => {
             <h1 className="font-bold text-[20px]">
               Fundamentals of UI/UX Design
             </h1>
-            <p className="font-semibold">By Sarah Muwanguzi</p>
+            <p className="font-semibold mt-2 sm:mt-0">By Sarah Muwanguzi</p>
           </div>
           <div className="p-4 self-end">
-            <button className="rounded-md px-7 py-2 bg-white text-black">
+            <button className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black">
               Enroll today!
             </button>
           </div>
         </div>
       </div>
       <div className="flex flex-col mt-5 mb-3">
-        <h1 className="font-semibold text-[18px]">
+        <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
           Cost : <span className="font-bold text-[18px]">FREE</span>
         </h1>
-        <h1 className="font-semibold text-[18px]">
-          Duration :{" "}
+        <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
+          Duration :
           <span className="font-bold text-[18px]">2hours 40 minutes</span>
         </h1>
 
-        <h1 className="font-semibold text-[18px]">
+        <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
           Students enrolled : <span className="font-bold text-[18px]">112</span>
         </h1>
+
+        <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
+          <button className="text-white px-6 py-2">Enroll today!</button>
+        </div>
       </div>
       <div className="flex w-full justify-around items-center mt-10 ">
         <div

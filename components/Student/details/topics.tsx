@@ -4,7 +4,7 @@ import { topics } from "../../../components/Student/details/tabs.json";
 const TopicsCard: React.FC = () => {
   return (
     <div>
-      <div className="h-auto max-md:h-[400px] max-md:hidden  rounded-lg flex flex-col overflow-y-auto scroll bg-gray-900 ">
+      <div className="h-auto  max-md:hidden  rounded-lg flex flex-col overflow-y-auto scroll bg-gray-900 ">
         <div className="sm:p-4 ">
           <h2 className="text-xl text-right font-bold text-white max-md:mr-4">
             {topics.length} Topics
@@ -14,7 +14,7 @@ const TopicsCard: React.FC = () => {
           {topics.map((topic, index) => (
             <li
               key={index}
-              className="flex justify-between items-center px-4 py-3 rounded hover:bg-zinc-600 transition duration-300 ease-in-out"
+              className="flex justify-between items-center px-4 py-[14px] rounded hover:bg-zinc-600 transition duration-300 ease-in-out"
             >
               <span className="text-white">{`${index + 1}. ${
                 topic.name
@@ -24,7 +24,7 @@ const TopicsCard: React.FC = () => {
           ))}
         </ul>
       </div>
-      <div className="flex items-center  gap-3 mt-7 w-full justify-between">
+      <div className="flex items-center gap-3 sm:mt-6 w-full justify-between">
         <div className="flex flex-col">
           <div className="flex items-center justify-between font-bold">
             <h2>Progress</h2>
@@ -32,7 +32,7 @@ const TopicsCard: React.FC = () => {
           </div>
 
           <div className="mt-1 flex flex-row space-x-4 items-center">
-            <div className="w-48 h-4 bg-gray-300 flex flex-row">
+            <div className="sm:w-48  w-60 h-4 bg-gray-300 flex flex-row">
               <div
                 className="h-full bg-[#1C4E85]"
                 style={{ width: "30%" }}

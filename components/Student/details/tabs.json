@@ -44,9 +44,9 @@
     {
       "Quizz": "QUIZZ 2",
       "topic": "Topics 2",
-      "actionText": "Redo",
-      "score": "100%",
-      "status": "Passed"
+      "actionText": "Attempt",
+      "score": "---",
+      "status": "----"
     },
     {
      "Quizz": "QUIZZ 3",

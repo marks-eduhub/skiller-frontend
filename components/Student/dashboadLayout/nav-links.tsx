@@ -96,7 +96,7 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
                   >
                     <div
                       className={clsx(
-                        "flex items-center justify-between bg-black pl-4 pb-4 p-3 cursor-pointer",
+                        "flex items-center justify-between bg-black sm:pl-4 pb-4 sm:p-3 cursor-pointer",
                         {
                           "bg-gray-700 text-white rounded ":
                             pathname ===
