@@ -10,7 +10,6 @@ const Knowledge = () => {
 
   return (
     <div className="flex flex-col rounded-lg ">
-      {/* Tab Selector */}
       <div className="flex w-full mb-4 cursor-pointer">
         <div
           className={`bg-gray-300 justify-center items-center flex w-1/2 h-full${
@@ -51,7 +50,6 @@ const Knowledge = () => {
         </div>
       </div>
 
-      {/* Display Tests */}
       {selectedTab === "Tests" &&
         tests.map((test, index) => (
           <div
@@ -91,7 +89,6 @@ const Knowledge = () => {
           </div>
         ))}
 
-      {/* Display Quizzes */}
       {selectedTab === "Quizzes" &&
         quizzes.map((quiz, index) => (
           <div
