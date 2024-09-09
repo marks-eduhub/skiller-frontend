@@ -66,7 +66,7 @@ const SmallScreenSideNav = () => {
         <div
           className="fixed inset-0 z-30 bg-black opacity-50"
           onClick={toggleSidebar}
-        ></div>
+        />
       )}
     </div>
   );

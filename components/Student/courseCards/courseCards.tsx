@@ -51,7 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
         <div className="p-2 bg-[#F3F4F3] text-black" >
           <div className="mb-4 sm:h-[30px] h-[50px]">
-            <h3 className="font-semibold line-clamp-2 overflow-hidden text-ellipsis ">{course.topic}</h3>
+            <h3 className="font-semibold line-clamp-2  text-ellipsis ">{course.topic}</h3>
           </div>
 
           <div className="flex items-center mb-4">
