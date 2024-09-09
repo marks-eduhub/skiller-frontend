@@ -1,17 +1,17 @@
 import React from "react";
 import { CiShare2 } from "react-icons/ci";
-import { topics } from "../../../components/Student/details/tabs.json";
+import tabs from "../../../components/Student/details/tabs.json";
 const TopicsCard: React.FC = () => {
   return (
     <div>
       <div className="h-auto  max-md:hidden  rounded-lg flex flex-col overflow-y-auto scroll bg-gray-900 ">
         <div className="sm:p-4 ">
           <h2 className="text-xl text-right font-bold text-white max-md:mr-4">
-            {topics.length} Topics
+            {tabs.topics.length} Topics
           </h2>
         </div>
         <ul className="p-4 flex flex-col">
-          {topics.map((topic, index) => (
+          {tabs.topics.map((topic, index) => (
             <li
               key={index}
               className="flex justify-between items-center px-4 py-[14px] rounded hover:bg-zinc-600 transition duration-300 ease-in-out"

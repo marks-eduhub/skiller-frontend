@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { topics } from "../../../components/Student/details/tabs.json";
+import tabs from "../../../components/Student/details/tabs.json";
 import Image from "next/image";
 const VideoCard: React.FC = () => {
   const videoFilePath = "/Video1.mp4";
   const thumbnail = "/Thumb Nail.svg";
-  const [selectedTopic, setSelectedTopic] = useState(topics[0]);
+  const [selectedTopic, setSelectedTopic] = useState(tabs.topics[0]);
   const [showTopics, setShowTopics] = useState(false);
 
   const handleToggle = () => {
@@ -51,7 +51,7 @@ const VideoCard: React.FC = () => {
             />
             {showTopics && (
               <div className="absolute top-12 left-0 z-40 text-white  bg-gray-900 rounded-lg shadow">
-                {topics.map((topic, index) => (
+                {tabs.topics.map((topic, index) => (
                   <div
                     key={index}
                     className="px-8 py-3 hover:bg-gray-100 cursor-pointer"

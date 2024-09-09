@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { tests, quizzes } from "../../../components/Student/details/tabs.json";
+import tabs from "../../../components/Student/details/tabs.json";
 
 const Knowledge = () => {
   const [selectedTab, setselectedTab] = useState("Tests");
@@ -51,10 +51,10 @@ const Knowledge = () => {
       </div>
 
       {selectedTab === "Tests" &&
-        tests.map((test, index) => (
+        tabs.tests.map((test, index) => (
           <div
             key={index}
-            className="w-full py-6 sm:flex sm:rounded-lg sm:space-x-4"
+            className="w-full py-6 "
           >
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="bg-gray-200 w-full sm:w-1/3 mb-2 sm:mb-0">
@@ -90,10 +90,10 @@ const Knowledge = () => {
         ))}
 
       {selectedTab === "Quizzes" &&
-        quizzes.map((quiz, index) => (
+       tabs.quizzes.map((quiz, index) => (
           <div
             key={index}
-            className="w-full py-6 sm:flex sm:rounded-lg sm:space-x-4"
+            className="w-full py-6 "
           >
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="bg-gray-200 w-full sm:w-1/3 mb-2 sm:mb-0">
