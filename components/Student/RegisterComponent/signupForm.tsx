@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import data from "./data.json";
-import { API } from "../../../lib/constants";
 import { setToken } from "../../../lib/helpers";
 import { useAuthContext } from "../../../Context/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
+import api from "@/lib/axios";
 
 export default function SignUp() {
   const authContext = useAuthContext();
@@ -25,25 +25,18 @@ export default function SignUp() {
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async () => {
-      const response = await fetch(`${API}/api/auth/local/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      try {
+        const response = await api.post("/api/auth/local/register", {
           email: formData.email,
           username: formData.username,
           phone: formData.phone,
           dob: `${formData.dob.year}-${formData.dob.month}-${formData.dob.day}`,
           password: formData.password,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
       }
-      return response.json();
     },
     onSuccess: (data) => {
       setToken(data.jwt);
@@ -84,6 +77,10 @@ export default function SignUp() {
     if (formData.password !== formData.confirmPassword) {
       message.error("Passwords do not match");
       return;
+    }
+
+    if (formData.password.length < 6) {
+      message.error("Password must be at least 6 characters long");
     }
 
     try {

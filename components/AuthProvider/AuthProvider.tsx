@@ -1,28 +1,28 @@
 import React, { ReactNode, useState, useEffect } from "react";
-import { AuthContext } from "../../Context/AuthContext"
+import { AuthContext } from "../../Context/AuthContext";
 import { message } from "antd";
-import { API, BEARER } from "../../lib/constants";
+import { BEARER } from "../../lib/constants";
 import { getToken } from "../../lib/helpers";
 import { User } from "@/lib/types";
+import api from "@/lib/axios";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<User | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   const authToken = getToken();
 
   const fetchLoggedInUser = async (token: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API}/api/users/me`, {
+      const response = await api.get('/api/users/me', {
         headers: { Authorization: `${BEARER} ${token}` },
       });
-      const data = await response.json();
 
-      setUserData(data);
+      setUserData(response.data); 
     } catch (error) {
       console.error(error);
-      message.error("Error While Getting Logged In User Details");
+      message.error("Error while getting logged-in user details");
     } finally {
       setIsLoading(false);
     }

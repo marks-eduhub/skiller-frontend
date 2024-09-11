@@ -1,40 +1,34 @@
-"use client"
-import React from 'react';
+"use client";
+import React, { useEffect } from "react";
 import ClientWrapper from "./ClientWrapper";
-import { useRouter } from 'next/navigation';
-import { useAuthContext } from '@/Context/AuthContext';
-import Loader from '@/components/Student/loader';
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/Context/AuthContext";
+import Loader from "@/components/Student/loader";
 
-const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user, isLoading } = useAuthContext();
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isLoading && !user) {
-      router.push('/auth'); 
+      router.push("/auth");
     }
   }, [user, isLoading, router]);
 
   
   if (isLoading) {
     return (
-      <div className="fixed inset-0 flex  items-center justify-center bg-white z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
         <div className="text-center">
           <Loader />
-          <p className="mt-4 text-lg text-gray-600">Redirecting to login page...</p>
+          <p className="mt-4 text-lg text-gray-600">Redirecting...</p>
         </div>
       </div>
     );
   }
-  if (!user) {
-    return null;
-  }
 
-  return (
-      <ClientWrapper>
-         {children}
-       </ClientWrapper>
-      );
-};
+  return <ClientWrapper>{children}</ClientWrapper>;};
 
 export default DashboardLayout;

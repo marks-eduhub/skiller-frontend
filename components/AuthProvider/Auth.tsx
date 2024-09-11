@@ -1,23 +1,23 @@
-import React, { ComponentType, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useAuthContext } from '../../Context/AuthContext';
+import React, { ComponentType } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "../../Context/AuthContext";
+import Loader from "../Student/loader";
 
 const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
-  const WithAuth: React.FC<P > = (props) => {
+  const WithAuth: React.FC<P> = (props) => {
     const { user, isLoading } = useAuthContext();
     const router = useRouter();
 
-    useEffect(() => {
-      if (!isLoading && !user) {
-        router.push('/auth'); 
-      }
-    }, [user, isLoading, router]);
-
-    if (isLoading || user) {
-      return <WrappedComponent {...props as P} />;
+    if (isLoading) {
+      return null;
     }
 
-    return null; 
+    if (!user) {
+      router.push("/auth");
+      return null;
+    }
+
+    return <WrappedComponent {...(props as P)} />;
   };
 
   return WithAuth;
