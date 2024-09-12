@@ -1,31 +1,20 @@
 import React from "react";
-
+import { CiShare2 } from "react-icons/ci";
+import tabs from "../../../components/Student/details/tabs.json";
 const TopicsCard: React.FC = () => {
-  const topics = [
-    { name: "Topic 1", time: "5:00" },
-    { name: "Topic 2", time: "5:00" },
-    { name: "Topic 3", time: "5:00" },
-    { name: "Topic 4", time: "5:00" },
-    { name: "Topic 5", time: "5:00" },
-    { name: "Topic 6", time: "5:00" },
-    { name: "Topic 7", time: "5:00" },
-    { name: "Topic 8", time: "5:00" },
-    { name: "Topic 9", time: "5:00" },
-  ];
-
   return (
     <div>
-      <div className="h-auto max-md:h-[400px] rounded-lg flex flex-col overflow-y-auto scroll bg-gray-900 ">
+      <div className="h-auto  max-md:hidden  rounded-lg flex flex-col overflow-y-auto scroll bg-gray-900 ">
         <div className="sm:p-4 ">
           <h2 className="text-xl text-right font-bold text-white max-md:mr-4">
-            {topics.length} Topics
+            {tabs.topics.length} Topics
           </h2>
         </div>
         <ul className="p-4 flex flex-col">
-          {topics.map((topic, index) => (
+          {tabs.topics.map((topic, index) => (
             <li
               key={index}
-              className="flex justify-between items-center px-4 py-3 rounded hover:bg-zinc-600 transition duration-300 ease-in-out"
+              className="flex justify-between items-center px-4 py-[14px] rounded hover:bg-zinc-600 transition duration-300 ease-in-out"
             >
               <span className="text-white">{`${index + 1}. ${
                 topic.name
@@ -35,14 +24,26 @@ const TopicsCard: React.FC = () => {
           ))}
         </ul>
       </div>
-      <div className="mt-4 font-bold text-black">
-        <h2>Progress</h2>
-      </div>
-      <div className="mt-1 flex flex-row space-x-4 items-center">
-        <div className="w-80 h-4 bg-gray-300 flex flex-row">
-          <div className="h-full bg-[#1C4E85]" style={{ width: "30%" }}></div>
+      <div className="flex items-center gap-3 sm:mt-6 w-full justify-between">
+        <div className="flex flex-col">
+          <div className="flex items-center justify-between font-bold">
+            <h2>Progress</h2>
+            <span>30%</span>
+          </div>
+
+          <div className="mt-1 flex flex-row space-x-4 items-center">
+            <div className="sm:w-48  w-60 h-4 bg-gray-300 flex flex-row">
+              <div
+                className="h-full bg-[#1C4E85]"
+                style={{ width: "30%" }}
+              ></div>
+            </div>
+          </div>
         </div>
-        <span className="text-white">30%</span>
+        <div className="flex items-center gap-2 mt-4 font-bold">
+          <CiShare2  className=" ml-2 text-[20px]"/>
+          <h1 >Share</h1>
+        </div>
       </div>
     </div>
   );

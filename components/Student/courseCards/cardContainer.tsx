@@ -22,7 +22,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
   return (
     <>
       <div className="relative pl-0 container  mx-auto max-md:hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-3 w-full my-4  gap-6">
+        <div className="grid sm:grid-cols-3 w-full my-4  gap-6">
           {courses.map((course) => (
             <ProductCard
               key={course.id}
@@ -33,9 +33,9 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
         </div>
       </div>
 
-      <div className="w-full h-full flex flex-col items-center justify-center bg-transparent  rounded-lg relative  sm:hidden">
-        <div className="flex flex-col w-full mt-3 mb-4 pb-2 mx-auto  ">
-          {courses.map((course) => (
+      <div className="w-full h-full flex items-center justify-center bg-transparent  rounded-lg relative  sm:hidden">
+        <div className="grid grid-cols-2 w-full mt-3 mb-4 pb-2 mx-auto  ">
+        {courses.slice(0, 2).map((course) => (
             <ProductCard
               key={course.id}
               course={course}

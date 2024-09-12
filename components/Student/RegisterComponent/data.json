@@ -1,13 +1,13 @@
 {
  
   "registerForm": {
-    "title": "Register",
+    "title": "Sign Up",
     "passwordsvg": "/logos/password.svg",
     "logo":"/logos/whiteLogo.svg",
     "action": {
       "text": "Register",
       "link": "/auth/register",
-      "googlelogo": "/logos/googlelogo.svg"
+      "googlelogo": "/logos/google.png"
     }
   }
 }

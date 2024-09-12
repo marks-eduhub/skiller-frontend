@@ -8,30 +8,40 @@ import { setToken } from "../../../lib/helpers";
 import { useAuthContext } from "../../../Context/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "@/lib/axios";
 
-export default function SignUp() {
+const SignupForm = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
   const authContext = useAuthContext();
   const { setUser } = authContext || {};
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     username: "",
-    phone: "",
-    dob: { day: "", month: "", year: "" },
+    lastName: "",
+    firstName: "",
     password: "",
     confirmPassword: "",
   });
-
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async () => {
       try {
         const response = await api.post("/api/auth/local/register", {
           email: formData.email,
           username: formData.username,
-          phone: formData.phone,
-          dob: `${formData.dob.year}-${formData.dob.month}-${formData.dob.day}`,
+          lastName: formData.lastName,
+          firstName: formData.firstName,
           password: formData.password,
+          confirmPassword: formData.confirmPassword,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Registration failed");
         });
         return response.data;
       } catch (error) {
@@ -50,27 +60,16 @@ export default function SignUp() {
       message.error((error as Error).message || "Something went wrong!");
     },
   });
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "day" || name === "month" || name === "year") {
-      setFormData((prevData) => ({
-        ...prevData,
-        dob: {
-          ...prevData.dob,
-          [name]: value,
-        },
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
 
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -87,165 +86,130 @@ export default function SignUp() {
       await mutate();
     } catch (error) {}
   };
-
   return (
     <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
-      <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
-      <div className="sm:hidden flex flex-row justify-between items-center w-full px-[0.5rem]">
-        <Link
-          href={"/auth"}
-          className="bg-[#000] w-[8rem] font-[600] py-[0.9rem] items-center rounded-[12px] text-[17px] flex justify-center text-white"
-        >
-          Login
-        </Link>
-
-        <div className="relative w-[8rem] h-[4rem]">
-          <Image alt={"logo"} src={data.registerForm.logo} fill />
-        </div>
-      </div>
-
-      <h2 className="font-[600] sm:text-[50px] mt-[1rem] text-[38px]">
+        <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
+      <h2 className="font-[500] sm:text-[50px] text-[38px]">
         {data.registerForm.title}
       </h2>
       {isError && <p className="text-red-500">{isError}</p>}
+      <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[1.5rem] mt-[2rem]">
 
-      <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[2.2rem] mt-[2rem]">
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
-          <div className="flex flex-col items-start">
-            <div className="font-[400] text-[14px] sm:text-[22px]">Email</div>
+          <div className="flex flex-col items-start w-full sm:w-[22rem]">
+            <label className="sm:text-[22px]">First Name</label>
             <input
-              type="email"
+              type="text"
+              name="firstName"
+              required
+              value={formData.firstName}
+              onChange={handleChange}
+              className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+            />
+          </div>
+          <div className="flex flex-col items-start w-full sm:w-[22rem]">
+            <label className="sm:text-[22px]">Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              required
+              value={formData.lastName}
+              onChange={handleChange}
+              className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
+          <div className="flex flex-col items-start w-full sm:w-[22rem]">
+            <label className="sm:text-[22px]">Email Address</label>
+            <input
+              type="text"
               name="email"
               required
-              placeholder="black@gmail.com"
               value={formData.email}
               onChange={handleChange}
-              className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
+              className="border border-gray-600 my-3 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
             />
           </div>
-          <div className="flex flex-col items-start">
-            <div className="font-[400] text-[14px] sm:text-[22px]">Phone</div>
-            <div className="w-full sm:w-[20rem] gap-2 flex flex-row ">
-              <input
-                placeholder="256"
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-[4rem]"
-              />
-              <input
-                placeholder="700600504"
-                type="text"
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[14rem]"
-              />
-            </div>
+          <div className="flex flex-col items-start w-full sm:w-[22rem]">
+            <label className="sm:text-[22px]">Username</label>
+            <input
+              type="text"
+              name="username"
+              required
+              value={formData.username}
+              onChange={handleChange}
+              className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+            />
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
-          <div className="flex flex-col items-start">
-            {/* <div className="font-[400] text-[14px] sm:text-[22px]">Gender</div>
-            <select
-              id="gender"
-              name="gender"
-              className="fieldBoxShadow  bg-[#F9F9F9] rounded-[14px]  px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div> */}
-            <div className="flex flex-col items-start">
-              <div className="font-[400] text-[14px] sm:text-[22px]">
-                Username
-              </div>
+          <div className="flex flex-col items-start w-full">
+            <label className="  sm:text-[22px]">Password</label>
+            <div className="relative  sm:w-[22rem] w-full">
               <input
-                placeholder="username"
-                type="text"
-                name="username"
+                type={passwordVisible ? "text" : "password"}
+                name="password"
                 required
-                value={formData.username}
+                value={formData.password}
+                placeholder="Enter your password"
                 onChange={handleChange}
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
+                className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
               />
+              <span
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-[50%] transform -translate-y-[50%] cursor-pointer"
+              >
+                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+              </span>
             </div>
           </div>
-          <div className="flex flex-col items-start">
-            <div className="font-[400] text-[14px] sm:text-[22px]">
-              Date of birth
-            </div>
-            <div className="w-full sm:w-[20rem] gap-4 flex flex-row max-sm:justify-between">
+          <div className="flex flex-col items-start w-full sm:w-[22rem]">
+            <label className="  sm:text-[22px]">Confirm password</label>
+            <div className="relative sm:w-[22rem] w-full">
               <input
-                placeholder="DD"
-                type="number"
-                min="1"
-                name="day"
-                value={formData.dob.day}
+                type={passwordVisible ? "text" : "password"}
+                name="confirmPassword"
+                required
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
                 onChange={handleChange}
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-[4.5rem]"
+                className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
               />
-              <input
-                placeholder="MM"
-                type="number"
-                min="1"
-                name="month"
-                value={formData.dob.month}
-                onChange={handleChange}
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-[4.5rem]"
-              />
-              <input
-                placeholder="YYYY"
-                type="number"
-                name="year"
-                min="1"
-                value={formData.dob.year}
-                onChange={handleChange}
-                className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-[8rem]"
-              />
+              <span
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-[50%] transform -translate-y-[50%] cursor-pointer"
+              >
+                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
-          <div className="flex flex-col items-start">
-            <div className="font-[400] text-[14px] sm:text-[22px]">
-              Password
-            </div>
-            <input
-              type="password"
-              name="password"
-              required
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
-            />
-          </div>
-          <div className="flex flex-col items-start">
-            <div className="font-[400] text-[14px] sm:text-[22px]">
-              Confirm password
-            </div>
-            <input
-              type="password"
-              name="confirmPassword"
-              required
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="fieldBoxShadow bg-[#F9F9F9] rounded-[14px] px-3 py-[0.7rem] sm:py-[1.3rem] w-full sm:w-[20rem]"
-            />
-          </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="terms"
+            name="terms"
+            required
+            className="w-[1.2rem] h-[1.2rem]"
+          />
+          <label>
+            I agree to <span className="text-blue-600">terms of service </span>{" "}
+            and <span className="text-blue-600">privacy policy</span>
+          </label>
         </div>
 
         <div className="flex justify-center">
           <button
             onClick={handleSubmit}
             type="submit"
-            className="bg-black text-white rounded-lg py-3 text-xl flex justify-center w-52"
+            className="bg-black text-white rounded-lg py-3 text-xl flex justify-center w-96 my-4"
             disabled={isPending}
           >
-            {isPending ? "Loading..." : "Register"}
+            {isPending ? "Loading..." : "Sign Up"}
           </button>
         </div>
 
@@ -255,15 +219,26 @@ export default function SignUp() {
           <hr className="border-[1px] border-black w-[48%] " />
         </div>
 
-        <div className="relative w-[100%] flex justify-center bottom-[1rem] mt-2 cursor-pointer">
-          <Image
-            src={data.registerForm.action.googlelogo}
-            alt={"google"}
-            width={80}
-            height={80}
-          />
+        <div className="flex justify-center">
+          <button className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4">
+            <Image
+              src={data.registerForm.action.googlelogo}
+              alt={"google"}
+              width={50}
+              height={50}
+            />
+            <p className="text-[16px]">Sign in with Google</p>
+          </button>
+        </div>
+
+        <div className="sm:hidden flex items-center ">
+          <h1>Already have an account? <Link href="/auth" className="text-blue-600">Login</Link></h1>
         </div>
       </div>
+    
     </div>
+    
   );
-}
+};
+
+export default SignupForm;

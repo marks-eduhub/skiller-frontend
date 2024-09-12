@@ -26,7 +26,7 @@ const FeaturedProduct: React.FC<FeaturedProductProps> = ({ course }) => {
 
   return (
     <div>
-      <div className=" py-2 relative sm:pl-0 pl-2 ">
+      <div className=" py-2 relative  ">
         <div className="shadow-lg sm:rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl  max-md:rounded-lg overflow-hidden mx-2 relative">
           <Carousel
             showThumbs={false}

@@ -22,12 +22,11 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({
   course,
   containerWidth,
-  sidebarMinimized,
 }) => {
   return (
     <>
       
-      <div className="mr-4 max-md:pb-10  ">
+      <div className="mr-4 pb-10 sm:pb-0 h-full">
         <div className="border border-gray-400">
           <div className="rounded-lg flex relative overflow-hidden h-[180px]">
             <Image
@@ -50,9 +49,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           </div>
         </div>
-        <div className="p-2 bg-[#F3F4F3] text-black">
-          <div className="mb-4">
-            <h3 className="font-semibold">{course.topic}</h3>
+        <div className="p-2 bg-[#F3F4F3] text-black" >
+          <div className="mb-4 sm:h-[30px] h-[50px]">
+            <h3 className="font-semibold line-clamp-2  text-ellipsis ">{course.topic}</h3>
           </div>
 
           <div className="flex items-center mb-4">

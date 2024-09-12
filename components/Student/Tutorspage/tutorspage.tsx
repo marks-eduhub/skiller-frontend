@@ -22,7 +22,7 @@ const Tutorspage = () => {
   };
 
   return (
-    <div className="pl-10 py-5 w-full">
+    <div className="pl-10 py-5 sm:w-full">
       <div className="grid sm:grid-cols-3 grid-cols-1 gap-10">
         {alltutors.map((tutor, index) => (
           <div

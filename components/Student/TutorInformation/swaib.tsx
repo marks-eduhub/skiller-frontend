@@ -15,7 +15,7 @@ const DraguleSwaib = () => {
   ];
 
   return (
-    <div className="pl-10 sm:pl-0">
+    <div className="">
       <div className="flex mb-5 flex-col sm:w-full w-[345px] rounded-lg sm:px-4 p-2 sm:py-6 border border-black sm:h-[400px] h-auto relative">
         <div className="flex flex-col sm:flex-row items-start sm:gap-7 gap-3 mt-5">
           <Image

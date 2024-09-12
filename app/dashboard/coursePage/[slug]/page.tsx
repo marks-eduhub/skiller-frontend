@@ -63,7 +63,7 @@ const CoursecategoryPage = ({ params }: { params: { slug: string } }) => {
         </div>
       </div>
 
-      <div className="shadow-lg rounded-lg relative sm:hidden">
+      <div className="rounded-lg relative sm:hidden">
         <div className="w-full h-full flex flex-col items-center justify-center bg-transparent">
           <div className="flex flex-col w-full mt-2 mb-2">
             {filteredcourses.map((course) => (
