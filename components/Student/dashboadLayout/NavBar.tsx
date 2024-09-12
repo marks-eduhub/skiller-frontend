@@ -10,6 +10,7 @@ import Link from "next/link";
 import constants from "./constants.json";
 import SkillerLogo from "@/components/ui/logo";
 import { useAuthContext } from "@/Context/AuthContext";
+import Greeting from "@/lib/greeting";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
@@ -19,7 +20,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const { user } = useAuthContext();
-  const username = user?.username || '';
+  const username = user?.username || "Guest";
 
   useEffect(() => {
     setIsMounted(true);
@@ -39,9 +40,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
           {!sidebarMinimized ? (
             <>
               {!hideGreetingAndSearch && (
-                <p className="text-black font-semibold text-[20px]">
-                  Good Morning {username}
-                </p>
+                  <Greeting  username={username}/>
               )}
               <div className="flex items-center gap-10 ml-auto">
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">

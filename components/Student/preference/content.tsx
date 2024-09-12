@@ -3,6 +3,7 @@ import data from "./data.json";
 import { useState } from "react";
 import Profile from "./profile";
 import Splash from "../splash";
+import withAuth from "@/components/AuthProvider/Auth";
 
 interface MyComponentProps {
   data2: {
@@ -52,4 +53,4 @@ const Content: React.FC<MyComponentProps> = ({ data2 }) => {
   );
 };
 
-export default Content;
+export default withAuth(Content);
