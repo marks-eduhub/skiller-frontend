@@ -1,10 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import ProductContainer from "../courseCards/cardContainer";
-import { courses } from "../HomePage/dummyData.json";
+import dummy from "../HomePage/dummyData.json";
 
 const MichaelKizito = () => {
-  const KizitoCourses = courses.filter(
+  const KizitoCourses = dummy.courses.filter(
     (course) => course.instructor === "Micheal Kizito"
   );
   const images = [

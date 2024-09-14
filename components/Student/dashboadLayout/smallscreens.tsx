@@ -33,7 +33,7 @@ const SmallScreenSideNav = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 h-full bg-black text-white z-40 transition-transform transform ${
+        className={`fixed top-0 left-0 h-[600px] bg-black text-white z-40 transition-transform transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } w-64 duration-300 ease-in-out`}
       >
