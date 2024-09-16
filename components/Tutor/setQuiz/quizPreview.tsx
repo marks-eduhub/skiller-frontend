@@ -5,16 +5,16 @@ interface QuizPreviewProps{
 const QuizPreview:React.FC<QuizPreviewProps> = ({ handlePreviousStep }) => {
   return (
     <div className="p-6  mb-5 w-full">
-      <div className="flex mt-6 justify-between w-full  items-center">
+      <div className="flex mt-6  max-md:flex-col justify-between w-full  sm:items-center">
         <button
-          className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md"
+          className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md sm:mb-0 mb-4 w-[100px]  flex justify-start"
           onClick={handlePreviousStep}
         >
           Back
         </button>
         <h1 className="text-xl  mb-4">Quiz Preview</h1>
 
-        <button className="bg-black text-white py-2 px-6 rounded-md">
+        <button className="bg-black text-white py-2 px-6 sm:w-[150px]  rounded-md">
           Upload Quiz
         </button>
       </div>

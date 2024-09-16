@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import NavLinks from "@/components/Student/dashboadLayout/nav-links";
 import SkillerLogo from "@/components/ui/logo";
+import { IoMdClose } from "react-icons/io";
 
 const SmallScreenSideNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -11,8 +12,8 @@ const SmallScreenSideNav = () => {
   };
 
   return (
-    <div className="pt-6 px-4 relative">
-      <div className="flex gap-1 items-center justify-between w-full">
+    <div className="pt-6 px-5 relative">
+      <div className="flex  items-center justify-between w-full">
         <div className="w-24 text-white">
           <SkillerLogo />
         </div>
@@ -33,7 +34,7 @@ const SmallScreenSideNav = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 h-[600px] bg-black text-white z-40 transition-transform transform ${
+        className={`fixed top-0 left-0 h-full bg-black text-white z-40 transition-transform transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } w-64 duration-300 ease-in-out`}
       >
@@ -41,10 +42,11 @@ const SmallScreenSideNav = () => {
           <div className="w-36">
             <SkillerLogo />
           </div>
-          <HamburgerMenuIcon
-            className="w-6 h-6 text-white cursor-pointer"
-            onClick={toggleSidebar}
-          />
+          <IoMdClose
+                onClick={toggleSidebar}
+                className="text-white "
+                style={{ width: "40px", height: "30px" }}
+              />
         </div>
 
         <div className="p-4">

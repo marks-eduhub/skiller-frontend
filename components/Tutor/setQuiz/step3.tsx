@@ -13,9 +13,9 @@ const Step3 = () => {
             <h1>Question: </h1>
             <input 
               type="text"
-              className="w-1/2 outline-none p-2 my-4 border border-gray-300 rounded-md"
+              className="sm:w-1/2  w-full outline-none p-2 my-4 border border-gray-300 rounded-md"
               placeholder="Type your question here..."
-            />{" "}
+            />
           </div>
           <div className="flex items-center my-3 gap-3">
             <input type="radio" name="options" value="option1" id="option1" />

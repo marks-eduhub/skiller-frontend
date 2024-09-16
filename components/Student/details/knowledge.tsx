@@ -85,7 +85,7 @@ const Knowledge = () => {
                     {test.status}
                   </h1>
                   {test.status === "Passed" ? (
-                    <Image src="/tick.svg" alt="tick" width={20} height={20} />
+                    <Image src="/tick1.svg" alt="tick" width={25} height={25} />
                   ) : (
                     <Image src="/fail.svg" alt="fail" width={20} height={20} />
                   )}
@@ -108,18 +108,16 @@ const Knowledge = () => {
               </div>
 
               <div className="flex flex-col w-[45%]">
-                <div className="bg-gray-700 ">
-                  <h1 className="font-bold text-[15px] text-white p-3 hover:text-blue-600 hover:underline">
-                    {test.actionText}
-                  </h1>
-                  <h1 className="font-bold text-[15px] p-3">{test.status}</h1>
-                  <div className=" p-3">
+                <div className="bg-gray-600  h-[182px] ">
+                
+                  <h1 className="font-bold text-[15px] text-white p-3">{test.status}</h1>
+                  <div className="p-3">
                     {test.status === "Passed" ? (
                       <Image
-                        src="/tick.svg"
+                        src="/tick1.svg"
                         alt="tick"
-                        width={20}
-                        height={20}
+                        width={25}
+                        height={25}
                       />
                     ) : (
                       <Image
@@ -171,7 +169,7 @@ const Knowledge = () => {
                   {quiz.status}
                 </h1>
                 {quiz.status === "Passed" ? (
-                  <Image src="/tick.svg" alt="tick" width={20} height={20} />
+                  <Image src="/tick1.svg" alt="tick" width={25} height={25} />
                 ) : quiz.status === "Failed" ? (
                   <Image src="/fail.svg" alt="fail" width={20} height={20} />
                 ) : quiz.status === "---" ? (
@@ -196,14 +194,12 @@ const Knowledge = () => {
               </div>
 
               <div className="flex flex-col w-[45%]">
-                <div className="bg-gray-700 h-[182px] pl-4 ">
-                  <h1 className="font-bold text-[15px] text-white p-3 hover:text-blue-600 hover:underline">
-                    {quiz.actionText}
-                  </h1>
-                  <h1 className="font-bold text-[15px] p-3">{quiz.status}</h1>
+                <div className="bg-gray-600 h-[182px] pl-4 ">
+                 
+                  <h1 className="font-bold text-[15px] text-white p-3">{quiz.status}</h1>
                   <div className=" p-3">
                   {quiz.status === "Passed" ? (
-                  <Image src="/tick.svg" alt="tick" width={20} height={20} />
+                  <Image src="/tick1.svg" alt="tick" width={25} height={25} />
                 ) : quiz.status === "Failed" ? (
                   <Image src="/fail.svg" alt="fail" width={20} height={20} />
                 ):null}
