@@ -94,7 +94,7 @@ const Knowledge = () => {
             </div>
             <div className="sm:hidden w-full flex mb-4 ">
               <div className="flex flex-col w-[55%] ">
-                <div className="bg-gray-200 h-[182px]">
+                <div className="bg-gray-200 h-[235px]">
                   <h1 className="font-bold text-[15px] p-4 sm:p-6">
                     {test.Test}
                   </h1>
@@ -104,11 +104,16 @@ const Knowledge = () => {
                   <h1 className="font-bold text-[15px] underline p-4 sm:p-6">
                     {test.status}
                   </h1>
+                  <Link href="/dashboard/quizreview">
+                    <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">
+                      {test.actionText}
+                    </h1>
+                  </Link>
                 </div>
               </div>
 
               <div className="flex flex-col w-[45%]">
-                <div className="bg-gray-600  h-[182px] ">
+                <div className="bg-gray-600  h-[230px] py-10 px-3 ">
                 
                   <h1 className="font-bold text-[15px] text-white p-3">{test.status}</h1>
                   <div className="p-3">
@@ -180,7 +185,7 @@ const Knowledge = () => {
           </div>
           <div className="sm:hidden w-full flex mb-4 ">
               <div className="flex flex-col w-[55%] ">
-                <div className="bg-gray-200 h-[182px]">
+                <div className="bg-gray-200 h-[235px]">
                   <h1 className="font-bold text-[15px] p-4 sm:p-6">
                     {quiz.Quizz}
                   </h1>
@@ -190,11 +195,16 @@ const Knowledge = () => {
                   <h1 className="font-bold text-[15px] underline p-4 sm:p-6">
                     {quiz.status}
                   </h1>
+                  <Link href="/dashboard/quizreview">
+                  <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">
+                    {quiz.actionText}
+                  </h1>
+                </Link>
                 </div>
               </div>
 
               <div className="flex flex-col w-[45%]">
-                <div className="bg-gray-600 h-[182px] pl-4 ">
+                <div className="bg-gray-600 h-[235px] px-2 py-10 ">
                  
                   <h1 className="font-bold text-[15px] text-white p-3">{quiz.status}</h1>
                   <div className=" p-3">
