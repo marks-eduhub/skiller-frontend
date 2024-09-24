@@ -43,7 +43,7 @@ const Courseview = () => {
             <p className="text-[20px] mb-5">Educate others by creating a course</p>
             <Link href="/tutor/dashboard/courseUpload">
             <div
-              className="w-[30%] h-[350px] bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer"
+              className="sm:w-[30%] h-[350px] bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer"
               // onClick={addCourse}
             >
               <div className="rounded-3xl bg-gray-300 flex px-8 py-5 items-center justify-center">

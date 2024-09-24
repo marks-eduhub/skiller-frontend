@@ -4,13 +4,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import data from "./data.json";
-import { setToken } from "../../../lib/helpers";
 import { useAuthContext } from "../../../Context/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import api from "@/lib/axios";
-
+import {register} from "../../../lib/register"
 const SignupForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
@@ -28,28 +26,8 @@ const SignupForm = () => {
     confirmPassword: "",
   });
   const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: async () => {
-      try {
-        const response = await api.post("/api/auth/local/register", {
-          email: formData.email,
-          username: formData.username,
-          lastName: formData.lastName,
-          firstName: formData.firstName,
-          password: formData.password,
-          confirmPassword: formData.confirmPassword,
-        }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-        });
-        return response.data;
-      } catch (error) {
-        throw error;
-      }
-    },
+    mutationFn: register,
     onSuccess: (data) => {
-      setToken(data.jwt);
       message.success(`Welcome ${data.user.username}`);
       if (setUser) {
         setUser(data.user);
@@ -80,16 +58,25 @@ const SignupForm = () => {
 
     if (formData.password.length < 6) {
       message.error("Password must be at least 6 characters long");
+      return;
     }
-
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("firstName", formData.firstName);
+    formDataToSend.append("lastName", formData.lastName);
+    formDataToSend.append("password", formData.password);
+  
     try {
-      await mutate();
-    } catch (error) {}
+      await mutate(formDataToSend); 
+    } catch (error) {
+    }
   };
   return (
     <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
         <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
-      <h2 className="font-[500] sm:text-[50px] text-[38px]">
+      <h2 className="font-[400] sm:text-[50px] text-[38px]">
         {data.registerForm.title}
       </h2>
       {isError && <p className="text-red-500">{isError}</p>}

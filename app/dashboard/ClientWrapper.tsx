@@ -1,15 +1,21 @@
 "use client";
 import { useState, ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import SideNav from "@/components/Student/dashboadLayout/sidebar";
 import Navbar from "../../components/Student/dashboadLayout/NavBar";
 import Footer from "@/components/Student/footer";
 
 const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarMinimized, setSidebarMinimized] = useState(false);
+  const pathname = usePathname();
 
   const toggleSidebar = () => {
     setSidebarMinimized(!sidebarMinimized);
   };
+  
+  const excludeNavbar = ["/dashboard/quizreview"];
+
+  const showNavbar = !excludeNavbar.includes(pathname);
 
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
@@ -24,7 +30,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
           sidebarMinimized ? "ml-[90px]" : "ml-0"
         }`}
       >
-        <Navbar sidebarMinimized={sidebarMinimized} />
+        {showNavbar && <Navbar sidebarMinimized={sidebarMinimized} />}
         {children}
         <Footer />
       </div>

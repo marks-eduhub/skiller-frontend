@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import {content} from "./data.json"
+import data from "./data.json"
 
 const CourseOverview = () => {
-  
+  const content = data.content;
   return (
     <div className="">
       <div className="flex flex-col gap-2">

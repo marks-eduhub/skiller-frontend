@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import Progress from "./progress";
 import Wishlist from "./wishlist";
-import { myprogress } from "./data.json";
-import { courses } from "../HomePage/dummyData.json";
+import data from "./data.json";
+import dummy from "../HomePage/dummyData.json";
+import Link from "next/link";
 export const Learning = () => {
   const [clicked, setClicked] = useState("My Progress");
   const handleClick = (value: string) => {
@@ -11,6 +12,9 @@ export const Learning = () => {
   };
   return (
     <div className="sm:pl-0">
+      <Link href="/dashboard">
+      <h1 className="text-end mb-2 hover:text-blue-600 underline">See more categories</h1>
+      </Link>
       <div className="flex gap-3 items-center border-t-2 border-t-gray-300  w-full ">
         <div
           className={`rounded-md px-6 py-3 shadow-lg mt-5  cursor-pointer ${
@@ -21,7 +25,7 @@ export const Learning = () => {
           <h1>
             My Progress
             <span className="bg-gray-700 ml-2 text-white px-2 py-1 rounded-xl">
-              {myprogress.length}
+              {data.myprogress.length}
             </span>
           </h1>
         </div>
@@ -34,13 +38,13 @@ export const Learning = () => {
           <h1>
             Wishlist
             <span className="bg-gray-700 ml-2 text-white px-2 py-1 rounded-xl">
-              {courses.length}
+              {dummy.courses.length}
             </span>
           </h1>{" "}
         </div>
       </div>
 
-      {clicked == "My Progress" ? <Progress myprogress={myprogress}/> : <Wishlist courses={courses} />}
+      {clicked == "My Progress" ? <Progress myprogress={data.myprogress}/> : <Wishlist courses={dummy.courses} />}
     </div>
   );
 };

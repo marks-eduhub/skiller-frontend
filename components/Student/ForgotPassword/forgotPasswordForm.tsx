@@ -8,7 +8,7 @@ export default function ForgotPassword() {
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
       <div className="flex flex-col items-center max-w-md w-full">
         <Link
-          href={"/auth/register"}
+          href={"/auth"}
           className="flex justify-center items-center rounded-[8px] border-[4px] md:rounded-[14px] md:border-[4px] border-black px-2 sm:py-3 font-[700] text-[18px] w-[60px]  md:w-[58px] h-[52px] mt-10 absolute top-0 left-10"
         >
           <MdArrowBackIosNew width={60} height={30} fontWeight={100} />
