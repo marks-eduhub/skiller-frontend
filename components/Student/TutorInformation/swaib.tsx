@@ -2,8 +2,14 @@ import React from "react";
 import Image from "next/image";
 import ProductContainer from "../courseCards/cardContainer";
 import dummy from "../HomePage/dummyData.json";
+import { useFetchCourses } from "@/hooks/useCourses";
 
 const DraguleSwaib = () => {
+  const { data, isLoading, error } = useFetchCourses();
+
+
+  if (isLoading) return <p>Loading courses...</p>;
+  if (error) return <p>Failed to load courses</p>;
   const courses = dummy.courses
   const SwaibCourses = courses.filter(
     (course) => course.instructor === "Dragule Swaib"
@@ -66,7 +72,9 @@ const DraguleSwaib = () => {
       </div>
       <div className="mt-8">
         <h1 className="mb-6">Courses by Dragule Swaib</h1>
-        <ProductContainer courses={SwaibCourses} />
+        {/* <ProductContainer courses={SwaibCourses} /> */}
+        <ProductContainer courses={data?.data || []} />
+
       </div>
     </div>
   );

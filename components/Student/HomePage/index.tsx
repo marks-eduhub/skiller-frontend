@@ -5,7 +5,7 @@ import ProductContainer from "../courseCards/cardContainer";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { useCoursesByCategory } from "@/hooks/useCourses";
+import { useFetchCourses } from "@/hooks/useCourses";
 import constants from "./dummyData.json";
 
 const HomePage: React.FC = () => {
@@ -14,52 +14,57 @@ const HomePage: React.FC = () => {
     router.push(`/dashboard/coursePage/${category}`);
   };
 
-  const { data, isLoading, error } = useCoursesByCategory();
+  const { data, isLoading, error } = useFetchCourses();
   console.log("data:", data);
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching courses</div>;
 
- 
-  const coursesByCategory = data?.data.reduce(
-    (acc: { [key: string]: any[] }, course) => {
-      const categories = course.attributes.categories.data;
-      categories.forEach((category: any) => {
-        const categorySlug = category.attributes.slug;
-        const categoryTitle = category.attributes.coursecategories;
+  const coursesByCategory: {
+    [key: string]: { title: string; courses: any[] };
+  } = {};
 
-        if (!acc[categorySlug]) {
-          acc[categorySlug] = { title: categoryTitle, courses: [] };
-        }
-        acc[categorySlug].courses.push(course);
-      });
-      return acc;
-    },
-    {}
-  );
+  data?.data.forEach((course: any) => {
+    // console.log("course:", course);
+    const categories = course.attributes.categories.data;
 
+    categories.forEach((categories: any) => {
+      // console.log("categories:", categories);
+
+      const categorySlug = categories.attributes.slug;
+      const categoryTitle = categories.attributes.coursecategories;
+
+      if (!coursesByCategory[categorySlug]) {
+        coursesByCategory[categorySlug] = { title: categoryTitle, courses: [] };
+      }
+
+      coursesByCategory[categorySlug].courses.push(course);
+    });
+  });
+
+  // console.log("coursesByCategory:", coursesByCategory);
   return (
     <>
-      <div className="flex flex-col sm:min-h-screen  mx-auto sm:pb-9 ">
+      <div className="flex flex-col sm:min-h-screen mx-auto sm:pb-9">
         <h2 className="text-lg font-300 my-4">
           <b>Top Programming Courses</b>
         </h2>
         <FeaturedProduct course={constants.featuredProduct} />
 
         <div className="">
-          {Object.entries(coursesByCategory || {}).map(
+          {Object.entries(coursesByCategory).map(
             ([categorySlug, categoryData], index) => (
               <div key={index} className="relative">
                 <h2 className="text-lg font-300 my-4">
                   <div>
                     <div className="hidden md:block">
-                      <b>{categoryData.title}</b>{" "}
+                      <b>{categoryData.title}</b>
                     </div>
 
                     <div
                       className="block md:hidden flex items-center justify-between"
                       onClick={() => handleNavigation(categorySlug)}
                     >
-                      <b>{categoryData.title}</b>{" "}
+                      <b>{categoryData.title}</b>
                       <p className="text-gray-600 underline">See more</p>
                     </div>
                   </div>
@@ -67,12 +72,12 @@ const HomePage: React.FC = () => {
                 <ProductContainer courses={categoryData.courses} />
 
                 <div
-                  className=" max-md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
+                  className="max-md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
                   onClick={() => handleNavigation(categorySlug)}
                 >
                   <FontAwesomeIcon
                     icon={faChevronRight}
-                    className="text-gray-600 "
+                    className="text-gray-600"
                   />
                 </div>
               </div>
@@ -80,12 +85,6 @@ const HomePage: React.FC = () => {
           )}
         </div>
       </div>
-       {/* <div className="sm:hidden">
-        <h2 className="text-lg font-semibold my-4">
-          <b>Courses</b>
-        </h2>
-        <ProductContainer courses={constants.courses} />
-      </div> */}
     </>
   );
 };

@@ -10,7 +10,7 @@ export interface User {
 export interface Course {
   attributes: any;
   id: number;
-  tutor: string;
+  tutors: string;
   card: string;
   rating: number;
   duration: string;
