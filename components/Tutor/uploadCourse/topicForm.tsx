@@ -44,7 +44,7 @@ const TopicForm: React.FC<TopicProps> = ({ name, deleteTopic }) => {
   };
   return (
     <div className="flex flex-col mt-5 mb-5 cursor-pointer">
-      <div className="w-full sm:h-[100px] h-[90px] bg-gray-300 sm:mt-3">
+      <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300  bg-gray-100 sm:mt-3">
         <div
           onClick={toggleExpanded}
           className="flex items-center justify-between p-9 relative"
@@ -62,15 +62,15 @@ const TopicForm: React.FC<TopicProps> = ({ name, deleteTopic }) => {
         </div>
       </div>
       {expanded && (
-        <div className="p-4 w-full h-auto bg-gray-300 rounded-md overflow-hidden break-words">
-          <div className="mt-5 flex items-center w-full">
-            <label className="flex-shrink-0">Topic name</label>
+        <div className="p-4 w-full h-auto sm:bg-gray-300 bg-gray-100 rounded-md overflow-hidden break-words">
+          <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
+            <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
             <input
               type="text"
-              className="border ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
           </div>
-          <div className="mb-10 mt-4 ">
+          <div className="sm:mb-10 mt-4 ">
             <label className="block text-sm font-medium mb-4 mt-6">
               Enter a brief description about the topic
             </label>
@@ -82,8 +82,8 @@ const TopicForm: React.FC<TopicProps> = ({ name, deleteTopic }) => {
             </div>
           </div>
           <div>
-            <div className="mb-6 mt-10">
-              <label className="block text-sm font-medium mb-4 mt-20">
+            <div className="sm:mb-6 sm:mt-10">
+              <label className="block text-sm font-medium mb-4 sm:mt-20 mt-5">
                 What will the student learn?
               </label>
               <div className="bg-white w-full overflow-hidden">
@@ -95,7 +95,7 @@ const TopicForm: React.FC<TopicProps> = ({ name, deleteTopic }) => {
             </div>
           </div>
           <div>
-            <div className="mt-20">
+            <div className="sm:mt-20 mt-5">
               <h1>Upload Video</h1>
               <div
                 className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded"

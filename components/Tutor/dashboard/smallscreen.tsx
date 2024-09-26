@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   HamburgerMenuIcon,
+  MagnifyingGlassIcon,
   ShadowInnerIcon,
   TriangleDownIcon,
 } from "@radix-ui/react-icons";
@@ -19,8 +20,19 @@ const SmallScreen = () => {
 
   return (
     <div className="sm:hidden absolute top-0 left-5 right-5 z-50  flex items-center justify-between pt-6">
+      <div className="w-24 text-white">
+          <SkillerLogo />
+        </div>
+        <div className="flex w-56 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
+          <Image src="/magnify.svg" alt="magnify" width={30} height={30} />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="outline-none bg-transparent ml-2"
+          />
+        </div>
       <HamburgerMenuIcon
-        className="w-6 h-6 cursor-pointer text-black rotate-90  "
+        className="w-6 h-6 cursor-pointer text-black rotate90  "
         onClick={toggleSidebar}
       />
     
@@ -41,22 +53,7 @@ const SmallScreen = () => {
           </div>
         </div>
       )}
-      <div className="flex flex-row gap-4 items-center">
-        <h2 className="font-bold text-[16px]">Tutor</h2>
-        <Image
-          src="/Notification-Button.svg"
-          alt="notification"
-          width={20}
-          height={20}
-        />
-        <Link href="/tutor/profile">
-          <div className="sm:col-span-2  sm:mt-0 flex items-center justify-between p-1 rounded-full shadow bg-black text-white cursor-pointer">
-            <ShadowInnerIcon className="w-6 h-6 text-white ml-2" />
-            <div className="text-white">Norah</div>
-            <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
-          </div>
-        </Link>
-      </div>
+     
     </div>
   );
 };

@@ -61,7 +61,7 @@ const HomePage: React.FC = () => {
               />
                
               <div
-                className=" max-md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
+                className=" hidden md:flex absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
                 onClick={() => handleNavigation(item.category)}
               >
                 <FontAwesomeIcon

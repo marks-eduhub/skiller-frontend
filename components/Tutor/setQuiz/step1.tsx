@@ -14,14 +14,14 @@ const Step1 = () => {
             type="text"
             id="name"
             placeholder="name"
-            className="mt-1 w-1/2 rounded-lg block px-3 py-2 border border-gray-200 mb-6 outline-none"
+            className="mt-1 sm:w-1/2 w-full rounded-lg block px-3 py-2 border border-gray-200 mb-6 outline-none"
           />
         </div>
         <div className="flex-1">
           <label htmlFor="curriculum" className=" font-medium">
             Curriculum Item
           </label>
-          <select className="mt-2 w-1/4 block  bg-white rounded-lg px-3 py-2 border border-gray-200 mb-6 outline-none">
+          <select className="mt-2 sm:w-1/4 w-full block  bg-white rounded-lg px-3 py-2 border border-gray-200 mb-6 outline-none">
             <option>Quiz</option>
             <option>Assignment</option>
           </select>

@@ -43,26 +43,26 @@ const UploadCourse = () => {
   return (
     <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
         {currentStep === 1 && (
-        <h1 className="text-[20px] mb-6">Upload a Course</h1>
+        <h1 className="text-[20px] mb-6 sm:mt-0 mt-5">Upload a Course</h1>
       )}
       {currentStep === 2 && (
         <h1 className="text-[20px] mb-6">Upload a topic</h1>
       )}
       {currentStep === 3 && (
-        <h1 className="text-[20px] mb-6">Upload a resource</h1>
+        <h1 className="text-[20px] mb-6 sm:mt-0 mt-5">Add resources</h1>
       )}
       <StepTracker currentStep={currentStep} />
 
       {currentStep === 1 && (
         <div>
 
-          <div className="mt-5 flex items-center w-full">
-            <label className="flex-shrink-0">Course name</label>
+          <div className="mt-5 flex  sm:flex-row flex-col sm:items-center w-full">
+            <label className="sm:flex-shrink-0 my-2 sm:my-0">Course name</label>
             <input
               type="text"
               value={courseName}
               onChange={(e) => setCourseName(e.target.value)}
-              className="border ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
           </div>
           <div className="mb-10 mt-4">
