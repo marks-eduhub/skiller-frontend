@@ -41,7 +41,7 @@ const UploadCourse = () => {
   };
 
   return (
-    <div className="p-6 w-full flex flex-col">
+    <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
         {currentStep === 1 && (
         <h1 className="text-[20px] mb-6">Upload a Course</h1>
       )}

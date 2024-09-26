@@ -91,7 +91,9 @@ export default function LogIn() {
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
-          <h1 className="text-blue-600">Forgot Password?</h1>
+          <Link href="/auth/forgot-password">
+          <h1 className="text-blue-600 cursor-pointer">Forgot Password?</h1>
+          </Link>
           <button
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[300px]"
             type="submit"
@@ -99,8 +101,8 @@ export default function LogIn() {
           >
             <span className="pr-4">Login</span>
             {isPending && (
-              //  <DotPulseWrapper size="15" speed="2.5" color="white" />
-              <l-dot-pulse size="15" speed="2.5" color="white"></l-dot-pulse>
+              //  <DotPulseWrapper size="20" speed="0.3" color="white" />
+              <l-dot-pulse size="20" speed="1.5" color="white"/>
             )}
           </button>
           {/* <div className="font-bold text-gray-500 text-lg mx-auto">
