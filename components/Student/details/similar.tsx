@@ -1,25 +1,24 @@
 "use client";
 import React from "react";
 import ProductContainer from "../courseCards/cardContainer";
-type Course = {
-  id: number;
-  instructor: string;
-  image: string;
-  rating: number;
-  duration: string;
-  description: string;
-  topic: string;
-  level: string;
-};
-const SimilarCourses: React.FC<{ courses: Course[] }> = ({ courses }) => {
+import { useQuery } from "@tanstack/react-query";
+import { useFetchCourses } from "@/hooks/useCourses";
+
+const SimilarCourses: React.FC = () => {
+  const { data, isLoading, error } = useFetchCourses();
+
+
+  if (isLoading) return <p>Loading similar courses...</p>;
+  if (error) return <p>Failed to load similar courses</p>;
+
   return (
-    <div className=" bg-white ">
+    <div className="bg-white">
       <h2 className="text-lg font-semibold ml-10 pt-10">
         <b>Similar Courses</b>
       </h2>
 
-      <ProductContainer courses={courses} />
-    </div>
+      <ProductContainer courses={data?.data || []} />
+      </div>
   );
 };
 
