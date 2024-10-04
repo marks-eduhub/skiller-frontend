@@ -1,19 +1,54 @@
 import React from "react";
 import Image from "next/image";
 import ProductContainer from "../courseCards/cardContainer";
-import dummy from "../HomePage/dummyData.json";
 import { useFetchCourses } from "@/hooks/useCourses";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { message } from "antd";
 const DraguleSwaib = () => {
   const { data, isLoading, error } = useFetchCourses();
 
+  if (isLoading) {
+    return (
+     <div>
+        <h2 className="text-lg font-300 my-4 ">
+          <Skeleton width={2000} height={24} 
+            baseColor="#e0e0e0"
+            highlightColor="#f0f0f0"
+          />
+        </h2>
 
-  if (isLoading) return <p>Loading courses...</p>;
-  if (error) return <p>Failed to load courses</p>;
-  const courses = dummy.courses
-  const SwaibCourses = courses.filter(
-    (course) => course.instructor === "Dragule Swaib"
-  );
+        <div>
+          <Skeleton
+            height={300}
+            count={3}
+            baseColor="#e0e0e0"
+            highlightColor="#f5f5f5"
+            enableAnimation={true} 
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    message.error("Error fetching courses. Please try again later.");
+  }
+
+  const draguleCourses: any = [];
+
+  data?.data.forEach((course: any) => {
+    const tutors = course.attributes.tutors.data;
+
+    const isDraguleTutor = tutors.some((tutor: any) => {
+      return tutor.attributes.tutorname === "Dragule Swaib"; 
+    });
+
+    if (isDraguleTutor) {
+      draguleCourses.push(course);
+    }
+  });
+ 
   const images = [
     { src: "/twitter.svg", alt: "sms" },
     { src: "/linkedln.svg", alt: "sms" },
@@ -72,8 +107,7 @@ const DraguleSwaib = () => {
       </div>
       <div className="mt-8">
         <h1 className="mb-6">Courses by Dragule Swaib</h1>
-        {/* <ProductContainer courses={SwaibCourses} /> */}
-        <ProductContainer courses={data?.data || []} />
+        <ProductContainer courses={draguleCourses} />
 
       </div>
     </div>
