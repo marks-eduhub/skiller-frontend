@@ -72,10 +72,23 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
               <p>My Learning</p>
             </div>
           </Link>
-          <div className="flex items-center space-x-2 pl-6">
-            <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} />
-            <p>Wishlist</p>
-          </div>
+
+          <Link href="/dashboard/wishlist">
+          <div
+              className={clsx("flex items-center space-x-2 pl-6 my-5 p-3", {
+                "bg-gray-700 text-white rounded ":
+                  pathname === "/dashboard/wishlist",
+              })} >
+              <Image
+                src="/wishlist.svg"
+                alt="wishlist"
+                width={20}
+                height={20}
+              />
+              <p>Wishlist</p>
+            </div>
+          </Link>
+
           <hr className="border-gray-600 my-5" />
           <div className="">
             <Link href="/dashboard/tutorspage">

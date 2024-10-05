@@ -4,31 +4,42 @@ export interface User {
   email: string;
   password: string;
   username: string;
+  id:number
   // gender: string;
   // birthDate: string;
 }
-export interface Course {
-  attributes: any;
-  id: number;
-  tutors: string;
-  card: string;
-  rating: number;
-  duration: string;
-  coursename: string;
-  topicname: string;
-  categories: string;
-}
-// interface Course {
+// export interface Course {
+//   attributes: any;
 //   id: number;
-//   attributes: {
-//     coursename: string;
-//     rating: number;
-//     duration: string;
-//     tutor: string;
-//     card: string;
-//     categories: { data: Category[] };
-//   };
+//   tutors: string;
+//   card: string;
+//   rating: number;
+//   duration: string;
+//   coursename: string;
+//   topicname: string;
+//   categories: string;
 // }
+ export interface Course {
+  id: number;
+  attributes: {
+    course: any;
+    coursename: string;
+    rating: number;
+    duration: string;
+    tutor: string;
+    card: string;
+    categories: { data: Category[] };
+  };
+}
+export interface LikedCourse {
+  id: number;
+  course: Course[]
+  user: {
+    id: number;
+    // Add other user properties here
+  };
+  dateCreated: string;
+}
 export interface Category {
   id: number;
   coursecategories: string;
