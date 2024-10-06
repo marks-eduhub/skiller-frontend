@@ -11,6 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import { Course } from "@/lib/types";
+import { useRecentCourses } from "@/hooks/useRecentCourses";
 
 const HomePage: React.FC = () => {
   const router = useRouter();
@@ -20,6 +21,9 @@ const HomePage: React.FC = () => {
   };
 
   const { data, isLoading, error } = useFetchCourses();
+
+  // const { data: recentlyAccessedCourses } = useRecentCourses();
+
 
   if (isLoading) {
     return (
@@ -114,10 +118,10 @@ const HomePage: React.FC = () => {
         )}
       </div>
 
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <h1 className="mb-6 text-lg font-bold">Recently Accessed Courses</h1>
-        <ProductContainer courses={data?.data || []} />
-      </div>
+        <ProductContainer courses={recentlyAccessedCourses?.data || []} />
+        </div> */}
     </div>
   );
 };

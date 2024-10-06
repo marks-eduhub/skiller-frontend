@@ -19,6 +19,11 @@ export interface User {
 //   topicname: string;
 //   categories: string;
 // }
+export interface Wishlist {
+  userId: number;
+  courseId: number;
+  course: Course[]; 
+}
  export interface Course {
   id: number;
   attributes: {
@@ -36,7 +41,6 @@ export interface LikedCourse {
   course: Course[]
   user: {
     id: number;
-    // Add other user properties here
   };
   dateCreated: string;
 }
