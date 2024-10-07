@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import FeaturedProduct from "../courseCards/mainFeaturedCard";
 import ProductContainer from "../courseCards/cardContainer";
 import { useRouter } from "next/navigation";
@@ -10,10 +10,18 @@ import constants from "./dummyData.json";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
-import { Course } from "@/lib/types";
 import { useRecentCourses } from "@/hooks/useRecentCourses";
+import { useAuthContext } from "@/Context/AuthContext";
 
 const HomePage: React.FC = () => {
+  const { user } = useAuthContext();
+  const userId = user?.id;
+  const {
+    data: recentlyAccessedCourses,
+    isLoading: loadingRecent,
+    error: recentError,
+  } = useRecentCourses();
+
   const router = useRouter();
 
   const handleNavigation = (category: string) => {
@@ -21,9 +29,6 @@ const HomePage: React.FC = () => {
   };
 
   const { data, isLoading, error } = useFetchCourses();
-
-  // const { data: recentlyAccessedCourses } = useRecentCourses();
-
 
   if (isLoading) {
     return (
@@ -73,7 +78,6 @@ const HomePage: React.FC = () => {
     });
   });
 
- 
   return (
     <div className="flex flex-col sm:min-h-screen mx-auto sm:pb-9">
       <h2 className="text-lg font-300 my-4">
@@ -100,9 +104,7 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
               </h2>
-              <ProductContainer
-                courses={categoryData.courses}
-              />
+              <ProductContainer courses={categoryData.courses} />
 
               <div
                 className="max-md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
@@ -118,10 +120,10 @@ const HomePage: React.FC = () => {
         )}
       </div>
 
-      {/* <div className="mt-8">
+      <div className="mt-8">
         <h1 className="mb-6 text-lg font-bold">Recently Accessed Courses</h1>
         <ProductContainer courses={recentlyAccessedCourses?.data || []} />
-        </div> */}
+      </div>
     </div>
   );
 };

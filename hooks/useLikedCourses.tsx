@@ -43,13 +43,12 @@ export const removeLikedCourse = async (courseId: number, userId: number) => {
     `/api/liked-courses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`
   );
 
-  const likedCourseEntry = response.data?.data?.[0]; // The first matched liked-course entry
+  const likedCourseEntry = response.data?.data?.[0]; 
 
   if (!likedCourseEntry) {
-    throw new Error("Liked course entry not found");
+    throw new Error("Liked course not found");
   }
 
-  // Now delete the liked-course entry by its ID
   const likedCourseId = likedCourseEntry.id;
   await api.delete(`/api/liked-courses/${likedCourseId}`);
 };

@@ -9,7 +9,6 @@ const Wishlist: React.FC = () => {
   const userId = user?.id; 
 
   const { data, isLoading, error } = useLikedCourses();
-console.log(data)
   if (!userId) {
     return <p>Error: User ID is missing.</p>;
   }

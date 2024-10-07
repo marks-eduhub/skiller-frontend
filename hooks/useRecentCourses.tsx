@@ -3,13 +3,18 @@ import api from "@/lib/axios";
 import { useAuthContext } from "@/Context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 
+// const fetchRecentCourses = async (userId: number) => {
+//   const response = await api.get(
+//     `/api/recent-courses?filters[user][id][$eq]=${userId}&populate=*`
+//   );
+//   return response.data;
+// };
 const fetchRecentCourses = async (userId: number) => {
   const response = await api.get(
-    `/api/recent-courses?filters[user][id][$eq]=${userId}&populate=*`
+    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateAccessed:desc&populate=*`
   );
   return response.data;
 };
-
 export const useRecentCourses = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
@@ -29,13 +34,19 @@ export const useRecentCourses = () => {
   });
 };
 
+
+
 export const addRecentCourse = async (courseId: number, userId: number) => {
-  const response = await api.post("/api/recent-courses", {
-    data: {
-      course: courseId,
-      user: userId,
-      dateAccessed: new Date(), 
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.post("/api/recent-courses", {
+      data: {
+        course: courseId,
+        user: userId,
+        dateAccessed: new Date().toISOString(),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };

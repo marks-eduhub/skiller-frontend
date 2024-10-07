@@ -119,6 +119,46 @@ const { mutate: removeFromWishlist } = useMutation({
     },
   });
   
+  const { mutate: addRecent } = useMutation({
+    mutationFn: async () => {
+      if (!userId) throw new Error("User not logged in");
+      return await addRecentCourse(courseId, userId);
+    },
+    onMutate: async () => {
+      if (!userId) return; 
+      
+      setIsLiked(true);
+      await queryClient.cancelQueries(["recentCourses", userId]); 
+  
+      const previousLikedCourses = queryClient.getQueryData(["recentCourses", userId]);
+  
+      queryClient.setQueryData(["recentCourses", userId], (oldData: any) => {
+        return [...(oldData?.data || []), { id: courseId, attributes: { /* course data */ }}];
+      });
+  
+      return { previousLikedCourses };
+    },
+    onSuccess: () => {
+      if (userId) {
+        queryClient.invalidateQueries(["recentCourses", userId]); 
+      }
+      message.success(`Added to recent.`);
+    },
+    onError: (err, variables, context: any) => {
+      if (userId) {
+        queryClient.setQueryData(["recentCourses", userId], context.previousLikedCourses); 
+      }
+      message.error("Failed to add to recent");
+    },
+   
+  });
+  
+
+  const handleCourseClick = () => {
+    addRecent();
+  };
+
+
 
   const handleToggleWishlist = () => {
     if (isLiked) {
@@ -131,7 +171,7 @@ const { mutate: removeFromWishlist } = useMutation({
  
  
   return (
-    <div className="mr-4 pb-10 sm:pb-0 h-full" >
+    <div className="mr-4 pb-10 sm:pb-0 h-full">
       <div className="border border-gray-400">
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
@@ -153,7 +193,7 @@ const { mutate: removeFromWishlist } = useMutation({
           </div>
         </div>
       </div>
-      <div className="p-2 bg-[#F3F4F3] text-black">
+      <div className="p-2 bg-[#F3F4F3] cursor-pointer text-black"onClick={handleCourseClick} >
         <div className="mb-4 sm:h-[30px] h-[50px]">
           <h3 className="font-semibold line-clamp-2 text-ellipsis">
             {coursename || "Course Name"}
