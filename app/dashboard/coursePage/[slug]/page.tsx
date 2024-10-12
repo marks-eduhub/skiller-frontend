@@ -15,7 +15,6 @@ const CoursecategoryPage = ({ params }: { params: { slug: string } }) => {
       (category: any) => category.attributes.slug === slug
     )
   );
-  console.log("filteredCourses:", filteredCourses);
 if (!filteredCourses || filteredCourses.length === 0) {
   return <div>No courses found in this category</div>;
 }
@@ -35,7 +34,7 @@ if (!filteredCourses || filteredCourses.length === 0) {
           <div className="grid grid-cols-3 pl-4 py-3 mt-2">
             {filteredCourses?.map((course: any) => (
               <div key={course.id} className="pr-4">
-                <ProductCard course={course} containerWidth={"415px"} />
+                <ProductCard course={course}  />
               </div>
             ))}
           </div>

@@ -11,17 +11,13 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import { useRecentCourses } from "@/hooks/useRecentCourses";
-import { useAuthContext } from "@/Context/AuthContext";
 
 const HomePage: React.FC = () => {
-  const { user } = useAuthContext();
-  const userId = user?.id;
   const {
     data: recentlyAccessedCourses,
     isLoading: loadingRecent,
     error: recentError,
   } = useRecentCourses();
-
   const router = useRouter();
 
   const handleNavigation = (category: string) => {
@@ -30,7 +26,7 @@ const HomePage: React.FC = () => {
 
   const { data, isLoading, error } = useFetchCourses();
 
-  if (isLoading) {
+  if (isLoading || loadingRecent) {
     return (
       <div>
         <h2 className="text-lg font-300 my-4 ">
@@ -77,7 +73,6 @@ const HomePage: React.FC = () => {
       coursesByCategory[categorySlug].courses.push(course);
     });
   });
-
   return (
     <div className="flex flex-col sm:min-h-screen mx-auto sm:pb-9">
       <h2 className="text-lg font-300 my-4">
@@ -122,7 +117,19 @@ const HomePage: React.FC = () => {
 
       <div className="mt-8">
         <h1 className="mb-6 text-lg font-bold">Recently Accessed Courses</h1>
-        <ProductContainer courses={recentlyAccessedCourses?.data || []} />
+
+        {Array.isArray(recentlyAccessedCourses?.data) &&
+        recentlyAccessedCourses?.data.length > 0 ? (
+          <ProductContainer
+            courses={recentlyAccessedCourses.data.map(
+              (item: any) => item.attributes.course.data
+            )}
+          />
+        ) : (
+          <p className="font-semibold flex justify-center my-10 items-center text-[20px]">
+            No recently accessed courses available.
+          </p>
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import api from "@/lib/axios";
 import { message } from "antd";
 import { useAuthContext } from "@/Context/AuthContext";
-import { addLikedCourse, removeLikedCourse } from "@/hooks/useLikedCourses";
+import { addLikedCourse, removeLikedCourse, useLikedCourses } from "@/hooks/useLikedCourses";
 import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { addRecentCourse } from "@/hooks/useRecentCourses";
 
@@ -19,45 +19,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   const tutorName = tutors?.data[0]?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
   const courseId = course?.id; 
-  
   const { user } = useAuthContext(); 
   const userId = user?.id; 
   const [isLiked, setIsLiked] = useState(false); 
- 
+  const queryClient = useQueryClient(); 
+
+  const { data: likedCourses } = useLikedCourses();
+
   useEffect(() => {
-    const fetchLikedCourses = async () => {
-      try {
-        const response = await api.get(`/api/liked-courses?filters[user][id][$eq]=${userId}&populate=*`);
-        const likedCourses = response.data?.data?.map(
-          (likedCourse: any) => likedCourse.attributes.course.data.id
-        );
-        
-        if (likedCourses?.includes(courseId)) {
-          setIsLiked(true);
-        }
-      } catch (error) {
-        message.error("Error fetching liked courses");
-      }
-    };
-  
-    fetchLikedCourses();
-  }, [userId, courseId]);
+    if (likedCourses) {
+      const likedCourseIds = likedCourses?.data?.map((likedCourse: any) => likedCourse.attributes.course.data.id);
+      setIsLiked(likedCourseIds?.includes(courseId)); 
+    }
+  }, [likedCourses, courseId]);
 
   
-  const queryClient = useQueryClient(); 
 
 const { mutate: removeFromWishlist } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
-      const result = await removeLikedCourse(courseId, userId);
-      return result;
+      const response = await removeLikedCourse(courseId, userId);
+      return response;
     },
     onMutate: async () => {
       if (!userId) return;
   
       setIsLiked(false);
   
-      await queryClient.cancelQueries(["likedCourses", userId]);
+      await queryClient.cancelQueries({queryKey:["likedCourses", userId]});
   
       const previousLikedCourses = queryClient.getQueryData(["likedCourses", userId]);
   
@@ -73,6 +62,7 @@ const { mutate: removeFromWishlist } = useMutation({
     onSuccess: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: ["likedCourses", userId] });
+
       }
       message.success(`Removed from wishlist.`);
     },
@@ -88,26 +78,27 @@ const { mutate: removeFromWishlist } = useMutation({
   const { mutate: addToWishlist } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
-      const result = await addLikedCourse(courseId, userId);
-      return result;
+      const response = await addLikedCourse(courseId, userId);
+      return response;
     },
     onMutate: async () => {
       if (!userId) return; 
       
       setIsLiked(true);
-      await queryClient.cancelQueries(["likedCourses", userId]); 
+      await queryClient.cancelQueries({queryKey: ["likedCourses", userId]}); 
   
       const previousLikedCourses = queryClient.getQueryData(["likedCourses", userId]);
   
       queryClient.setQueryData(["likedCourses", userId], (oldData: any) => {
-        return [...(oldData?.data || []), { id: courseId, attributes: { /* course data */ }}];
+        return [...(oldData?.data || []), { id: courseId, attributes: {}}];
       });
   
       return { previousLikedCourses };
     },
+  
     onSuccess: () => {
       if (userId) {
-        queryClient.invalidateQueries(["likedCourses", userId]); 
+        queryClient.invalidateQueries({ queryKey: ["likedCourses", userId] });
       }
       message.success(`Added to wishlist.`);
     },
@@ -128,19 +119,19 @@ const { mutate: removeFromWishlist } = useMutation({
       if (!userId) return; 
       
       setIsLiked(true);
-      await queryClient.cancelQueries(["recentCourses", userId]); 
+      await queryClient.cancelQueries({queryKey: ["recentCourses", userId]}); 
   
       const previousLikedCourses = queryClient.getQueryData(["recentCourses", userId]);
   
       queryClient.setQueryData(["recentCourses", userId], (oldData: any) => {
-        return [...(oldData?.data || []), { id: courseId, attributes: { /* course data */ }}];
+        return [...(oldData?.data || []), { id: courseId, attributes: { }}];
       });
   
       return { previousLikedCourses };
     },
     onSuccess: () => {
       if (userId) {
-        queryClient.invalidateQueries(["recentCourses", userId]); 
+        queryClient.invalidateQueries({queryKey:["recentCourses", userId]}); 
       }
       message.success(`Added to recent.`);
     },
@@ -191,8 +182,10 @@ const { mutate: removeFromWishlist } = useMutation({
             </button>
             <p className="text-black bg-white px-4 py-0 rounded-full">Free</p>
           </div>
+          
         </div>
       </div>
+
       <div className="p-2 bg-[#F3F4F3] cursor-pointer text-black"onClick={handleCourseClick} >
         <div className="mb-4 sm:h-[30px] h-[50px]">
           <h3 className="font-semibold line-clamp-2 text-ellipsis">

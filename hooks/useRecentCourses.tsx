@@ -1,18 +1,12 @@
-
 import api from "@/lib/axios";
 import { useAuthContext } from "@/Context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 
-// const fetchRecentCourses = async (userId: number) => {
-//   const response = await api.get(
-//     `/api/recent-courses?filters[user][id][$eq]=${userId}&populate=*`
-//   );
-//   return response.data;
-// };
 const fetchRecentCourses = async (userId: number) => {
   const response = await api.get(
-    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateAccessed:desc&populate=*`
+    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateAccessed:desc&populate[course][populate]=card,tutors`
   );
+
   return response.data;
 };
 export const useRecentCourses = () => {
@@ -27,14 +21,12 @@ export const useRecentCourses = () => {
       return fetchRecentCourses(userId);
     },
     queryKey: ["recentCourses", userId],
-    enabled: !!userId, 
+    enabled: !!userId,
     meta: {
-        errorMessage: "Failed to fetch courses",
-      },
+      errorMessage: "Failed to fetch courses",
+    },
   });
 };
-
-
 
 export const addRecentCourse = async (courseId: number, userId: number) => {
   try {

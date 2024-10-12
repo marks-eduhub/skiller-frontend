@@ -3,12 +3,12 @@ import { useAuthContext } from "@/Context/AuthContext";
 import { Course } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
-
 const fetchLikedCourses = async (userId: number) => {
-  const response = await api.get(`/api/liked-courses?filters[user][id][$eq]=${userId}&populate=*`);
+  const response = await api.get(
+    `/api/liked-courses?filters[user][id][$eq]=${userId}&populate[course][populate]=card,tutors`
+  );
   return response.data;
 };
-
 export const useLikedCourses = () => {
   const { user } = useAuthContext();
   const userId = user?.id;

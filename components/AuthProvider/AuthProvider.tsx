@@ -21,7 +21,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       setUserData(response.data); 
     } catch (error) {
-      console.error(error);
       message.error("Error while getting logged-in user details");
     } finally {
       setIsLoading(false);
