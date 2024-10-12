@@ -118,7 +118,6 @@ const { mutate: removeFromWishlist } = useMutation({
     onMutate: async () => {
       if (!userId) return; 
       
-      setIsLiked(true);
       await queryClient.cancelQueries({queryKey: ["recentCourses", userId]}); 
   
       const previousLikedCourses = queryClient.getQueryData(["recentCourses", userId]);
