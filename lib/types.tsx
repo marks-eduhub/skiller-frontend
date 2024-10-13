@@ -7,7 +7,35 @@ export interface User {
     // gender: string;
     // birthDate: string;
   }
-  
+  export interface CarouselCourses {
+    id: number;
+   tutors: string;
+    Image: string;
+    rating: number;
+    duration: string;
+    description: string
+    level: string;
+    days: string;
+  }
+  export interface Category {
+    id: number;
+    coursecategories: string;
+    slug: string;
+    categorySlug: string;
+    courses: Course[];
+  }
+  export interface Course {
+    id: number;
+    attributes: {
+      course: any;
+      coursename: string;
+      rating: number;
+      duration: string;
+      tutor: string;
+      card: string;
+      categories: { data: Category[] };
+    };
+  }
   export interface RegisterResponse {
     jwt: string;
     user: {
