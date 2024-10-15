@@ -5,29 +5,41 @@ import CourseOverview from "./courseOverview";
 import CourseReview from "./courseReviews";
 import similarCoursesData from "../details/data.json";
 import reviews from "./data.json";
-
+import { useFetchOverview, useFetchUsers } from "@/hooks/useCourseOverview";
+import Image from "next/image";
+import api from "@/lib/axios";
 const Enroll = () => {
+  const { data: courseData, isLoading, error } = useFetchOverview();
+
+  const details = courseData?.data[0] || {};
+
+  const courseImage = details.attributes?.Image?.data[0]?.attributes?.url || "";
+  const tutorName =
+    details.attributes?.tutor?.data?.attributes?.tutorname || "";
+  const courseName =
+    details.attributes?.course?.data?.attributes?.coursename || "";
+
   const [tab, setTab] = useState("Course Overview");
   const handleTab = (tabName: string) => {
     setTab(tabName);
   };
   return (
-    <div className="">
-      <div
-        className="w-full relative rounded-lg sm:h-[500px] h-[300px]"
-        style={{
-          backgroundImage: `url("/enroll.webp")`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
+    <div>
+      <div className="w-full relative rounded-lg sm:h-[500px] h-[300px]">
+        <Image
+          src={
+            courseImage ? `${api.defaults.baseURL}${courseImage}` : "/cake.svg"
+          }
+          alt="Course Image"
+          fill
+          className="object-cover  bg-no-repeat"
+        />
+
         <div className="absolute inset-0 video-overlay rounded-lg"></div>
         <div className="flex justify-between w-full absolute inset-0 mb-5 z-50">
-          <div className="flex flex-col text-white p-4 self-end">
-            <h1 className="font-bold text-[20px]">
-              Fundamentals of UI/UX Design
-            </h1>
-            <p className="font-semibold mt-2 sm:mt-0">By Sarah Muwanguzi</p>
+          <div className="flex flex-col text-white p-4 gap-2 self-end">
+            <h1 className="font-bold text-[20px]">{courseName}</h1>
+            <p className="font-semibold sm:mt-0">By {tutorName}</p>
           </div>
           <div className="p-4 self-end">
             <button className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black">
@@ -62,7 +74,9 @@ const Enroll = () => {
           } `}
           onClick={() => handleTab("Course Overview")}
         >
-          <h1 className="font-semibold sm:text-[20px] text-[17px] sm:ml-20">Course Overview</h1>
+          <h1 className="font-semibold sm:text-[20px] text-[17px] sm:ml-20">
+            Course Overview
+          </h1>
         </div>
 
         <div
@@ -73,11 +87,17 @@ const Enroll = () => {
           } `}
           onClick={() => handleTab("Course Reviews")}
         >
-          <h1 className="font-semibold sm:text-[20px] text-[17px]">Course Reviews</h1>
+          <h1 className="font-semibold sm:text-[20px] text-[17px]">
+            Course Reviews
+          </h1>
         </div>
       </div>
-      {tab === "Course Overview" ? <CourseOverview /> : <CourseReview reviews={reviews.Reviews}  />}
-        <SimilarCourses courses={similarCoursesData} />
+      {tab === "Course Overview" ? (
+        <CourseOverview />
+      ) : (
+        <CourseReview reviews={reviews.Reviews} />
+      )}
+      <SimilarCourses courses={similarCoursesData} />
     </div>
   );
 };
