@@ -2,7 +2,7 @@ import React from "react";
 
 const step2 = () => {
   return (
-    <div className="rouded-lg bg-gray-100 border sm:mb-0 mb-5 border-gray-100 py-6 px-2">
+    <div className="rouded-lg bg-gray-100 border sm:mb-0 mb-5 border-gray-100 py-6 sm:px-2">
       <div className="border-b border-gray-300 flex items-center justify-center">
         <h1 className="mb-2">Title: Quiz One</h1>
       </div>

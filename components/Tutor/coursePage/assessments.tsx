@@ -65,19 +65,20 @@ const Assessments = () => {
           </div>
         </div>
         {isOpen && (
-          <div className="bg-gray-100 p-4 space-y-2">
+          <div className="sm:bg-gray-100 p-4 space-y-2">
             {quizzes.map((quiz, index) => (
               <div
                 key={index}
-                className="bg-gray-300 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0"
+                className="bg-gray-300 sm:p-4 p-6 flex justify-between items-center space-y-2 sm:space-y-0"
               >
-                <span className="text-black sm:text-base text-sm">{quiz}</span>
-                <div className="flex items-center space-x-2">
+                <span className="text-black  sm:text-sm">{quiz}</span>
+                <p className="underline">Add content</p>
+                {/* <div className="flex items-center space-x-2">
                   <div className="bg-gray-700 text-white px-3 py-2 rounded flex items-center cursor-pointer sm:text-base text-sm">
                     <Image src="/plus.svg" alt="plus" width={15} height={15} />
                     <span className="ml-2 font-semibold">Add Content</span>
                   </div>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>
@@ -90,7 +91,7 @@ const Assessments = () => {
             <div className="flex items-center">
               {isDown && (
                 <div className="flex flex-row bg-black p-4 rounded-xl mr-4 gap-2 items-center">
-                  <Image src="/plus.svg" alt="plus" width={30} height={30} />
+                  <Image src="/plus.svg" alt="plus" width={15} height={15} />
                   <h1 className="text-white">New Assignment</h1>
                 </div>
               )}
@@ -154,11 +155,11 @@ const Assessments = () => {
             {Challenges.map((challenge, index) => (
               <div
                 key={index}
-                className="bg-[#1a1b1ab0]   p-4 flex justify-between items-center"
+                className="bg-[#1a1b1ab0] p-6 flex justify-between items-center"
               >
                 <span className="text-white">{challenge}</span>
                 <div className="flex items-center space-x-2">
-                  <div className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer">
+                  <div className="bg-white text-gray-800 px-3 py-1  rounded flex items-center cursor-pointer">
                     <Image src="/pluss.svg" alt="plus" width={10} height={10} />
                     <span className="ml-2 text-sm font-semibold">Content</span>
                   </div>

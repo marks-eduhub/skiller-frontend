@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const Curriculum = () => {
+const Topics = () => {
   const topics = [
     "Topic 1: How to get started in design",
     "Topic 2: Figma Basics",
@@ -36,5 +36,5 @@ const Curriculum = () => {
   );
 };
 
-export default Curriculum;
+export default Topics;
 

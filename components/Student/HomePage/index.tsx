@@ -102,8 +102,10 @@ const HomePage: React.FC = () => {
               <ProductContainer courses={categoryData.courses} />
 
               <div
+
                 className="max-md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
                 onClick={() => handleNavigation(categorySlug)}
+
               >
                 <FontAwesomeIcon
                   icon={faChevronRight}

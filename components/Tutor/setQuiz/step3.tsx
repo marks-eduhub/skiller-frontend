@@ -4,16 +4,16 @@ import TextEditor from "@/lib/quill";
 
 const Step3 = () => {
   return (
-    <div className="rounded-lg border mb-5 w-full border-gray-100 p-6 bg-gray-100">
+    <div className="rounded-lg border mb-5 w-full border-gray-100 sm:p-6 p-4 bg-gray-100">
       <h1>Add questions and answers to your quiz</h1>
 
-      <div className="rounded-lg border w-full h-auto border-gray-900 bg-white mt-5 ">
+      <div className="rounded-lg border w-full flex sm:flex-row flex-col h-auto border-gray-900 bg-white mt-5 ">
         <div className="flex flex-col p-4">
-          <div className="flex items-center gap-3">
+          <div className="flex sm:flex-row flex-col sm:items-center gap-3">
             <h1>Question: </h1>
             <input 
               type="text"
-              className="sm:w-1/2  w-full outline-none p-2 my-4 border border-gray-300 rounded-md"
+              className="sm:w-1/2  w-full outline-none p-2 sm:my-4  my-1 border border-gray-300 rounded-md"
               placeholder="Type your question here..."
             />
           </div>
@@ -47,15 +47,15 @@ const Step3 = () => {
               Option 3
             </label>
           </div>
-          <div className="flex gap-3 mt-6">
+          <div className="flex sm:flex-row flex-col gap-3 mt-6">
             <h1 className="mt-1">Select the right answer:</h1>
-            <select className=" text-gray-600 block  w-28 bg-white rounded-md px-3 py-2 border border-gray-300 mb-6 outline-none ">
+            <select className=" text-gray-600 block  sm:w-28 w-36 bg-white rounded-md px-3 py-2 border border-gray-300 mb-6 outline-none ">
               <option>Option 1</option>
               <option>Option 2</option>
               <option>Option 3</option>
             </select>
           </div>
-          <div className=" mt-3  ">
+          <div className=" mt-3 hidden md:flex ">
             <TextEditor />
           </div>
         </div>
