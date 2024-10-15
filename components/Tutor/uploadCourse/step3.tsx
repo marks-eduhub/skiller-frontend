@@ -25,7 +25,6 @@ const Step3 = () => {
   };
 
   const handleTextChange = (text: string) => {
-    console.log("Received text input:", text);
   };
 
   const handleModalClose = () => {

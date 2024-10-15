@@ -56,33 +56,49 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
               </Link>
             );
           })}
-          <Link
-            key={communityLink.name}
-            href={communityLink.href}
-            className={clsx(
-              "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3",
-
-              "mb-3",
-              {
+          <Link href="/dashboard/learning">
+            <div
+              className={clsx("flex items-center space-x-2 pl-6 my-5 p-3", {
                 "bg-gray-700 text-white rounded ":
-                  pathname === communityLink.href,
-              }
-            )}
-          >
-            <AiOutlineTeam className="w-10 h-7 mr-2 text-white " />
-            <p className="md:block">{communityLink.name}</p>
+                  pathname === "/dashboard/learning",
+              })}
+            >
+              <Image
+                src="/mylearning.svg"
+                alt="learning"
+                width={20}
+                height={20}
+              />
+              <p>My Learning</p>
+            </div>
           </Link>
-          <hr className="border-gray-600" />
+
+          <Link href="/dashboard/wishlist">
+          <div
+              className={clsx("flex items-center space-x-2 pl-6 my-5 p-3", {
+                "bg-gray-700 text-white rounded ":
+                  pathname === "/dashboard/wishlist",
+              })} >
+              <Image
+                src="/wishlist.svg"
+                alt="wishlist"
+                width={20}
+                height={20}
+              />
+              <p>Wishlist</p>
+            </div>
+          </Link>
+
+          <hr className="border-gray-600 my-5" />
           <div className="">
             <Link href="/dashboard/tutorspage">
               <div
                 className={clsx("flex items-center mt-2 p-3 cursor-pointer", {
-                  "bg-gray-700 text-white rounded ": pathname === "/dashboard/tutorspage",
+                  "bg-gray-700 text-white rounded ":
+                    pathname === "/dashboard/tutorspage",
                 })}
               >
-              <p className="  hover:bg-gray-900">
-                Tutors
-              </p>
+                <p className="  hover:bg-gray-900">Tutors</p>
               </div>
             </Link>
             {subscriptionLinks.map(
@@ -119,26 +135,23 @@ export default function NavLinks({ minimized }: { minimized?: boolean }) {
             )}
           </div>
           <hr className="my-4 border-gray-600" />
-          <Link href="/dashboard/learning">
-            <div
-              className={clsx("flex items-center space-x-2 pl-3 mb-6 p-3", {
+
+          <Link
+            key={communityLink.name}
+            href={communityLink.href}
+            className={clsx(
+              "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3",
+
+              "mb-3",
+              {
                 "bg-gray-700 text-white rounded ":
-                  pathname === "/dashboard/learning",
-              })}
-            >
-              <Image
-                src="/mylearning.svg"
-                alt="learning"
-                width={20}
-                height={20}
-              />
-              <p>My Learning</p>
-            </div>
+                  pathname === communityLink.href,
+              }
+            )}
+          >
+            <AiOutlineTeam className="w-10 h-7 mr-2 text-white " />
+            <p className="md:block">{communityLink.name}</p>
           </Link>
-          <div className="flex items-center space-x-2 pl-3">
-            <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} />
-            <p>Wishlist</p>
-          </div>
         </>
       )}
     </>

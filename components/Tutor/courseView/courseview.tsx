@@ -41,7 +41,7 @@ const Courseview = () => {
           <div className="flex flex-col ">
             <h1 className="font-medium text-[25px] mb-5">Welcome!</h1>
             <p className="text-[20px] mb-5">Educate others by creating a course</p>
-            <Link href="/tutor/dashboard/courseUpload">
+            <Link href="/tutor/dashboard/uploadCourse">
             <div
               className="sm:w-[30%] h-[350px] bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer"
               onClick={addCourse}

@@ -13,7 +13,6 @@ export const login = async (formData: FormData) => {
       throw new Error(response.statusText || 'Login failed');
     }
   } catch (error) {
-    console.error('Login error:', error);
     throw error;
   }
 };

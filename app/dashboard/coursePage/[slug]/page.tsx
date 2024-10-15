@@ -1,77 +1,41 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import constants from "../../../../components/Student/HomePage/dummyData.json";
+import React from "react";
 import ProductCard from "../../../../components/Student/courseCards/courseCards";
-
-interface Course {
-  id: number;
-  instructor: string;
-  image: string;
-  rating: number;
-  duration: string;
-  description: string;
-  topic: string;
-  level: string;
-  category: string;
-}
+import { useFetchCourses } from "@/hooks/useCourses";
 
 const CoursecategoryPage = ({ params }: { params: { slug: string } }) => {
-  const categories = [
-    { title: "Featured Courses", category: "featuredCourses" },
-    { title: "Recently Accessed", category: "recentCourses" },
-    { title: "The Week's Picks", category: "weeksPicks" },
-    { title: "New Arrivals", category: "newArrivals" },
-  ];
-
   const { slug } = params;
-  const [filteredcourses, setfilteredcourses] = useState<Course[]>([]);
-  const containerWidth = "415px";
 
-  
+  const { data, isLoading, error } = useFetchCourses();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching courses</div>;
 
-  useEffect(() => {
-    const filtered = constants.courses.filter(
-      (course) => course.category === slug
-    );
-    setfilteredcourses(filtered);
-    console.log("filteredcourses:", filteredcourses);
-  }, [slug]);
-
+  const filteredCourses = data?.data.filter((course: any) =>
+    course.attributes.categories.data.some(
+      (category: any) => category.attributes.slug === slug
+    )
+  );
+if (!filteredCourses || filteredCourses.length === 0) {
+  return <div>No courses found in this category</div>;
+}
   const categoryTitle =
-    categories.find((cat: { category: string }) => cat.category === slug)
-      ?.title || slug;
+    filteredCourses[0]?.attributes.categories.data.find(
+      (category: any) => category.attributes.slug === slug
+    )?.attributes.coursecategories || "Courses";
 
   return (
     <>
       <div className="pl-3 pr-2 container mx-auto">
         <h1 className="mb-4 font-bold text-[20px] ml-2 mt-10">
-          {categoryTitle}
+          {categoryTitle} 
         </h1>
 
-        <div className=" rounded-lg relative overflow-hidden justify-center items-center max-md:hidden">
+        <div className="rounded-lg relative overflow-hidden justify-center items-center">
           <div className="grid grid-cols-3 pl-4 py-3 mt-2">
-            {filteredcourses.map((course) => (
+            {filteredCourses?.map((course: any) => (
               <div key={course.id} className="pr-4">
-                <ProductCard
-                  key={course.id}
-                  course={course}
-                  containerWidth={containerWidth}
-                />
+                <ProductCard course={course}  />
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="rounded-lg relative sm:hidden">
-        <div className="w-full h-full flex flex-col items-center justify-center bg-transparent">
-          <div className="flex flex-col w-full mt-2 mb-2">
-            {filteredcourses.map((course) => (
-              <ProductCard
-                key={course.id}
-                course={course}
-                containerWidth={containerWidth}
-              />
             ))}
           </div>
         </div>
