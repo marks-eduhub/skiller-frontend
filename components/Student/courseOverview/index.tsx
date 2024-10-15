@@ -1,44 +1,95 @@
 "use client";
+import similarCoursesData from "../details/data.json";
+import { useParams } from 'next/navigation';
 import React, { useState } from "react";
 import SimilarCourses from "../details/similar";
-import CourseOverview from "./courseOverview";
-import CourseReview from "./courseReviews";
-import similarCoursesData from "../details/data.json";
-import reviews from "./data.json";
-import { useFetchOverview, useFetchUsers } from "@/hooks/useCourseOverview";
 import Image from "next/image";
 import api from "@/lib/axios";
+import { useFetchOverview } from '@/hooks/useCourseOverview';
+import CourseOverview from './courseOverview';
+import CourseReview from './courseReviews';
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { message } from "antd";
 const Enroll = () => {
-  const { data: courseData, isLoading, error } = useFetchOverview();
-
-  const details = courseData?.data[0] || {};
-
-  const courseImage = details.attributes?.Image?.data[0]?.attributes?.url || "";
-  const tutorName =
-    details.attributes?.tutor?.data?.attributes?.tutorname || "";
-  const courseName =
-    details.attributes?.course?.data?.attributes?.coursename || "";
-
   const [tab, setTab] = useState("Course Overview");
-  const handleTab = (tabName: string) => {
-    setTab(tabName);
-  };
+  const { slug } = useParams(); 
+  console.log("slug", slug);
+  const { data, isLoading, error } = useFetchOverview(Number(slug));
+console.log("response",data)
+  if (!slug) {
+    return <div>Course ID is missing</div>;
+  }
+  if (isLoading) {
+    return (
+      <div>
+        <h2 className="text-lg font-300 my-4 ">
+          <Skeleton
+            width={200}
+            height={24}
+            baseColor="#e0e0e0"
+            highlightColor="#f0f0f0"
+          />
+        </h2>
+
+        <div>
+          <Skeleton
+            height={300}
+            count={3}
+            baseColor="#e0e0e0"
+            highlightColor="#f5f5f5"
+            enableAnimation={true}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    message.error("Error fetching details. Please try again later.");
+  }
+  
+  if (!data) return <div>Course details not available!</div>;
+
+  const courseAttributes = data?.data?.attributes || {};
+  console.log("attributes",courseAttributes)
+  const coursename = courseAttributes.coursename || "UI";
+  const card = courseAttributes.card?.data?.attributes?.url || "";
+  const tutorName = courseAttributes.tutors?.data[0]?.attributes?.tutorname || "DS";
+  const duration = courseAttributes.duration || "2 hours and 40 minutes";
+  const introduction = courseAttributes?.introduction[0]?.children[0]?.text || "";
+  const requirements = courseAttributes?.requirements[0]?.children[0]?.text || "";
+  const expectations = courseAttributes.expectations || [];
+  const enrolled = courseAttributes.users?.data || [];
+  const studentsenrolled = enrolled.length;
+  console.log("students", enrolled)
+
+const reviewsData = courseAttributes.reviews?.data || []; 
+
+const formattedReviews = reviewsData.map((review:any) => ({
+  name: review.attributes.name,
+  image: review.attributes.imageUrl || "/albert.svg", 
+  comment: review.attributes.comment,
+  rating: review.attributes.rating,
+}));
+  const topics = courseAttributes?.topicname?.data || [];
+  console.log("Expectations:", expectations); 
+console.log("Topics:", topics); 
+  const handleTab = (tabName: string) => setTab(tabName);
+
   return (
     <div>
       <div className="w-full relative rounded-lg sm:h-[500px] h-[300px]">
         <Image
-          src={
-            courseImage ? `${api.defaults.baseURL}${courseImage}` : "/cake.svg"
-          }
+          src={card ? `${api.defaults.baseURL}${card}` : "/cake.svg"}
           alt="Course Image"
           fill
-          className="object-cover  bg-no-repeat"
+          className="object-cover bg-no-repeat"
         />
-
         <div className="absolute inset-0 video-overlay rounded-lg"></div>
         <div className="flex justify-between w-full absolute inset-0 mb-5 z-50">
           <div className="flex flex-col text-white p-4 gap-2 self-end">
-            <h1 className="font-bold text-[20px]">{courseName}</h1>
+            <h1 className="font-bold text-[20px]">{coursename}</h1>
             <p className="font-semibold sm:mt-0">By {tutorName}</p>
           </div>
           <div className="p-4 self-end">
@@ -52,15 +103,13 @@ const Enroll = () => {
         <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
           Cost : <span className="font-bold text-[18px]">FREE</span>
         </h1>
-        <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
+        <h1 className="font-semibold text-[18px]  sm:mb-0 mb-2">
           Duration :
-          <span className="font-bold text-[18px]">2hours 40 minutes</span>
+          <span className="font-bold text-[18px] ml-1">{duration}</span>
         </h1>
-
         <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
-          Students enrolled : <span className="font-bold text-[18px]">112</span>
+          Students enrolled : <span className="font-bold text-[18px]">{studentsenrolled}</span>
         </h1>
-
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
           <button className="text-white px-6 py-2">Enroll today!</button>
         </div>
@@ -93,10 +142,15 @@ const Enroll = () => {
         </div>
       </div>
       {tab === "Course Overview" ? (
-        <CourseOverview />
+        <CourseOverview
+        introduction={introduction}
+          requirements={requirements}
+          expectations={expectations}
+          topics={topics} />
       ) : (
-        <CourseReview reviews={reviews.Reviews} />
+        <CourseReview reviews={formattedReviews} />
       )}
+     
       <SimilarCourses courses={similarCoursesData} />
     </div>
   );

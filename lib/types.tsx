@@ -1,4 +1,5 @@
 import { createContext } from "react";
+
 export interface ImageData {
   id: number;
   attributes: {
@@ -21,48 +22,18 @@ export interface CourseImage {
 export interface User {
   id: number;
   attributes: {
-  email: string;
-  password: string;
-  username: string;
-  id:number
-  }
+    email: string;
+    password: string;
+    username: string;
+  };
 }
-// export interface Course {
-//   attributes: any;
-//   id: number;
-//   tutors: string;
-//   card: string;
-//   rating: number;
-//   duration: string;
-//   coursename: string;
-//   topicname: string;
-//   categories: string;
-// }
+
 export interface Wishlist {
   userId: number;
   courseId: number;
   course: Course[]; 
 }
- export interface Course {
-  id: number;
-  attributes: {
-    course: any;
-    coursename: string;
-    rating: number;
-    duration: string;
-    tutor: string;
-    card: string;
-    categories: { data: Category[] };
-  };
-}
-export interface LikedCourse {
-  id: number;
-  course: Course[]
-  user: {
-    id: number;
-  };
-  dateCreated: string;
-}
+
 export interface Category {
   id: number;
   coursecategories: string;
@@ -70,15 +41,14 @@ export interface Category {
   categorySlug: string;
   courses: Course[];
 }
-export interface RegisterResponse {
-  jwt: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
+
+export interface Topic {
+  id: number;
+  attributes: {
+    name: string;
+    description: string;
   };
 }
-
 
 export interface Tutor {
   id: number;
@@ -103,12 +73,34 @@ export interface CourseCategory {
   };
 }
 
+// export interface CourseAttributes {
+//   id: number;
+//   rating: number;
+//   duration: string;
+//   coursename: string;
+//   card: CourseImage;
+//   users: {
+//     data: User[];
+//   };
+//   topicname: {
+//     data: Topic[];
+//   };
+//   tutors: {
+//     data: Tutor[];
+//   };
+//   reviews: {
+//     data: CourseReview[];
+//   };
+//   categories: {
+//     data: CourseCategory[];
+//   };
+// }
 export interface CourseAttributes {
-  id:number
+  id: number;
   rating: number;
   duration: string;
   coursename: string;
-  card: CourseImage;
+  card: CourseImage;  
   users: {
     data: User[];
   };
@@ -126,35 +118,21 @@ export interface CourseAttributes {
   };
 }
 
-// export interface Course {
-//   id: number;
-//   attributes: CourseAttributes;
-// }
 
-export interface Category {
+export interface Course {
+  
   id: number;
-  coursecategories: string;
-  slug: string;
-  categorySlug: string;
-  courses: Course[];
+  attributes: CourseAttributes;
 }
-export interface Topic {
+
+export interface LikedCourse {
   id: number;
-  attributes: {
-    name: string;
-    description: string;
+  course: Course[];
+  user: {
+    id: number;
   };
+  dateCreated: string;
 }
-
-export interface Review {
-  id: number;
-  attributes: {
-    comment: string;
-    rating: number;
-    name: string;
-  };
-}
-
 
 export interface courseDetail {
   id: number;
@@ -167,45 +145,32 @@ export interface courseDetail {
     topics?: { data: Array<any> };
   };
 }
-  export interface Reviews {
-    Image:string
-    name: string;
-    comment: string;
-    rating: number;
-    courseName: string;
-  }
-  // export interface CourseOverview{
-  //   Image: string
-  //   reviews:Reviews
-  //   requirements: string
-  //   expectations:string
-  //   introduction: string
-  //   tutorName: string
-  //   courseName: string
-  //   topic: string
 
-  // }
-  export interface RegisterResponse {
-    jwt: string;
-    user: {
-      id: string;
-      username: string;
-      email: string;
-    };
-  }
-  export interface AuthContextType {
-    user: User | undefined;
-    setUser: (user: User) => void;
-    isLoading: boolean;
-  }
-  
-  export const AuthContext = createContext<AuthContextType>({
-    user: undefined,
-    setUser: () => {}, 
-    isLoading: false,
-  });
+export interface Reviews {
+  Image: string;
+  name: string;
+  comment: string;
+  rating: number;
+  courseName: string;
+}
+
+export interface RegisterResponse {
+  jwt: string;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+  };
+}
+
 export interface AuthContextType {
   user: User | undefined;
   setUser: (user: User) => void;
   isLoading: boolean;
 }
+
+export const AuthContext = createContext<AuthContextType>({
+  user: undefined,
+  setUser: () => {},
+  isLoading: false,
+});
