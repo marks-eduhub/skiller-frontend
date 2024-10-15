@@ -3,6 +3,7 @@ import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import NavLinks from "@/components/Student/dashboadLayout/nav-links";
 import SkillerLogo from "@/components/ui/logo";
 import { IoMdClose } from "react-icons/io";
+import Image from "next/image";
 
 const SmallScreenSideNav = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,11 +19,11 @@ const SmallScreenSideNav = () => {
           <SkillerLogo />
         </div>
         <div className="flex w-48 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
-          <MagnifyingGlassIcon className="w-4 h-4 text-black mr-2" />
-          <input
+        <Image src="/magnify.svg" alt="magnify" width={30} height={30} />
+        <input
             type="text"
             placeholder="Search..."
-            className="outline-none bg-transparent"
+            className="outline-none bg-transparent ml-2"
           />
         </div>
 

@@ -1,12 +1,55 @@
 import React from "react";
 import Image from "next/image";
 import ProductContainer from "../courseCards/cardContainer";
-import dummy from "../HomePage/dummyData.json";
-
+import { useFetchCourses } from "@/hooks/useCourses";
+import { Course } from "@/lib/types";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { message } from "antd";
 const MichaelKizito = () => {
-  const KizitoCourses = dummy.courses.filter(
-    (course) => course.instructor === "Micheal Kizito"
-  );
+  const { data, isLoading, error } = useFetchCourses();
+
+  if (isLoading) {
+    return (
+     <div>
+        <h2 className="text-lg font-300 my-4 ">
+          <Skeleton width={2000} height={24} 
+            baseColor="#e0e0e0"
+            highlightColor="#f0f0f0"
+          />
+        </h2>
+
+        <div>
+          <Skeleton
+            height={300}
+            count={3}
+            baseColor="#e0e0e0"
+            highlightColor="#f5f5f5"
+            enableAnimation={true} 
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    message.error("Error fetching courses. Please try again later.");
+  }
+
+  const kizitoCourses: any = [];
+
+  data?.data.forEach((course: any) => {
+    const tutors = course.attributes.tutors.data;
+
+    const isKizitoTutor = tutors.some((tutor: any) => {
+      return tutor.attributes.tutorname === "Michael Kizito"; 
+    });
+
+    if (isKizitoTutor) {
+      kizitoCourses.push(course);
+    }
+  });
+
   const images = [
     { src: "/twitter.svg", alt: "sms" },
     { src: "/linkedln.svg", alt: "sms" },
@@ -15,7 +58,7 @@ const MichaelKizito = () => {
   ];
 
   return (
-    <div className=" sm:p-0">
+    <div className="sm:p-0">
       <div className="flex mb-5 flex-col sm:w-full w-[345px] rounded-lg sm:px-4 p-2 sm:py-6 border border-black sm:h-[400px] h-auto relative">
         <div className="flex flex-col sm:flex-row items-start sm:gap-7 gap-3 mt-5">
           <Image
@@ -65,7 +108,7 @@ const MichaelKizito = () => {
       </div>
       <div className="mt-8">
         <h1 className="mb-6">Courses by Micheal Kizito</h1>
-        <ProductContainer courses={KizitoCourses} />
+        <ProductContainer courses={kizitoCourses} />
       </div>
     </div>
   );

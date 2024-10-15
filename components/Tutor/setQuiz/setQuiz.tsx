@@ -35,7 +35,25 @@ const SetQuiz = () => {
 
   return (
     <div className="p-6 w-full flex flex-col  sm:mt-0 mt-10">
-      <h1 className="text-[20px] mb-6">New Assignment</h1>
+      <div className="sm:hidden flex items-center justify-between w-full">
+        {(currentStep === 2 || currentStep === 3) && (
+          <button
+            className="flex sm:hidden sm:mt-0 mt-8 text-[18px] text-gray-600 underline"
+            onClick={handlePreviousStep}
+          >
+            Go back
+          </button>
+        )}
+        {currentStep === 3 && (
+          <button className="underline mt-10 " onClick={handleQuizPreview}>
+            Quiz Preview
+          </button>
+        )}
+      </div>
+
+      <h1 className="text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center">
+        New Assignment
+      </h1>
 
       <StepTracker currentStep={currentStep} />
 
@@ -45,31 +63,31 @@ const SetQuiz = () => {
 
       <div className="sm:mt-5 flex items-center justify-between">
         {currentStep > 1 && (
-          <button
-            className="py-2 px-4 flex items-center justify-center rounded w-[150px] text-black border border-black"
-            onClick={handlePreviousStep}
-          >
-            Previous
-          </button>
+          <>
+            <button
+              className="py-2 px-4 flex items-center  hidden md:flex justify-center rounded w-[150px] text-black border border-black"
+              onClick={handlePreviousStep}
+            >
+              Previous
+            </button>
+          </>
         )}
 
         {currentStep === 3 ? (
-          <> 
+          <>
             <button
-              className="py-2 px-4 mt-2 flex sm:mb-0 mb-48 items-center justify-center rounded w-full sm:w-[150px] text-black border border-black"
+              className="py-2 px-4 mt-2 flex sm:mb-0 mb-48 hidden md:flex items-center justify-center rounded w-full sm:w-[150px] text-black border border-black"
               onClick={handleQuizPreview}
             >
               Quiz Preview
             </button>
-            <button
-              className="bg-black py-2  px-4 flex items-center justify-center rounded w-full sm:w-[150px] text-white"
-            >
+            <button className="bg-black py-2  px-4 flex items-center justify-center sm:ml-0 ml-20 rounded w-[150px] text-white">
               Upload Quiz
             </button>
           </>
         ) : (
           <button
-            className="bg-black py-2 px-4  flex items-center justify-center rounded w-[150px] text-white"
+            className="bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white"
             onClick={handleNextStep}
           >
             Next

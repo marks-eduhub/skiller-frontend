@@ -15,7 +15,7 @@ const Step2 = () => {
     setTopics(topics.filter((topic, index) => index !== indexToDelete));
   };
   return (
-    <div className="p-4">
+    <div className="sm:p-4">
       {topics.map((topic, index) => (
         <TopicForm
           key={index}

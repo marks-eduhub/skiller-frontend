@@ -21,6 +21,59 @@ export interface CourseImage {
 export interface User {
   id: number;
   attributes: {
+  email: string;
+  password: string;
+  username: string;
+  id:number
+  }
+}
+// export interface Course {
+//   attributes: any;
+//   id: number;
+//   tutors: string;
+//   card: string;
+//   rating: number;
+//   duration: string;
+//   coursename: string;
+//   topicname: string;
+//   categories: string;
+// }
+export interface Wishlist {
+  userId: number;
+  courseId: number;
+  course: Course[]; 
+}
+ export interface Course {
+  id: number;
+  attributes: {
+    course: any;
+    coursename: string;
+    rating: number;
+    duration: string;
+    tutor: string;
+    card: string;
+    categories: { data: Category[] };
+  };
+}
+export interface LikedCourse {
+  id: number;
+  course: Course[]
+  user: {
+    id: number;
+  };
+  dateCreated: string;
+}
+export interface Category {
+  id: number;
+  coursecategories: string;
+  slug: string;
+  categorySlug: string;
+  courses: Course[];
+}
+export interface RegisterResponse {
+  jwt: string;
+  user: {
+    id: string;
     username: string;
     email: string;
   };
@@ -73,10 +126,10 @@ export interface CourseAttributes {
   };
 }
 
-export interface Course {
-  id: number;
-  attributes: CourseAttributes;
-}
+// export interface Course {
+//   id: number;
+//   attributes: CourseAttributes;
+// }
 
 export interface Category {
   id: number;
@@ -151,3 +204,8 @@ export interface courseDetail {
     setUser: () => {}, 
     isLoading: false,
   });
+export interface AuthContextType {
+  user: User | undefined;
+  setUser: (user: User) => void;
+  isLoading: boolean;
+}

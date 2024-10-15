@@ -6,7 +6,7 @@ const Resources = () => {
 
   return (
 
-    <div className="ml-6 mr-6 pt-9 ">
+    <div className="sm:ml-6 sm:mr-6 ">
     <div className="h-60 bg-gray-300 mt-3 font-bold text-black flex flex-row items-center justify-center">
       <h2 className="">Instructions on how to use resouces</h2>
     </div>

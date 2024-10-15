@@ -27,7 +27,7 @@ const page = () => {
             <h3 className="sm:text-4xl text-[30px] mt-10">
               or
               <Link
-                href="/tutor/dashboard"
+                href="/tutor/dashboard/courseview"
                 className="text-[#0000FF] ml-2 mr-2"
               >
                 get started here

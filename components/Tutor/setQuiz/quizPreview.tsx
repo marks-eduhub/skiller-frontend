@@ -1,24 +1,31 @@
 import React from "react";
-interface QuizPreviewProps{
-    handlePreviousStep: () => void
+interface QuizPreviewProps {
+  handlePreviousStep: () => void;
 }
-const QuizPreview:React.FC<QuizPreviewProps> = ({ handlePreviousStep }) => {
+const QuizPreview: React.FC<QuizPreviewProps> = ({ handlePreviousStep }) => {
   return (
-    <div className="p-6  mb-5 w-full">
-      <div className="flex mt-6  max-md:flex-col justify-between w-full  sm:items-center">
+    <div className="sm:p-6  p-4 mb-5 sm:mt-0 mt-20  w-full">
+      <div className="flex mt-6  justify-between w-full  sm:items-center">
         <button
           className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md sm:mb-0 mb-4 w-[100px]  flex justify-start"
           onClick={handlePreviousStep}
         >
           Back
         </button>
-        <h1 className="text-xl  mb-4">Quiz Preview</h1>
+        <h1 className="text-xl hidden md:flex">Quiz Preview</h1>
 
-        <button className="bg-black text-white py-2 px-6 sm:w-[150px]  rounded-md">
+        <button
+          className="bg-black text-white rounded-md px-4 sm:px-6 w-[150px]  sm:py-2"
+          onClick={handlePreviousStep}
+        >
           Upload Quiz
         </button>
       </div>
-      <div className="bg-gray-100 border mt-10 rounded-lg p-4 border-gray-100  w-full h-auto">
+      <h1 className="text-xl flex items-center justify-center w-full  sm:mb-4 sm:mt-0 my-8 sm:hidden text-gray-600 font-semibold mb-4">
+        Quiz Preview
+      </h1>
+
+      <div className="bg-gray-100 border mt-10 rounded-lg p-4  w-full h-auto">
         <div className="flex flex-col  ">
           <h1 className="underline">Question1:</h1>
           <div className="ml-5">

@@ -9,6 +9,11 @@ const Step3 = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadFile, setUploadFile] = useState<string | null>(null);
 
+  const [tab, setTab] = useState("RESOURCES");
+  const handleTab = (tabName: string) => {
+    setTab(tabName);
+  };
+
   const handleFileChange = (file: File | null) => {
     if (file) {
       const reader = new FileReader();
@@ -20,7 +25,6 @@ const Step3 = () => {
   };
 
   const handleTextChange = (text: string) => {
-    console.log("Received text input:", text);
   };
 
   const handleModalClose = () => {
@@ -58,46 +62,80 @@ const Step3 = () => {
   return (
     <div className="relative flex flex-col">
       <div className="mb-10">
-        <label className="block text-sm font-medium mb-6 mt-6">
-          Add instructions on how to use the resources
-        </label>
-        <ReactQuill
-          modules={modules}
-          formats={[
-            "header",
-            "font",
-            "size",
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            "blockquote",
-            "list",
-            "bullet",
-            "indent",
-            "link",
-            "image",
-          ]}
-          className="bg-white h-40 mb-10"
-        />
-      </div>
-      <div className="w-full sm:h-[100px] h-[90px] sm:mt-0 mt-10 bg-gray-300 cursor-pointer">
-        <div
-          className="flex items-center justify-center gap-1 p-9"
-        >
-          <Image src="/pluss.svg" alt="plus" width={20} height={20} />
-          <h1 className="font-semibold text-[18px]">Add resources</h1>
+        <div className="flex items-center justify-center mt-3 mb-5 w-full sm:gap-72 gap-20">
+          <div
+            className={`${
+              tab === "RESOURCES"
+                ? "border-b-2 sm:w-56 w-36 border-black  flex justify-center"
+                : "text-gray-400"
+            } cursor-pointer`}
+            onClick={() => handleTab("RESOURCES")}
+          >
+            <h1 className="text-center">RESOURCES</h1>
+          </div>
+          <div
+            className={`${
+              tab === "QUIZZES"
+                ? "border-b-2 sm:w-56 w-36 border-black flex justify-center"
+                : "text-gray-400"
+            } cursor-pointer`}
+            onClick={() => handleTab("QUIZZES")}
+          >
+            <h1 className="text-center">QUIZZES</h1>
+          </div>
         </div>
-      </div>
 
-      {isModalOpen && (
-        <FileModal
-          closeModal={handleModalClose}
-          handleFileChange={handleFileChange} 
-          handleTextChange={handleTextChange} 
-          isModalOpen={isModalOpen}
-        />
-      )}
+        {tab === "RESOURCES" && (
+          <div>
+            <label className="block sm:text-sm font-medium mb-6 sm:mt-6">
+              Add instructions on how to use the resources
+            </label>
+            <ReactQuill
+              modules={modules}
+              formats={[
+                "header",
+                "font",
+                "size",
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                "blockquote",
+                "list",
+                "bullet",
+                "indent",
+                "link",
+                "image",
+              ]}
+              className="bg-white h-40 mb-10"
+            />
+
+            <div className="w-full sm:h-[100px] h-[90px] sm:mt-20 mt-36 bg-gray-300 cursor-pointer">
+              <div className="flex items-center justify-center gap-1 p-9">
+                <Image src="/pluss.svg" alt="plus" width={20} height={20} />
+                <h1 className="font-semibold text-[18px]">Add resources</h1>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === "QUIZZES" && (
+          <div className="w-full sm:h-[100px] h-[90px] mt-10 bg-gray-300 cursor-pointer">
+            <div className="flex items-center justify-center gap-1 p-9">
+              <Image src="/pluss.svg" alt="plus" width={20} height={20} />
+              <h1 className="font-semibold text-[18px]">Add a quiz</h1>
+            </div>
+          </div>
+        )}
+        {isModalOpen && (
+          <FileModal
+            closeModal={handleModalClose}
+            handleFileChange={handleFileChange}
+            handleTextChange={handleTextChange}
+            isModalOpen={isModalOpen}
+          />
+        )}
+      </div>
     </div>
   );
 };
