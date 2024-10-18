@@ -8,7 +8,6 @@ interface ProductContainerProps {
 }
 
 const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
-  console.log("lol", courses)
   return (
     <>
       <div className="relative pl-0 container mx-auto max-md:hidden">

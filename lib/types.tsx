@@ -1,4 +1,27 @@
 import { createContext } from "react";
+export interface Child {
+  text: string;
+  type: string; 
+}
+
+export interface Expectation {
+  type: string; 
+  format: string;
+  children: Array<{
+    type: string;
+    children: Child[]; 
+  }>;
+}
+
+export interface Topic {
+  id: number;
+  attributes: {
+    name: string;
+    duration?: string;
+    description: string;
+
+  };
+}
 
 export interface ImageData {
   id: number;
@@ -42,13 +65,6 @@ export interface Category {
   courses: Course[];
 }
 
-export interface Topic {
-  id: number;
-  attributes: {
-    name: string;
-    description: string;
-  };
-}
 
 export interface Tutor {
   id: number;
@@ -73,28 +89,6 @@ export interface CourseCategory {
   };
 }
 
-// export interface CourseAttributes {
-//   id: number;
-//   rating: number;
-//   duration: string;
-//   coursename: string;
-//   card: CourseImage;
-//   users: {
-//     data: User[];
-//   };
-//   topicname: {
-//     data: Topic[];
-//   };
-//   tutors: {
-//     data: Tutor[];
-//   };
-//   reviews: {
-//     data: CourseReview[];
-//   };
-//   categories: {
-//     data: CourseCategory[];
-//   };
-// }
 export interface CourseAttributes {
   id: number;
   rating: number;
@@ -147,7 +141,7 @@ export interface courseDetail {
 }
 
 export interface Reviews {
-  Image: string;
+  profilepicture: string;
   name: string;
   comment: string;
   rating: number;

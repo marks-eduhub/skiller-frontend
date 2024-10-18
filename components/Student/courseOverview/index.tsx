@@ -1,26 +1,30 @@
 "use client";
 import similarCoursesData from "../details/data.json";
-import { useParams } from 'next/navigation';
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import SimilarCourses from "../details/similar";
 import Image from "next/image";
 import api from "@/lib/axios";
-import { useFetchOverview } from '@/hooks/useCourseOverview';
-import CourseOverview from './courseOverview';
-import CourseReview from './courseReviews';
+import { useFetchOverview, useFetchReviews } from "@/hooks/useCourseOverview";
+import CourseOverview from "./courseOverview";
+import CourseReview from "./courseReviews";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 const Enroll = () => {
   const [tab, setTab] = useState("Course Overview");
-  const { slug } = useParams(); 
-  console.log("slug", slug);
+  const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
-console.log("response",data)
+  const {
+    data: reviews,
+    isLoading: loadingreviews,
+    error: reviewError,
+  } = useFetchReviews(Number(slug));
+
   if (!slug) {
     return <div>Course ID is missing</div>;
   }
-  if (isLoading) {
+  if (isLoading || loadingreviews) {
     return (
       <div>
         <h2 className="text-lg font-300 my-4 ">
@@ -48,43 +52,56 @@ console.log("response",data)
   if (error) {
     message.error("Error fetching details. Please try again later.");
   }
-  
-  if (!data) return <div>Course details not available!</div>;
+
+  if (!data)
+    return (
+      <div className="flex items-center justify-center font-semibold text-[17px] p-7">
+        Course details not available!
+      </div>
+    );
 
   const courseAttributes = data?.data?.attributes || {};
-  console.log("attributes",courseAttributes)
+  const reviewData = reviews?.data?.attributes?.reviews?.data || [];
+
   const coursename = courseAttributes.coursename || "UI";
   const card = courseAttributes.card?.data?.attributes?.url || "";
-  const tutorName = courseAttributes.tutors?.data[0]?.attributes?.tutorname || "DS";
+  const tutorName =
+    courseAttributes.tutors?.data[0]?.attributes?.tutorname || "DS";
   const duration = courseAttributes.duration || "2 hours and 40 minutes";
-  const introduction = courseAttributes?.introduction[0]?.children[0]?.text || "";
-  const requirements = courseAttributes?.requirements[0]?.children[0]?.text || "";
+  const introduction =
+    courseAttributes?.introduction?.[0]?.children?.[0]?.text ||
+    "No introduction available";
+  const requirements =
+    courseAttributes?.requirements?.[0]?.children?.[0]?.text ||
+    "No requirements available";
   const expectations = courseAttributes.expectations || [];
   const enrolled = courseAttributes.users?.data || [];
   const studentsenrolled = enrolled.length;
-  console.log("students", enrolled)
+  const topics = courseAttributes?.topicname?.data || "No topics available";
 
-const reviewsData = courseAttributes.reviews?.data || []; 
+  const Reviews = reviewData.map((review: any) => {
+    const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
 
-const formattedReviews = reviewsData.map((review:any) => ({
-  name: review.attributes.name,
-  image: review.attributes.imageUrl || "/albert.svg", 
-  comment: review.attributes.comment,
-  rating: review.attributes.rating,
-}));
-  const topics = courseAttributes?.topicname?.data || [];
-  console.log("Expectations:", expectations); 
-console.log("Topics:", topics); 
+    return {
+      name: review.attributes.name,
+      image: imageUrl
+        ? `${api.defaults.baseURL}${imageUrl}`
+        : "/default-image.jpg",
+      comment: review.attributes.comment,
+      rating: review.attributes.rating,
+    };
+  });
+
   const handleTab = (tabName: string) => setTab(tabName);
 
   return (
     <div>
-      <div className="w-full relative rounded-lg sm:h-[500px] h-[300px]">
+      <div className="w-full relative sm:h-[500px] h-[300px]">
         <Image
           src={card ? `${api.defaults.baseURL}${card}` : "/cake.svg"}
           alt="Course Image"
           fill
-          className="object-cover bg-no-repeat"
+          className="object-cover bg-no-repeat  rounded-2xl"
         />
         <div className="absolute inset-0 video-overlay rounded-lg"></div>
         <div className="flex justify-between w-full absolute inset-0 mb-5 z-50">
@@ -108,7 +125,8 @@ console.log("Topics:", topics);
           <span className="font-bold text-[18px] ml-1">{duration}</span>
         </h1>
         <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
-          Students enrolled : <span className="font-bold text-[18px]">{studentsenrolled}</span>
+          Students enrolled :{" "}
+          <span className="font-bold text-[18px]">{studentsenrolled}</span>
         </h1>
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
           <button className="text-white px-6 py-2">Enroll today!</button>
@@ -143,12 +161,13 @@ console.log("Topics:", topics);
       </div>
       {tab === "Course Overview" ? (
         <CourseOverview
-        introduction={introduction}
+          introduction={introduction}
           requirements={requirements}
           expectations={expectations}
-          topics={topics} />
+          topics={topics}
+        />
       ) : (
-        <CourseReview reviews={formattedReviews} />
+        <CourseReview reviews={Reviews} />
       )}
      
       <SimilarCourses courses={similarCoursesData} />

@@ -32,9 +32,9 @@ const CourseReview: React.FC<CourseReviewProps> = ({ reviews }) => {
               <Image
                 src={review.image}
                 alt={review.name}
-                width={40}
-                height={40}
-                className="rounded-full"
+                width={60}
+                height={60}
+                className="rounded-md"
               />
               <div className="ml-3">
                 <h2 className="font-semibold">{review.name}</h2>

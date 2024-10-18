@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import ProductContainer from "../courseCards/cardContainer";
-import { useQuery } from "@tanstack/react-query";
 import { useFetchCourses } from "@/hooks/useCourses";
 
 const SimilarCourses: React.FC = () => {
