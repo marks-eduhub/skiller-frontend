@@ -11,7 +11,6 @@ import api from "@/lib/axios";
 
 const FeaturedProduct: React.FC = () => {
   const { data, isLoading, error } = useFetchCarouselCourses();
-
   if (isLoading) {
     return (
       <div>
@@ -55,16 +54,16 @@ const FeaturedProduct: React.FC = () => {
           showStatus={false}
         >
           {carouselCourses.map((course: any) => {
-            const imageUrl = course?.attributes?.Image?.data[0]?.attributes.url;
+            const imageUrl = course?.attributes?.card?.data?.attributes.url;
             const tutorName = course.attributes.tutors.data[0]?.attributes.tutorname;
-            const description = course.attributes.topics.data[0]?.attributes.description
+            const description = course.attributes.topicname?.data[0]?.attributes.description
             const { rating, duration, level, days } = course.attributes;
 
             return (
               <div key={course.id} className="relative">
                 <Image
                   src={imageUrl? `${api.defaults.baseURL}${imageUrl}`: "/cake.svg"}
-                  alt={course.attributes.Image.data[0]?.attributes.alternativeText }
+                  alt={course?.attributes.Image?.data[0]?.attributes.alternativeText }
                   height={256}
                   width={800}
                   className="w-full object-cover h-64 rounded-tl-2xl rounded-tr-2xl"

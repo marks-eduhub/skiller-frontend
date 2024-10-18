@@ -4,7 +4,7 @@ import { CarouselCourses } from "@/lib/types";
 
 
 const fetchCarouselCourses = async () => {
-  const response = await api.get("/api/carousel-courses?populate=*")
+  const response = await api.get("/api/courses?populate=*&filters[featured]=true")
   return response.data;
 };
 
