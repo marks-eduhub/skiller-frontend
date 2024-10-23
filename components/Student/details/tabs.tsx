@@ -5,7 +5,7 @@ import Resources from "./resources";
 import Discussion from "./discussion";
 import Knowledge from "./knowledge";
 import Transcript from "./transcript";
-
+import Notes from "./notes";
 const Tabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Description");
 
@@ -26,6 +26,16 @@ const Tabs: React.FC = () => {
             onClick={() => handleTabClick("Description")}
           >
             <h2>Description</h2>
+          </div>
+          <div
+            className={`cursor-pointer ${
+              activeTab === "Notes"
+                ? "inline-block p-1 text-center font-semibold text-black transition-colors duration-300 border-l-4 border-b-4 border-black shadow-md rounded-md"
+                : ""
+            }`}
+            onClick={() => handleTabClick("Notes")}
+          >
+            <h2>Notes</h2>
           </div>
           <div
             className={`cursor-pointer ${
@@ -57,19 +67,13 @@ const Tabs: React.FC = () => {
           >
             <h2>Resources</h2>
           </div>
-
+         
           <div
             className={`cursor-pointer ${
-              activeTab === "Tests and Assignment" ? "active-tab" : ""
-            }`}
-            onClick={() => handleTabClick("Tests and Assignment")}
-          >
-            <h2>Tests and Assignment</h2>
-          </div>
-          <div
-            className={`cursor-pointer ${
-              activeTab === "Knowledge Check" ? "active-tab" : ""
-            }`}
+              activeTab === "Knowledge Check"
+              ? "inline-block p-1 text-center font-semibold text-black transition-colors duration-300 border-l-4 border-b-4 border-black shadow-md rounded-md"
+              : ""
+          }`}
             onClick={() => handleTabClick("Knowledge Check")}
           >
             <h2>Knowledge Check</h2>
@@ -83,6 +87,7 @@ const Tabs: React.FC = () => {
         {activeTab === "Discussions" && <Discussion />}
         {activeTab === "Knowledge Check" && <Knowledge />}
         {activeTab === "Transcript" && <Transcript />}
+        {activeTab === "Notes" && <Notes />}
       </div>
     </>
   );

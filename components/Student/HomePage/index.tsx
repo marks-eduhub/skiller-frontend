@@ -123,9 +123,9 @@ const HomePage: React.FC = () => {
         {Array.isArray(recentlyAccessedCourses?.data) &&
         recentlyAccessedCourses?.data.length > 0 ? (
           <ProductContainer
-            courses={recentlyAccessedCourses.data.map(
-              (item: any) => item.attributes.course.data
-            )}
+            courses={recentlyAccessedCourses.data
+              .map((item: any) => item.attributes.course.data)
+              .slice(0, 3)} 
           />
         ) : (
           <p className="font-semibold flex justify-center my-10 items-center text-[20px]">
