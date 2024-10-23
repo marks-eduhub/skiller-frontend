@@ -34,7 +34,7 @@ const Tutorspage = () => {
             {tutor.image ? (
               <div className="sm:w-[300px] w-[150px] h-[150px] sm:h-[300px] relative">
                 <Image src={tutor.image} alt={tutor.name} fill className="hover:scale-110 transition duration-300 hover:brightness-75" />
-                <div className="max-md:hidden ">
+                <div className="hidden md:flex ">
                 {hovered === index && (
                   <FontAwesomeIcon
                     icon={faHeart}

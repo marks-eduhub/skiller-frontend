@@ -8,7 +8,7 @@ export default function TextEditor() {
   const [value, setValue] = useState('');
 
   return (
-    <div className="max-w-lg  ">
+    <div className="max-w-lg">
       <ReactQuill
         theme="snow"
         value={value}

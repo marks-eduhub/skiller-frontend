@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import Curriculum from "./curriculum";
 import Overview from "./overview";
 import Image from "next/image";
 import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
 import TutorNav from "../dashboard/tutor-nav";
+import Topics from "./topics";
 
 const CoursePage = () => {
   const [Tab, setTab] = useState("Course Overview");
@@ -16,7 +16,7 @@ const CoursePage = () => {
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
-        <div className="flex gap-2 items-center ">
+        <div className="flex gap-2 items-center hidden md:flex">
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
@@ -42,11 +42,12 @@ const CoursePage = () => {
       </div>
 
       <div
-        className="w-full h-[450px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
+        className="w-full sm:h-[450px] h-[300px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
         style={{ backgroundImage: `url("/keyboard.webp")` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl"></div>
-        <div className="p-6 z-20 w-full relative">
+
+        <div className="p-6 z-20 w-full relative sm:block hidden">
           <h1 className="text-white font-bold sm:text-[50px] sm:w-1/4 mb-10 text-[20px] sm:mx-0 mx-2">
             FUNDAMENTALS OF DESIGN
           </h1>
@@ -63,13 +64,23 @@ const CoursePage = () => {
             et at ut tincidunt varius viverra.
           </p>
         </div>
+
+        <div className="p-6 z-20 w-full relative sm:hidden flex flex-col justify-end h-full">
+          <h1 className="text-white font-bold text-[20px] mx-2">
+            FUNDAMENTALS OF DESIGN
+          </h1>
+          <p className="text-white font-bold text-[20px] mx-2">
+            By Sarah Muwangunzi
+          </p>
+        </div>
       </div>
+      <p className="mt-4  mb-6 sm:hidden text-gray-600 font-bold text-[17px] mx-2 underline">See course description</p>
 
       <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center hide-scrollbar overflow-x-scroll">
         <div
           className={`cursor-pointer ${
             Tab === "Course Overview"
-              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-xl"
               : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Course Overview")}
@@ -78,18 +89,18 @@ const CoursePage = () => {
         </div>
         <div
           className={`cursor-pointer ${
-            Tab === "Curriculum"
-              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md "
+            Tab === "Topics"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-xl "
               : "sm:text-[20px] text-gray-600"
           }`}
-          onClick={() => handleClicks("Curriculum")}
+          onClick={() => handleClicks("Topics")}
         >
-          <h2>Curriculum</h2>
+          <h2>Topics</h2>
         </div>
         <div
           className={`cursor-pointer ${
             Tab === "Assessments"
-              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-xl"
               : "sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Assessments")}
@@ -99,7 +110,7 @@ const CoursePage = () => {
         <div
           className={`cursor-pointer ${
             Tab === "Analytics"
-              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-md"
+              ? "inline-block py-2 sm:px-12 px-6 text-center font-semibold text-black transition-colors duration-300 border-r-4 border-b-4 border-black shadow-md rounded-xl"
               : " sm:text-[20px] text-gray-600"
           }`}
           onClick={() => handleClicks("Analytics")}
@@ -107,7 +118,7 @@ const CoursePage = () => {
           <h2>Analytics</h2>
         </div>
       </div>
-      {Tab === "Curriculum" && <Curriculum />}
+      {Tab === "Topics" && <Topics />}
 
       {Tab === "Course Overview" && <Overview />}
 
