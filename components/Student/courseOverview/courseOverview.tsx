@@ -9,13 +9,9 @@ interface CourseOverviewProps {
   expectations: Expectation[];
   topics: Topic[];
 }
+const CourseOverview: React.FC<CourseOverviewProps> = ({introduction, requirements, expectations, topics,}) => {
 
-const CourseOverview: React.FC<CourseOverviewProps> = ({
-  introduction,
-  requirements,
-  expectations,
-  topics,
-}) => {
+  
   return (
     <div>
       <div className="flex flex-col gap-2">
@@ -56,7 +52,7 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({
           {topics.map((topic) => (
             <div
               key={topic.id}
-              className="flex items-center w-full justify-between p-6"
+              className="flex items-center  cursor-pointer w-full justify-between p-6"
             >
               <h1 className="font-semibold">{topic.attributes.name}</h1>
               <h1 className="font-semibold">

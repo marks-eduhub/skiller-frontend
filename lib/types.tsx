@@ -13,14 +13,26 @@ export interface Expectation {
   }>;
 }
 
+
+export interface TopicAttributes {
+  name: string;
+  duration: string;
+}
+
 export interface Topic {
   id: number;
-  attributes: {
-    name: string;
-    duration?: string;
-    description: string;
+  attributes: TopicAttributes;
+}
 
-  };
+
+
+export interface Course {
+  id: number;
+  attributes: CourseAttributes;
+}
+
+interface FetchOverviewResponse {
+  data: Course;
 }
 
 export interface ImageData {
@@ -113,11 +125,7 @@ export interface CourseAttributes {
 }
 
 
-export interface Course {
-  
-  id: number;
-  attributes: CourseAttributes;
-}
+
 
 export interface LikedCourse {
   id: number;
@@ -168,3 +176,17 @@ export const AuthContext = createContext<AuthContextType>({
   setUser: () => {},
   isLoading: false,
 });
+
+export interface NoteTypes {
+  type: string;
+  children: Array<{ text: string }>;
+  format?: string; 
+}
+
+export interface TopicDetails {
+  data: {
+    attributes: {
+      notes: NoteTypes[];
+    };
+  };
+}

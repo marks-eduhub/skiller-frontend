@@ -1,6 +1,6 @@
 "use client";
 import similarCoursesData from "../details/data.json";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import SimilarCourses from "../details/similar";
 import Image from "next/image";
@@ -11,7 +11,11 @@ import CourseReview from "./courseReviews";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
+import Link from "next/link";
+
 const Enroll = () => {
+  const router = useRouter();
+
   const [tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
@@ -77,7 +81,9 @@ const Enroll = () => {
   const expectations = courseAttributes.expectations || [];
   const enrolled = courseAttributes.users?.data || [];
   const studentsenrolled = enrolled.length;
-  const topics = courseAttributes?.topicname?.data || "No topics available";
+  const topics = courseAttributes?.topicname?.data || [];
+
+  const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
 
   const Reviews = reviewData.map((review: any) => {
     const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
@@ -94,6 +100,12 @@ const Enroll = () => {
 
   const handleTab = (tabName: string) => setTab(tabName);
 
+  const handleEnrollClick = () => {
+    if (firstTopicId) {
+      router.push(`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`);
+    }
+  };
+
   return (
     <div>
       <div className="w-full relative sm:h-[500px] h-[300px]">
@@ -101,7 +113,7 @@ const Enroll = () => {
           src={card ? `${api.defaults.baseURL}${card}` : "/cake.svg"}
           alt="Course Image"
           fill
-          className="object-cover bg-no-repeat  rounded-2xl"
+          className="object-cover bg-no-repeat rounded-2xl"
         />
         <div className="absolute inset-0 video-overlay rounded-lg"></div>
         <div className="flex justify-between w-full absolute inset-0 mb-5 z-50">
@@ -109,10 +121,14 @@ const Enroll = () => {
             <h1 className="font-bold text-[20px]">{coursename}</h1>
             <p className="font-semibold sm:mt-0">By {tutorName}</p>
           </div>
+
           <div className="p-4 self-end">
-            <button className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black">
+            <Link
+              href={`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`}
+              className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black"
+            >
               Enroll today!
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -120,7 +136,7 @@ const Enroll = () => {
         <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
           Cost : <span className="font-bold text-[18px]">FREE</span>
         </h1>
-        <h1 className="font-semibold text-[18px]  sm:mb-0 mb-2">
+        <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
           Duration :
           <span className="font-bold text-[18px] ml-1">{duration}</span>
         </h1>
@@ -129,7 +145,9 @@ const Enroll = () => {
           <span className="font-bold text-[18px]">{studentsenrolled}</span>
         </h1>
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
-          <button className="text-white px-6 py-2">Enroll today!</button>
+          <button className="text-white px-6 py-2" onClick={handleEnrollClick}>
+            Enroll today!
+          </button>
         </div>
       </div>
       <div className="flex w-full justify-around items-center mt-10 ">
@@ -169,7 +187,7 @@ const Enroll = () => {
       ) : (
         <CourseReview reviews={Reviews} />
       )}
-     
+
       <SimilarCourses courses={similarCoursesData} />
     </div>
   );
