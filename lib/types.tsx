@@ -13,6 +13,40 @@ export interface Expectation {
   }>;
 }
 
+export interface Option {
+  id: number; 
+  label: string; 
+}
+
+export interface Question {
+  id: number; 
+  attributes: {
+    questions: string; 
+    options: Option[]; 
+    answer: string;
+  };
+}
+interface TestResult {
+  userId: number;
+  topicId: number;
+  score: number;
+  timesAttempted: number;
+  userQuestionResults: any[]; 
+}
+export interface Test {
+  id: number; 
+  attributes: {
+    quizname: string; 
+    questions: {
+      data: Question[]; 
+    };
+  };
+}
+
+export interface QuizData {
+  data: Test[]; 
+  meta: object; 
+}
 
 export interface TopicAttributes {
   name: string;
@@ -31,9 +65,7 @@ export interface Course {
   attributes: CourseAttributes;
 }
 
-interface FetchOverviewResponse {
-  data: Course;
-}
+
 
 export interface ImageData {
   id: number;
@@ -161,7 +193,7 @@ export interface RegisterResponse {
   user: {
     id: string;
     username: string;
-
+  }
   }
   export interface CarouselCourses {
     id: number;
@@ -180,40 +212,33 @@ export interface RegisterResponse {
     categorySlug: string;
     courses: Course[];
   }
-  export interface Course {
-    id: number;
-    attributes: {
-      course: any;
-      coursename: string;
-      rating: number;
-      duration: string;
-      tutor: string;
-      card: string;
-      categories: { data: Category[] };
-    };
-  }
-  export interface RegisterResponse {
-    jwt: string;
-    user: {
-      id: string;
-      username: string;
-      email: string;
-    };
-  }
+  // export interface Course {
+  //   id: number;
+  //   attributes: {
+  //     course: any;
+  //     coursename: string;
+  //     rating: number;
+  //     duration: string;
+  //     tutor: string;
+  //     card: string;
+  //     categories: { data: Category[] };
+  //   };
+  // }
+  // export interface RegisterResponse {
+  //   jwt: string;
+  //   user: {
+  //     id: string;
+  //     username: string;
+  //     email: string;
+  //   };
+  // }
   export interface AuthContextType {
     user: User | undefined;
     setUser: (user: User) => void;
     isLoading: boolean;
   }
   
-  export const AuthContext = createContext<AuthContextType>({
-    user: undefined,
-    setUser: () => {}, 
-    isLoading: false,
-  });
-    email: string;
-  };
-}
+
 
 export interface AuthContextType {
   user: User | undefined;

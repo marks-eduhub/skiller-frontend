@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import Image from "next/image";
 import tabs from "../../../components/Student/details/tabs.json";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 const Knowledge = () => {
+  const searchParams = useSearchParams();
+  const topicId = searchParams.get("topicId");
+
   const [selectedTab, setselectedTab] = useState("Tests");
   const handleselectedClick = (tabName: string) => {
     setselectedTab(tabName);
@@ -50,7 +54,7 @@ const Knowledge = () => {
         </div>
       </div>
 
-      {selectedTab === "Tests" &&
+      {/* {selectedTab === "Tests" &&
         tabs.tests.map((test, index) => (
           <>
             <div
@@ -140,7 +144,7 @@ const Knowledge = () => {
               </div>
             </div>
           </>
-        ))}
+        ))} */}
 
       {selectedTab === "Quizzes" &&
         tabs.quizzes.map((quiz, index) => (
@@ -158,7 +162,7 @@ const Knowledge = () => {
                 </h1>
               </div>
               <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
-                <Link href="/dashboard/quizreview">
+                <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
                   <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">
                     {quiz.actionText}
                   </h1>
