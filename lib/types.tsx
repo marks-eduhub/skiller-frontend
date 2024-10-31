@@ -23,7 +23,7 @@ export interface Question {
   attributes: {
     questions: string; 
     options: Option[]; 
-    answer: string;
+    answers: string;
   };
 }
 interface TestResult {

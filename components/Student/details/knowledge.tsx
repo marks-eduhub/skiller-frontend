@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import tabs from "../../../components/Student/details/tabs.json";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import {
+  UsefetchResult,
+  UsefetchTestResult,
+  useFetchTests,
+  useFetchUserQuestionResults,
+} from "@/hooks/useSubmit";
+import { useAuthContext } from "@/Context/AuthContext";
 const Knowledge = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-
+  const { user } = useAuthContext();
+  const userId = user?.id;
   const [selectedTab, setselectedTab] = useState("Tests");
   const handleselectedClick = (tabName: string) => {
     setselectedTab(tabName);
   };
-
-  return (
+  const { data, isLoading, error } = UsefetchResult( Number(topicId), Number(userId));
+  const { data: tests, isLoading: isTests, error: isError,} = useFetchTests(Number(topicId));
+ 
+ return (
     <div className="flex flex-col rounded-lg ">
       <div className="flex w-full mb-4 cursor-pointer">
         <div
@@ -54,7 +63,7 @@ const Knowledge = () => {
         </div>
       </div>
 
-      {/* {selectedTab === "Tests" &&
+      {/* {selectedTab === "Quizzes" &&
         tabs.tests.map((test, index) => (
           <>
             <div
@@ -146,86 +155,59 @@ const Knowledge = () => {
           </>
         ))} */}
 
-      {selectedTab === "Quizzes" &&
-        tabs.quizzes.map((quiz, index) => (
-          <>
-          <div key={index} className="w-full py-6 cursor-pointer max-md:hidden">
+{selectedTab === "Tests" && (
+  <>
+    {data?.data && data?.data.length > 0 ? (
+      data?.data.map((test:any, index:number) => {
+        const score = test.attributes.score; 
+        const passmark = test.attributes.passmark; 
+        const topic = test.attributes.topic.data.attributes.name; 
+
+        return (
+          <div key={test.id} className="w-full py-6 cursor-pointer">
             <div className="flex flex-col sm:flex-row sm:space-x-4">
               <div className="bg-gray-200 w-full sm:w-1/3 mb-2 sm:mb-0">
-                <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                  {quiz.Quizz}
-                </h1>
+                <h1 className="font-bold text-[15px] p-4 sm:p-6">Test {index + 1}</h1> 
               </div>
               <div className="bg-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0">
-                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">
-                  {quiz.topic}
-                </h1>
+                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">{topic}</h1>
               </div>
               <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
                 <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
-                  <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">
-                    {quiz.actionText}
-                  </h1>
+                  <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">Re-Attempt</h1>
                 </Link>
               </div>
               <div className="bg-gray-700 w-full sm:w-1/6 mb-2 sm:mb-0">
-                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">
-                  {quiz.score}
-                </h1>
+                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">{score}</h1>
               </div>
               <div className="bg-gray-200 w-full sm:w-1/6 flex flex-col items-center justify-center py-3">
-                <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                  {quiz.status}
-                </h1>
-                {quiz.status === "Passed" ? (
+                <h1 className="font-bold text-[15px] p-4 sm:p-6">{score >= passmark ? "Passed" : "Failed"}</h1>
+                {score >= passmark ? (
                   <Image src="/tick1.svg" alt="tick" width={25} height={25} />
-                ) : quiz.status === "Failed" ? (
+                ) : (
                   <Image src="/fail.svg" alt="fail" width={20} height={20} />
-                ) : quiz.status === "---" ? (
-                  <p>---</p>
-                ) : null}
+                )}
               </div>
             </div>
           </div>
-          <div className="sm:hidden w-full flex mb-4 ">
-              <div className="flex flex-col w-[55%] ">
-                <div className="bg-gray-200 h-[235px]">
-                  <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                    {quiz.Quizz}
-                  </h1>
-                  <h1 className="text-gray-600 font-bold text-[15px] p-4 sm:p-6">
-                    {quiz.topic}
-                  </h1>
-                  <h1 className="font-bold text-[15px] underline p-4 sm:p-6">
-                    {quiz.status}
-                  </h1>
-                  <Link href="/dashboard/quizreview">
-                  <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">
-                    {quiz.actionText}
-                  </h1>
-                </Link>
-                </div>
-              </div>
+        );
+      })
+    ) : (
+      <div className="w-full flex flex-col items-center justify-center py-6">
+        <h1 className="font-bold text-[15px] p-4">No attempts made yet.</h1>
+        <Link href={`/dashboard/quizattempt?topicId=${topicId}`}>
+          <button className="bg-slate-900 text-white p-2 rounded hover:bg-gray-300 hover:text-black">
+            Attempt Test
+          </button>
+        </Link>
+      </div>
+    )}
+  </>
+)}
 
-              <div className="flex flex-col w-[45%]">
-                <div className="bg-gray-600 h-[235px] px-2 py-10 ">
-                 
-                  <h1 className="font-bold text-[15px] text-white p-3">{quiz.status}</h1>
-                  <div className=" p-3">
-                  {quiz.status === "Passed" ? (
-                  <Image src="/tick1.svg" alt="tick" width={25} height={25} />
-                ) : quiz.status === "Failed" ? (
-                  <Image src="/fail.svg" alt="fail" width={20} height={20} />
-                ):null}
-                  </div>
-                  <h1 className="text-white font-bold text-[15px] p-3 sm:p-6">
-                    {quiz.score}
-                  </h1>
-                </div>
-              </div>
-            </div>
-          </>
-        ))}
+
+
+
     </div>
   );
 };

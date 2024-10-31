@@ -2,14 +2,15 @@ import api from "@/lib/axios";
 import {useQuery } from "@tanstack/react-query";
 
 const fetchTestResult = async (userId: number, topicId: number) => {
-  const response = await api.get(`/api/test-results?user=${userId}&topic=${topicId}`);
+  const response = await api.get(`/api/test-results?user=${userId}&topic=${topicId}&populate=user_question_results,topic,test,user`);
  return response.data
 };
 
 export const UsefetchTestResult = (topicId:number, userId:number) => {
     return useQuery({
         queryKey: ["testresult", topicId, userId],
-        queryFn: () => fetchTestResult,
+        queryFn: () => fetchTestResult(userId, topicId),
+
         meta: {
             errorMessage: "Failed to fetch test result",
         },
@@ -17,9 +18,26 @@ export const UsefetchTestResult = (topicId:number, userId:number) => {
     })
 }
 
+const fetchResult = async (userId: number, topicId: number) => {
+  const response = await api.get(`/api/test-results?filters[topic][id]=${topicId}&user=${userId}&populate=topic,test`);
+ return response.data
+};
+
+export const UsefetchResult = (topicId:number, userId:number) => {
+    return useQuery({
+        queryKey: ["testresult", topicId, userId],
+        queryFn: () => fetchResult(userId, topicId),
+
+        meta: {
+            errorMessage: "Failed to fetch test result",
+        },
+        enabled: !!userId && !!topicId
+    })
+}
 
 const fetchQuestionResultsByTestResult = async (testResultId: number) => {
-  const response = await api.get(`/api/user-question-results?filters[test_results][id][$eq]=${testResultId}&populate=questions`);
+  const response = await api.get(`/api/user-question-results?filters[test_result][id][$eq]=${testResultId}&populate=questions`);
+  console.log("Fetched User Question Results:", response.data);
   return response.data;
 };
 
@@ -56,8 +74,8 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
       data: {
         user: userId,
         topic: topicId,
-        score: 70,
-        times_attempted: 4,
+        score: 0,
+        times_attempted: 0,
         test: testId
       },
     });
@@ -77,7 +95,7 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
      
       data: {
         passed,
-        test_results: testResultId, 
+        test_result: testResultId, 
         useranswer: userAnswer,  
         questions: questionId  
       },
@@ -86,24 +104,30 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
   };
   
 
-  export const UseUpdateQuestionResult = async (
-    userQuestionResultId: number, 
-    userAnswer: string, 
-    passed: boolean,
-    questionId: number
+
+
+export const UseUpdateQuestionResult = async (
+  userQuestionResultId: number, 
+  userAnswer: string, 
+  passed: boolean,
+  questionId: number
 ) => {
-    const response = await api.put(`/api/user-question-results/${userQuestionResultId}`, {
-        data: {
-            useranswer: userAnswer,  
-            passed,
-            questions:questionId
-        },
-    });
-    return response.data;
+  const response = await api.put(`/api/user-question-results/${userQuestionResultId}`, {
+      data: {
+          useranswer: userAnswer,  
+          passed: passed, 
+          questions: questionId
+      },
+  });
+  return response.data;
 };
 
 
-
-
-
+export const updateTestResultScore = async (testResultId:number, score:number) => {
+      const response = await api.put(`/api/test-results/${testResultId}`, {
+          data: { score: score },
+      });
+      console.log("Test result updated with new score:", score);
+      return response.data;
+  } 
       
