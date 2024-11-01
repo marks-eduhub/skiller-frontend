@@ -3,7 +3,7 @@ export interface Child {
   text: string;
   type: string; 
 }
-
+export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 export interface Expectation {
   type: string; 
   format: string;
@@ -31,9 +31,7 @@ export interface Course {
   attributes: CourseAttributes;
 }
 
-interface FetchOverviewResponse {
-  data: Course;
-}
+
 
 export interface ImageData {
   id: number;
@@ -56,11 +54,11 @@ export interface CourseImage {
 
 export interface User {
   id: number;
-  attributes: {
+  
     email: string;
     password: string;
     username: string;
-  };
+  
 }
 
 export interface Wishlist {
@@ -82,9 +80,17 @@ export interface Tutor {
   id: number;
   attributes: {
     tutorname: string;
+    profilepicture: {
+      data: Array<{
+        attributes: {
+          url: string;
+        };
+      }>;
+    };
+    role: string;
+    type:'tutor'
   };
 }
-
 export interface CourseReview {
   id: number;
   attributes: {
@@ -106,6 +112,7 @@ export interface CourseAttributes {
   rating: number;
   duration: string;
   coursename: string;
+  type: 'course';
   card: CourseImage;  
   users: {
     data: User[];
@@ -163,6 +170,7 @@ export interface RegisterResponse {
     username: string;
 
   }
+}
   export interface CarouselCourses {
     id: number;
    tutors: string;
@@ -180,40 +188,40 @@ export interface RegisterResponse {
     categorySlug: string;
     courses: Course[];
   }
-  export interface Course {
-    id: number;
-    attributes: {
-      course: any;
-      coursename: string;
-      rating: number;
-      duration: string;
-      tutor: string;
-      card: string;
-      categories: { data: Category[] };
-    };
-  }
-  export interface RegisterResponse {
-    jwt: string;
-    user: {
-      id: string;
-      username: string;
-      email: string;
-    };
-  }
+  // export interface Course {
+  //   id: number;
+  //   attributes: {
+  //     course: any;
+  //     coursename: string;
+  //     rating: number;
+  //     duration: string;
+  //     tutor: string;
+  //     card: string;
+  //     categories: { data: Category[] };
+  //   };
+  // }
+  // export interface RegisterResponse {
+  //   jwt: string;
+  //   user: {
+  //     id: string;
+  //     username: string;
+  //     email: string;
+  //   };
+  // }
   export interface AuthContextType {
     user: User | undefined;
     setUser: (user: User) => void;
     isLoading: boolean;
   }
   
-  export const AuthContext = createContext<AuthContextType>({
-    user: undefined,
-    setUser: () => {}, 
-    isLoading: false,
-  });
-    email: string;
-  };
-}
+//   export const AuthContext = createContext<AuthContextType>({
+//     user: undefined,
+//     setUser: () => {}, 
+//     isLoading: false,
+//   });
+//     email: string;
+//   };
+// }
 
 export interface AuthContextType {
   user: User | undefined;
@@ -221,11 +229,7 @@ export interface AuthContextType {
   isLoading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  user: undefined,
-  setUser: () => {},
-  isLoading: false,
-});
+
 
 export interface NoteTypes {
   type: string;
