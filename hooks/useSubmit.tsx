@@ -131,3 +131,15 @@ export const updateTestResultScore = async (testResultId:number, score:number) =
       return response.data;
   } 
       
+export const usefetchtimesAttempted = async (testResultId: number, times_attempted: number) => {
+  try {
+      const response = await api.put(`/api/test-results/${testResultId}`, {
+          data: { times_attempted },
+      });
+      console.log("Times attempted updated to:", times_attempted);
+      return response.data;
+  } catch (error) {
+      console.error("Failed to update times_attempted:", error);
+      throw error;
+  }
+};

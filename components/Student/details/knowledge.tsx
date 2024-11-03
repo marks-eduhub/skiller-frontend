@@ -195,7 +195,7 @@ const Knowledge = () => {
     ) : (
       <div className="w-full flex flex-col items-center justify-center py-6">
         <h1 className="font-bold text-[15px] p-4">No attempts made yet.</h1>
-        <Link href={`/dashboard/quizattempt?topicId=${topicId}`}>
+        <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
           <button className="bg-slate-900 text-white p-2 rounded hover:bg-gray-300 hover:text-black">
             Attempt Test
           </button>

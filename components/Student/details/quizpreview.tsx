@@ -1,7 +1,7 @@
 "use client";
 import { useAuthContext } from "@/Context/AuthContext";
 import { useFetchQuizQuestions } from "@/hooks/useQuestions";
-import { createQuestionResult, createTestResult, updateTestResultScore, useFetchTests, useFetchUserQuestionResults, UseUpdateQuestionResult } from "@/hooks/useSubmit";
+import { createQuestionResult, createTestResult, updateTestResultScore, useFetchTests, usefetchtimesAttempted, useFetchUserQuestionResults, UseUpdateQuestionResult } from "@/hooks/useSubmit";
 import { Question } from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
@@ -19,7 +19,7 @@ const QuizPreview = () => {
   
   const { data: testData, isLoading: isTestLoading, error: isTestError } = useFetchTests(Number(topicId));
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
-
+  const [timesAttempted, setTimesAttempted] = useState(1);
   const [testResultId, setTestResultId] = useState<number | null>(null);
   const [userQuestionResultsMap, setUserQuestionResultsMap] = useState<Record<number, number>>({});
   const questionId = data?.data?.[0]?.attributes?.questions?.data?.[0]?.id;
@@ -58,7 +58,20 @@ const QuizPreview = () => {
     },
   });
 
-  
+ 
+  const{mutate: timesattempted} = useMutation({
+    mutationFn: async ({ testResultId, times_attempted }: { testResultId: number; times_attempted: number }) => {
+      return await usefetchtimesAttempted(testResultId, times_attempted)
+      },
+       onSuccess: () => {
+            message.success("Times attempted updated successfully!");
+        },
+        onError: (error) => {
+            console.error("Failed to update times attempted:", error);
+            message.error("Error updating times attempted.");
+        },
+    }
+);
  
   const { mutate: submitTestResult } = useMutation({
     mutationFn: async ({ userId, topicId, testId }: { 
@@ -149,7 +162,11 @@ const handleSubmitQuiz = async () => {
       return;
   }
 
-  
+  const isConfirmed = window.confirm("Are you sure you want to submit? Once submitted, you can't review or change your answers.");
+
+  if (!isConfirmed) {
+    return;
+  }
   const correctAnswers = data?.data?.flatMap((quiz: { attributes: { questions: { data: Question[] }}}) =>
     quiz.attributes?.questions?.data.map((q) => ({
         questionId: q.id,
@@ -197,8 +214,13 @@ const handleSubmitQuiz = async () => {
   const scorePercentage = (passedCount / totalQuestions) * 100;
 
   await updateTestResultScore(testResultId, scorePercentage);
+  timesattempted({ testResultId, times_attempted: timesAttempted });
+
+    setTimesAttempted((prev) => prev + 1); 
 
   message.success("Quiz submitted successfully! Your score is: " + scorePercentage.toFixed(2) + "%");
+  setUserAnswers({});
+  // router.back();
 };
 
 
