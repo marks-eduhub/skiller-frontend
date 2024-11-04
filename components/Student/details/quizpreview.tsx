@@ -1,30 +1,55 @@
 "use client";
 import { useAuthContext } from "@/Context/AuthContext";
 import { useFetchQuizQuestions } from "@/hooks/useQuestions";
-import { createQuestionResult, createTestResult, updateTestResultScore, useFetchTests, usefetchtimesAttempted, useFetchUserQuestionResults, UseUpdateQuestionResult } from "@/hooks/useSubmit";
-import { Question } from "@/lib/types";
+import { createQuestionResult, createTestResult, updateTestResultScore, UsefetchTestResult, useFetchTests,useFetchUserQuestionResults, UseUpdateQuestionResult } from "@/hooks/useSubmit";
+import { CorrectAnswer, Question } from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
- 
+import CustomModal from "./modal"
 const QuizPreview = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user } = useAuthContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const userId = user?.id;
   const topicId = searchParams.get("topicId");
- 
+  const [timesAttempted, setTimesAttempted] = useState(0); 
   const { data, isLoading, error } = useFetchQuizQuestions(Number(topicId));
-  
+  const{data:Resultdata, isLoading:resultloading, error:resulterror} = UsefetchTestResult(Number(topicId), Number(userId))
   const { data: testData, isLoading: isTestLoading, error: isTestError } = useFetchTests(Number(topicId));
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
-  const [timesAttempted, setTimesAttempted] = useState(1);
   const [testResultId, setTestResultId] = useState<number | null>(null);
   const [userQuestionResultsMap, setUserQuestionResultsMap] = useState<Record<number, number>>({});
   const questionId = data?.data?.[0]?.attributes?.questions?.data?.[0]?.id;
-
   const testId = testData?.data?.[0]?.id;
+  const MAX_ATTEMPTS = 3; 
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const confirmSubmit = async () => {
+    await handleSubmitQuiz(); 
+    closeModal(); 
+};
+
+  useEffect(() => {
+    const fetchAndSetTimesAttempted = () => {
+      if (Resultdata) {
+        const attemptCount = Resultdata?.data?.length ; 
+        setTimesAttempted(attemptCount); 
+      }
+    };
+
+    fetchAndSetTimesAttempted();
+  }, [Resultdata]); 
+
   const { mutate: submitQuestionResult } = useMutation({
     mutationFn: async ({ testResultId, userAnswer, questionId, passed }: { testResultId: number; userAnswer: string; passed: boolean, questionId: number }) => {
       return await createQuestionResult(passed, testResultId,  userAnswer, questionId);
@@ -58,32 +83,20 @@ const QuizPreview = () => {
     },
   });
 
- 
-  const{mutate: timesattempted} = useMutation({
-    mutationFn: async ({ testResultId, times_attempted }: { testResultId: number; times_attempted: number }) => {
-      return await usefetchtimesAttempted(testResultId, times_attempted)
-      },
-       onSuccess: () => {
-            message.success("Times attempted updated successfully!");
-        },
-        onError: (error) => {
-            console.error("Failed to update times attempted:", error);
-            message.error("Error updating times attempted.");
-        },
-    }
-);
+
  
   const { mutate: submitTestResult } = useMutation({
-    mutationFn: async ({ userId, topicId, testId }: { 
+    mutationFn: async ({ userId, topicId, testId, times_attempted }: { 
       userId: number; 
       topicId: number; 
       testId: number; 
       userAnswer: string; 
       passed: boolean; 
       questionId: number; 
+      times_attempted:number
     }) => {
       if (!userId) throw new Error("User not logged in");
-      return await createTestResult(userId, topicId, testId);
+      return await createTestResult(userId, topicId, testId, times_attempted);
     },
     onSuccess: (data, variables) => {
       const createdTestResultId = data?.id || data?.data?.id;
@@ -97,7 +110,7 @@ const QuizPreview = () => {
           testResultId: createdTestResultId,
           userAnswer: variables.userAnswer,
           passed: variables.passed,
-          questionId: variables.questionId
+          questionId: variables.questionId,
         });
       } else {
         console.error("Test Result ID is undefined.");
@@ -110,20 +123,22 @@ const QuizPreview = () => {
 
  
 const handleOptionSelect = (userAnswer: string, passed: boolean, questionId: number) => {
-  console.log("Option selected:", userAnswer);
-  
+
+  if (timesAttempted >= MAX_ATTEMPTS) {
+    message.error("You have reached the maximum attempts for this test.");
+    return; 
+}
   setUserAnswers(prevAnswers => ({
       ...prevAnswers,
       [questionId]: userAnswer, 
   }));
 
   if (!testResultId) {
-      console.log("Creating test result for the first question answered...");
       if (!userId || !topicId || !testId) {
           message.error("Missing userId, topicId, or testId");
           return;
       }
-
+      const newAttemptCount = timesAttempted + 1; 
       submitTestResult({
           userId,
           topicId: Number(topicId),
@@ -131,18 +146,16 @@ const handleOptionSelect = (userAnswer: string, passed: boolean, questionId: num
           userAnswer,
           passed,
           questionId,
+          times_attempted: newAttemptCount
       });
+     
   } else {
-      console.log("Using existing Test Result ID:", testResultId);
 
       const userQuestionResultId = userQuestionResultsMap[questionId];
-      console.log("User Question Result ID:", userQuestionResultId);
 
       if (userQuestionResultId) {
-          console.log("Updating user's answer for question ID:", userQuestionResultId);
           updating({ userQuestionResultId, userAnswer, passed });
       } else {
-          console.log("Creating new User Question Result for question ID:", questionId);
           submitQuestionResult({
               testResultId,
               userAnswer,
@@ -154,75 +167,62 @@ const handleOptionSelect = (userAnswer: string, passed: boolean, questionId: num
 };
 
 
-
-
 const handleSubmitQuiz = async () => {
   if (!testResultId) {
-      message.error("No test result found.");
-      return;
-  }
-
-  const isConfirmed = window.confirm("Are you sure you want to submit? Once submitted, you can't review or change your answers.");
-
-  if (!isConfirmed) {
+    message.error("No test result found.");
     return;
   }
-  const correctAnswers = data?.data?.flatMap((quiz: { attributes: { questions: { data: Question[] }}}) =>
+
+
+  const correctAnswers: CorrectAnswer[] = data?.data?.flatMap((quiz: { attributes: { questions: { data: Question[] }}}) =>
     quiz.attributes?.questions?.data.map((q) => ({
-        questionId: q.id,
-        correctAnswer: q.attributes.answers, 
+      questionId: q.id,
+      correctAnswer: q.attributes.answers, 
     }))
-) || [];
-
-
-  const correctAnswerMap = correctAnswers.reduce((acc:any, questionId:number, correctAnswer:string ) => {
+  ) || [];
+  
+  const correctAnswerMap = correctAnswers.reduce(
+    (acc: Record<number, string>, { questionId, correctAnswer }: CorrectAnswer) => {
       acc[questionId] = correctAnswer;
       return acc;
-  }, {});
+    },
+    {}
+  );
 
   let passedCount = 0;
   const totalQuestions = Object.keys(userAnswers).length;
 
   for (const questionId in userAnswers) {
-      const userAnswer = userAnswers[questionId];
-      const correctAnswer = correctAnswerMap[questionId];
+    const userAnswer = userAnswers[questionId];  
+    const correctAnswer = correctAnswerMap[Number(questionId)];  
 
-      const passed = userAnswer === correctAnswer;
+    const passed = userAnswer === correctAnswer;
+    if (passed) {
+      passedCount++;
+    }
 
-      if (passed) {
-          passedCount++;
-      }
-
-      
-      const userQuestionResultId = userQuestionResultsMap[questionId];
-
-      if (userQuestionResultId) {
-          console.log("Updating user's answer for question ID:", userQuestionResultId);
-          
-          updating({ userQuestionResultId, userAnswer, passed });
-      } else {
-          console.log("Creating new User Question Result for question ID:", questionId);
-          submitQuestionResult({
-              testResultId,
-              userAnswer,
-              passed,
-              questionId: Number(questionId),
-          });
-      }
+    const userQuestionResultId = userQuestionResultsMap[Number(questionId)];
+    if (userQuestionResultId) {
+      console.log(`Updating user's answer for question ID: ${questionId}`);
+      updating({ userQuestionResultId, userAnswer, passed });
+    } else {
+      console.log(`Creating new User Question Result for question ID: ${questionId}`);
+      submitQuestionResult({
+        testResultId,
+        userAnswer,
+        passed,
+        questionId: Number(questionId),
+      });
+    }
   }
 
   const scorePercentage = (passedCount / totalQuestions) * 100;
-
   await updateTestResultScore(testResultId, scorePercentage);
-  timesattempted({ testResultId, times_attempted: timesAttempted });
 
-    setTimesAttempted((prev) => prev + 1); 
-
-  message.success("Quiz submitted successfully! Your score is: " + scorePercentage.toFixed(2) + "%");
+  message.success(`Quiz submitted successfully! Your score is: ${scorePercentage.toFixed(2)}%`);
   setUserAnswers({});
-  // router.back();
+  router.back();
 };
-
 
  
   const handlePreviousStep = () => {
@@ -241,7 +241,7 @@ const handleSubmitQuiz = async () => {
           Back
         </button>
         <h1 className="font-semibold text-lg">Quiz one - Typescript fundamentals</h1>
-        <button className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md w-[100px] flex justify-start"onClick={ handleSubmitQuiz}>
+        <button className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md w-[100px] flex justify-start" onClick={openModal}>
           Submit
         </button>
       </div>
@@ -280,6 +280,11 @@ const handleSubmitQuiz = async () => {
           );
         })}
       </div>
+      <CustomModal 
+    isOpen={isModalOpen} 
+    onClose={closeModal} 
+    onConfirm={confirmSubmit} 
+/>
     </div>
   );
 };

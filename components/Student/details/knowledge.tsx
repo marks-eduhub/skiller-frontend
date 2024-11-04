@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import {
-  UsefetchResult,
-  UsefetchTestResult,
-  useFetchTests,
-  useFetchUserQuestionResults,
-} from "@/hooks/useSubmit";
+import { UsefetchResult, useFetchTests } from "@/hooks/useSubmit";
 import { useAuthContext } from "@/Context/AuthContext";
 const Knowledge = () => {
   const searchParams = useSearchParams();
@@ -18,25 +13,34 @@ const Knowledge = () => {
   const handleselectedClick = (tabName: string) => {
     setselectedTab(tabName);
   };
-  const { data, isLoading, error } = UsefetchResult( Number(topicId), Number(userId));
-  const { data: tests, isLoading: isTests, error: isError,} = useFetchTests(Number(topicId));
- 
- return (
-    <div className="flex flex-col rounded-lg ">
+
+  const { data, isLoading, error } = UsefetchResult(Number(topicId), Number(userId));
+  const { data: tests, isLoading: isTests, error: isError } = useFetchTests(Number(topicId));
+
+  const passmark = tests?.data[0]?.attributes?.passmark;
+  // const topic = data?.data?.[0]?.attributes?.topic.data.attributes.name;
+
+  // const scores = data?.data?.map((attempt: any) => attempt.attributes.score) || [];
+
+  // const highestScore = Math.max(...scores); 
+  // const latestScore = scores[scores.length - 1]; 
+  console.log("tests", tests)
+  // const score = data?.data[0]?.attributes?.score
+
+  return (
+    <div className="flex flex-col rounded-lg">
       <div className="flex w-full mb-4 cursor-pointer">
         <div
-          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full${
+          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full ${
             selectedTab === "Tests"
-              ? " text-black transition-all duration-300 ease-in-out border-b-2 border-black"
+              ? "text-black transition-all duration-300 ease-in-out border-b-2 border-black"
               : "text-gray-400"
           }`}
           onClick={() => handleselectedClick("Tests")}
         >
           <h2
             className={`${
-              selectedTab === "Tests"
-                ? "p-4 font-bold text-[20px]"
-                : "p-4 text-[20px]"
+              selectedTab === "Tests" ? "p-4 font-bold text-[20px]" : "p-4 text-[20px]"
             }`}
           >
             Tests
@@ -46,16 +50,14 @@ const Knowledge = () => {
         <div
           className={`bg-gray-300 justify-center items-center flex w-1/2 h-full ${
             selectedTab === "Quizzes"
-              ? " text-black transition-all duration-100 ease-in-out border-b-2 border-black"
+              ? "text-black transition-all duration-100 ease-in-out border-b-2 border-black"
               : "text-gray-400"
           }`}
           onClick={() => handleselectedClick("Quizzes")}
         >
           <h2
             className={`${
-              selectedTab === "Quizzes"
-                ? "p-4 font-bold text-[20px]"
-                : "p-4 text-[20px]"
+              selectedTab === "Quizzes" ? "p-4 font-bold text-[20px]" : "p-4 text-[20px]"
             }`}
           >
             Quizzes
@@ -63,7 +65,55 @@ const Knowledge = () => {
         </div>
       </div>
 
-      {/* {selectedTab === "Quizzes" &&
+      {selectedTab === "Tests" && (
+  <>
+    {data?.data && data?.data.length > 0 ? (
+      data?.data.map((test:any, index:number) => {
+        const score = test.attributes.score; 
+        const topic = test.attributes.topic.data.attributes.name; 
+
+        return (
+          <div key={test.id} className="w-full py-6 cursor-pointer">
+            <div className="flex flex-col sm:flex-row sm:space-x-4">
+              <div className="bg-gray-200 w-full sm:w-1/3 mb-2 sm:mb-0">
+                <h1 className="font-bold text-[15px] p-4 sm:p-6">Test {index + 1}</h1> 
+              </div>
+              <div className="bg-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0">
+                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">{topic}</h1>
+              </div>
+              <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
+                <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
+                  <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">Re-Attempt</h1>
+                </Link>
+              </div>
+              <div className="bg-gray-700 w-full sm:w-1/6 mb-2 sm:mb-0">
+                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">{score}</h1>
+              </div>
+              <div className="bg-gray-200 w-full sm:w-1/6 flex flex-col items-center justify-center py-3">
+                <h1 className="font-bold text-[15px] p-4 sm:p-6">{score >= passmark ? "Passed" : "Failed"}</h1>
+                {score >= passmark ? (
+                  <Image src="/tick1.svg" alt="tick" width={25} height={25} />
+                ) : (
+                  <Image src="/fail.svg" alt="fail" width={20} height={20} />
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })
+    ) : (
+      <div className="w-full flex flex-col items-center justify-center py-6">
+        <h1 className="font-bold text-[15px] p-4">No attempts made yet.</h1>
+        <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
+          <button className="bg-slate-900 text-white p-2 rounded hover:bg-gray-300 hover:text-black">
+            Attempt Test
+          </button>
+        </Link>
+      </div>
+    )}
+  </>
+)}
+        {/* {selectedTab === "Quizzes" &&
         tabs.tests.map((test, index) => (
           <>
             <div
@@ -154,60 +204,6 @@ const Knowledge = () => {
             </div>
           </>
         ))} */}
-
-{selectedTab === "Tests" && (
-  <>
-    {data?.data && data?.data.length > 0 ? (
-      data?.data.map((test:any, index:number) => {
-        const score = test.attributes.score; 
-        const passmark = test.attributes.passmark; 
-        const topic = test.attributes.topic.data.attributes.name; 
-
-        return (
-          <div key={test.id} className="w-full py-6 cursor-pointer">
-            <div className="flex flex-col sm:flex-row sm:space-x-4">
-              <div className="bg-gray-200 w-full sm:w-1/3 mb-2 sm:mb-0">
-                <h1 className="font-bold text-[15px] p-4 sm:p-6">Test {index + 1}</h1> 
-              </div>
-              <div className="bg-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0">
-                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">{topic}</h1>
-              </div>
-              <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
-                <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
-                  <h1 className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline">Re-Attempt</h1>
-                </Link>
-              </div>
-              <div className="bg-gray-700 w-full sm:w-1/6 mb-2 sm:mb-0">
-                <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">{score}</h1>
-              </div>
-              <div className="bg-gray-200 w-full sm:w-1/6 flex flex-col items-center justify-center py-3">
-                <h1 className="font-bold text-[15px] p-4 sm:p-6">{score >= passmark ? "Passed" : "Failed"}</h1>
-                {score >= passmark ? (
-                  <Image src="/tick1.svg" alt="tick" width={25} height={25} />
-                ) : (
-                  <Image src="/fail.svg" alt="fail" width={20} height={20} />
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      })
-    ) : (
-      <div className="w-full flex flex-col items-center justify-center py-6">
-        <h1 className="font-bold text-[15px] p-4">No attempts made yet.</h1>
-        <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
-          <button className="bg-slate-900 text-white p-2 rounded hover:bg-gray-300 hover:text-black">
-            Attempt Test
-          </button>
-        </Link>
-      </div>
-    )}
-  </>
-)}
-
-
-
-
     </div>
   );
 };

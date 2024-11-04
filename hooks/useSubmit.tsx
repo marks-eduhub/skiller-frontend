@@ -69,17 +69,17 @@ const fetchTests = async (topicId: number) => {
   };
   
 
-export const createTestResult = async (userId: number, topicId: number, testId:number) => {
+export const createTestResult = async (userId: number, topicId: number, testId:number, times_attempted:number) => {
     const response = await api.post("/api/test-results", {
       data: {
         user: userId,
         topic: topicId,
         score: 0,
-        times_attempted: 0,
-        test: testId
+        times_attempted,
+        test: testId,
+        latestscore: new Date().toISOString(),
       },
     });
-    console.log("API response for Test Result creation:", response);
 
     return response.data;
   };
@@ -127,19 +127,7 @@ export const updateTestResultScore = async (testResultId:number, score:number) =
       const response = await api.put(`/api/test-results/${testResultId}`, {
           data: { score: score },
       });
-      console.log("Test result updated with new score:", score);
       return response.data;
   } 
       
-export const usefetchtimesAttempted = async (testResultId: number, times_attempted: number) => {
-  try {
-      const response = await api.put(`/api/test-results/${testResultId}`, {
-          data: { times_attempted },
-      });
-      console.log("Times attempted updated to:", times_attempted);
-      return response.data;
-  } catch (error) {
-      console.error("Failed to update times_attempted:", error);
-      throw error;
-  }
-};
+

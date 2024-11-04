@@ -85,7 +85,10 @@ export interface CourseImage {
     };
   };
 }
-
+export interface CorrectAnswer {
+  questionId: number;
+  correctAnswer: string;
+}
 export interface User {
   id: number;
   attributes: {
