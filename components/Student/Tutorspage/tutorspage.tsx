@@ -3,12 +3,16 @@ import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
-import { useFetchSearchTutors } from "@/hooks/useCourses";
+import {  useFetchTutors } from "@/hooks/useCourses";
 import { Tutor } from "@/lib/types";
 import api from "@/lib/axios";
+import Skeleton from "react-loading-skeleton";
+import { message } from "antd";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 const Tutorspage = () => {
-  const { data, isLoading, error } = useFetchSearchTutors();
+  const { data, isLoading, error } = useFetchTutors();
   const tutors = useMemo(() => data?.data || [], [data]);
 
   const [favorites, setFavorites] = useState<boolean[]>([]);
@@ -28,8 +32,34 @@ const Tutorspage = () => {
     });
   };
 
-  if (isLoading) return <p>Loading tutors...</p>;
-  if (error) return <p>Error loading tutors</p>;
+  if (isLoading  ) {
+    return (
+      <div>
+        <h2 className="text-lg font-300 my-4 ">
+          <Skeleton
+            width={200}
+            height={24}
+            baseColor="#e0e0e0"
+            highlightColor="#f0f0f0"
+          />
+        </h2>
+
+        <div>
+          <Skeleton
+            height={300}
+            count={3}
+            baseColor="#e0e0e0"
+            highlightColor="#f5f5f5"
+            enableAnimation={true}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error ) {
+    message.error("Error fetching courses. Please try again later.");
+  }
 
   return (
     <div className="sm:pl-10 py-5 sm:w-full">

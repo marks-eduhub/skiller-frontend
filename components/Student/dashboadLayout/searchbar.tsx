@@ -1,0 +1,110 @@
+import React, { useState, useEffect } from "react";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useFetchSearchCourses, useFetchSearchTutors } from "@/hooks/useCourses";
+import Image from "next/image";
+import Link from "next/link";
+import { SearchResult, Tutor } from "@/lib/types";
+import { message } from "antd";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const SearchBar: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { data: coursesData, isLoading, error } = useFetchSearchCourses(searchTerm);
+  const { data: tutorsData, isLoading: isLoadingTutors, error: errorTutors } = useFetchSearchTutors(searchTerm);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (searchTerm.trim() === "") {
+        setSearchResults([]);
+        return;
+      }
+
+      const filteredCourses = coursesData?.data?.filter((course: { attributes: { coursename: string; }; }) =>
+        course.attributes.coursename.toLowerCase().includes(searchTerm.toLowerCase())
+      ).map((course: any) => ({
+        ...course,
+        type: 'course',
+      })) || [];
+
+      const filteredTutors = tutorsData?.data?.filter((tutor: Tutor) =>
+        tutor.attributes.tutorname.toLowerCase().includes(searchTerm.toLowerCase())
+      ).map((tutor: Tutor) => ({
+        ...tutor,
+        slug: tutor.attributes.tutorname.toLowerCase().replace(/\s+/g, ""),
+        type: 'tutor',
+      })) || [];
+
+      setSearchResults([...filteredCourses, ...filteredTutors]);
+    };
+
+    fetchResults();
+  }, [searchTerm, coursesData, tutorsData]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setShowDropdown(true);
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchTerm.trim()) {
+      setShowDropdown(false);
+    }
+  };
+
+
+
+  const loadingContent = (
+    <div className="absolute bg-white shadow-md mt-2 rounded-md w-3/4 z-10">
+      <Skeleton height={24} count={1} />
+    </div>
+  );
+
+  if (error || errorTutors) {
+    message.error("Error fetching courses. Please try again later.");
+  }
+
+  return (
+    <div className="relative">
+      <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer my-5">
+        <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+        <input
+          type="text"
+          placeholder="Search for classes or tutors"
+          className="flex-1 outline-none bg-transparent"
+          value={searchTerm}
+          onChange={handleInputChange}
+        />
+        <Image
+          src="/filter-variant.svg"
+          alt="filter"
+          width={20}
+          height={20}
+        />
+      </div>
+
+      {isLoading || isLoadingTutors ? loadingContent : null}
+
+      {showDropdown && searchResults.length > 0 && (
+        <div className="absolute bg-white shadow-md mt-2 rounded-md w-3/4 z-10 ">
+          {searchResults.map((result) => (
+            <div key={result.id} className="p-2 cursor-pointer">
+              <Link
+                href={result.type === 'tutor'
+                  ? `/dashboard/subscriptions/${result.slug}`
+                  : `/dashboard/overview/${result.id}`}
+                onClick={() => setShowDropdown(false)}
+              >
+                <p>{result.type === 'tutor' ? result.attributes.tutorname : result.attributes.coursename}</p>
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SearchBar;

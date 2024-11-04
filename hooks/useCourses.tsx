@@ -18,32 +18,51 @@ export const useFetchCourses = () => {
   });
 };
 
-const fetchSearchTutors = async () => {
-  const response = await api.get("/api/tutors?search=${searchTerm}&populate=profilepicture");
+const fetchTutors = async () => {
+  const response = await api.get("/api/tutors?populate=profilepicture");
 
   return response.data;
 };
 
-export const useFetchSearchTutors = () => {
-  return useQuery<{ data: any }, Error>({
-    queryFn: fetchSearchTutors,
-    queryKey: ["searchtutors"],
+export const useFetchTutors = () => {
+  return useQuery<{ data:Tutor[]}, Error>({
+    queryFn: fetchTutors,
+    queryKey: ["tutors"],
     meta: {
       errorMessage: "Failed to fetch tutors",
     },
   });
 };
 
-const fetchSearchCourses = async () => {
-  const response = await api.get("/api/courses?search=${searchTerm}");
 
+
+
+const fetchSearchTutors = async (searchTerm: string) => {
+  const response = await api.get(`/api/tutors?search=${searchTerm}&populate=profilepicture`);
   return response.data;
 };
 
-export const useFetchSearchCourses = () => {
-  return useQuery<{ data:Course[] }, Error>({
-    queryFn: fetchSearchCourses,
-    queryKey: ["searchcourses"],
+export const useFetchSearchTutors = (searchTerm: string) => {
+  return useQuery<{ data: any }, Error>({
+    queryKey: ["searchtutors", searchTerm],
+    queryFn: () => fetchSearchTutors(searchTerm),
+    enabled: Boolean(searchTerm), 
+    meta: {
+      errorMessage: "Failed to fetch tutors",
+    },
+  });
+};
+
+const fetchSearchCourses = async (searchTerm: string) => {
+  const response = await api.get(`/api/courses?search=${searchTerm}`);
+  return response.data;
+};
+
+export const useFetchSearchCourses = (searchTerm: string) => {
+  return useQuery<{ data: any }, Error>({
+    queryKey: ["searchcourses", searchTerm],
+    queryFn: () => fetchSearchCourses(searchTerm),
+    enabled: Boolean(searchTerm), 
     meta: {
       errorMessage: "Failed to fetch courses",
     },

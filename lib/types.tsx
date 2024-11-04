@@ -88,7 +88,8 @@ export interface Tutor {
       }>;
     };
     role: string;
-    type:'tutor'
+    type: 'tutor';
+    slug?: string; 
   };
 }
 export interface CourseReview {
