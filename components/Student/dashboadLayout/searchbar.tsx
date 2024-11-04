@@ -87,20 +87,26 @@ const SearchBar: React.FC = () => {
 
       {isLoading || isLoadingTutors ? loadingContent : null}
 
-      {showDropdown && searchResults.length > 0 && (
-        <div className="absolute bg-white shadow-md mt-2 rounded-md w-3/4 z-10 ">
-          {searchResults.map((result) => (
-            <div key={result.id} className="p-2 cursor-pointer">
-              <Link
-                href={result.type === 'tutor'
-                  ? `/dashboard/subscriptions/${result.slug}`
-                  : `/dashboard/overview/${result.id}`}
-                onClick={() => setShowDropdown(false)}
-              >
-                <p>{result.type === 'tutor' ? result.attributes.tutorname : result.attributes.coursename}</p>
-              </Link>
-            </div>
-          ))}
+      {showDropdown && (
+        <div className="absolute bg-white shadow-md mt-2 rounded-md w-3/4 z-10">
+          {isLoading ? (
+            <div className="p-2 ">Loading...</div>
+          ) : searchResults.length > 0 ? (
+            searchResults.map((result) => (
+              <div key={result.id} className="p-2 cursor-pointer">
+                <Link
+                  href={result.type === "tutor" 
+                    ? `/dashboard/subscriptions/${result.slug}`
+                    : `/dashboard/overview/${result.id}`}
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <p>{result.type === 'tutor' ? result.attributes.tutorname : result.attributes.coursename}</p>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <div className="p-2 ">No results found.</div>
+          )}
         </div>
       )}
     </div>
