@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFetchSearchCourses, useFetchSearchTutors } from "@/hooks/useCourses";
 import Image from "next/image";
@@ -14,6 +14,7 @@ const SearchBar: React.FC = () => {
   const { data: coursesData, isLoading, error } = useFetchSearchCourses(searchTerm);
   const { data: tutorsData, isLoading: isLoadingTutors, error: errorTutors } = useFetchSearchTutors(searchTerm);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -53,7 +54,26 @@ const SearchBar: React.FC = () => {
       setShowDropdown(false);
     }
   };
+  useEffect(() => {
+    function handleClickOutside(event:any) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
+  useEffect(() => {
+    if (showDropdown && searchResults.length === 0) {
+      const timer = setTimeout(() => {
+        setShowDropdown(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [showDropdown, searchResults]);
 
 
   const loadingContent = (
@@ -88,19 +108,19 @@ const SearchBar: React.FC = () => {
       {isLoading || isLoadingTutors ? loadingContent : null}
 
       {showDropdown && (
-        <div className="absolute bg-white shadow-md mt-2 rounded-md w-3/4 z-10">
+        <div className="absolute bg-white border-t pt-2 border-gray-200 shadow-2xl rounded-lg w-3/4 z-10">
           {isLoading ? (
             <div className="p-2 ">Loading...</div>
           ) : searchResults.length > 0 ? (
             searchResults.map((result) => (
-              <div key={result.id} className="p-2 cursor-pointer">
+              <div key={result.id} className="p-3 cursor-pointer border-b border-gray-200">
                 <Link
                   href={result.type === "tutor" 
                     ? `/dashboard/subscriptions/${result.slug}`
                     : `/dashboard/overview/${result.id}`}
                   onClick={() => setShowDropdown(false)}
                 >
-                  <p>{result.type === 'tutor' ? result.attributes.tutorname : result.attributes.coursename}</p>
+                  <p className="text-md">{result.type === 'tutor' ? result.attributes.tutorname : result.attributes.coursename}</p>
                 </Link>
               </div>
             ))
