@@ -8,7 +8,7 @@ const fetchTestResult = async (userId: number, topicId: number) => {
 
 export const UsefetchTestResult = (topicId:number, userId:number) => {
     return useQuery({
-        queryKey: ["testresult", topicId, userId],
+        queryKey: ["testresults_1", topicId, userId],
         queryFn: () => fetchTestResult(userId, topicId),
 
         meta: {
@@ -25,7 +25,7 @@ const fetchResult = async (userId: number, topicId: number) => {
 
 export const UsefetchResult = (topicId:number, userId:number) => {
     return useQuery({
-        queryKey: ["testresult", topicId, userId],
+        queryKey: ["testresults_2", topicId, userId],
         queryFn: () => fetchResult(userId, topicId),
 
         meta: {

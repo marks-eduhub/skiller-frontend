@@ -8,6 +8,8 @@ import { message } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import CustomModal from "./modal"
+import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton from "react-loading-skeleton";
 const QuizPreview = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -124,10 +126,10 @@ const QuizPreview = () => {
  
 const handleOptionSelect = (userAnswer: string, passed: boolean, questionId: number) => {
 
-  if (timesAttempted >= MAX_ATTEMPTS) {
-    message.error("You have reached the maximum attempts for this test.");
-    return; 
-}
+//   if (timesAttempted >= MAX_ATTEMPTS) {
+//     message.error("You have reached the maximum attempts for this test.");
+//     return; 
+// }
   setUserAnswers(prevAnswers => ({
       ...prevAnswers,
       [questionId]: userAnswer, 
@@ -219,7 +221,7 @@ const handleSubmitQuiz = async () => {
   const scorePercentage = (passedCount / totalQuestions) * 100;
   await updateTestResultScore(testResultId, scorePercentage);
 
-  message.success(`Quiz submitted successfully! Your score is: ${scorePercentage.toFixed(2)}%`);
+  message.success(`Quiz submitted successfully!`);
   setUserAnswers({});
   router.back();
 };
@@ -229,9 +231,34 @@ const handleSubmitQuiz = async () => {
     router.back();
   };
  
-  if (isLoading || isTestLoading) return <p>Loading questions or tests...</p>;
-  if (error || isTestError) return <p>Error loading questions or tests</p>;
- 
+  if (isLoading || isTestLoading) {
+    return (
+      <div>
+        <h2 className="text-lg font-300 my-4 ">
+          <Skeleton
+            width={200}
+            height={24}
+            baseColor="#e0e0e0"
+            highlightColor="#f0f0f0"
+          />
+        </h2>
+
+        <div>
+          <Skeleton
+            height={300}
+            count={3}
+            baseColor="#e0e0e0"
+            highlightColor="#f5f5f5"
+            enableAnimation={true}
+          />
+        </div>
+      </div>
+    );
+  }
+  if (error || isTestError) {
+    message.error("Error fetching details. Please try again later.");
+  }
+
   const allQuestions = data?.data?.flatMap((quiz: any) => quiz.attributes?.questions?.data) || [];
  
   return (
