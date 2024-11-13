@@ -19,7 +19,9 @@ export const UsefetchTestResult = (topicId:number, userId:number) => {
 }
 
 const fetchResult = async (userId: number, topicId: number) => {
-  const response = await api.get(`/api/test-results?filters[topic][id]=${topicId}&user=${userId}&populate=topic,test`);
+  const response = await api.get(
+    `/api/test-results?filters[topic][id][$eq]=${topicId}&filters[user][id][$eq]=${userId}&populate=topic,test,user`
+  );
  return response.data
 };
 
@@ -53,18 +55,16 @@ export const useFetchUserQuestionResults = (testResultId: number) => {
 };
 
 
-const fetchTests = async (topicId: number) => {
-    const response = await api.get (`/api/tests?filters[topic]=${topicId}&populate=topic`);
+const fetchTests = async (topicId: number, userId:number) => {
+    const response = await api.get (`/api/tests?filters[topic][id]=${topicId}&user=${userId}&populate=topic,user`);
     return response.data
   };
   
-  export const useFetchTests = (topicId: number) => {
+  export const useFetchTests = (topicId: number, userId: number, enabled: boolean = true) => {
     return useQuery({
-      queryKey: ["test", topicId],
-      queryFn: () => fetchTests(topicId),
-      meta: {
-        errorMessage: "Failed to fetch tests",
-      },
+      queryKey: ["test", topicId, userId],
+      queryFn: () => fetchTests(topicId, userId),
+      enabled, 
     });
   };
   
@@ -103,7 +103,6 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
     return response.data;
   };
   
-
 
 
 export const UseUpdateQuestionResult = async (

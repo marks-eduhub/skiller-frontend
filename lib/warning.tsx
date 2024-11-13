@@ -10,13 +10,7 @@ interface WarningProps {
   MAX_ATTEMPTS: number;
 }
 
-const WarningModal: React.FC<WarningProps> = ({
-  isFirstAttempt,
-  isLastAttempt,
-  onClose,
-  onStartTest,
-  MAX_ATTEMPTS
-}) => {
+const WarningModal: React.FC<WarningProps> = ({isFirstAttempt,isLastAttempt,onClose,onStartTest, MAX_ATTEMPTS}) => {
   const [show, setShow] = useState(true);
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");

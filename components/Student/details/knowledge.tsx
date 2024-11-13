@@ -26,7 +26,8 @@ const Knowledge = () => {
   const [attemptsByTopic, setAttemptsByTopic] = useState<{ [key: number]: number }>({});
   const { data, isLoading, error } = UsefetchResult(Number(topicId), Number(userId));
   const testresultdata = data?.data
-  const { data: tests, isLoading: isTests, error: isError, } = useFetchTests(Number(topicId));
+  const isTestAvailable= Boolean(testresultdata && testresultdata.length > 0);
+  const { data: tests, isLoading: isTests, error: isError } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
 
   const router = useRouter();
   const totalAttempts = 3;
@@ -59,7 +60,7 @@ const Knowledge = () => {
       setHighestScore(highestScore);  
       setMostRecentScore(mostRecentScore);  
     }
-  }, [testresultdata, topicId]);
+  }, [testresultdata, topicId, userId]);
 
 
   useEffect(() => {
@@ -74,7 +75,7 @@ const Knowledge = () => {
     };
   
     fetchAndSetTimesAttempted();
-  }, [data, topicId]);
+  }, [data, topicId, userId]);
 
 
   const handleAttemptTest = () => {
@@ -188,9 +189,8 @@ if (attemptsRemaining > 0) {
  
       {selectedTab === "Tests" && (
         <>
-          {testresultdata && testresultdata.length > 0 ? (
-            testresultdata?.map((test: any) => {
-              const score = test.attributes.score;
+         {tests?.data && tests?.data.length > 0 ? (
+            tests?.data?.map((test: any) => {
               const attemptsremaining = totalAttempts - (attemptsByTopic[Number(topicId)] || 0);
 
  
@@ -235,7 +235,7 @@ if (attemptsRemaining > 0) {
                       <h1 className="font-bold text-[15px] p-4 sm:p-6">
                         {highestScore >= passmark ? "Passed" : "Failed"}
                       </h1>
-                      {score >= passmark ? (
+                      {highestScore >= passmark ? (
                         <Image
                           src="/tick1.svg"
                           alt="tick"

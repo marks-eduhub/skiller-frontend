@@ -20,7 +20,7 @@ const QuizPreview = () => {
   const [timesAttempted, setTimesAttempted] = useState(0); 
   const { data, isLoading, error } = useFetchQuizQuestions(Number(topicId));
   const{data:Resultdata, isLoading:resultloading, error:resulterror} = UsefetchTestResult(Number(topicId), Number(userId))
-  const { data: testData, isLoading: isTestLoading, error: isTestError } = useFetchTests(Number(topicId));
+  const { data: testData, isLoading: isTestLoading, error: isTestError } = useFetchTests(Number(topicId), Number(userId));
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [testResultId, setTestResultId] = useState<number | null>(null);
   const [userQuestionResultsMap, setUserQuestionResultsMap] = useState<Record<number, number>>({});
@@ -126,10 +126,7 @@ const QuizPreview = () => {
  
 const handleOptionSelect = (userAnswer: string, passed: boolean, questionId: number) => {
 
-//   if (timesAttempted >= MAX_ATTEMPTS) {
-//     message.error("You have reached the maximum attempts for this test.");
-//     return; 
-// }
+
   setUserAnswers(prevAnswers => ({
       ...prevAnswers,
       [questionId]: userAnswer, 
