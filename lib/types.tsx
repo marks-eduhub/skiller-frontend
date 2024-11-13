@@ -13,6 +13,40 @@ export interface Expectation {
   }>;
 }
 
+export interface Option {
+  id: number; 
+  label: string; 
+}
+
+export interface Question {
+  id: number; 
+  attributes: {
+    questions: string; 
+    options: Option[]; 
+    answers: string;
+  };
+}
+interface TestResult {
+  userId: number;
+  topicId: number;
+  score: number;
+  timesAttempted: number;
+  userQuestionResults: any[]; 
+}
+export interface Test {
+  id: number; 
+  attributes: {
+    quizname: string; 
+    questions: {
+      data: Question[]; 
+    };
+  };
+}
+
+export interface QuizData {
+  data: Test[]; 
+  meta: object; 
+}
 
 export interface TopicAttributes {
   name: string;
@@ -51,7 +85,10 @@ export interface CourseImage {
     };
   };
 }
-
+export interface CorrectAnswer {
+  questionId: number;
+  correctAnswer: string;
+}
 export interface User {
   id: number;
   
@@ -169,7 +206,7 @@ export interface RegisterResponse {
   user: {
     id: string;
     username: string;
-
+  }
   }
 }
   export interface CarouselCourses {
@@ -215,14 +252,7 @@ export interface RegisterResponse {
     isLoading: boolean;
   }
   
-//   export const AuthContext = createContext<AuthContextType>({
-//     user: undefined,
-//     setUser: () => {}, 
-//     isLoading: false,
-//   });
-//     email: string;
-//   };
-// }
+
 
 export interface AuthContextType {
   user: User | undefined;

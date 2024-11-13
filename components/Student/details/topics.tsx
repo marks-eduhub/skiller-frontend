@@ -45,7 +45,7 @@ const TopicsCard: React.FC = () => {
           </h2>
         </div>
         <ul className="p-4 flex flex-col">
-          {topics.map((topic: Topic, index: number) => (
+          {topics?.map((topic: Topic, index: number) => (
             <Link
               key={topic.id}
               href={`/dashboard/overview/${slug}/topics?topicId=${topic.id}`}

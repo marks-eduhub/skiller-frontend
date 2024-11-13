@@ -12,7 +12,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
     <>
       <div className="relative pl-0 container mx-auto max-md:hidden">
         <div className="grid sm:grid-cols-3 w-full my-4 gap-6">
-          {courses.map((course) => (
+          {courses.slice(0,3).map((course) => (
             <Link key={course.id} href={`/dashboard/overview/${course.id}`}>
               
               <ProductCard course={course} />
