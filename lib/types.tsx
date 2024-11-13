@@ -3,7 +3,7 @@ export interface Child {
   text: string;
   type: string; 
 }
-
+export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 export interface Expectation {
   type: string; 
   format: string;
@@ -91,11 +91,11 @@ export interface CorrectAnswer {
 }
 export interface User {
   id: number;
-  attributes: {
+  
     email: string;
     password: string;
     username: string;
-  };
+  
 }
 
 export interface Wishlist {
@@ -117,9 +117,18 @@ export interface Tutor {
   id: number;
   attributes: {
     tutorname: string;
+    profilepicture: {
+      data: Array<{
+        attributes: {
+          url: string;
+        };
+      }>;
+    };
+    role: string;
+    type: 'tutor';
+    slug?: string; 
   };
 }
-
 export interface CourseReview {
   id: number;
   attributes: {
@@ -141,6 +150,7 @@ export interface CourseAttributes {
   rating: number;
   duration: string;
   coursename: string;
+  type: 'course';
   card: CourseImage;  
   users: {
     data: User[];
@@ -198,6 +208,7 @@ export interface RegisterResponse {
     username: string;
   }
   }
+}
   export interface CarouselCourses {
     id: number;
    tutors: string;
@@ -249,11 +260,7 @@ export interface AuthContextType {
   isLoading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  user: undefined,
-  setUser: () => {},
-  isLoading: false,
-});
+
 
 export interface NoteTypes {
   type: string;

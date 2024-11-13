@@ -11,6 +11,7 @@ import constants from "./constants.json";
 import SkillerLogo from "@/components/ui/logo";
 import { useAuthContext } from "@/Context/AuthContext";
 import Greeting from "@/lib/greeting";
+import SearchBar from "./searchbar";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
@@ -39,9 +40,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
         >
           {!sidebarMinimized ? (
             <>
-              {!hideGreetingAndSearch && (
-                  <Greeting  username={username}/>
-              )}
+              {!hideGreetingAndSearch && <Greeting username={username} />}
               <div className="flex items-center gap-10 ml-auto">
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
@@ -55,7 +54,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     className="ml-2"
                   />
                   <Link href="/dashboard/profile" className="text-white">
-                  {username}
+                    {username}
                   </Link>
                   <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
                 </div>
@@ -66,13 +65,18 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
               <div className="w-32 h-10 mr-10">
                 <SkillerLogo />
               </div>
+              {/* <div>
+                <SearchBar />
+              </div> */}
               <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
-                <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+                {/* <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
                 <input
                   type="text"
                   placeholder="Search for classes or tutors"
                   className="flex-1 outline-none bg-transparent"
-                />
+                 
+                /> */}
+                <SearchBar />
               </div>
               <div className="flex items-center gap-10">
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
@@ -96,23 +100,11 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
           )}
         </div>
         {!sidebarMinimized && !hideGreetingAndSearch && (
-          <div className="sm:col-span-8 w-1/2 my-6 flex items-center rounded-lg shadow bg-white p-2 cursor-pointer">
-            <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
-            <input
-              type="text"
-              placeholder="Search for classes or tutors"
-              className="flex-1 outline-none bg-transparent"
-            />
-            <Image
-              src="/filter-variant.svg"
-              alt="filter"
-              width={20}
-              height={20}
-            />
+          <div>
+            <SearchBar />
           </div>
         )}
       </nav>
-     
     </>
   );
 };
