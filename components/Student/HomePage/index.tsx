@@ -78,7 +78,7 @@ const HomePage: React.FC = () => {
       <h2 className="text-lg font-300 my-4">
         <b>Top Programming Courses</b>
       </h2>
-      <FeaturedProduct course={constants.featuredProduct} />
+      <FeaturedProduct />
 
       <div>
         {Object.entries(coursesByCategory).map(

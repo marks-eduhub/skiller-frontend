@@ -23,7 +23,7 @@ export const useRecentCourses = () => {
     queryKey: ["recentCourses", userId],
     enabled: !!userId,
     meta: {
-      errorMessage: "Failed to fetch courses",
+      errorMessage: "Failed to fetch recent courses",
     },
   });
 };

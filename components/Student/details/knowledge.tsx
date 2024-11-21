@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/Context/AuthContext";
-import { UsefetchResult, UsefetchTestResult, useFetchTests } from "@/hooks/useSubmit";
+import { UsefetchResult, useFetchTests } from "@/hooks/useSubmit";
 import { message } from "antd";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -146,8 +146,11 @@ if (attemptsRemaining > 0) {
       </div>
     );
   }
-  if (error || isError) {
-    message.error("Error fetching details. Please try again later.");
+  if (error) {
+    message.error("Error fetching testresults.");
+  }
+  if (isError) {
+    message.error("Error fetching tests");
   }
   return (
     <div className="flex flex-col rounded-lg">

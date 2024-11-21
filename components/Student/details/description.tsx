@@ -46,11 +46,11 @@ const Description = () => {
       <div className="flex flex-col md:flex-row gap-9 pt-9 ">
         <div className="mb-2 sm:ml-3 bg-[#FFF] sm:w-[800px] w-full sm:h-[600px] ml-5 sm:pr-0 pr-4">
           <div className="ml-5 mt-8 mr-3">
-            {description.length > 0 ? (
-              description.map((point: any, index: number) => (
+            {description?.length > 0 ? (
+              description?.map((point: any, index: number) => (
                 <div key={index}>
                   {point.type === "paragraph" &&
-                    point.children.map((child: any, childIndex: any) => (
+                    point.children?.map((child: any, childIndex: any) => (
                       <p key={childIndex} className="my-6">
                         {child.text}
                       </p>
@@ -64,7 +64,7 @@ const Description = () => {
                           : "list-decimal ml-6"
                       }
                     >
-                      {point.children.map(
+                      {point?.children?.map(
                         (listItem: any, listItemIndex: any) => (
                           <li key={listItemIndex}>
                             {listItem.children.map(

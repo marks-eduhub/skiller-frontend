@@ -4,13 +4,7 @@ import { Course } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchOverview = (id: number) => {
-  return useQuery<
-    {
-      data: any;
-      course: Course;
-    },
-    Error
-  >({
+  return useQuery<  {data: any; course: Course; }, Error>({
     queryFn: async () => {
       if (!id) {
         throw new Error("Course ID is required");

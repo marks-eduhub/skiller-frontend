@@ -21,7 +21,7 @@ export const useLikedCourses = () => {
     },
     queryKey: ["likedCourses", userId],
     meta: {
-      errorMessage: "Failed to fetch courses",
+      errorMessage: "Failed to fetch liked courses",
     },
     enabled: !!userId,
   });

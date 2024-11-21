@@ -58,7 +58,6 @@ const QuizPreview = () => {
     },
     onSuccess: (data, variables) => {
       const createdUserQuestionResultId = data?.id || data?.data?.id;
-      console.log("User Question Result created successfully with ID:", createdUserQuestionResultId);
  
       if (createdUserQuestionResultId) {
           setUserQuestionResultsMap((prevMap:any) => ({
@@ -102,7 +101,6 @@ const QuizPreview = () => {
     },
     onSuccess: (data, variables) => {
       const createdTestResultId = data?.id || data?.data?.id;
-      console.log("Test result created successfully with ID:", createdTestResultId);
  
       if (createdTestResultId) {
  
@@ -202,10 +200,8 @@ const handleSubmitQuiz = async () => {
 
     const userQuestionResultId = userQuestionResultsMap[Number(questionId)];
     if (userQuestionResultId) {
-      console.log(`Updating user's answer for question ID: ${questionId}`);
       updating({ userQuestionResultId, userAnswer, passed });
     } else {
-      console.log(`Creating new User Question Result for question ID: ${questionId}`);
       submitQuestionResult({
         testResultId,
         userAnswer,
@@ -216,7 +212,9 @@ const handleSubmitQuiz = async () => {
   }
 
   const scorePercentage = (passedCount / totalQuestions) * 100;
-  await updateTestResultScore(testResultId, scorePercentage);
+  const roundedScore = Math.round(scorePercentage);
+
+  await updateTestResultScore(testResultId, roundedScore);
 
   message.success(`Quiz submitted successfully!`);
   setUserAnswers({});

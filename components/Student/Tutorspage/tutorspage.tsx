@@ -64,9 +64,10 @@ const Tutorspage = () => {
   return (
     <div className="sm:pl-10 py-5 sm:w-full">
       <div className="grid sm:grid-cols-3 grid-cols-2 gap-10 ">
-        {tutors.map((tutor: Tutor, index: number) => {
-          const relativeUrl = tutor.attributes.profilepicture?.data?.[0]?.attributes?.url;
-          const profilePictureUrl = relativeUrl ? `${api.defaults.baseURL}${relativeUrl}` : null;
+        {tutors?.map((tutor: Tutor, index: number) => {
+     const relativeUrl = tutor.attributes.profilepicture?.data?.attributes?.url;
+     const profilePictureUrl = relativeUrl ? `${api.defaults.baseURL}${relativeUrl}` : null;
+     
 
 
           return (
