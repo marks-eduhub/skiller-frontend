@@ -40,7 +40,7 @@ const Notes: React.FC = () => {
   if (error) {
     message.error("Error fetching details. Please try again later.");
   }
-  const notes = (data as TopicDetails)?.data.attributes?.notes || [];
+  const notes = (data as TopicDetails)?.data?.attributes?.notes || [];
 
   return (
     <div className="my-6 p-4 bg-gray-50 rounded-lg ">
@@ -48,8 +48,8 @@ const Notes: React.FC = () => {
         Topic Notes
       </h2>
 
-      {notes.length ? (
-        notes.map((note, index) => (
+      {notes?.length ? (
+        notes?.map((note, index) => (
           <div key={index} className="my-4">
             {note.type === "paragraph" && <p>{note.children[0]?.text}</p>}
 

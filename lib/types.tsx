@@ -4,14 +4,14 @@ export interface Child {
   type: string; 
 }
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
-export interface Expectation {
-  type: string; 
-  format: string;
-  children: Array<{
-    type: string;
-    children: Child[]; 
-  }>;
-}
+// export interface Expectation {
+//   type: string; 
+//   format: string;
+//   children: Array<{
+//     type: string;
+//     children: Child[]; 
+//   }>;
+// }
 
 export interface Option {
   id: number; 
@@ -91,12 +91,11 @@ export interface CorrectAnswer {
 }
 export interface User {
   id: number;
-  
     email: string;
     password: string;
     username: string;
-  
-}
+  }
+
 
 export interface Wishlist {
   userId: number;
@@ -208,7 +207,7 @@ export interface RegisterResponse {
     username: string;
   }
   }
-}
+
   export interface CarouselCourses {
     id: number;
    tutors: string;

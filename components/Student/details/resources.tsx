@@ -13,7 +13,7 @@ const Resources = () => {
   const topicId = searchParams.get("topicId");
   const { data, isLoading, error } = useFetchTopicResources(Number(topicId));
 
-  const resources = data?.data?.attributes?.resources?.data || {};
+  const resources = data?.data?.attributes?.resources?.data || [];
  
   if (isLoading) {
     return (
@@ -49,8 +49,8 @@ const Resources = () => {
   return (
     <div className="sm:ml-6 sm:mr-6 ">
       <div className="overflow-x-auto">
-        {resources.length > 0 ? (
-          resources.map((resource: any) => (
+        {resources?.length > 0 ? (
+          resources?.map((resource: any) => (
             <div
               key={resource.id}
               className="h-20 mt-10 bg-gray-700 text-white flex items-center justify-between px-4"

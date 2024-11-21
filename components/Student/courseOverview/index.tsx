@@ -19,11 +19,7 @@ const Enroll = () => {
   const [tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
-  const {
-    data: reviews,
-    isLoading: loadingreviews,
-    error: reviewError,
-  } = useFetchReviews(Number(slug));
+  const { data: reviews, isLoading: loadingreviews, error: reviewError} = useFetchReviews(Number(slug));
 
   if (!slug) {
     return <div>Course ID is missing</div>;
@@ -69,16 +65,11 @@ const Enroll = () => {
 
   const coursename = courseAttributes.coursename || "UI";
   const card = courseAttributes.card?.data?.attributes?.url || "";
-  const tutorName =
-    courseAttributes.tutors?.data[0]?.attributes?.tutorname || "DS";
+  const tutorName = courseAttributes.tutors?.data[0]?.attributes?.tutorname || "DS";
   const duration = courseAttributes.duration || "2 hours and 40 minutes";
-  const introduction =
-    courseAttributes?.introduction?.[0]?.children?.[0]?.text ||
-    "No introduction available";
-  const requirements =
-    courseAttributes?.requirements?.[0]?.children?.[0]?.text ||
-    "No requirements available";
-  const expectations = courseAttributes.expectations || [];
+  const introduction = courseAttributes?.coursedescription || "No introduction available";
+  const requirements = courseAttributes?.requirements|| "No requirements available";
+  const expectations = courseAttributes?.expectations || "No expectations available";
   const enrolled = courseAttributes.users?.data || [];
   const studentsenrolled = enrolled.length;
   const topics = courseAttributes?.topicname?.data || [];
@@ -86,7 +77,7 @@ const Enroll = () => {
   const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
 
   const Reviews = reviewData.map((review: any) => {
-    const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
+  const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
 
     return {
       name: review.attributes.name,
@@ -188,7 +179,7 @@ const Enroll = () => {
         <CourseReview reviews={Reviews} />
       )}
 
-      <SimilarCourses courses={similarCoursesData} />
+      <SimilarCourses/>
     </div>
   );
 };

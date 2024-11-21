@@ -32,7 +32,7 @@ const VideoCard: React.FC = () => {
     message.error("Error fetching details. Please try again later.");
   }
 
-  const topicdata = data?.data?.attributes || {};
+  const topicdata = data?.data?.attributes || [];
   const videoFilePath = topicdata?.video?.data?.[0]?.attributes?.url;
   const videoUrl = videoFilePath ? `${api.defaults.baseURL}${videoFilePath}` : null; 
   const tutorName = topicdata?.course?.data?.attributes?.tutors?.data?.[0]?.attributes?.tutorname;

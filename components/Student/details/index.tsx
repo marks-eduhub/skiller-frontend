@@ -14,7 +14,7 @@ const DetailsPage: React.FC = () => {
         <TopicsCard />
       </div>
       <Tabs />
-      <SimilarCourses courses={similarCoursesData} />
+      <SimilarCourses  />
     </div>
   );
 };

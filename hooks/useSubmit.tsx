@@ -19,9 +19,8 @@ export const UsefetchTestResult = (topicId:number, userId:number) => {
 }
 
 const fetchResult = async (userId: number, topicId: number) => {
-  const response = await api.get(
-    `/api/test-results?filters[topic][id][$eq]=${topicId}&filters[user][id][$eq]=${userId}&populate=topic,test,user`
-  );
+
+  const response = await api.get(`/api/test-results?filters[topic][id][$eq] = ${topicId}&filters[user][id][$eq]=${userId}&populate=topic,user,test,user`);
  return response.data
 };
 
@@ -75,7 +74,7 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
         user: userId,
         topic: topicId,
         score: 0,
-        times_attempted,
+        times_of_attempt:times_attempted,
         test: testId,
         latestscore: new Date().toISOString(),
       },
@@ -95,7 +94,7 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
      
       data: {
         passed,
-        test_result: testResultId, 
+        test_results: testResultId, 
         useranswer: userAnswer,  
         questions: questionId  
       },
