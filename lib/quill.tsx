@@ -17,7 +17,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder })
         theme="snow"
         value={value}
         onChange={onChange}
-        placeholder={placeholder} // Pass the placeholder to ReactQuill
+        placeholder={placeholder} 
         modules={{
           toolbar: [
             [{ header: "1" }, { header: "2" }, { font: [] }],
