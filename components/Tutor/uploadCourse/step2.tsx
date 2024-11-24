@@ -78,28 +78,7 @@ const Step2:React.FC<StepProps> = ({topicname,
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
- 
-  // const handleFileChange = (file: File | null) => {
-  //   if (file) {
-  //     const fileType = file.type;
 
-  //     if (fileType === "application/pdf") {
-  //       const fileURL = URL.createObjectURL(file);
-  //       setTopicresource(fileURL);
-  //     } else if (
-  //       fileType ===
-  //         "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
-  //       fileType === "application/vnd.ms-powerpoint"
-  //     ) {
-  //       const fileURL = URL.createObjectURL(file);
-  //       setTopicresource(fileURL);
-  //     } else {
-  //       message.error(
-  //         "Unsupported file type. Please upload a PDF or PowerPoint."
-  //       );
-  //     }
-  //   }
-  // };
   const handleFileChange = async (file: File | null) => {
     console.log("Selected file:", file);
   

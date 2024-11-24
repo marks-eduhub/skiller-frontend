@@ -98,7 +98,7 @@ const UploadCourse = () => {
       if (videoFile) {
         videoId = await uploadMedia(videoFile);
         if (!videoId) {
-          throw new Error("Video upload failed.");
+          throw new Error("Topic video upload failed.");
         }
       }
 
@@ -139,8 +139,7 @@ const UploadCourse = () => {
               topicname,
               topicexpectation,
               topicdescription,
-              // resourceId ? [resourceId] : [],
-              resourceId,
+              resourceId ? [resourceId] : [],
               videoId,
               instructions
             )

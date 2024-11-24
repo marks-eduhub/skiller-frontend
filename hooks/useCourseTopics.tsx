@@ -4,7 +4,7 @@ import TurndownService from "turndown";
 
 const fetchTopicDetails = async (topicId: number) => {
 
-  const response = await api.get(`/api/topics/${topicId}?populate[course][populate]=tutors&populate=video`);
+  const response = await api.get(`/api/topics/${topicId}?populate[course][populate]=tutors&populate=topicVideo`);
   return response.data;
 };
 
