@@ -49,7 +49,7 @@ export interface QuizData {
 }
 
 export interface TopicAttributes {
-  name: string;
+  topicname: string;
   duration: string;
 }
 

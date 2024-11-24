@@ -37,7 +37,8 @@ const VideoCard: React.FC = () => {
   const videoUrl = videoFilePath ? `${api.defaults.baseURL}${videoFilePath}` : null; 
   const tutorName = topicdata?.course?.data?.attributes?.tutors?.data?.[0]?.attributes?.tutorname;
   const tutorRole = topicdata?.course?.data?.attributes?.tutors?.data?.[0]?.attributes?.role;
-  const topicname = topicdata?.name;
+  const topicname = topicdata?.topicname;
+  
 
   return (
     <>

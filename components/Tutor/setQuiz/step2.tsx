@@ -1,39 +1,101 @@
+import { useFetchTopic } from "@/hooks/useSetQuiz";
 import React from "react";
+import {message} from "antd"
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+const Step2 = ({
+  duration,
+  setDuration,
+  topic,
+  setTopic,
+}: {
+  duration: string;
+  setDuration: React.Dispatch<React.SetStateAction<string>>;
+  topic: string;
+  setTopic: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const { data, isLoading, error } = useFetchTopic();
+  console.log("topic", data);
+  if (isLoading) {
+    return (
+      <div>
+        <h2 className="text-lg font-300 my-4 ">
+          <Skeleton
+            width={200}
+            height={24}
+            baseColor="#e0e0e0"
+            highlightColor="#f0f0f0"
+          />
+        </h2>
 
-const step2 = () => {
+        <div>
+          <Skeleton
+            height={300}
+            count={3}
+            baseColor="#e0e0e0"
+            highlightColor="#f5f5f5"
+            enableAnimation={true}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    message.error("Error fetching courses. Please try again later.");
+  }
+  const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTopic(e.target.value);
+  };
   return (
     <div className="rouded-lg bg-gray-100 border sm:mb-0 mb-5 border-gray-100 py-6 sm:px-2">
       <div className="border-b border-gray-300 flex items-center justify-center">
-        <h1 className="mb-2">Title: Quiz One</h1>
+        <h1 className="mb-2">Select Quiz Duration and Topic</h1>
       </div>
-      <div className="flex flex-col items-center sm:justify-center w-full  ">
-        <div className="mt-5 ">
-          <label htmlFor="duration" className="font-medium ">
-            Select duration for this quiz
-          </label>
-          <select className="mt-2 text-gray-600 block bg-white rounded-lg px-4 py-3 border border-gray-200 mb-6 outline-none sm:w-96 w-72">
-            <option>15 minutes</option>
-            <option>30 minutes</option>
-          </select>
+      <div className="flex flex-col space-y-6 sm:w-[50%] w-full mt-6 mx-auto">
+        <div>
+          <label htmlFor="duration">Duration</label>
+          <input
+            type="text"
+            id="duration"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            placeholder="e.g., 30 minutes"
+            className="mt-1 px-4 py-2 rounded-md w-full border border-gray-200"
+          />
         </div>
-        <div className="mt-3">
-          <label htmlFor="topic" className="font-medium">
-            Select topic for this quiz
-          </label>
-          <select className="mt-2 text-gray-600 block bg-white rounded-lg px-4 py-3 border border-gray-200 mb-6 outline-none sm:w-96 w-72">
-            <option>Topic One: Introduction to....</option>
-            <option>Topic Two: UI/UX ....</option>
+        <div>
+          <label htmlFor="topic">Topic</label>
+          <select
+            id="topic"
+            value={topic}
+            onChange={handleTopicChange}
+            className="mt-1 px-4 py-2 rounded-md w-full border text-black border-gray-200 outline-none"
+          >
+            <option value="" className="text-black">
+              Select a topic
+            </option>
+            <div className="rounded-lg">
+            {data?.data?.map(
+              (topicData: {
+                id: string;
+                attributes: { topicname: string };
+              }) => (
+                <option
+                  key={topicData.id}
+                  value={topicData.id}
+                  className="text-black"
+                >
+                  {topicData.attributes.topicname}
+                </option>
+              )
+            )}
+            </div>
           </select>
-        </div>
-        <div className="mt-3 sm:mr-[200px] mr-[100px]">
-          <input type="radio" id="quiz" className="mr-2" />
-          <label htmlFor="quiz"  className="font-medium">
-            Enable randomisation
-          </label>
         </div>
       </div>
     </div>
   );
 };
 
-export default step2;
+export default Step2;

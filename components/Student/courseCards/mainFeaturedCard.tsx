@@ -13,26 +13,17 @@ const FeaturedProduct: React.FC = () => {
   const { data, isLoading, error } = useFetchCarouselCourses();
   if (isLoading) {
     return (
-      <div>
-        <h2 className="text-lg font-300 my-4">
-          <Skeleton
-            width={200}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
+       
 
-        <div>
+        <div className="rounded-lg">
           <Skeleton
             height={300}
-            count={3}
+            count={1}
             baseColor="#e0e0e0"
             highlightColor="#f5f5f5"
             enableAnimation={true}
           />
         </div>
-      </div>
     );
   }
 
@@ -56,7 +47,8 @@ const FeaturedProduct: React.FC = () => {
           {carouselCourses.map((course: any) => {
             const imageUrl = course?.attributes?.card?.data?.attributes.url;
             const tutorName = course.attributes.tutors.data[0]?.attributes.tutorname;
-            const description = course.attributes.topicname?.data[0]?.attributes.description
+            // const description = course.attributes.topicname?.data[0]?.attributes.description
+            const coursename = course.attributes.coursename
             const { rating, duration, level, days } = course.attributes;
 
             return (
@@ -77,7 +69,8 @@ const FeaturedProduct: React.FC = () => {
                   tutorName={tutorName}
                   duration={duration}
                   rating={rating}
-                  description={description}
+                  // description={description}
+                  description={coursename}
                   level={level}
                   days={days}
                 />
