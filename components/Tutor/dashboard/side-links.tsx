@@ -17,7 +17,7 @@ const SideLinks = () => {
       src: "/course.svg",
       alt: "courses",
       name: "Courses",
-      path: "/tutor/dashboard/courses",
+      path: "/tutor/dashboard",
     },
     {
       src: "/people.svg",

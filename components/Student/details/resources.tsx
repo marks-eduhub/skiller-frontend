@@ -2,7 +2,7 @@ import { useFetchTopicResources } from '@/hooks/useTopicResources';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { BiSolidDownArrow } from 'react-icons/bi';
-import Link from "next/link"
+import Link from "next/link";
 import api from '@/lib/axios';
 import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
@@ -13,12 +13,15 @@ const Resources = () => {
   const topicId = searchParams.get("topicId");
   const { data, isLoading, error } = useFetchTopicResources(Number(topicId));
 
-  const resources = data?.data?.attributes?.resources?.data || [];
  
+
+  const resources = data?.data?.attributes?.topicResources?.data || [];
+  const instructions = data?.data?.attributes?.resourceInstructions || "No instructions available.";
+
   if (isLoading) {
     return (
       <div>
-        <h2 className="text-lg font-300 my-4 ">
+        <h2 className="text-lg font-300 my-4">
           <Skeleton
             width={200}
             height={24}
@@ -26,7 +29,6 @@ const Resources = () => {
             highlightColor="#f0f0f0"
           />
         </h2>
-
         <div>
           <Skeleton
             height={300}
@@ -42,13 +44,13 @@ const Resources = () => {
 
   if (error) {
     message.error("Error fetching details. Please try again later.");
+    return null;
   }
 
- 
-
   return (
-    <div className="sm:ml-6 sm:mr-6 ">
+    <div className="sm:ml-6 sm:mr-6">
       <div className="overflow-x-auto">
+        <h1>{instructions}</h1>
         {resources?.length > 0 ? (
           resources?.map((resource: any) => (
             <div
@@ -56,12 +58,12 @@ const Resources = () => {
               className="h-20 mt-10 bg-gray-700 text-white flex items-center justify-between px-4"
             >
               <Link
-                href= {`${api.defaults.baseURL}${resource.attributes.url}`}
+                href={`${api.defaults.baseURL}${resource.attributes.url}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between w-full"
               >
-                <h2 className="ml-6">{resource.attributes.name}</h2>
+                <h2 className="ml-6">{resource.attributes.name || "Resource1"}</h2>
                 <BiSolidDownArrow className="text-white mr-6" />
               </Link>
             </div>

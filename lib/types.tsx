@@ -49,8 +49,10 @@ export interface QuizData {
 }
 
 export interface TopicAttributes {
-  name: string;
+  topicname: string;
   duration: string;
+  topicExpectations: string;
+  topicdescription: string;
 }
 
 export interface Topic {

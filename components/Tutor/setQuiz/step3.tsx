@@ -1,68 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import TextEditor from "@/lib/quill";
 
-const Step3 = () => {
+const Step3 = ({ quizData, setQuizData }: { quizData: any[]; setQuizData: Function }) => {
+ 
+
+  const handleQuestionChange = (index: number, value: string) => {
+    const updatedQuizData = [...quizData];
+    updatedQuizData[index].question = value;
+    setQuizData(updatedQuizData);
+  };
+
+  const handleOptionChange = (qIndex: number, oIndex: number, value: string) => {
+    const updatedQuizData = [...quizData];
+    updatedQuizData[qIndex].options[oIndex] = value;
+    setQuizData(updatedQuizData);
+  };
+
+  const handleCorrectAnswerChange = (index: number, value: string) => {
+    const updatedQuizData = [...quizData];
+    updatedQuizData[index].answers = value;
+    setQuizData(updatedQuizData);
+  };
+
+  const addOption = (qIndex: number) => {
+    const updatedQuizData = [...quizData];
+    updatedQuizData[qIndex].options.push("");
+    setQuizData(updatedQuizData);
+  };
+
+  const addQuestion = () => {
+    setQuizData([...quizData, { question: "", options: ["", ""], answers: "" }]);
+  };
+
+  const removeQuestion = (index: number) => {
+    setQuizData(quizData.filter((_, qIndex) => qIndex !== index));
+  };
+
   return (
     <div className="rounded-lg border mb-5 w-full border-gray-100 sm:p-6 p-4 bg-gray-100">
-      <h1>Add questions and answers to your quiz</h1>
+      <h1>Add Questions and Answers to Your Quiz</h1>
 
-      <div className="rounded-lg border w-full flex sm:flex-row flex-col h-auto border-gray-900 bg-white mt-5 ">
-        <div className="flex flex-col p-4">
-          <div className="flex sm:flex-row flex-col sm:items-center gap-3">
-            <h1>Question: </h1>
-            <input 
-              type="text"
-              className="sm:w-1/2  w-full outline-none p-2 sm:my-4  my-1 border border-gray-300 rounded-md"
-              placeholder="Type your question here..."
-            />
-          </div>
-          <div className="flex items-center my-3 gap-3">
-            <input type="radio" name="options" value="option1" id="option1" />
-            <label
-              htmlFor="option1"
-              className="text-sm font-medium text-gray-900"
+      {quizData.map((q, qIndex) => (
+        <div
+          key={qIndex}
+          className="rounded-lg border w-full flex flex-col h-auto border-gray-900 bg-white mt-5 p-4"
+        >
+          <div className="flex justify-between items-center w-full sm:mb-0 mb-3">
+            <h2>Question {qIndex + 1}</h2>
+            <button
+              onClick={() => removeQuestion(qIndex)}
+              className="text-red-500 text-sm border  border-black p-2 rounded-md"
             >
-              Option 1
-            </label>
+              Remove Question
+            </button>
           </div>
 
-          <div className="flex items-center mb-3 gap-3">
-            <input type="radio" name="options" value="option2" id="option2" />
+          <input
+            type="text"
+            className="sm:w-full outline-none p-2 sm:my-4 my-1 border border-gray-300 rounded-md"
+            placeholder="Type your question here..."
+            value={q.question}
+            onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
+          />
 
-            <label
-              htmlFor="option2"
-              className="text-sm font-medium text-gray-900"
-            >
-              Option 2
-            </label>
-          </div>
-          <div className="flex items-center mb-3 gap-3">
-            <input type="radio" name="options" id="option3" value="option3" />
+          {q.options.map((option:string, oIndex:any) => (
+            <div key={oIndex} className="flex items-center gap-3 my-2">
+              <input
+                type="text"
+                className="sm:w-1/2 w-full outline-none p-2 border border-gray-300 rounded-md"
+                placeholder={`Option ${oIndex + 1}`}
+                value={option}
+                onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+              />
+            </div>
+          ))}
 
-            <label
-              htmlFor="option3"
-              className="text-sm font-medium text-gray-900 "
-            >
-              Option 3
-            </label>
-          </div>
+          <button
+            onClick={() => addOption(qIndex)}
+            className="text-blue-500  mt-2 border border-black rounded-md p-2 w-[250px]"
+          >
+            Add Option
+          </button>
+
           <div className="flex sm:flex-row flex-col gap-3 mt-6">
-            <h1 className="mt-1">Select the right answer:</h1>
-            <select className=" text-gray-600 block  sm:w-28 w-36 bg-white rounded-md px-3 py-2 border border-gray-300 mb-6 outline-none ">
-              <option>Option 1</option>
-              <option>Option 2</option>
-              <option>Option 3</option>
+            <h3 className="mt-1">Select the Right Answer:</h3>
+            <select
+              className="text-gray-600 block sm:w-40 w-full bg-white rounded-md px-3 py-2 border border-gray-300 outline-none"
+              value={q.answers}
+              onChange={(e) => handleCorrectAnswerChange(qIndex, e.target.value)}
+            >
+              <option value="" disabled>
+                Select Answer
+              </option>
+              {q.options.map((option:string, oIndex:any) => (
+                <option key={oIndex} value={option}>
+                  {option || `Option ${oIndex + 1}`}
+                </option>
+              ))}
             </select>
           </div>
-          <div className=" mt-3 hidden md:flex ">
-            <TextEditor />
-          </div>
         </div>
-      </div>
-      <div className="gap-2 cursor-pointer my-10 rounded-md items-center justify-center w-[200px] py-3 px-4 flex border border-gray-600 ">
+      ))}
+
+      <div
+        className="gap-2 cursor-pointer my-10 rounded-md items-center justify-center w-[200px] py-3 px-4 flex border border-gray-600"
+        onClick={addQuestion}
+      >
         <Image src="/pluss.svg" alt="plus" width={20} height={20} />
-        <h1>Add a question</h1>
+        <h1>Add a Question</h1>
       </div>
     </div>
   );

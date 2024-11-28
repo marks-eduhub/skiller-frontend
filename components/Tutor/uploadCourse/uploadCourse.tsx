@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
@@ -9,9 +9,13 @@ import Step2 from "./step2";
 import { courseUpload, uploadMedia } from "@/hooks/useCourseUpload";
 import { message } from "antd";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { topicUpload } from "@/hooks/useCourseTopics";
+import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
+  const { setCourseId } = useCourseContext();
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
@@ -19,8 +23,15 @@ const UploadCourse = () => {
   const [courseLearning, setCourseLearning] = useState("");
   const [courseName, setCourseName] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [topicname, setTopicname] = useState("");
+  const [topicdescription, setTopicdescription] = useState("");
+  const [topicexpectation, setTopicexpectation] = useState("");
+  const [topicresource, setTopicresource] = useState("");
+  const [instructions, setInstructions] = useState("");
+  const [videoFile, setVideoFile] = useState<File | null>(null); 
+  const [resourceFile, setResourceFile] = useState<File | null>(null);
+  
   const handleNextStep = () => {
     if (currentStep < 3) {
       setCurrentStep((prevStep) => prevStep + 1);
@@ -33,11 +44,10 @@ const UploadCourse = () => {
     }
   };
 
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file); 
+      setSelectedImage(file);
       setFileName(file.name);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -45,43 +55,119 @@ const UploadCourse = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      message.error("No file selected. Please try again.");
+      message.error("No course image selected. Please try again.");
     }
   };
-  
-  
-  const handleSubmit = async () => {
-  if (!selectedFile) {
-    message.error("Please select a file to upload.");
-    return;
-  }
 
-  try {
-    const mediaId = await uploadMedia(selectedFile);
-
-    if (!mediaId) {
-      throw new Error("You have to select an image.");
-    }
-
-    const courseData = await courseUpload(
+  const { mutate: uploadCourse } = useMutation({
+    mutationFn: async ({
       courseName,
       courseLearning,
       courseDescription,
       courseRequirements,
-      mediaId
-    );
-
-    message.success("Course uploaded successfully!");
-  } catch (error) {
-    console.error("Error in handleSubmit:", error);
-    message.error("Error uploading course.");
-  }
-};
+      mediaId,
+    }: {
+      courseName: string;
+      courseLearning: string;
+      courseDescription: string;
+      courseRequirements: string;
+      mediaId: number;
+    }) => {
+      return await courseUpload(
+        courseName,
+        courseLearning,
+        courseDescription,
+        courseRequirements,
+        mediaId
+      );
+    },
+    onSuccess: () => {
+      console.log("course submitted!");
+    },
+    onError: (err) => {
+      console.error("Error submitting course:", err);
+    },
+  });
 
   
-  
-  
+  const handleSubmit = async () => {
+    try {
+      if (!selectedImage) {
+        message.error("Please select a course image  to upload.");
+        return;
+      }
+ 
+      let videoId: number | null = null;
+      if (videoFile) {
+        videoId = await uploadMedia(videoFile);
+        if (!videoId) {
+          throw new Error("Topic video upload failed.");
+        }
+      }
 
+      const resourceId = resourceFile
+      if (
+        !courseName ||
+        !courseDescription ||
+        !courseRequirements ||
+        !courseLearning
+      ) {
+        message.error("Please fill out all required course details.");
+        return;
+      }
+ 
+      const mediaId = await uploadMedia(selectedImage);
+      if (!mediaId) {
+        throw new Error("Course image upload failed.");
+      }
+ 
+      uploadCourse(
+        {
+          courseName,
+          courseLearning,
+          courseDescription,
+          courseRequirements,
+          mediaId,
+        },
+        {
+          onSuccess: (data) => {
+            const courseId = data?.data?.id;
+            setCourseId(courseId);
+            if (!courseId) {
+              throw new Error("Course ID is missing from the response.");
+            }
+            console.log("Course ID:", courseId);
+ 
+            topicUpload(
+              courseId,
+              topicname,
+              topicexpectation,
+              topicdescription,
+              resourceId ? [resourceId] : [],
+              videoId,
+              instructions
+            )
+              .then(() => {
+                message.success("Course and topic submitted successfully!");
+              })
+              .catch((err) => {
+                console.error("Error uploading topic:", err);
+                message.error("Failed to upload topic.");
+              });
+          },
+          onError: (err) => {
+            console.error("Error submitting course details:", err);
+            message.error("Failed to upload course details.");
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      message.error("An unexpected error occurred.");
+    }
+  };
+  
+  
   return (
     <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
       {currentStep === 1 && (
@@ -184,9 +270,26 @@ const UploadCourse = () => {
         </div>
       )}
 
-      {currentStep === 2 && <Step2 />}
-      {currentStep === 3 && <Step3 />}
-
+      {currentStep === 2 && (
+        <Step2
+          topicname={topicname}
+          setTopicname={setTopicname}
+          topicdescription={topicdescription}
+          setTopicdescription={setTopicdescription}
+          topicexpectation={topicexpectation}
+          setTopicexpectation={setTopicexpectation}
+          topicresource={topicresource}
+          setTopicresource={setTopicresource}
+          instructions={instructions}
+          setInstructions={setInstructions}
+          videoFile={videoFile}
+          setVideoFile={setVideoFile}
+          resourceFile={resourceFile}
+          setResourceFile={setResourceFile}
+        />
+      )}
+      {currentStep === 3 && <Step3
+      />}
 
       <div className="mt-5 flex items-center justify-between">
         {currentStep > 1 && (
@@ -204,6 +307,7 @@ const UploadCourse = () => {
           {currentStep === 3 ? "Upload" : "Continue"}
         </button>
       </div>
+
     </div>
   );
 };

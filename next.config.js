@@ -18,7 +18,7 @@ const nextConfig = {
         return defaultRedirects;
       },
       images: {
-        domains: ['img-c.udemycdn.com', 'kinsta.com'],
+        domains: ['img-c.udemycdn.com', 'kinsta.com', 'localhost'],
       },
 }
 

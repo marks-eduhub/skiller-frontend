@@ -52,7 +52,7 @@ const TopicsCard: React.FC = () => {
             >
               <li className="flex justify-between items-center px-4 py-[14px] rounded hover:bg-zinc-600 transition duration-300 ease-in-out">
                 <span className="text-white">{`${index + 1}. ${
-                  topic.attributes.name
+                  topic.attributes.topicname
                 }`}</span>
                 <span className="text-white ml-auto">
                   {topic.attributes.duration}

@@ -1,13 +1,13 @@
 import Image from "next/image";
 
 interface SkillerLogoProps {
-  minimized?: boolean; // Make the prop optional
+  minimized?: boolean; 
 }
 
 const SkillerLogo = ({ minimized = false }: SkillerLogoProps) => {
   return (
     <div>
-      {minimized ? null : ( // Conditionally render the logo if not minimized
+      {minimized ? null : ( 
         <Image
           src="/logo.svg"
           alt="Skiller logo"

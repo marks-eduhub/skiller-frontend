@@ -2,7 +2,7 @@ import { useFetchTopicDetails } from "@/hooks/useCourseTopics";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { TopicDetails } from "@/lib/types";
-import {  message } from "antd";
+import { message } from "antd";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
 
@@ -44,13 +44,12 @@ const Notes: React.FC = () => {
 
   return (
     <div className="my-6 p-4 bg-gray-50 rounded-lg ">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
-        Topic Notes
-      </h2>
-
       {notes?.length ? (
         notes?.map((note, index) => (
           <div key={index} className="my-4">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
+              Topic Notes
+            </h2>
             {note.type === "paragraph" && <p>{note.children[0]?.text}</p>}
 
             {note.type === "list" && note.format === "unordered" && (

@@ -63,7 +63,7 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({introduction,requirement
               key={topic.id}
               className="flex items-center  cursor-pointer w-full justify-between p-6"
             >
-              <h1 className="font-semibold">{topic.attributes.name}</h1>
+              <h1 className="font-semibold">{topic.attributes.topicname}</h1>
               <h1 className="font-semibold">{topic.attributes.duration}</h1>
             </div>
           ))}
