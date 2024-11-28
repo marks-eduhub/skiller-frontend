@@ -39,19 +39,19 @@ export const PostQuestion = async(questions:string, options:string[], answers:st
 }
 
 
-const fetchTopic = async () => {
+const fetchTopic = async (courseId:number, userId:number) => {
 
-    const response = await api.get(`/api/topics?populate=*`);
+    const response = await api.get (`/api/topics?filters[course][id]=${courseId}&user=${userId}&populate=course,user`);
 
     return response.data;
   };
   
-  export const useFetchTopic = () => {
+  export const useFetchTopic = (courseId:number, userId:number) => {
     return useQuery({
-      queryKey: ["selecttopic"],
-      queryFn: () => fetchTopic(),
+      queryKey: ["select_topic", courseId, userId],
+      queryFn: () => fetchTopic(courseId, userId),
       meta: {
-        errorMessage: "Try again later!",
+        errorMessage: "Failed to fetch topic(s)",
       },
     });
   };

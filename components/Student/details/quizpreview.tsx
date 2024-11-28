@@ -26,7 +26,6 @@ const QuizPreview = () => {
   const [userQuestionResultsMap, setUserQuestionResultsMap] = useState<Record<number, number>>({});
   const questionId = data?.data?.[0]?.attributes?.questions?.data?.[0]?.id;
   const testId = testData?.data?.[0]?.id;
-  const MAX_ATTEMPTS = 3; 
 
   const openModal = () => {
     setIsModalOpen(true);

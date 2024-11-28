@@ -94,9 +94,9 @@ export const createTestResult = async (userId: number, topicId: number, testId:n
      
       data: {
         passed,
-        test_results: testResultId, 
+        test_result: testResultId, 
         useranswer: userAnswer,  
-        questions: questionId  
+        question: questionId  
       },
     });
     return response.data;

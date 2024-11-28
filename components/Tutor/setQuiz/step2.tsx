@@ -3,19 +3,24 @@ import React from "react";
 import {message} from "antd"
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useAuthContext } from "@/Context/AuthContext";
 const Step2 = ({
   duration,
   setDuration,
   topic,
   setTopic,
+courseId
 }: {
   duration: string;
   setDuration: React.Dispatch<React.SetStateAction<string>>;
   topic: string;
   setTopic: React.Dispatch<React.SetStateAction<string>>;
+  courseId:number 
 }) => {
-  const { data, isLoading, error } = useFetchTopic();
-  console.log("topic", data);
+  const { user } = useAuthContext();
+  const userId =  user?.id
+  const { data, isLoading, error } = useFetchTopic(courseId, Number(userId))
+ 
   if (isLoading) {
     return (
       <div>

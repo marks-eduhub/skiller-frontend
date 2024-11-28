@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
@@ -11,9 +11,11 @@ import { message } from "antd";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { topicUpload } from "@/hooks/useCourseTopics";
+import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
+  const { setCourseId } = useCourseContext();
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
@@ -29,6 +31,7 @@ const UploadCourse = () => {
   const [instructions, setInstructions] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null); 
   const [resourceFile, setResourceFile] = useState<File | null>(null);
+  
   const handleNextStep = () => {
     if (currentStep < 3) {
       setCurrentStep((prevStep) => prevStep + 1);
@@ -129,6 +132,7 @@ const UploadCourse = () => {
         {
           onSuccess: (data) => {
             const courseId = data?.data?.id;
+            setCourseId(courseId);
             if (!courseId) {
               throw new Error("Course ID is missing from the response.");
             }
@@ -162,7 +166,8 @@ const UploadCourse = () => {
       message.error("An unexpected error occurred.");
     }
   };
-
+  
+  
   return (
     <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
       {currentStep === 1 && (
@@ -283,7 +288,8 @@ const UploadCourse = () => {
           setResourceFile={setResourceFile}
         />
       )}
-      {currentStep === 3 && <Step3 />}
+      {currentStep === 3 && <Step3
+      />}
 
       <div className="mt-5 flex items-center justify-between">
         {currentStep > 1 && (
@@ -301,6 +307,7 @@ const UploadCourse = () => {
           {currentStep === 3 ? "Upload" : "Continue"}
         </button>
       </div>
+
     </div>
   );
 };
