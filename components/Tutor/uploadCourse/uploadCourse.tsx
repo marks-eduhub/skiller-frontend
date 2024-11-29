@@ -15,7 +15,7 @@ import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
-  const { setCourseId } = useCourseContext();
+  const { setCourseId , setTopicId} = useCourseContext();
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
@@ -149,6 +149,8 @@ const UploadCourse = () => {
             )
               .then(() => {
                 message.success("Course and topic submitted successfully!");
+                const topicId = data?.data?.id
+                setTopicId(topicId);
               })
               .catch((err) => {
                 console.error("Error uploading topic:", err);

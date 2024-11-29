@@ -1,121 +1,59 @@
 import React from "react";
+
 interface QuizPreviewProps {
   handlePreviousStep: () => void;
+  quizData: {
+    question: string;
+    options: string[];
+  }[];
+  handleSubmitQuiz: () => void
 }
-const QuizPreview: React.FC<QuizPreviewProps> = ({ handlePreviousStep }) => {
+
+const QuizPreview: React.FC<QuizPreviewProps> = ({
+  handlePreviousStep,
+  quizData,
+  handleSubmitQuiz
+}) => {
   return (
-    <div className="sm:p-6  p-4 mb-5 sm:mt-0 mt-20  w-full">
-      <div className="flex mt-6  justify-between w-full  sm:items-center">
+    <div className="sm:p-6 p-4 mb-5 sm:mt-0 mt-20 w-full">
+      <div className="flex mt-6 justify-between w-full sm:items-center">
         <button
-          className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md sm:mb-0 mb-4 w-[100px]  flex justify-start"
+          className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md sm:mb-0 mb-4 w-[100px] flex justify-start"
           onClick={handlePreviousStep}
         >
           Back
         </button>
         <h1 className="text-xl hidden md:flex">Quiz Preview</h1>
-
         <button
-          className="bg-black text-white rounded-md px-4 sm:px-6 w-[150px]  sm:py-2"
-          onClick={handlePreviousStep}
+          className="bg-black text-white rounded-md px-4 sm:px-6 w-[150px] sm:py-2"
+          onClick={handleSubmitQuiz}
         >
           Upload Quiz
         </button>
       </div>
-      <h1 className="text-xl flex items-center justify-center w-full  sm:mb-4 sm:mt-0 my-8 sm:hidden text-gray-600 font-semibold mb-4">
-        Quiz Preview
-      </h1>
 
-      <div className="bg-gray-100 border mt-10 rounded-lg p-4  w-full h-auto">
-        <div className="flex flex-col  ">
-          <h1 className="underline">Question1:</h1>
-          <div className="ml-5">
-            <h1 className="font-semibold my-3 ">
-              What is the primary purpose of User Interface Design?
-            </h1>
-            <div className="flex items-center mb-3 gap-3">
-              <input type="radio" name="options" value="option1" id="option1" />
-
-              <label htmlFor="option1" className="  text-gray-900">
-                To facilitate a user&apos;s interaction with a product or
-                service.
-              </label>
+      <div className="p-10 mt-10">
+        {quizData.map((item, index) => (
+          <div key={index} className="mb-6">
+            <h2 className="text-lg font-semi-bold">{`Q${index + 1}: ${
+              item.question
+            }`}</h2>
+            <div className="pl-5 mt-4 font-normal">
+              {item.options.map((option, optIndex) => (
+                <label key={optIndex} className="block mb-2">
+                  <input
+                    type="radio"
+                    name={`question-${index}`}
+                    value={option}
+                    disabled 
+                    className="mr-2"
+                  />
+                  {option}
+                </label>
+              ))}
             </div>
-            <div className="flex items-center mb-3 gap-3">
-              <input type="radio" name="options" value="option2" id="option2" />
-
-              <label htmlFor="option2" className="  text-gray-900">
-                To establish a consisitent brand identity.
-              </label>
-            </div>
-            <div className="flex items-center mb-3 gap-3">
-              <input type="radio" name="options" value="option3" id="option3" />
-
-              <label htmlFor="option3" className="  text-gray-900">
-                To ensure the functionality of the backend.
-              </label>
-            </div>
-            <div className="flex items-center mb-3 gap-3">
-              <input type="radio" name="options" value="option4" id="option4" />
-
-              <label htmlFor="option4" className="  text-gray-900">
-                To create a visually appealing interface.
-              </label>
-            </div>
-            <h1 className="mt-6">
-              Correct Answer: To facilitate a user&apos;s interaction with a
-              product or service.
-            </h1>
           </div>
-        </div>
-        <div className="flex flex-col py-10 ">
-          <h1 className="underline ">Question1:</h1>
-          <div className="ml-5">
-            <h1 className="font-semibold my-3 ">
-              Which of the following is NOT a key principle of UI/UX?
-            </h1>
-            <div className="flex items-center mb-3 gap-3">
-              <input
-                type="radio"
-                name="options"
-                value="usability"
-                id="usability"
-              />
-
-              <label htmlFor="usability" className="  text-gray-900">
-                Usability
-              </label>
-            </div>
-            <div className="flex items-center mb-3 gap-3">
-              <input type="radio" name="options" value="accesss" id="access" />
-
-              <label htmlFor="access" className="  text-gray-900">
-                Accessibility
-              </label>
-            </div>
-            <div className="flex items-center mb-3 gap-3">
-              <input
-                type="radio"
-                name="options"
-                value="aesthetic"
-                id="aesthetic"
-              />
-
-              <label htmlFor="aesthetic" className="  text-gray-900">
-                Asthetics
-              </label>
-            </div>
-            <div className="flex items-center mb-3 gap-3">
-              <input type="radio" name="options" value="rate" id="rate" />
-
-              <label htmlFor="rate" className="  text-gray-900">
-                Conversion rate optimization
-              </label>
-            </div>
-            <h1 className="mt-6">
-              Correct Answer: Conversion rate optimization
-            </h1>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

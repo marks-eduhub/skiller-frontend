@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || recentError) {
     message.error("Error fetching courses. Please try again later.");
   }
 

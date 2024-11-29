@@ -11,6 +11,7 @@ import { message } from "antd";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useSearchParams } from "next/navigation";
+import { useCourseContext } from "@/lib/CourseContext";
 
 const SetQuiz = () => {
   const router = useRouter();
@@ -18,8 +19,6 @@ const SetQuiz = () => {
   const courseId = searchParams.get("courseId");
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
-  const [topics, setTopics] = useState([]);
-
   const [testname, setTestname] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
@@ -32,7 +31,7 @@ const SetQuiz = () => {
       console.log("Course ID passed to SetQuiz:", courseId);
     }
   }, [courseId]);
-
+const {topicId} = useCourseContext()
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
       testname,
@@ -115,7 +114,8 @@ const SetQuiz = () => {
   };
 
   if (showPreview) {
-    return <QuizPreview handlePreviousStep={handlePreviousStep} />;
+    return <QuizPreview handlePreviousStep={handlePreviousStep}  quizData={quizData} handleSubmitQuiz={handleSubmitQuiz}
+     />;
   }
   if (courseId === null) {
     return (
@@ -132,7 +132,6 @@ const SetQuiz = () => {
       </div>
     );
   }
-  console.log("setgh", courseId);
   return (
 
       <div className="p-6 w-full flex flex-col sm:mt-0 mt-10">
@@ -176,7 +175,7 @@ const SetQuiz = () => {
           />
         )}
         {currentStep === 3 && (
-          <Step3 quizData={quizData} setQuizData={setQuizData} />
+          <Step3 quizData={quizData} setQuizData={setQuizData}  />
         )}
 
         <div className="sm:mt-5 flex items-center justify-between">
