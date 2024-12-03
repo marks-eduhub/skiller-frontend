@@ -20,10 +20,10 @@ const SmallScreen = () => {
 
   return (
     <div className="sm:hidden absolute top-0 left-5 right-5 z-50  flex items-center justify-between pt-6">
-      <div className="w-24 text-white">
+      <div className="w-20 text-white">
           <SkillerLogo />
         </div>
-        <div className="flex w-56 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
+        <div className="flex w-48 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
           <Image src="/magnify.svg" alt="magnify" width={30} height={30} />
           <input
             type="text"

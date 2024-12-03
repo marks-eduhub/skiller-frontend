@@ -15,13 +15,14 @@ import { useCourseContext } from "@/lib/CourseContext";
 
 const SetQuiz = () => {
   const router = useRouter();
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId");
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
   const [testname, setTestname] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
+  const [passmark, setPassmark] = useState(""); 
   const [topic, setTopic] = useState("");
   const [quizData, setQuizData] = useState([
     { question: "", options: ["", ""], answers: "" },
@@ -31,20 +32,22 @@ const SetQuiz = () => {
       console.log("Course ID passed to SetQuiz:", courseId);
     }
   }, [courseId]);
-const {topicId} = useCourseContext()
+
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
       testname,
       testdescription,
       testduration,
       topicId,
+      passmark
     }: {
       testname: string;
       testdescription: string;
       testduration: string;
       topicId: string;
+      passmark:string
     }) => {
-      return await PostTest(testname, testdescription, testduration, topicId);
+      return await PostTest(testname, testdescription, testduration, topicId, passmark);
     },
     onSuccess: () => {
       console.log("test data submitted!");
@@ -74,18 +77,43 @@ const {topicId} = useCourseContext()
   };
 
   const handleSubmitQuiz = () => {
-    if (!testname || !description || !duration || !topic) {
-      console.error("Please fill out all fields in Steps 1 and 2.");
+  
+    if (!testname) {
+      message.error("Test name is missing.");
+      return;
+    }
+    if (!description) {
+      message.error("Test description is missing.");
+      return;
+    }
+    if (!duration) {
+      message.error("Test duration is missing.");
+    }
+    if (!topic) {
+      message.error("Please select a topic.");
+      return;
+    }
+    // if (passmark === "" || isNaN(passmark)) {
+    //   message.error("Please enter a valid passmark.");
+    //   return;
+    // }
+    if (!passmark) {
+      message.error("Please enter the test passmark.");
+      return;
+    }
+   
+    if (quizData.some(({ question }) => !question)) {
+      message.error("Question field is missing data.");
       return;
     }
 
-    if (
-      quizData.some(
-        ({ question, options, answers }) =>
-          !question || !answers || options.some((opt) => !opt)
-      )
-    ) {
-      console.error("Please complete all fields in Step 3.");
+    if (quizData.some(({ options }) => options.some((opt) => !opt))) {
+      message.error("Please ensure all options are filled in .");
+      return;
+    }
+
+    if (quizData.some(({ answers }) => !answers)) {
+      message.error("Please select the correct answer for the questions .");
       return;
     }
 
@@ -95,12 +123,14 @@ const {topicId} = useCourseContext()
         testdescription: description,
         testduration: duration,
         topicId: topic,
+        passmark
       },
       {
         onSuccess: (data) => {
           const testId = data.data.id;
           console.log("id", testId);
           message.success("Quiz submitted successfully");
+          console.log("data", data)
           quizData.forEach(({ question, options, answers }) => {
             PostQuestion(question, options, answers, testId);
           });
@@ -108,14 +138,20 @@ const {topicId} = useCourseContext()
         },
         onError: (err) => {
           console.error("Error submitting test data:", err);
+          message.error("Failed to submit quiz.");
         },
       }
     );
   };
 
   if (showPreview) {
-    return <QuizPreview handlePreviousStep={handlePreviousStep}  quizData={quizData} handleSubmitQuiz={handleSubmitQuiz}
-     />;
+    return (
+      <QuizPreview
+        handlePreviousStep={handlePreviousStep}
+        quizData={quizData}
+        handleSubmitQuiz={handleSubmitQuiz}
+      />
+    );
   }
   if (courseId === null) {
     return (
@@ -128,91 +164,92 @@ const {topicId} = useCourseContext()
   if (!courseId) {
     return (
       <div className="text-center">
-        <p className="text-red-500">No course ID provided. Please go back.</p>
+        <p className="text-red-500">No course ID provided. Please go back and create a course.</p>
       </div>
     );
   }
   return (
-
-      <div className="p-6 w-full flex flex-col sm:mt-0 mt-10">
-        <div className="sm:hidden flex items-center justify-between w-full">
-          {(currentStep === 2 || currentStep === 3) && (
-            <button
-              className="flex sm:hidden sm:mt-0 mt-8 text-[18px] text-gray-600 underline"
-              onClick={handlePreviousStep}
-            >
-              Go back
-            </button>
-          )}
-          {currentStep === 3 && (
-            <button className="underline mt-10 " onClick={handleQuizPreview}>
-              Quiz Preview
-            </button>
-          )}
-        </div>
-
-        <h1 className="text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center">
-          New Assignment
-        </h1>
-
-        <StepTracker currentStep={currentStep} />
-
-        {currentStep === 1 && (
-          <Step1
-            testname={testname}
-            setTestname={setTestname}
-            description={description}
-            setDescription={setDescription}
-          />
-        )}
-        {currentStep === 2 && (
-          <Step2
-            duration={duration}
-            setDuration={setDuration}
-            topic={topic}
-            setTopic={setTopic}
-            courseId={courseId}
-          />
+    <div className="p-6 w-full flex flex-col sm:mt-0 mt-10">
+      <div className="sm:hidden flex items-center justify-between w-full">
+        {(currentStep === 2 || currentStep === 3) && (
+          <button
+            className="flex sm:hidden sm:mt-0 mt-8 text-[18px] text-gray-600 underline"
+            onClick={handlePreviousStep}
+          >
+            Go back
+          </button>
         )}
         {currentStep === 3 && (
-          <Step3 quizData={quizData} setQuizData={setQuizData}  />
+          <button className="underline mt-10 " onClick={handleQuizPreview}>
+            Quiz Preview
+          </button>
+        )}
+      </div>
+
+      <h1 className="text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center">
+        New Assignment
+      </h1>
+
+      <StepTracker currentStep={currentStep} />
+
+      {currentStep === 1 && (
+        <Step1
+          testname={testname}
+          setTestname={setTestname}
+          description={description}
+          setDescription={setDescription}
+        />
+      )}
+      {currentStep === 2 && (
+        <Step2
+          duration={duration}
+          setDuration={setDuration}
+          topic={topic}
+          setTopic={setTopic}
+          courseId={courseId}
+          passmark={passmark}
+          setPassmark={setPassmark}
+        />
+      )}
+      {currentStep === 3 && (
+        <Step3 quizData={quizData} setQuizData={setQuizData} />
+      )}
+
+      <div className="sm:mt-5 flex items-center justify-between">
+        {currentStep > 1 && (
+          <button
+            className="py-2 px-4 items-center hidden md:flex justify-center rounded w-[150px] text-black border border-black"
+            onClick={handlePreviousStep}
+          >
+            Previous
+          </button>
         )}
 
-        <div className="sm:mt-5 flex items-center justify-between">
-          {currentStep > 1 && (
+        {currentStep === 3 ? (
+          <>
             <button
-              className="py-2 px-4 flex items-center hidden md:flex justify-center rounded w-[150px] text-black border border-black"
-              onClick={handlePreviousStep}
+              className="py-2 px-4 mt-2 sm:mb-0 mb-48 hidden md:flex items-center justify-center rounded w-full sm:w-[150px] text-black border border-black"
+              onClick={handleQuizPreview}
             >
-              Previous
+              Quiz Preview
             </button>
-          )}
-
-          {currentStep === 3 ? (
-            <>
-              <button
-                className="py-2 px-4 mt-2 flex sm:mb-0 mb-48 hidden md:flex items-center justify-center rounded w-full sm:w-[150px] text-black border border-black"
-                onClick={handleQuizPreview}
-              >
-                Quiz Preview
-              </button>
-              <button
-                className="bg-black py-2 px-4 flex items-center justify-center sm:ml-0 ml-20 rounded w-[150px] text-white"
-                onClick={handleSubmitQuiz}
-              >
-                Upload Quiz
-              </button>
-            </>
-          ) : (
             <button
-              className="bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white"
-              onClick={handleNextStep}
+              className="bg-black py-2 px-4 flex items-center justify-center sm:ml-0 ml-20 rounded w-[150px] text-white"
+              onClick={handleSubmitQuiz}
             >
-              Next
+              Upload Quiz
             </button>
-          )}
-        </div>
+          </>
+        ) : (
+          <button
+            className="bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white"
+            onClick={handleNextStep}
+          >
+            Next
+          </button>
+        )}
       </div>
+    </div>
   );
 };
 

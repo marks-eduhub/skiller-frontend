@@ -79,38 +79,27 @@ const Step2:React.FC<StepProps> = ({topicname,
   };
 
 
-  const handleFileChange = async (file: File | null) => {
-    console.log("Selected file:", file);
-  
+  const handleFileChange = async (file: File | null) => {  
     if (file) {
-      const fileType = file.type;
-      console.log("File type:", fileType);
-  
+      const fileType = file.type;  
       if (
         fileType === "application/pdf" ||
         fileType === "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
         fileType === "application/vnd.ms-powerpoint"
-      ) {
-        console.log("Valid file type detected. Uploading file...");
-  
+      ) {  
         try {
-          const resourceId = await uploadMedia(file);
-          console.log("Resource upload result:", resourceId);
-  
+          const resourceId = await uploadMedia(file);  
           if (resourceId) {
             setResourceFile(resourceId); 
             setTopicresource(resourceId);
-            console.log("Resource file ID saved:", resourceId);
           } else {
             message.error("Resource upload failed.");
           }
         } catch (error) {
           message.error("Failed to upload the resource.");
-          console.error("Error uploading resource:", error);
         }
       } else {
         message.error("Unsupported file type. Please upload a PDF or PowerPoint.");
-        console.log("Unsupported file type:", fileType);
       }
     }
   };

@@ -1,4 +1,6 @@
 import api from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import { message } from "antd";
 import TurndownService from "turndown";
 
 export const courseUpload = async (
@@ -6,7 +8,8 @@ export const courseUpload = async (
   expectations: string,
   coursedescription: string,
   requirements: string,
-  cardId: number
+  cardId: number,
+  categories:string
 ) => {
   try {
     const turndownService = new TurndownService();
@@ -15,13 +18,14 @@ export const courseUpload = async (
     const markdownDescription = turndownService.turndown(coursedescription);
     const markdownRequirements = turndownService.turndown(requirements);
 
-    const response = await api.post("/api/courses?populate[card]=*", {
+    const response = await api.post("/api/courses?populate[card][populate][categories]=*", {
       data: {
         coursename,
         expectations: markdownExpectations,
         coursedescription: markdownDescription,
         requirements: markdownRequirements,
         card: cardId,
+        categories
       },
     });
 
@@ -35,7 +39,7 @@ export const courseUpload = async (
 
 export const uploadMedia = async (file: File | null) => {
   if (!file) {
-    console.error("No file selected");
+    message.error("No file selected");
     return;
   }
 
@@ -59,7 +63,24 @@ export const uploadMedia = async (file: File | null) => {
 
     return response.data[0].id;
   } catch (error) {
-    console.error("Error uploading media:", error);
+    message.error("Error uploading media:");
     throw error;
   }
+};
+
+const fetchCategory = async () => {
+
+  const response = await api.get (`/api/categories?populate=*`);
+
+  return response.data;
+};
+
+export const useFetchCategory = () => {
+  return useQuery({
+    queryKey: ["course_category"],
+    queryFn: () => fetchCategory(),
+    meta: {
+      errorMessage: "Failed to fetch category",
+    },
+  });
 };

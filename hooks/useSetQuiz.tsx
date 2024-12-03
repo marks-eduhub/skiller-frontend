@@ -2,7 +2,7 @@ import api from "@/lib/axios"
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 
-export const PostTest = async(testname:string, testdescription:string, testduration:string, topicId:string) => {
+export const PostTest = async(testname:string, testdescription:string, testduration:string, topicId:string, passmark:string) => {
     const turndownService = new TurndownService();
     const description = turndownService.turndown(testdescription);
 
@@ -12,10 +12,11 @@ export const PostTest = async(testname:string, testdescription:string, testdurat
             testdescription:description,
             testduration,
             topic: topicId,
-            // dateCreated: new Date().toISOString(),
+            passmark
+
         },
         meta:{
-            errorMessage: "Failed to display",
+            errorMessage: "Failed to submit test details",
 
         }
     });
@@ -32,7 +33,7 @@ export const PostQuestion = async(questions:string, options:string[], answers:st
             test:testId
         },
         meta:{
-            errorMessage: "Failed to display",
+            errorMessage: "Failed to submit quiz questions",
         }
     });
     return response.data;
@@ -55,3 +56,5 @@ const fetchTopic = async (courseId:number, userId:number) => {
       },
     });
   };
+
+  
