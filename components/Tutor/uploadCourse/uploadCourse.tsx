@@ -6,16 +6,22 @@ import { GrCloudUpload } from "react-icons/gr";
 import StepTracker from "./tracker";
 import Step3 from "./step3";
 import Step2 from "./step2";
-import { courseUpload, uploadMedia } from "@/hooks/useCourseUpload";
+import {
+  courseUpload,
+  uploadMedia,
+  useFetchCategory,
+} from "@/hooks/useCourseUpload";
 import { message } from "antd";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { topicUpload } from "@/hooks/useCourseTopics";
 import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
+import Loader from "@/components/Student/loader";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
-  const { setCourseId } = useCourseContext();
+  const { setCourseId, setTopicId } = useCourseContext();
+  const { data, isLoading, error } = useFetchCategory();
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
@@ -29,9 +35,14 @@ const UploadCourse = () => {
   const [topicexpectation, setTopicexpectation] = useState("");
   const [topicresource, setTopicresource] = useState("");
   const [instructions, setInstructions] = useState("");
-  const [videoFile, setVideoFile] = useState<File | null>(null); 
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [resourceFile, setResourceFile] = useState<File | null>(null);
-  
+  const [category, setCategory] = useState("");
+
+  const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategory(e.target.value);
+  };
+
   const handleNextStep = () => {
     if (currentStep < 3) {
       setCurrentStep((prevStep) => prevStep + 1);
@@ -66,19 +77,22 @@ const UploadCourse = () => {
       courseDescription,
       courseRequirements,
       mediaId,
+      category,
     }: {
       courseName: string;
       courseLearning: string;
       courseDescription: string;
       courseRequirements: string;
       mediaId: number;
+      category: string;
     }) => {
       return await courseUpload(
         courseName,
         courseLearning,
         courseDescription,
         courseRequirements,
-        mediaId
+        mediaId,
+        category
       );
     },
     onSuccess: () => {
@@ -89,14 +103,13 @@ const UploadCourse = () => {
     },
   });
 
-  
   const handleSubmit = async () => {
     try {
       if (!selectedImage) {
         message.error("Please select a course image  to upload.");
         return;
       }
- 
+
       let videoId: number | null = null;
       if (videoFile) {
         videoId = await uploadMedia(videoFile);
@@ -105,22 +118,23 @@ const UploadCourse = () => {
         }
       }
 
-      const resourceId = resourceFile
+      const resourceId = resourceFile;
       if (
         !courseName ||
         !courseDescription ||
         !courseRequirements ||
-        !courseLearning
+        !courseLearning ||
+        !category
       ) {
         message.error("Please fill out all required course details.");
         return;
       }
- 
+
       const mediaId = await uploadMedia(selectedImage);
       if (!mediaId) {
         throw new Error("Course image upload failed.");
       }
- 
+
       uploadCourse(
         {
           courseName,
@@ -128,6 +142,7 @@ const UploadCourse = () => {
           courseDescription,
           courseRequirements,
           mediaId,
+          category,
         },
         {
           onSuccess: (data) => {
@@ -137,7 +152,7 @@ const UploadCourse = () => {
               throw new Error("Course ID is missing from the response.");
             }
             console.log("Course ID:", courseId);
- 
+
             topicUpload(
               courseId,
               topicname,
@@ -149,6 +164,8 @@ const UploadCourse = () => {
             )
               .then(() => {
                 message.success("Course and topic submitted successfully!");
+                const topicId = data?.data?.id;
+                setTopicId(topicId);
               })
               .catch((err) => {
                 console.error("Error uploading topic:", err);
@@ -166,8 +183,7 @@ const UploadCourse = () => {
       message.error("An unexpected error occurred.");
     }
   };
-  
-  
+
   return (
     <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
       {currentStep === 1 && (
@@ -231,6 +247,45 @@ const UploadCourse = () => {
               className="h-40"
             />
           </div>
+          <div>
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium mb-4 mt-20"
+            >
+              Course Category
+            </label>
+            {isLoading ? (
+              <Loader/>
+            ) : error ? (
+              <p className="text-red-500">Failed to load categories</p>
+            ) : (
+              <select
+                id="category"
+                value={category}
+                onChange={handleCategory}
+                className="px-4 py-2 rounded-md w-full sm:w-[300px] border text-black border-gray-200 outline-none"
+              >
+                <option value="" className="text-gray-500">
+                  Select a category for your course
+                </option>
+                {data?.data?.map(
+                  (CategoryData: {
+                    id: string;
+                    attributes: { coursecategories: string };
+                  }) => (
+                    <option
+                      key={CategoryData.id}
+                      value={CategoryData.id}
+                      className="text-black"
+                    >
+                      {CategoryData.attributes.coursecategories}
+                    </option>
+                  )
+                )}
+              </select>
+            )}
+          </div>
+
           <div className="mt-20">
             <h1>Upload Course Image</h1>
             <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
@@ -288,8 +343,7 @@ const UploadCourse = () => {
           setResourceFile={setResourceFile}
         />
       )}
-      {currentStep === 3 && <Step3
-      />}
+      {currentStep === 3 && <Step3 />}
 
       <div className="mt-5 flex items-center justify-between">
         {currentStep > 1 && (
@@ -307,7 +361,6 @@ const UploadCourse = () => {
           {currentStep === 3 ? "Upload" : "Continue"}
         </button>
       </div>
-
     </div>
   );
 };

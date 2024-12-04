@@ -23,21 +23,11 @@ export const topicUpload = async (
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
-  topicResourcesId: number[],
+  topicResourcesId: number[] | File[],
   topicVideoId: number | null,
   instructions:string
 ) => {
   try {
-    console.log("Uploading Topic with the following data:");
-    console.log({
-      courseId,
-      topicname,
-      topicExpectations,
-      topicdescription,
-      topicResourcesId,
-      topicVideoId,
-      instructions,
-    });
     const turndownService = new TurndownService();
     const markdownInstructions = turndownService.turndown(instructions);
     const markdownExpectations = turndownService.turndown(topicExpectations);
@@ -55,12 +45,11 @@ export const topicUpload = async (
 
       },
     });
-console.log("res", response)
     return response.data;
   } catch (error) {
     console.error("Error uploading topic:", error);
     throw new Error(
-      "There was an error uploading the topic. Please check the relations and try again."
+      "There was an error uploading the topic. Please try again."
     );
   }
 };

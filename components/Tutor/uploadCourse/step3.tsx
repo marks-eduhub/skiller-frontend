@@ -9,7 +9,6 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const Step3 = () => {
   const { courseId } = useCourseContext(); 
-console.log("lol", courseId)
   if (!courseId) {
     return (
       <div className="text-center">

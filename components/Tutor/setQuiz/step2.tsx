@@ -1,6 +1,6 @@
 import { useFetchTopic } from "@/hooks/useSetQuiz";
 import React from "react";
-import {message} from "antd"
+import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useAuthContext } from "@/Context/AuthContext";
@@ -9,18 +9,22 @@ const Step2 = ({
   setDuration,
   topic,
   setTopic,
-courseId
+  courseId,
+  passmark,
+  setPassmark,
 }: {
   duration: string;
   setDuration: React.Dispatch<React.SetStateAction<string>>;
   topic: string;
   setTopic: React.Dispatch<React.SetStateAction<string>>;
-  courseId:number 
+  courseId: number | string;
+  passmark:  string;
+  setPassmark: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { user } = useAuthContext();
-  const userId =  user?.id
-  const { data, isLoading, error } = useFetchTopic(courseId, Number(userId))
- 
+  const userId = user?.id;
+  const { data, isLoading, error } = useFetchTopic(Number(courseId), Number(userId))
+
   if (isLoading) {
     return (
       <div>
@@ -65,7 +69,18 @@ courseId
             id="duration"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
-            placeholder="e.g., 30 minutes"
+            placeholder="e.g, 30 minutes"
+            className="mt-1 px-4 py-2 rounded-md w-full border border-gray-200"
+          />
+        </div>
+        <div>
+          <label htmlFor="duration">Passmark</label>
+          <input
+            type="text"
+            id="passmark"
+            value={passmark}
+            onChange={(e) => setPassmark((e.target.value))}
+            placeholder="e.g,50"
             className="mt-1 px-4 py-2 rounded-md w-full border border-gray-200"
           />
         </div>
@@ -81,20 +96,20 @@ courseId
               Select a topic
             </option>
             <div className="rounded-lg">
-            {data?.data?.map(
-              (topicData: {
-                id: string;
-                attributes: { topicname: string };
-              }) => (
-                <option
-                  key={topicData.id}
-                  value={topicData.id}
-                  className="text-black"
-                >
-                  {topicData.attributes.topicname}
-                </option>
-              )
-            )}
+              {data?.data?.map(
+                (topicData: {
+                  id: string;
+                  attributes: { topicname: string };
+                }) => (
+                  <option
+                    key={topicData.id}
+                    value={topicData.id}
+                    className="text-black"
+                  >
+                    {topicData.attributes.topicname}
+                  </option>
+                )
+              )}
             </div>
           </select>
         </div>

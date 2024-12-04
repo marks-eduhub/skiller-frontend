@@ -68,3 +68,19 @@ export const useFetchSearchCourses = (searchTerm: string) => {
     },
   });
 };
+
+
+const fetchTutorCourses = async (userId: number) => {
+  const response = await api.get(`/api/courses?filters[users][id][$eq]=${userId}&populate=*`);
+  return response.data;
+};
+
+export const useFetchTutorCourses = (userId: number) => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: () => fetchTutorCourses(userId), 
+    queryKey: ["tutor_courses", userId],
+    meta: {
+      errorMessage: "Failed to fetch courses",
+    },
+  });
+};
