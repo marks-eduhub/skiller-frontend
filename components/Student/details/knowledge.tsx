@@ -44,7 +44,6 @@ const Knowledge = () => {
     error: iserror,
   } = useFetchTests(Number(topicId), Number(userId));
   const hasTests = testlength?.data?.length > 0;
-  console.log("has", hasTests);
   const router = useRouter();
   const totalAttempts = 3;
 

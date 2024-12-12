@@ -47,9 +47,9 @@ export const topicUpload = async (
     });
     return response.data;
   } catch (error) {
-    console.error("Error uploading topic:", error);
     throw new Error(
       "There was an error uploading the topic. Please try again."
     );
   }
 };
+
