@@ -4,11 +4,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { message } from "antd";
 import {
   addComment,
-  addLikedReply,
+  addLikedComment,
   addReply,
+  removeLikedComment,
   useFetchCommentReplies,
   useFetchComments,
+  useFetchLikedComments,
 } from "@/hooks/useComments";
+import Loader from "../loader";
 import { useSearchParams } from "next/navigation";
 import { RxAvatar } from "react-icons/rx";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -16,47 +19,54 @@ import Skeleton from "react-loading-skeleton";
 import { FaComment } from "react-icons/fa";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
+
 const Discussion = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
+  const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const userId = user?.id;
-  const [isLiked, setIsLiked] = useState(false);
   const [topicComment, setTopicComment] = useState("");
-  const [commentId, setCommentId] = useState<number | null>(null);
-
-  const [showModalForComment, setShowModalForComment] = useState<number | null>(
-    null
-  );
-
   const [replyContent, setReplyContent] = useState("");
-  const [showReplies, setShowReplies] = useState<{ [key: number]: boolean }>(
-    {}
-  );
-  const queryClient = useQueryClient();
+  const [commentId, setCommentId] = useState<number | null>(null);
+  const [likedCommentsState, setLikedCommentsState] = useState<{ [key: number]: boolean;}>({});
+  const [showModalForComment, setShowModalForComment] = useState<number | null>(null);
+  const [likedComments, setLikedComments] = useState<{[key: number]: boolean;}>({});
+  const [showReplies, setShowReplies] = useState<{ [key: number]: boolean }>({});
 
   const { data, isLoading, error } = useFetchComments(Number(topicId));
+  const { data: allCommentLikes , isLoading:likesLoading, error: likesError, } = useFetchLikedComments(Number(userId));
 
-  const openReplyModal = (commentId: number) => {
+  useEffect(() => {
+    if (allCommentLikes?.data) {
+      const likesByCommentId: { [key: number]: boolean } = {};
+  
+      allCommentLikes.data.forEach((like: any) => {
+        const commentId = like.attributes?.comment?.data?.id;
+        const userIdForUser = like.attributes?.user?.data?.id;
+  
+        if (commentId && userIdForUser === userId) {
+          likesByCommentId[commentId] = true; 
+        }
+      });
+  
+      setLikedCommentsState(likesByCommentId); 
+    }
+  }, [allCommentLikes, userId]);
+  
+
+  const openReplyModal = (commentId: number | null) => {
     setShowModalForComment(commentId);
     setCommentId(commentId);
   };
 
-  const {
-    data: commentReplies,
-    isLoading: replyLoading,
-    error: replyError,
-  } = useFetchCommentReplies(Number(commentId));
-
- 
-
+  const { data: commentReplies, isLoading: replyLoading, error: replyError, } = useFetchCommentReplies(Number(commentId));
 
   const handleCancel = () => {
     setShowModalForComment(null);
     setCommentId(null);
     setReplyContent("");
   };
-
 
   const handleComment = () => {
     if (topicComment.trim()) {
@@ -69,8 +79,7 @@ const Discussion = () => {
   const handleReply = () => {
     if (replyContent.trim()) {
       addToReplies({
-        commentId: showModalForComment,
-        topicId: Number(topicId),
+        commentId,
         userId: userId!,
         replyComment: replyContent,
       });
@@ -121,21 +130,11 @@ const Discussion = () => {
   });
 
   const { mutate: addToReplies } = useMutation({
-    mutationFn: async ({
-      commentId,
-      topicId,
-      userId,
-      replyComment,
-    }: {
-      commentId: number;
-      topicId: number;
-      userId: number;
-      replyComment: string;
-    }) => {
+    mutationFn: async ({commentId, userId, replyComment, }: {commentId: number | null;userId: number;replyComment: string;}) => {
       if (!userId) throw new Error("User not logged in");
-      return await addReply(commentId, topicId, userId, replyComment);
+      return await addReply(commentId, userId, replyComment);
     },
-    onMutate: async ({ commentId, replyComment, userId }) => {
+    onMutate: async ({ commentId, userId, replyComment }) => {
       if (!userId) return;
       await queryClient.cancelQueries({
         queryKey: ["comment_replies", commentId],
@@ -178,39 +177,74 @@ const Discussion = () => {
   });
 
   const toggleReplies = (commentId: number) => {
-    setCommentId(commentId);
-
+    setCommentId(commentId)
     setShowReplies((prevState) => ({
       ...prevState,
       [commentId]: !prevState[commentId],
     }));
   };
 
-  const { mutate: addToLiked} = useMutation({
-    mutationFn: async ({commentId , userId} : {commentId:number , userId:number} ) => {
+  const { mutate: addLikedCommentMutation } = useMutation({
+    mutationFn: async (commentId: number) => {
       if (!userId) throw new Error("User not logged in");
-      const response = await addLikedReply(commentId, userId);
-      return response;
+      return await addLikedComment(commentId, userId);
     },
-    
-  
-    onSuccess: () => {
-     
-      message.success(`Added to wishlist.`);
+    onMutate: async (commentId: number) => {
+      setLikedComments((prev) => ({ ...prev, [commentId]: true }));
     },
-    onError: (err, variables, context: any) => {
-     
-      message.error("Failed to add to wishlist");
+    onSuccess: (_, commentId) => {
+      message.success("Comment liked.");
+    },
+    onError: (err, commentId) => {
+      setLikedComments((prev) => ({ ...prev, [commentId]: false }));
+      message.error("Failed to like comment.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["comment_likes", userId]);
     },
   });
-  
-  const handleToggleWishlist = () => {
-    if (isLiked) {
+
+  const { mutate: removeLikedCommentMutation } = useMutation({
+    mutationFn: async (commentId: number) => {
+      if (!userId) throw new Error("User not logged in");
+      return await removeLikedComment(commentId, userId);
+    },
+    onMutate: async (commentId: number) => {
+      setLikedComments((prev) => ({ ...prev, [commentId]: false }));
+    },
+    onSuccess: (_, commentId) => {
+      message.success("Comment unliked.");
+    },
+    onError: (err, commentId) => {
+      setLikedComments((prev) => ({ ...prev, [commentId]: true }));
+      message.error("Failed to unlike comment.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["comment_likes", userId]);
+    },
+  });
+
+  const handleToggleWishlist = (commentId: number) => {
+    if (likedCommentsState[commentId]) {
+      removeLikedCommentMutation(commentId);
+      setLikedCommentsState((prev) => ({ ...prev, [commentId]: false }));
     } else {
+      addLikedCommentMutation(commentId);
+      setLikedCommentsState((prev) => ({ ...prev, [commentId]: true }));
     }
   };
   
-  if (isLoading || replyLoading) {
+if(replyLoading || likesLoading) {
+  <Loader/>
+}
+
+if(replyError) {
+  message.error("Failed to fetch replies. Please try again later.");
+}
+if(likesError) {
+  message.error("Failed to fetch comment likes. Please try again later.");
+}
+  if (isLoading ) {
     return (
       <div>
         <h2 className="text-lg font-300 my-4 ">
@@ -263,10 +297,10 @@ const Discussion = () => {
         Post Comment
       </button>
 
-      <div className="bg-gray-300 h-auto p-6 sm:mb-10">
+      <div className="bg-gray-100 h-auto p-6 sm:mb-10">
         <div className="flex flex-col space-y-4 w-1/2 h-auto">
           {data?.data?.length > 0 ? (
-            data.data.map((comment: any) => (
+            data?.data?.map((comment: any) => (
               <div
                 key={comment.id}
                 className="p-4 border-b border-gray-400 bg-white rounded-lg shadow-sm"
@@ -285,18 +319,20 @@ const Discussion = () => {
                     </small>
                   </div>
                 </div>
-                <div className="flex items-center gap-16">
+                <div className="flex flex-col">
                   <p>{comment?.attributes?.topicComment}</p>
-                  <button onClick={() => openReplyModal(comment.id)}>
-                    <FaComment />
-                  </button>
-                  <button onClick={handleToggleWishlist}>
-                    {isLiked ? (
-                      <AiFillHeart size={20} className="text-red-500" />
-                    ) : (
-                      <AiOutlineHeart size={20} className="text-gray-500" />
-                    )}
-                  </button>
+                  <div className="flex gap-10 mt-2">
+                    <button onClick={() => openReplyModal(comment.id)}>
+                      <FaComment />
+                    </button>
+                    <button onClick={() => handleToggleWishlist(comment.id)}>
+                      {likedCommentsState[comment.id] ? (
+                        <AiFillHeart size={20} className="text-red-500" />
+                      ) : (
+                        <AiOutlineHeart size={20} className="text-gray-500" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {showModalForComment === comment.id && (
                   <div className="mt-4">
@@ -361,7 +397,9 @@ const Discussion = () => {
             ))
           ) : (
             <div className="h-screen flex items-center justify-center">
-            <p className="text-center font-semibold ml-[300px]">No comments yet. Be the first to comment!</p>
+              <p className="text-center font-semibold ml-[300px]">
+                No comments yet. Be the first to comment!
+              </p>
             </div>
           )}
         </div>
