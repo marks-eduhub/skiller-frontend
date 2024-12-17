@@ -2,15 +2,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
-  postQuestion,
+  addLiked,
   addResponse,
+  removeLiked,
   useFetchCommunityDetails,
   useFetchQuestionResponses,
   useFetchSearchCommuity,
-  likeResponse,
-  removeLikedResponse,
   useLikedResponses,
 } from "@/hooks/useCommunity";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
@@ -18,80 +19,60 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useAuthContext } from "@/Context/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFetchCategory } from "@/hooks/useCourseUpload";
-import { CommunityQuestions } from "@/lib/types";
 import Loader from "@/components/Student/loader";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import QuestionModal from "./questionModal";
 
 const Community = () => {
-  const { data, isLoading, error } = useFetchCommunityDetails();
   const { user } = useAuthContext();
   const userId = user?.id;
+  const { data, isLoading, error } = useFetchCommunityDetails();
+  const questions = data?.data;
   const queryClient = useQueryClient();
-const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses()
+  const {
+    data: liked,
+    isLoading: likedLoading,
+    error: errorLiked,
+  } = useLikedResponses(Number(userId));
+  console.log("lol", liked);
+
   const {
     data: category,
     isLoading: categoryLoading,
     error: categoryError,
   } = useFetchCategory();
+
   const categoryData = category?.data;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [questionId, setQuestionId] = useState(null);
-  const [responseId, setResponseId] = useState<number | null>(null);
-
-  const [questions, setQuestions] = useState<CommunityQuestions[]>([]);
+  const [questionId, setQuestionId] = useState("");
   const [responsesMap, setResponsesMap] = useState<{ [key: string]: any[] }>(
     {}
   );
-  const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
-  const [responseInputs, setResponseInputs] = useState<{
-    [key: number]: string;
+  const [showAllResponsesMap, setShowAllResponsesMap] = useState<{
+    [key: string]: boolean;
   }>({});
-  const [responsesLimit, setResponsesLimit] = useState<{
-    [key: number]: number;
+
+  const [responsesContentMap, setResponsesContentMap] = useState<{
+    [key: string]: string;
   }>({});
-  const [questionInput, setQuestionInput] = useState("");
+
   const [searchQuery, setSearchQuery] = useState("");
   const DEFAULT_RESPONSES_LIMIT = 3;
   const [likedResponsesMap, setLikedResponsesMap] = useState<{
     [responseId: number]: boolean;
   }>({});
+  const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
+
+  const [responseContent, setResponseContent] = useState("");
 
   const { data: searchResults, isLoading: isSearchLoading } =
     useFetchSearchCommuity(searchQuery);
-
-  useEffect(() => {
-    if (data?.data) {
-      const initialQuestions = data.data.map((member: any) => {
-        const {
-          id,
-          attributes: { Question, nameofquestioner, response },
-        } = member;
-        return {
-          id,
-          Question,
-          nameofquestioner,
-          responses: response || [],
-        };
-      });
-      setQuestions(initialQuestions);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (liked && liked.data && Array.isArray(liked.data) && liked.data.length > 0) {
-      const newLikedResponsesMap = liked.data.reduce((map, response) => {
-        map[response.id] = true;  
-        return map;
-      }, {} as Record<number, boolean>);
-  
-      setLikedResponsesMap(newLikedResponsesMap);
-    } else {
-      setLikedResponsesMap({});
-    }
-  }, [liked]);
-
-  const { data: responsesData } = useFetchQuestionResponses(Number(questionId));
+  const {
+    data: responsesData,
+    isLoading: responsesLoading,
+    error: responsesError,
+  } = useFetchQuestionResponses(Number(questionId));
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -106,6 +87,20 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const { data: likedResponses = [], isLoading: likesLoading } = useLikedResponses(Number(userId))
+
+  
+  useEffect(() => {
+    if (likedResponses.length > 0) {
+      const initialMap = likedResponses.reduce((acc, id) => {
+        acc[id] = true;
+        return acc;
+      }, {} as { [key: number]: boolean });
+  
+      setLikedResponsesMap(initialMap);
+    }
+  }, [likedResponses]);
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
@@ -114,6 +109,12 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
 
   const handleSearchResultClick = (resultId: string) => {
     setShowDropdown(false);
+  };
+  const handleResponseChange = (questionId: string, value: string) => {
+    setResponsesContentMap((prev) => ({
+      ...prev,
+      [questionId]: value,
+    }));
   };
 
   useEffect(() => {
@@ -148,197 +149,184 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
   }, [responsesData, questionId]);
 
   const handleLoadMoreResponses = (questionId: number) => {
-    setResponsesLimit((prev) => ({
+    setShowAllResponsesMap((prev) => ({
       ...prev,
-      [questionId]: (prev[questionId] || DEFAULT_RESPONSES_LIMIT) + 3,
+      [questionId]: !prev[questionId],
     }));
   };
 
-  const { mutate: post } = useMutation({
+  const { mutate: postResponseMutation } = useMutation({
     mutationFn: async ({
-      Question,
-      nameofquestioner,
+      responseText,
+      responderName,
+      questionId,
     }: {
-      Question: string;
-      nameofquestioner: string;
+      responseText: string;
+      responderName: string;
+      questionId: number;
     }) => {
-      return await postQuestion(Question, nameofquestioner);
+      return await addResponse(responseText, responderName, questionId);
+    },
+    onMutate: async ({ responseText, responderName, questionId }) => {
+      const previousData = queryClient.getQueryData([
+        "question_responses",
+        questionId,
+      ]);
+
+      const optimisticResponse = {
+        id: new Date().toISOString(),
+        attributes: {
+          responseText,
+          responderName,
+          questionId,
+          createdAt: new Date().toISOString(),
+        },
+      };
+
+      queryClient.setQueryData(
+        ["question_responses", questionId],
+        (oldData: any) => ({
+          ...oldData,
+          data: [optimisticResponse, ...(oldData?.data || [])],
+        })
+      );
+
+      return { previousData };
+    },
+    onError: (error, variables, context: any) => {
+      queryClient.setQueryData(
+        ["question_responses", variables.questionId],
+        context.previousData
+      );
+      message.error("Failed to post response.");
     },
     onSuccess: () => {
-      message.success("Question posted!");
+      message.success("Response posted successfully!");
     },
-    onError: (err) => {
-      message.error("Failed to post question.");
-      setQuestions((prev) => prev.filter((q) => q.Question !== questionInput));
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries([
+        "question_responses",
+        variables.questionId,
+      ]);
     },
   });
 
-  const handleQuestion = () => {
-    if (!questionInput.trim()) {
-      message.error("Please enter a question!");
+  const handleSubmitResponse = (questionId: number) => {
+    console.log("Response Content: ", responseContent);
+
+    if (!responseContent.trim()) {
+      message.error("Please enter a response to submit!");
       return;
     }
 
-    const nameofquestioner = user?.username || "Guest";
-    const newQuestion = {
-      id: new Date().toISOString(),
-      Question: questionInput,
-      nameofquestioner,
-      responses: [],
-    };
-
-    setQuestions((prev) => [newQuestion, ...prev]);
-    setQuestionInput("");
-    setIsSubmittingQuestion(true);
-
-    post(
-      { Question: questionInput, nameofquestioner },
-      {
-        onSuccess: ({ data }) => {
-          setQuestions((prev) =>
-            prev.map((q) =>
-              q.id === newQuestion.id
-                ? {
-                    ...newQuestion,
-                    id: data.id,
-                  }
-                : q
-            )
-          );
-          setIsSubmittingQuestion(false);
-          message.success("Question posted!");
-        },
-        onError: (err) => {
-          setIsSubmittingQuestion(false);
-          setQuestions((prev) => prev.filter((q) => q.id !== newQuestion.id));
-          message.error("Failed to post question.");
-        },
-      }
-    );
-  };
-
-  const handleSubmitResponse = (questionId: number, responseText: string) => {
-    if (!responseText.trim()) {
-      message.error("Response cannot be empty.");
+    if (!questionId) {
+      console.error("Missing questionId!");
+      message.error("Something went wrong. Please try again later.");
       return;
     }
 
-    const responderName = user?.username || "Anonymous";
+    const responderName = user?.username || "Guest";
 
-    addResponse(responseText, responderName, questionId)
-      .then((newResponse) => {
-        const savedResponse = newResponse?.data?.attributes;
-        const responseId = newResponse?.data?.id;
+    console.log("Posting response with: ", {
+      responseText: responseContent,
+      responderName,
+      questionId,
+    });
 
-        if (!responseId) {
-          return;
-        }
+    postResponseMutation({
+      responseText: responseContent,
+      responderName,
+      questionId,
+    });
 
-        setResponsesMap((prevMap) => {
-          const updatedResponses = prevMap[questionId]
-            ? [savedResponse, ...prevMap[questionId]]
-            : [savedResponse];
-          return { ...prevMap, [questionId]: updatedResponses };
-        });
-
-        setResponseInputs((prev) => ({
-          ...prev,
-          [questionId]: "",
-        }));
-
-        message.success("Response added successfully.");
-        setResponseId(responseId);
-      })
-      .catch((err) => {
-        
-        message.error("Failed to add response.");
-      });
+    setResponseContent("");
+    setShowAllResponsesMap((prev) => ({
+      ...prev,
+      [questionId]: true,
+    }));
   };
-
-  const { mutate: likedResponses } = useMutation({
-    mutationFn: async (id: number) => {
-      if (!userId) throw new Error("User not logged in");
-      return await likeResponse(id, userId);
-    },
-    onSuccess: () => {
-      message.success(`Response liked successfully.`);
-      queryClient.invalidateQueries({queryKey:["likedResponses", userId]});
-    },
-    onError: (err, variables, context) => {
-      message.error("Failed to like response.");
-      setLikedResponsesMap((prevMap) => ({
-        ...prevMap,
-        [variables]: false,
-      }));
-    },
-  });
 
   const { mutate: removeFromLiked } = useMutation({
-    mutationFn: async (responseId: number) => {
+    mutationFn: async ({responseId , userId} : {responseId:number, userId:number}) => {
       if (!userId) throw new Error("User not logged in");
-      const response = await removeLikedResponse(responseId, userId);
+      const response = await removeLiked(responseId, userId);
       return response;
     },
-  
-    onMutate: async (responseId: number) => {
-      if (!userId) return;
-    
+    onMutate: async ({ responseId }) => {
       await queryClient.cancelQueries({ queryKey: ["likedResponses", userId] });
+      
+      const previousLiked = queryClient.getQueryData(["likedResponses", userId]) || [];
+
     
-      const previousLikedResponses = queryClient.getQueryData([
-        "likedResponses",
-        userId,
-      ]);
-    
-      queryClient.setQueryData(["likedResponses", userId], (oldData: any) => {
-        return {
-          ...oldData,
-          data: oldData?.data?.filter(
-            (response: any) => response.id !== responseId
-          ),
-        };
+      queryClient.setQueryData(["likedResponses", userId], (old: any) => {
+        const currentData = Array.isArray(old) ? old : [];
+        return currentData.filter((response: any) => response.id !== responseId);
       });
     
-      return { previousLikedResponses };
+      return { previousLiked };
     },
     
     onSuccess: () => {
-      if (userId) {
-        queryClient.invalidateQueries({ queryKey: ["likedResponses", userId] });
-
-      }
-      message.success(`Unliked successfully.`);
+      queryClient.invalidateQueries({ queryKey: ["likedResponses", userId] });
+      message.success("Unliked successfully.");
     },
-    onError: (err, variables, context: any) => {
-      if (userId) {
-        queryClient.setQueryData(["likedResponses", userId], context.previousLikedResponses);
-      }
-      message.error("Failed to unlike.");
+    onError: (err, variables, context) => {
+      
+      queryClient.setQueryData(
+        ["likedResponses", userId],
+        context?.previousLiked
+      );
+      message.error("Failed to unlike response.");
     },
+    
   });
 
-  const handleToggleWishlist = (responseId: number | null) => {
-    if (!responseId) {
-      return;
-    }
-  
-    const isCurrentlyLiked = likedResponsesMap[responseId];
-  
-    if (!isCurrentlyLiked) {
-      likedResponses(responseId);
-      setLikedResponsesMap((prevMap) => ({
-        ...prevMap,
-        [responseId]: true, 
-      }));
-    } else {
-      removeFromLiked(responseId); 
-      setLikedResponsesMap((prevMap) => {
-        const updatedMap = { ...prevMap };
-        delete updatedMap[responseId]; 
-        return updatedMap;
+  const { mutate: addToWishlist } = useMutation({
+    mutationFn: async ({responseId, userId} : {responseId:number, userId:number}) => {
+      if (!userId) throw new Error("User not logged in");
+      const response = await addLiked(responseId, userId);
+      return response;
+    },
+    onMutate: async ({ responseId }) => {
+      await queryClient.cancelQueries({ queryKey: ["likedResponses", userId] });
+      
+      const previousLiked = queryClient.getQueryData(["likedResponses", userId]) || [];
+
+    
+      queryClient.setQueryData(["likedResponses", userId], (old: any) => {
+        const currentData = Array.isArray(old) ? old : [];
+        return [...currentData, { id: responseId }];
       });
+    
+      return { previousLiked };
+    },
+    
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["likedResponses", userId] });
+      message.success("Liked successfully.");
+    },
+    onError: (err, variables, context) => {
+     
+      queryClient.setQueryData(
+        ["likedResponses", userId],
+        context?.previousLiked
+      );
+      message.error("Failed to like response.");
+    },
+    
+  });
+
+  const handleToggleLike = (responseId: number, isLiked: boolean, userId:number) => {
+ 
+    if (isLiked) {
+      setLikedResponsesMap((prev) => ({ ...prev, [responseId]: false }));
+      removeFromLiked({responseId, userId}); 
+    } else {
+      setLikedResponsesMap((prev) => ({ ...prev, [responseId]: true }));
+      addToWishlist({responseId, userId}); 
     }
   };
+  
   
 
   if (isLoading || categoryLoading) {
@@ -402,23 +390,7 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
           />
         </div>
 
-        <div className="flex flex-col relative sm:flex-row w-full gap-2 items-center">
-          <input
-            type="text"
-            value={questionInput}
-            onChange={(e) => setQuestionInput(e.target.value)}
-            className="border p-2 rounded-lg flex-1 outline-none"
-            placeholder="Type your question here..."
-          />
-
-          <button
-            onClick={handleQuestion}
-            className="bg-gray-600 text-white rounded-lg px-6 py-2 hover:bg-gray-700 transition"
-            disabled={isSubmittingQuestion}
-          >
-            {isSubmittingQuestion ? <Loader /> : "Post your Question"}
-          </button>
-        </div>
+        <QuestionModal />
       </div>
 
       {showDropdown && (
@@ -447,12 +419,10 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
         <div className="w-full sm:w-[80%]">
           {questions && questions.length > 0 ? (
             questions.map((q: any, index: number) => {
-              const { Question, nameofquestioner, id: questionId } = q;
+              const { Question, nameofquestioner, id } = q.attributes;
+              const questionId = q.id;
               const responses = responsesMap[questionId] || [];
-              const responsesToShow = responses.slice(
-                0,
-                responsesLimit[questionId] || DEFAULT_RESPONSES_LIMIT
-              );
+
               return (
                 <div
                   key={index}
@@ -468,14 +438,18 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
                   </div>
 
                   <div className="px-4 mt-4">
-                    {responsesToShow.length === 0 ? (
+                    {responses.length === 0 ? (
                       <p className="text-gray-700 mt-4 text-center">
                         No responses yet for this question.
                       </p>
                     ) : (
-                      responsesToShow.map((response: any, resIndex: number) => {
+                      (showAllResponsesMap[questionId]
+                        ? responses
+                        : responses.slice(0, DEFAULT_RESPONSES_LIMIT)
+                      ).map((response: any, resIndex: number) => {
                         const isLiked = likedResponsesMap[response.id] || false;
-
+                        
+                        const responseId = response.id;
                         return (
                           <div
                             key={resIndex}
@@ -499,18 +473,18 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
                                 </p>
                                 <button
                                   onClick={() =>
-                                    handleToggleWishlist(response.id)
-                                  }
+                                    handleToggleLike(responseId, isLiked, userId)
+                                  } 
                                 >
                                   {isLiked ? (
                                     <AiFillHeart
                                       size={20}
-                                      className="text-red-500"
+                                      className="text-red-500" 
                                     />
                                   ) : (
                                     <AiOutlineHeart
                                       size={20}
-                                      className="text-gray-500"
+                                      className="text-gray-500" 
                                     />
                                   )}
                                 </button>
@@ -520,41 +494,37 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
                         );
                       })
                     )}
-                    {responses.length > 3 &&
-                      responsesToShow.length < responses.length && (
-                        <button
-                          onClick={() => handleLoadMoreResponses(questionId)}
-                          className="text-blue-600 mt-3"
-                        >
-                          See {responses.length - responsesToShow.length} more
-                          response(s)
-                        </button>
-                      )}
+                    {responses.length > DEFAULT_RESPONSES_LIMIT && (
+                      <button
+                        onClick={() => handleLoadMoreResponses(questionId)}
+                        className="text-blue-600 mt-3"
+                      >
+                        {showAllResponsesMap[questionId]
+                          ? "Hide Responses"
+                          : `See ${
+                              responses.length - DEFAULT_RESPONSES_LIMIT
+                            } more response(s)`}
+                      </button>
+                    )}
                   </div>
 
                   <div className="mt-5 pt-5 px-4">
                     <h2>Add a Response:</h2>
-                    <textarea
-                      className="w-full mt-3 p-2 border border-gray-300 rounded-lg outline-none"
+                    <ReactQuill
+                      value={responsesContentMap[questionId] || ""}
                       placeholder="Write your response here..."
-                      value={responseInputs[questionId] || ""}
-                      onChange={(e) =>
-                        setResponseInputs((prev) => ({
-                          ...prev,
-                          [questionId]: e.target.value,
-                        }))
-                      }
+                      onChange={(value) => {
+                        handleResponseChange(questionId, value);
+                      }}
+                      className="mb-4 mt-2"
+                      theme="snow"
                     />
+
                     <button
-                      className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg hover:bg-gray-700 transition"
-                      onClick={() =>
-                        handleSubmitResponse(
-                          questionId,
-                          responseInputs[questionId] || ""
-                        )
-                      }
+                      className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg transition"
+                      onClick={() => handleSubmitResponse(questionId)}
                     >
-                      Submit Response
+                      {isSubmittingResponse ? <Loader /> : "Submit Response"}
                     </button>
                   </div>
                 </div>
@@ -563,14 +533,14 @@ const {data:liked, isLoading:likedLoading, error:errorLiked} = useLikedResponses
           ) : (
             <div className="text-center py-10 text-gray-600">
               <h2 className="text-xl font-semibold">No questions yet!</h2>
-              <p className="mt-2">
+              <p className="mt-4">
                 Start the conversation by asking a question.
               </p>
             </div>
           )}
         </div>
 
-        <div className="sm:w-[20%] h-auto border border-black">
+        <div className="sm:w-[20%] border border-black max-h-[350px] overflow-y-auto">
           <div className="flex flex-col">
             <h1 className="bg-gray-300 p-3">Course Categories</h1>
             <div className="p-2">

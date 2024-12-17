@@ -1,9 +1,11 @@
 import { useAuthContext } from "@/Context/AuthContext";
 import api from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
+import TurndownService from "turndown";
 
 const fetchCommunitydetails = async () => {
-  const response = await api.get("/api/communities?populate=*");
+  const response = await api.get("/api/communities?sort=createdAt:desc&populate=*");
+
   return response.data;
 };
 
@@ -39,9 +41,11 @@ export const postQuestion = async (
   nameofquestioner: string
 ) => {
   try {
+    const turndownService = new TurndownService();
+    const markdownQuestion = turndownService.turndown(Question);
     const response = await api.post("/api/communities", {
       data: {
-        Question,
+        Question: markdownQuestion,
         nameofquestioner,
       },
     });
@@ -56,15 +60,21 @@ export const addResponse = async (
   responderName: string,
   questionId: number
 ) => {
-  const response = await api.post(`/api/community-responses`, {
-    data: {
-      responseText,
-      responderName,
-      community: questionId,
-    },
-  });
-  return response.data;
-};
+  try{
+    const turndownService = new TurndownService();
+    const markdownResponse = turndownService.turndown(responseText);
+    const response = await api.post("/api/community-responses", {
+      data: {
+        responseText: markdownResponse,
+        responderName,
+        community: questionId,
+      },
+    });
+    return response.data;
+  }
+  catch (error) {
+    throw error;
+  }};
 
 const fetchSearchCommunity = async (searchTerm: string) => {
   const response = await api.get(`/api/communities?_q=${searchTerm}`);
@@ -83,25 +93,46 @@ export const useFetchSearchCommuity = (searchTerm: string) => {
   });
 };
 
-const fetchLikedResponses = async () => {
+// const fetchLikedResponses = async (userId:number) => {
+//   const response = await api.get(
+//     `/api/response-likes?filters[user][id][$eq]${userId}&populate[community_response][populate]=*`
+//   );
+//   return response.data;
+// };
+// export const useLikedResponses = (userId:number) => {
+//   return useQuery<{ data: any }, Error>({
+//     queryFn: () => fetchLikedResponses(userId), 
+//     queryKey: ["likedResponses", userId],
+//     meta: {
+//       errorMessage: "Failed to fetch likes",
+//     },
+//   });
+// };
+
+const fetchLikedResponses = async (userId: number) => {
   const response = await api.get(
-    `/api/response-likes?&populate[community_response][populate]=*`
+    `/api/response-likes?filters[user][id][$eq]=${userId}&populate=community_response`
   );
-  return response.data;
+
+  const likedResponses = response.data?.data?.map(
+    (item: any) => item?.attributes?.community_response?.data?.id
+  );
+
+  return likedResponses || [];
 };
-export const useLikedResponses = () => {
-  return useQuery<{ data: any }, Error>({
-    queryFn: fetchLikedResponses,
-    queryKey: ["likedResponses"],
+
+export const useLikedResponses = (userId: number) => {
+  return useQuery<number[], Error>({
+    queryFn: () => fetchLikedResponses(userId),
+    queryKey: ["likedResponses", userId],
     meta: {
-      errorMessage: "Failed to fetch likes",
+      errorMessage: "Failed to fetch liked responses.",
     },
   });
 };
-export const likeResponse = async (
-  responseId: number | null,
-  userId: number
-) => {
+
+
+export const addLiked = async (responseId: number, userId: number) => {
   try {
     const response = await api.post("/api/response-likes", {
       data: {
@@ -109,44 +140,29 @@ export const likeResponse = async (
         user: userId,
       },
     });
+    console.log("Like Success:", response.data);
     return response.data;
   } catch (error) {
-    throw error;
+    throw new Error("Failed to add like.");
   }
 };
-export const removeLikedResponse = async (
-  responseId: number | null,
-  userId: number
-) => {
-  const response = await api.get(
-    `/api/response-likes?filters[user][id][$eq]=${userId}&filters[community_response][id][$eq]=${responseId}`
-  );
 
-  const likedResponse = response.data?.data?.[0];
-
-  if (!likedResponse) {
-    throw new Error("Liked course not found");
-  }
-
-  const likedResponseId = likedResponse.id;
-  await api.delete(`/api/response-likes/${likedResponseId}`);
-};
-
-export const commentOnResponse = async (
-  responseId: number,
-  commentText: string,
-  commenterName: string
-) => {
+export const removeLiked = async (responseId: number, userId: number) => {
   try {
-    const response = await api.post("/api/response-comments", {
-      data: {
-        community_response: responseId,
-        commentText,
-        commenterName,
-      },
-    });
-    return response.data;
+    const response = await api.get(
+      `/api/response-likes?filters[user][id][$eq]=${userId}&filters[community_response][id][$eq]=${responseId}`
+    );
+
+    const likedEntry = response.data?.data?.[0];
+
+    if (!likedEntry) {
+      throw new Error("Liked response not found");
+    }
+
+    const likedId = likedEntry.id;
+    await api.delete(`/api/response-likes/${likedId}`);
+    console.log("Unlike Success:", likedId);
   } catch (error) {
-    throw error;
+    throw new Error("Failed to remove like.");
   }
 };
