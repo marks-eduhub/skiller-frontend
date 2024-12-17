@@ -297,7 +297,7 @@ if(likesError) {
         Post Comment
       </button>
 
-      <div className="bg-gray-100 h-auto p-6 sm:mb-10">
+      <div className="bg-gray-100 max-h-[650px] overflow-auto p-6 sm:mb-10">
         <div className="flex flex-col space-y-4 w-1/2 h-auto">
           {data?.data?.length > 0 ? (
             data?.data?.map((comment: any) => (
