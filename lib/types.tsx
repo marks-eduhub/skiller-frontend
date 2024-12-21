@@ -30,7 +30,7 @@ export interface Question {
     answers: string;
   };
 }
-interface TestResult {
+export interface TestResult {
   userId: number;
   topicId: number;
   score: number;

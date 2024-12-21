@@ -1,5 +1,6 @@
 import { useAuthContext } from "@/Context/AuthContext";
 import api from "@/lib/axios";
+import { Searchdata } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 
@@ -15,6 +16,21 @@ export const useFetchCommunityDetails = () => {
     queryKey: ["communityDetails"],
     meta: {
       errorMessage: "Failed to fetch community details",
+    },
+  });
+};
+
+const fetchLikeCounts = async () => {
+  const response = await api.get("/api/response-likes?populate=*");
+  return response.data;
+};
+
+export const useFetchLikeCount= () => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: fetchLikeCounts,
+    queryKey: ["likeCount"],
+    meta: {
+      errorMessage: "Failed to fetch total like count",
     },
   });
 };
@@ -83,7 +99,7 @@ const fetchSearchCommunity = async (searchTerm: string) => {
 };
 
 export const useFetchSearchCommuity = (searchTerm: string) => {
-  return useQuery<{ data: any }, Error>({
+  return useQuery<{ data:any}, Error>({
     queryKey: ["searchcommunity", searchTerm],
     queryFn: () => fetchSearchCommunity(searchTerm),
     enabled: Boolean(searchTerm),
