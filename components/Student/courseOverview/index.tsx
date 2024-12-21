@@ -1,5 +1,4 @@
 "use client";
-import similarCoursesData from "../details/data.json";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import SimilarCourses from "../details/similar";
@@ -11,11 +10,10 @@ import CourseReview from "./courseReviews";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
-import Link from "next/link";
 
 const Enroll = () => {
   const router = useRouter();
-
+  const[isEnroll, setIsEnroll] = useState(false)
   const [tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
@@ -93,6 +91,7 @@ const Enroll = () => {
 
   const handleEnrollClick = () => {
     if (firstTopicId) {
+      setIsEnroll(true);
       router.push(`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`);
     }
   };
@@ -112,15 +111,11 @@ const Enroll = () => {
             <h1 className="font-bold text-[20px]">{coursename}</h1>
             <p className="font-semibold sm:mt-0">By {tutorName}</p>
           </div>
-
-          <div className="p-4 self-end">
-            <Link
-              href={`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`}
-              className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black"
-            >
-              Enroll today!
-            </Link>
-          </div>
+          <div className="p-4 self-end ">
+          <button className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black" onClick={handleEnrollClick}>
+          {isEnroll ? "Please wait..." : "Enroll today!"}
+          </button>
+        </div>
         </div>
       </div>
       <div className="flex flex-col mt-5 mb-3">
@@ -137,7 +132,7 @@ const Enroll = () => {
         </h1>
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
           <button className="text-white px-6 py-2" onClick={handleEnrollClick}>
-            Enroll today!
+          {isEnroll ? "Please wait..." : "Enroll today!"}
           </button>
         </div>
       </div>

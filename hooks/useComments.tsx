@@ -1,7 +1,6 @@
 import axios from "axios";
 import api from "@/lib/axios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuthContext } from "@/Context/AuthContext";
+import {useQuery} from "@tanstack/react-query";
 
 const fetchComments = async (topicId:number) => {
   const response = await api.get(`/api/comments?filters[topic][id]=${topicId}&populate=user`);
@@ -18,7 +17,7 @@ export const useFetchComments = (topicId:number) => {
     },
   });
 };
-const fetchCommentReplies = async (commentId: number | null) => {
+const fetchCommentReplies = async (commentId: number) => {
   const response = await api.get(`/api/comment-replies?filters[comment][id]=${commentId}&populate=user,comment`);
   return response.data;
 };
@@ -33,7 +32,35 @@ export const useFetchCommentReplies = (commentId:number) => {
     },
   });
 };
+const fetchCount = async () => {
+  const response = await api.get("/api/comment-likes?populate=*");
+  return response.data;
+};
 
+export const useFetchCount= () => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: fetchCount,
+    queryKey: ["comment_likeCount"],
+    meta: {
+      errorMessage: "Failed to fetch likes",
+    },
+  });
+};
+
+const fetchReplyCount = async () => {
+  const response = await api.get("/api/comment-replies?populate=*");
+  return response.data;
+};
+
+export const useFetchReplyCount= () => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: fetchReplyCount,
+    queryKey: ["comment_replyCount"],
+    meta: {
+      errorMessage: "Failed to fetch reply count",
+    },
+  });
+};
 
 export const addComment = async ( topicId:number, userId:number, topicComment:string ) => {
     const response = await api.post("/api/comments", {
@@ -48,7 +75,7 @@ export const addComment = async ( topicId:number, userId:number, topicComment:st
   };
 
   export const addReply = async (
-    commentId: number | null,
+    commentId: number ,
     userId: number,
     replyComment: string
   ) => {
@@ -79,7 +106,7 @@ export const addComment = async ( topicId:number, userId:number, topicComment:st
     });
   };
   
-  export const addLikedComment = async (commentId: number| null , userId: number) => {
+  export const addLikedComment = async (commentId: number , userId: number) => {
     const response = await api.post("/api/comment-likes", {
       data: {
         comment: commentId,
@@ -89,7 +116,7 @@ export const addComment = async ( topicId:number, userId:number, topicComment:st
     return response.data;
   };
   
-  export const removeLikedComment = async (commentId: number| null , userId: number) => {
+  export const removeLikedComment = async (commentId: number , userId: number) => {
     const response = await api.get(
       `/api/comment-likes?filters[user][id][$eq]=${userId}&filters[comment][id][$eq]=${commentId}`
     );
