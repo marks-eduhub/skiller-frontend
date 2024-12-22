@@ -4,20 +4,24 @@ export interface Child {
   type: string; 
 }
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
-// export interface Expectation {
-//   type: string; 
-//   format: string;
-//   children: Array<{
-//     type: string;
-//     children: Child[]; 
-//   }>;
-// }
+
 
 export interface Option {
   id: number; 
   label: string; 
 }
-
+export interface CommunityQuestions {
+  id: string;
+  Question: string;
+  nameofquestioner: string;
+  responses: Responses[];
+}
+export interface Responses {
+  id: string;
+  questionId: number;
+  responseText: string[] | string;
+  responderName: string;
+}
 export interface Question {
   id: number; 
   attributes: {
@@ -26,7 +30,7 @@ export interface Question {
     answers: string;
   };
 }
-interface TestResult {
+export interface TestResult {
   userId: number;
   topicId: number;
   score: number;
@@ -227,26 +231,7 @@ export interface RegisterResponse {
     categorySlug: string;
     courses: Course[];
   }
-  // export interface Course {
-  //   id: number;
-  //   attributes: {
-  //     course: any;
-  //     coursename: string;
-  //     rating: number;
-  //     duration: string;
-  //     tutor: string;
-  //     card: string;
-  //     categories: { data: Category[] };
-  //   };
-  // }
-  // export interface RegisterResponse {
-  //   jwt: string;
-  //   user: {
-  //     id: string;
-  //     username: string;
-  //     email: string;
-  //   };
-  // }
+ 
   export interface AuthContextType {
     user: User | undefined;
     setUser: (user: User) => void;

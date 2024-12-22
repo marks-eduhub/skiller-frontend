@@ -90,7 +90,6 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
     ),
   };
 
-  // Check if the selected sub-option exists in subOptionsContent
   const content = subOptionsContent[slug as string];
 
   if (!content) {

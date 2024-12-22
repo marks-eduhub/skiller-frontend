@@ -13,7 +13,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
     setSidebarMinimized(!sidebarMinimized);
   };
   
-  const excludeNavbar = ["/dashboard/quizreview"];
+  const excludeNavbar = ["/dashboard/quizreview", "/dashboard/community"];
 
   const showNavbar = !excludeNavbar.includes(pathname);
 

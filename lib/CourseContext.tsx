@@ -14,7 +14,7 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
   const [topicId, setTopicId] = useState<number | null>(null);
 
   return (
-    <CourseContext.Provider value={{ courseId, setCourseId, topicId, setTopicId }}>
+    <CourseContext.Provider value={{ courseId, setCourseId, topicId, setTopicId}}>
       {children}
     </CourseContext.Provider>
   );

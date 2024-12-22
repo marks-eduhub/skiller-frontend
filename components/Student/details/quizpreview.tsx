@@ -67,7 +67,7 @@ const QuizPreview = () => {
       message.success("Answer saved!");
     },
     onError: (err) => {
-      console.error("Error saving answer:", err);
+      message.error("Error saving answer:");
     },
   });
  
@@ -79,7 +79,7 @@ const QuizPreview = () => {
       message.success("Answer updated!");
     },
     onError: (err) => {
-      console.error("Error updating:", err);
+      message.error("Error updating:");
     },
   });
 

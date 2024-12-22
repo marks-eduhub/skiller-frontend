@@ -1,4 +1,3 @@
-// ProductList.tsx
 import React from 'react';
 import ProductCard from './courseCards';
 
@@ -23,7 +22,7 @@ const ProductList: React.FC<ProductListProps> = ({ courses ,containerWidth }) =>
     <div className="flex overflow-x-auto py-4">
       {courses.map((course) => (
         <div key={course.id} className="flex-none w-64 mx-4 mr-2">
-          <ProductCard course={course} containerWidth={containerWidth} />
+          <ProductCard course={course}  />
         </div>
       ))}
     </div>
