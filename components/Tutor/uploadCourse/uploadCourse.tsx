@@ -17,11 +17,13 @@ import { useMutation } from "@tanstack/react-query";
 import { topicUpload } from "@/hooks/useCourseTopics";
 import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
 import Loader from "@/components/Student/loader";
+import { useAuthContext } from "@/Context/AuthContext";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
   const { setCourseId, setTopicId } = useCourseContext();
   const { data, isLoading, error } = useFetchCategory();
+  const {user} = useAuthContext()
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
@@ -38,6 +40,11 @@ const UploadCourse = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [resourceFile, setResourceFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
+  const [duration, setDuration] = useState("");
+  const [topicDuration, setTopicDuration] = useState("");
+
+
+  const tutorName = user?.id
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
@@ -78,6 +85,8 @@ const UploadCourse = () => {
       courseRequirements,
       mediaId,
       category,
+      tutorName,
+      duration
     }: {
       courseName: string;
       courseLearning: string;
@@ -85,6 +94,8 @@ const UploadCourse = () => {
       courseRequirements: string;
       mediaId: number;
       category: string;
+      tutorName:number| undefined;
+      duration: string
     }) => {
       return await courseUpload(
         courseName,
@@ -92,7 +103,9 @@ const UploadCourse = () => {
         courseDescription,
         courseRequirements,
         mediaId,
-        category
+        category,
+        tutorName,
+        duration
       );
     },
     onSuccess: () => {
@@ -143,6 +156,8 @@ const UploadCourse = () => {
           courseRequirements,
           mediaId,
           category,
+          tutorName,
+          duration
         },
         {
           onSuccess: (data) => {
@@ -160,7 +175,8 @@ const UploadCourse = () => {
               topicdescription,
               resourceId ? [resourceId] : [],
               videoId,
-              instructions
+              instructions,
+              topicDuration
             )
               .then(() => {
                 message.success("Course and topic submitted successfully!");
@@ -199,8 +215,9 @@ const UploadCourse = () => {
 
       {currentStep === 1 && (
         <div>
+          <div className="flex gap-5">
           <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
-            <label className="sm:flex-shrink-0 my-2 sm:my-0">Course name</label>
+            <label className="sm:flex-shrink-0 my-2 sm:my-0">Course name:</label>
             <input
               type="text"
               value={courseName}
@@ -209,6 +226,18 @@ const UploadCourse = () => {
               }}
               className="border sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
+          </div>
+          <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
+            <label className="sm:flex-shrink-0 my-2 sm:my-0">Course duration:</label>
+            <input
+              type="text"
+              value={duration}
+              onChange={(e) => {
+                setDuration(e.target.value);
+              }}
+              className="border sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+            />
+          </div>
           </div>
           <div className="mb-10 mt-4">
             <label className="block text-sm font-medium mb-4 mt-6">
@@ -247,6 +276,7 @@ const UploadCourse = () => {
               className="h-40"
             />
           </div>
+        
           <div>
             <label
               htmlFor="category"
@@ -286,7 +316,7 @@ const UploadCourse = () => {
             )}
           </div>
 
-          <div className="mt-20">
+          <div className="mt-10">
             <h1>Upload Course Image</h1>
             <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
               {!uploadImage ? (
@@ -341,6 +371,8 @@ const UploadCourse = () => {
           setVideoFile={setVideoFile}
           resourceFile={resourceFile}
           setResourceFile={setResourceFile}
+          topicDuration={topicDuration}
+          setTopicDuration={setTopicDuration}
         />
       )}
       {currentStep === 3 && <Step3 />}
