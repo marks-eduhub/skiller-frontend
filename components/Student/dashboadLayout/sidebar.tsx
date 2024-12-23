@@ -10,12 +10,22 @@ import { logout } from "@/lib/helpers";
 interface SideNavProps {
   sidebarMinimized: boolean;
   toggleSidebar: () => void;
+  onNavigate: (path: string) => void; 
 }
-const SideNav = ({ sidebarMinimized, toggleSidebar }: SideNavProps) => {
-  
 
+const SideNav: React.FC<SideNavProps> = ({
+  sidebarMinimized,
+  toggleSidebar,
+  onNavigate,
+}) => {
   const router = useRouter();
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
+
+ const handleNavigation = (href: string) => {
+   if (onNavigate) {
+     onNavigate(href); 
+   }
+  };
 
   return (
     <>
@@ -45,7 +55,10 @@ const SideNav = ({ sidebarMinimized, toggleSidebar }: SideNavProps) => {
             )}
           </div>
           <div className="h-auto w-full grow bg-black">
-            <NavLinks minimized={sidebarMinimized} />
+            <NavLinks
+              minimized={sidebarMinimized}
+              onNavigate={handleNavigation}
+            />
           </div>
           <form
             onSubmit={(e) => {

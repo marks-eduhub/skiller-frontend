@@ -63,7 +63,7 @@ const Enroll = () => {
 
   const coursename = courseAttributes.coursename || "UI";
   const card = courseAttributes.card?.data?.attributes?.url || "";
-  const tutorName = courseAttributes.tutors?.data[0]?.attributes?.tutorname || "DS";
+  const tutorName = courseAttributes.tutor?.data?.attributes?.tutorname || "DS";
   const duration = courseAttributes.duration || "2 hours and 40 minutes";
   const introduction = courseAttributes?.coursedescription || "No introduction available";
   const requirements = courseAttributes?.requirements|| "No requirements available";
