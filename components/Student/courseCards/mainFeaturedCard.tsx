@@ -46,8 +46,8 @@ const FeaturedProduct: React.FC = () => {
         >
           {carouselCourses.map((course: any) => {
             const imageUrl = course?.attributes?.card?.data?.attributes.url;
-            const tutorName = course.attributes.tutor.data[0]?.attributes.tutorname;
-            // const description = course.attributes.topicname?.data[0]?.attributes.description
+
+            const tutorName = course.attributes.tutors.data[0]?.attributes.tutorname;
             const coursename = course.attributes.coursename
             const { rating, duration, level, days } = course.attributes;
 
@@ -69,7 +69,6 @@ const FeaturedProduct: React.FC = () => {
                   tutorName={tutorName}
                   duration={duration}
                   rating={rating}
-                  // description={description}
                   description={coursename}
                   level={level}
                   days={days}

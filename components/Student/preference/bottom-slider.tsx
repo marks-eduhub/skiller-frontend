@@ -19,7 +19,6 @@ const BottomSlider: React.FC<SliderProps> = ({
   const lastIndex = 2;
 
   const handleLastSlide = () => {
-    //incase user wants to skip to last slide
     if (data2.currentIndex === lastIndex - 1) {
       skipToSplash();
     } else {

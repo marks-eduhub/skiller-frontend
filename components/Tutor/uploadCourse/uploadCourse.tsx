@@ -109,10 +109,10 @@ const UploadCourse = () => {
       );
     },
     onSuccess: () => {
-      console.log("course submitted!");
+      message.success("course submitted!");
     },
     onError: (err) => {
-      console.error("Error submitting course:", err);
+      message.error("Error submitting course:");
     },
   });
 
@@ -166,7 +166,6 @@ const UploadCourse = () => {
             if (!courseId) {
               throw new Error("Course ID is missing from the response.");
             }
-            console.log("Course ID:", courseId);
 
             topicUpload(
               courseId,
@@ -184,18 +183,15 @@ const UploadCourse = () => {
                 setTopicId(topicId);
               })
               .catch((err) => {
-                console.error("Error uploading topic:", err);
                 message.error("Failed to upload topic.");
               });
           },
           onError: (err) => {
-            console.error("Error submitting course details:", err);
             message.error("Failed to upload course details.");
           },
         }
       );
     } catch (error) {
-      console.error("Error in handleSubmit:", error);
       message.error("An unexpected error occurred.");
     }
   };

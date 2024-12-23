@@ -132,7 +132,6 @@ const { mutate: removeFromWishlist } = useMutation({
       if (userId) {
         queryClient.invalidateQueries({queryKey:["recentCourses", userId]}); 
       }
-      message.success(`Added to recent.`);
     },
     onError: (err, variables, context: any) => {
       if (userId) {

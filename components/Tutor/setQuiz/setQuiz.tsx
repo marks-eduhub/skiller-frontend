@@ -128,16 +128,13 @@ const SetQuiz = () => {
       {
         onSuccess: (data) => {
           const testId = data.data.id;
-          console.log("id", testId);
           message.success("Quiz submitted successfully");
-          console.log("data", data)
           quizData.forEach(({ question, options, answers }) => {
             PostQuestion(question, options, answers, testId);
           });
           router.push("/tutor/dashboard");
         },
         onError: (err) => {
-          console.error("Error submitting test data:", err);
           message.error("Failed to submit quiz.");
         },
       }

@@ -25,29 +25,29 @@ const SideLinks = () => {
       name: "Community",
       path: "/tutor/dashboard/courses",
     },
-    {
-      src: "/tools.svg",
-      alt: "tools",
-      name: "Tools",
-      path: "/tutor/dashboard/tools",
-    },
-    {
-      src: "/performance.svg",
-      alt: "performance",
-      name: "Performance",
-      path: "/tutor/dashboard/performance",
-    },
-    {
-      src: "/communications.svg",
-      alt: "communications",
-      name: "Communications",
-    },
-    {
-      src: "/resources.svg",
-      alt: "resources",
-      name: "Resources",
-      path: "/tutor/dashboard/resources",
-    },
+    // {
+    //   src: "/tools.svg",
+    //   alt: "tools",
+    //   name: "Tools",
+    //   path: "/tutor/dashboard/tools",
+    // },
+    // {
+    //   src: "/performance.svg",
+    //   alt: "performance",
+    //   name: "Performance",
+    //   path: "/tutor/dashboard/performance",
+    // },
+    // {
+    //   src: "/communications.svg",
+    //   alt: "communications",
+    //   name: "Communications",
+    // },
+    // {
+    //   src: "/resources.svg",
+    //   alt: "resources",
+    //   name: "Resources",
+    //   path: "/tutor/dashboard/resources",
+    // },
   ];
 
   const subOptions = {

@@ -18,7 +18,6 @@ const Enroll = () => {
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
   const { data: reviews, isLoading: loadingreviews, error: reviewError} = useFetchReviews(Number(slug));
-
   if (!slug) {
     return <div>Course ID is missing</div>;
   }
