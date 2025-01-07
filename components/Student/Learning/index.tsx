@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Progress from "./progress";
-import Wishlist from "./wishlist";
 import data from "./data.json";
-import dummy from "../HomePage/dummyData.json";
 import Link from "next/link";
+import Wishlist from "../wishlist/wishlist";
 export const Learning = () => {
   const [clicked, setClicked] = useState("My Progress");
   const handleClick = (value: string) => {
@@ -38,13 +37,13 @@ export const Learning = () => {
           <h1>
             Wishlist
             <span className="bg-gray-700 ml-2 text-white px-2 py-1 rounded-xl">
-              {dummy.courses.length}
+              {2}
             </span>
-          </h1>{" "}
+          </h1>
         </div>
       </div>
 
-      {clicked == "My Progress" ? <Progress myprogress={data.myprogress}/> : <Wishlist courses={dummy.courses} />}
+      {clicked == "My Progress" ? <Progress myprogress={data.myprogress}/> : <Wishlist  />}
     </div>
   );
 };

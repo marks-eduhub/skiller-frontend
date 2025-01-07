@@ -1,16 +1,11 @@
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import {
-  MagnifyingGlassIcon,
-  TriangleDownIcon,
-  ShadowInnerIcon,
-} from "@radix-ui/react-icons";
+import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import constants from "./constants.json";
-import SkillerLogo from "@/components/ui/logo";
 import { useAuthContext } from "@/Context/AuthContext";
 import Greeting from "@/lib/greeting";
+import SkillerLogo from "@/components/ui/logo";
 import SearchBar from "./searchbar";
 
 interface NavBarProps {
@@ -29,15 +24,16 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
 
   const hiddenRoutes = ["/dashboard/profile"];
   const hideGreetingAndSearch = isMounted && hiddenRoutes.includes(pathname);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   return (
     <>
       <nav className="max-md:hidden">
-        <div
-          className={`flex items-center justify-between w-full ${
-            hideGreetingAndSearch ? "" : ""
-          }`}
-        >
+        <div className="flex items-center justify-between w-full">
           {!sidebarMinimized ? (
             <>
               {!hideGreetingAndSearch && <Greeting username={username} />}
@@ -45,7 +41,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p>
-                <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
+                <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
                   <Image
                     src="/Ellipse 1.svg"
                     alt="variant"
@@ -56,7 +52,24 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                   <Link href="/dashboard/profile" className="text-white">
                     {username}
                   </Link>
-                  <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
+                  <TriangleDownIcon
+                    className={`w-6 h-6 text-white mr-2 transform transition-transform duration-300 ${
+                      showDropdown ? 'rotate-180' : 'rotate-0'
+                    }`}
+                    onClick={handleDropdownToggle}
+                  />
+                  {showDropdown && (
+                    <div className="absolute top-full w-48  right-0 z-50 mt-4 rounded-xl bg-gray-800 shadow-lg p-2">
+                      <div className="flex flex-col">
+                        <Link href="/auth">
+                          <p className="text-white p-2">Sign Out</p>
+                        </Link>
+                        <Link href="/tutor/dashboard" className="text-white p-2">
+                          <p>Switch to tutor profile</p>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </>
@@ -82,7 +95,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p>
-                <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer">
+                <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
                   <Image
                     src="/Ellipse 1.svg"
                     alt="variant"
@@ -93,7 +106,24 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                   <Link href="/dashboard/profile" className="text-white">
                     {username}
                   </Link>
-                  <TriangleDownIcon className="w-6 h-6 text-white mr-2" />
+                  <TriangleDownIcon
+                    className={`w-6 h-6 text-white mr-2 transform transition-transform duration-300 ${
+                      showDropdown ? 'rotate-180' : 'rotate-0'
+                    }`}
+                    onClick={handleDropdownToggle}
+                  />
+                  {showDropdown && (
+                    <div className="absolute  z-50 mt-2 rounded-md bg-gray-800 shadow-lg p-2">
+                      <div className="flex flex-col">
+                        <Link href="/auth">
+                          <p className="text-white p-2">Sign Out</p>
+                        </Link>
+                        <Link href="/tutor/dashboard" className="text-white p-2">
+                          <p>Switch to tutor dashboard</p>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

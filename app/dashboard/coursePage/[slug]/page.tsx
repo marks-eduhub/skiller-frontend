@@ -30,16 +30,14 @@ if (!filteredCourses || filteredCourses.length === 0) {
           {categoryTitle} 
         </h1>
 
-        <div className="rounded-lg relative overflow-hidden justify-center items-center">
-          <div className="grid sm:grid-cols-3 pl-4 py-3 mt-2">
+          <div className="grid sm:grid-cols-3 pl-4 py-3 mt-2 mb-4">
             {filteredCourses?.map((course: any) => (
-              <div key={course.id} className="pr-4">
+              <div key={course.id} className="pr-4 mb-6">
                 <ProductCard course={course}  />
               </div>
             ))}
           </div>
         </div>
-      </div>
     </>
   );
 };

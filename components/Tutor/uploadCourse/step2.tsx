@@ -27,6 +27,7 @@ interface StepProps{
   setResourceFile: Dispatch<SetStateAction<File | null>>
   topicduration: string;
   setTopicduration: Dispatch<SetStateAction<string>>;
+  
 }
 const Step2:React.FC<StepProps> = ({topicname,
   setTopicname,
@@ -165,6 +166,7 @@ const Step2:React.FC<StepProps> = ({topicname,
           </div>
           {expandedIndex === index && (
              <div className="p-4 w-full h-auto  bg-gray-100 rounded-md overflow-hidden break-words">
+              <div className="flex gap-5">
              <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
               <div className="flex items-center justify-between w-full">
                <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
@@ -182,6 +184,16 @@ const Step2:React.FC<StepProps> = ({topicname,
                  className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
                />
                </div>
+             </div>
+             <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
+               <label className="flex-shrink-0 sm:mb-0 mb-2">Topic duration</label>
+               <input
+                 type="text"
+                 value={topicDuration}
+                 onChange={(e) => setTopicDuration(e.target.value)}
+                 className="border sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+               />
+             </div>
              </div>
              <div className="sm:mb-10 mt-4 ">
                <label className="block text-sm font-medium mb-4 mt-6">
