@@ -54,7 +54,7 @@ const Courseview = () => {
   return (
     <div className="p-6 w-full">
       <TutorNav />
-      <h1 className="font-semibold text-[25px]">Courses</h1>
+      <h1 className="font-semibold text-[25px]">Courses by {username} Tutor</h1>
 
       <div className="mt-10">
         {coursedata?.length === 0 ? (
