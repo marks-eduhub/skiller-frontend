@@ -25,6 +25,8 @@ interface StepProps{
   setVideoFile: Dispatch<SetStateAction<File | null>>
   resourceFile:File | null
   setResourceFile: Dispatch<SetStateAction<File | null>>
+  topicduration: string;
+  setTopicduration: Dispatch<SetStateAction<string>>;
 }
 const Step2:React.FC<StepProps> = ({topicname,
   setTopicname,
@@ -39,7 +41,11 @@ const Step2:React.FC<StepProps> = ({topicname,
   setVideoFile,
   resourceFile,
   setResourceFile,
-  setTopicresource,}) => {
+  setTopicresource,
+  topicduration,
+  setTopicduration
+
+}) => {
   const [topics, setTopics] = useState<string[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,13 +166,22 @@ const Step2:React.FC<StepProps> = ({topicname,
           {expandedIndex === index && (
              <div className="p-4 w-full h-auto  bg-gray-100 rounded-md overflow-hidden break-words">
              <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
+              <div className="flex items-center justify-between w-full">
                <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
                <input
                  type="text"
                  value={topicname}
                  onChange={(e) => setTopicname(e.target.value)}
-                 className="border sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+                 className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
                />
+               <label className="flex-shrink-0 sm:mb-0 mb-2 ml-[50px]">Topic duration</label>
+               <input
+                 type="text"
+                 value={topicduration}
+                 onChange={(e) => setTopicduration(e.target.value)}
+                 className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
+               />
+               </div>
              </div>
              <div className="sm:mb-10 mt-4 ">
                <label className="block text-sm font-medium mb-4 mt-6">

@@ -17,6 +17,10 @@ import { useMutation } from "@tanstack/react-query";
 import { topicUpload } from "@/hooks/useCourseTopics";
 import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
 import Loader from "@/components/Student/loader";
+import { dotPulse } from "ldrs";
+
+dotPulse.register();
+
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
@@ -34,10 +38,12 @@ const UploadCourse = () => {
   const [topicdescription, setTopicdescription] = useState("");
   const [topicexpectation, setTopicexpectation] = useState("");
   const [topicresource, setTopicresource] = useState("");
+  const [topicduration, setTopicduration] = useState("");
   const [instructions, setInstructions] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [resourceFile, setResourceFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
@@ -106,7 +112,7 @@ const UploadCourse = () => {
   const handleSubmit = async () => {
     try {
       if (!selectedImage) {
-        message.error("Please select a course image  to upload.");
+        message.error("Please select a course image to upload.");
         return;
       }
 
@@ -149,7 +155,7 @@ const UploadCourse = () => {
             const courseId = data?.data?.id;
             setCourseId(courseId);
             if (!courseId) {
-              throw new Error("Course ID is missing from the response.");
+              throw new Error("An error has occurred. Try again later!");
             }
 
             topicUpload(
@@ -159,7 +165,8 @@ const UploadCourse = () => {
               topicdescription,
               resourceId ? [resourceId] : [],
               videoId,
-              instructions
+              instructions,
+              topicduration,
             )
               .then(() => {
                 message.success("Course and topic submitted successfully!");
@@ -179,6 +186,20 @@ const UploadCourse = () => {
       message.error("An unexpected error occurred.");
     }
   };
+  const handleClick = async () => {
+    if (currentStep === 3) {
+      setIsUploading(true); 
+      try {
+        await handleSubmit(); 
+      } finally {
+        setIsUploading(false); 
+      }
+    } else {
+      handleNextStep();
+    }
+  };
+
+ 
 
   return (
     <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
@@ -251,7 +272,7 @@ const UploadCourse = () => {
               Course Category
             </label>
             {isLoading ? (
-              <Loader/>
+              <Loader />
             ) : error ? (
               <p className="text-red-500">Failed to load categories</p>
             ) : (
@@ -337,6 +358,8 @@ const UploadCourse = () => {
           setVideoFile={setVideoFile}
           resourceFile={resourceFile}
           setResourceFile={setResourceFile}
+          topicduration={topicduration}
+          setTopicduration={setTopicduration}
         />
       )}
       {currentStep === 3 && <Step3 />}
@@ -350,11 +373,21 @@ const UploadCourse = () => {
             Back
           </button>
         )}
+     
         <button
           className="bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white"
-          onClick={currentStep === 3 ? handleSubmit : handleNextStep}
+          onClick={handleClick}
+          disabled={isUploading}
         >
-          {currentStep === 3 ? "Upload" : "Continue"}
+          {isUploading ? (
+            <div>
+              <l-dot-pulse size="20" speed="1.5" color="white" />
+            </div>
+          ) : currentStep === 3 ? (
+            "Upload"
+          ) : (
+            "Continue"
+          )}
         </button>
       </div>
     </div>

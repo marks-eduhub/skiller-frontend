@@ -9,7 +9,7 @@ export const courseUpload = async (
   coursedescription: string,
   requirements: string,
   cardId: number,
-  categories:string
+  categories:string,
 ) => {
   try {
     const turndownService = new TurndownService();

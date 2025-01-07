@@ -1,7 +1,6 @@
 import React, { ComponentType } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "../../Context/AuthContext";
-import Loader from "../Student/loader";
 
 const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
   const WithAuth: React.FC<P> = (props) => {

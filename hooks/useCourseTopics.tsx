@@ -25,7 +25,8 @@ export const topicUpload = async (
   topicdescription: string,
   topicResourcesId: number[] | File[],
   topicVideoId: number | null,
-  instructions:string
+  instructions:string,
+  duration : string
 ) => {
   try {
     const turndownService = new TurndownService();
@@ -41,7 +42,8 @@ export const topicUpload = async (
         topicdescription: markdownDescription,
         topicResources: topicResourcesId,
         topicVideo: topicVideoId, 
-        resourceInstructions: markdownInstructions
+        resourceInstructions: markdownInstructions,
+        duration
 
       },
     });
