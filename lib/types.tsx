@@ -6,6 +6,21 @@ export interface Child {
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 
 
+export  interface Reply {
+  id: number;
+  attributes: {
+    createdAt: string;
+    replyText: string;
+    parentComment: number;
+    user: {
+      data: {
+        attributes: {
+          username: string;
+        };
+      };
+    };
+  };
+};
 export interface Option {
   id: number; 
   label: string; 
