@@ -10,6 +10,7 @@ export const courseUpload = async (
   requirements: string,
   cardId: number,
   categories:string,
+
   tutor: number | undefined,
   duration: string
 ) => {

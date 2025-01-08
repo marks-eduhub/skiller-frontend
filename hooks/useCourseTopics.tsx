@@ -26,7 +26,8 @@ export const topicUpload = async (
   topicResourcesId: number[] | File[],
   topicVideoId: number | null,
   instructions:string,
-  duration:string
+  duration : string
+
 ) => {
   try {
     const turndownService = new TurndownService();
@@ -55,3 +56,21 @@ export const topicUpload = async (
   }
 };
 
+const fetchAllResults = async (userId: number) => {
+  const response = await api.get(
+    `/api/test-results?filters[user][id][$eq]=${userId}&populate=user_question_results,topic,test,user`
+  );
+  return response.data;
+};
+
+export const useFetchAllResults = (userId: number) => {
+  return useQuery({
+    queryKey: ["testresults_all", userId], 
+    queryFn: () => fetchAllResults(userId),
+
+    meta: {
+      errorMessage: "Failed to fetch test results",
+    },
+    enabled: !!userId,
+  });
+};
