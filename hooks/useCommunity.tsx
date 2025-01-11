@@ -1,6 +1,6 @@
 import { useAuthContext } from "@/Context/AuthContext";
 import api from "@/lib/axios";
-import { Searchdata } from "@/lib/types";
+
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 

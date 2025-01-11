@@ -53,6 +53,7 @@ const QuestionModal = () => {
       message.success("Question posted successfully!");
     },
     onSettled: () => {
+      //@ts-ignore
       queryClient.invalidateQueries(["communityDetails"]);
     },
   });

@@ -226,6 +226,7 @@ const Community = () => {
       message.success("Response posted successfully!");
     },
     onSettled: (data, error, variables) => {
+      //@ts-ignore
       queryClient.invalidateQueries([
         "question_responses",
         variables.questionId,
@@ -274,7 +275,7 @@ const Community = () => {
       userId,
     }: {
       responseId: number;
-      userId: number;
+      userId: number | undefined;
     }) => {
       if (!userId) throw new Error("User not logged in");
       const response = await removeLiked(responseId, userId);
@@ -315,7 +316,7 @@ const Community = () => {
       userId,
     }: {
       responseId: number;
-      userId: number;
+      userId: number | undefined;
     }) => {
       if (!userId) throw new Error("User not logged in");
       const response = await addLiked(responseId, userId);
@@ -351,7 +352,7 @@ const Community = () => {
   const handleToggleLike = (
     responseId: number,
     isLiked: boolean,
-    userId: number
+    userId: number | undefined
   ) => {
     setLikeCounts((prevLikeCounts) => ({
       ...prevLikeCounts,

@@ -185,15 +185,15 @@ const Step2:React.FC<StepProps> = ({topicname,
                />
                </div>
              </div>
-             <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
+             {/* <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
                <label className="flex-shrink-0 sm:mb-0 mb-2">Topic duration</label>
                <input
                  type="text"
-                 value={topicDuration}
-                 onChange={(e) => setTopicDuration(e.target.value)}
+                 value={topicduration}
+                 onChange={(e) => setTopicduration(e.target.value)}
                  className="border sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
                />
-             </div>
+             </div> */}
              </div>
              <div className="sm:mb-10 mt-4 ">
                <label className="block text-sm font-medium mb-4 mt-6">

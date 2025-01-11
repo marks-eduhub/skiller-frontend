@@ -22,6 +22,7 @@ import { dotPulse } from "ldrs";
 dotPulse.register();
 
 import { useAuthContext } from "@/Context/AuthContext";
+
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const UploadCourse = () => {
