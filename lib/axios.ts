@@ -1,8 +1,10 @@
 import { message } from 'antd';
 import axios from 'axios';
 
+const  baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+
 const api = axios.create({
-    baseURL: 'http://localhost:1337',  
+    baseURL: baseUrl,  
     headers: {
       'Content-Type': 'application/json',
     },
@@ -20,7 +22,6 @@ const api = axios.create({
       if (error.response && error.response.status === 403) {
         message.error("Your session has expired, you need to login again for data access");
         localStorage.removeItem('access_token');
-        localStorage.removeItem('amr_user_roles');
         window.location.href = '/auth'; 
       }
       return Promise.reject(error);
