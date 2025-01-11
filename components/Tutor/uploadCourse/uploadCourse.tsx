@@ -17,13 +17,12 @@ import { useMutation } from "@tanstack/react-query";
 import { topicUpload } from "@/hooks/useCourseTopics";
 import { CourseProvider, useCourseContext } from "@/lib/CourseContext";
 import Loader from "@/components/Student/loader";
-import { dotPulse } from "ldrs";
 
-dotPulse.register();
 
 import { useAuthContext } from "@/Context/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const DotPulseWrapper = dynamic(() => import('@/hooks/pulse'), { ssr: false });
 
 const UploadCourse = () => {
   const { setCourseId, setTopicId } = useCourseContext();
@@ -413,7 +412,8 @@ const UploadCourse = () => {
         >
           {isUploading ? (
             <div>
-              <l-dot-pulse size="20" speed="1.5" color="white" />
+              {/* <l-dot-pulse size="20" speed="1.5" color="white" /> */}
+              <DotPulseWrapper size="20" speed="1.5" color="white" />
             </div>
           ) : currentStep === 3 ? (
             "Upload"
