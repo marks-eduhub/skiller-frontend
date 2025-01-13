@@ -25,13 +25,14 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import QuestionModal from "./questionModal";
 import { useDebounce } from "use-debounce";
 
+
+
 const Community = () => {
   const { user } = useAuthContext();
-  const userId = user?.id;
+  const userId = user?.id ?? 0;
   const { data, isLoading, error } = useFetchCommunityDetails();
   const questions = data?.data;
   const queryClient = useQueryClient();
-  const { data: liked,isLoading: likedLoading,error: errorLiked,} = useLikedResponses(Number(userId));
   const { data: category,isLoading: categoryLoading,error: categoryError} = useFetchCategory();
   const categoryData = category?.data;
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,6 @@ const Community = () => {
   const DEFAULT_RESPONSES_LIMIT = 3;
   const [likedResponsesMap, setLikedResponsesMap] = useState<{[responseId: number]: boolean;}>({});
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
-  const [responseContent, setResponseContent] = useState("");
   const [selectedResult, setSelectedResult] = useState(""); 
   const { data: searchResults, isLoading: isSearchLoading, error: searchError,} = useFetchSearchCommuity(searchQuery);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -60,7 +60,6 @@ const Community = () => {
   
   
   const{data:likedCount} = useFetchLikeCount()
-  console.log("Like Counts:", likedCount);
   useEffect(() => {
     if (likedCount) {
       const initialLikeCounts = likedCount?.data.reduce((acc:any, item:any) => {
@@ -75,7 +74,6 @@ const Community = () => {
     }
   }, [likedCount]);
 
-     console.log("Like Counts Object:", likeCounts); 
 
   
   useEffect(() => {
@@ -230,43 +228,42 @@ const Community = () => {
         "question_responses",
         variables.questionId,
       ]);
+      
     },
   });
 
   const handleSubmitResponse = (questionId: number) => {
-    console.log("Response Content: ", responseContent);
-
-    if (!responseContent.trim()) {
+    const responseText = responsesContentMap[questionId] || ""; 
+  
+    if (!responseText.trim()) {
       message.error("Please enter a response to submit!");
       return;
     }
-
+  
     if (!questionId) {
-      console.error("Missing questionId!");
       message.error("Something went wrong. Please try again later.");
       return;
     }
-
-    const responderName = user?.username || "Guest";
-
-    console.log("Posting response with: ", {
-      responseText: responseContent,
-      responderName,
-      questionId,
-    });
-
+  
+    const responderName = user?.username || "Anonymous";
+  
     postResponseMutation({
-      responseText: responseContent,
+      responseText,
       responderName,
       questionId,
     });
-
-    setResponseContent("");
+  
+    setResponsesContentMap((prev) => ({
+      ...prev,
+      [questionId]: "",
+    }));
+  
     setShowAllResponsesMap((prev) => ({
       ...prev,
       [questionId]: true,
     }));
   };
+  
 
   const { mutate: removeFromLiked } = useMutation({
     mutationFn: async ({
@@ -309,7 +306,7 @@ const Community = () => {
     },
   });
 
-  const { mutate: addToWishlist } = useMutation({
+  const { mutate: addToLiked } = useMutation({
     mutationFn: async ({
       responseId,
       userId,
@@ -365,7 +362,7 @@ const Community = () => {
     if (isLiked) {
       removeFromLiked({ responseId, userId }); 
     } else {
-      addToWishlist({ responseId, userId }); 
+      addToLiked({ responseId, userId }); 
     }
   };
   
@@ -472,12 +469,12 @@ const Community = () => {
         const { Question, nameofquestioner, id } = q.attributes;
         const questionId = q.id;
         const responses = responsesMap[questionId] || [];
-
+        const plainQuestion = Question.replace(/(\*\*|\_)/g, ""); 
         return (
           <div key={index} className="flex flex-col border mb-5 rounded-lg py-6 border-black">
             <div className="flex flex-col px-4 border-b pb-2 border-gray-400">
               <h1 className="font-semibold">
-                Question: <span className="font-normal">{Question}</span>
+                Question: <span className="font-normal">{plainQuestion}</span>
               </h1>
               <p className="text-gray-500">Asked by: {nameofquestioner}</p>
             </div>
@@ -492,7 +489,6 @@ const Community = () => {
                   (response: any, resIndex: number) => {
                     const isLiked = likedResponsesMap[response.id] || false;
                     const responseId = response.id;
-                    console.log("Rendering Response ID2:", responseId); 
                     const likeCount = (likeCounts ? likeCounts[responseId] : 0 ) || 0;
 
 

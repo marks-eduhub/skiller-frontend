@@ -117,14 +117,14 @@ export default function LogIn() {
         <hr className="border-[1px] border-black flex-grow" />
       </div>
 
-      <div className="relative w-[100%] flex justify-center mt-[2rem] cursor-pointer">
+      {/* <div className="relative w-[100%] flex justify-center mt-[2rem] cursor-pointer">
         <Image
           src="/logos/google.png"
           alt={"google"}
           width={130}
           height={130}
         />
-      </div>
+      </div> */}
       <div className="flex sm:hidden items-center  justify-center w-full  mt-10">
         <h1>
           Dont have an account?{" "}

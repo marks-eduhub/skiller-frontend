@@ -38,9 +38,9 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
             <>
               {!hideGreetingAndSearch && <Greeting username={username} />}
               <div className="flex items-center gap-10 ml-auto">
-                <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
-                </p>
+                </p> */}
                 <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
                   <Image
                     src="/Ellipse 1.svg"
@@ -92,9 +92,9 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 <SearchBar />
               </div>
               <div className="flex items-center gap-10">
-                <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
-                </p>
+                </p> */}
                 <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
                   <Image
                     src="/Ellipse 1.svg"

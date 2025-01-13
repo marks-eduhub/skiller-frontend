@@ -1,6 +1,5 @@
 import { useAuthContext } from "@/Context/AuthContext";
 import api from "@/lib/axios";
-import { Searchdata } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 
@@ -51,6 +50,7 @@ export const useFetchQuestionResponses = (questionId: number) => {
     },
   });
 };
+
 
 export const postQuestion = async (
   Question: string,
@@ -109,21 +109,7 @@ export const useFetchSearchCommuity = (searchTerm: string) => {
   });
 };
 
-// const fetchLikedResponses = async (userId:number) => {
-//   const response = await api.get(
-//     `/api/response-likes?filters[user][id][$eq]${userId}&populate[community_response][populate]=*`
-//   );
-//   return response.data;
-// };
-// export const useLikedResponses = (userId:number) => {
-//   return useQuery<{ data: any }, Error>({
-//     queryFn: () => fetchLikedResponses(userId), 
-//     queryKey: ["likedResponses", userId],
-//     meta: {
-//       errorMessage: "Failed to fetch likes",
-//     },
-//   });
-// };
+
 
 const fetchLikedResponses = async (userId: number) => {
   const response = await api.get(

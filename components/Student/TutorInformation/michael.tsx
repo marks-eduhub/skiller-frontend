@@ -8,6 +8,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 const MichaelKizito = () => {
   const { data, isLoading, error } = useFetchCourses();
+  console.log("hello", data)
 
   if (isLoading) {
     return (
@@ -39,17 +40,13 @@ const MichaelKizito = () => {
   const kizitoCourses: any = [];
 
   data?.data.forEach((course: any) => {
-    const tutors = course.attributes.tutors.data;
-
-    const isKizitoTutor = tutors.some((tutor: any) => {
-      return tutor.attributes.tutorname === "Michael Kizito"; 
-    });
-
-    if (isKizitoTutor) {
+    const tutor = course.attributes.tutor?.data?.attributes;
+  
+    if (tutor && tutor.tutorname === "Michael Kizito") {
       kizitoCourses.push(course);
     }
   });
-
+  
   const images = [
     { src: "/twitter.svg", alt: "sms" },
     { src: "/linkedln.svg", alt: "sms" },

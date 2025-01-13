@@ -12,7 +12,7 @@ export const Learning = () => {
   return (
     <div className="sm:pl-0">
       <Link href="/dashboard">
-      <h1 className="text-end mb-2 hover:text-blue-600 underline">See more categories</h1>
+      {/* <h1 className="text-end mb-2 hover:text-blue-600 underline">See more categories</h1> */}
       </Link>
       <div className="flex gap-3 items-center border-t-2 border-t-gray-300  w-full ">
         <div

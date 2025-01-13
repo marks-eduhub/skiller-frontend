@@ -38,16 +38,13 @@ const DraguleSwaib = () => {
   const draguleCourses: any = [];
 
   data?.data.forEach((course: any) => {
-    const tutors = course.attributes.tutors.data;
-
-    const isDraguleTutor = tutors.some((tutor: any) => {
-      return tutor.attributes.tutorname === "Dragule Swaib"; 
-    });
-
-    if (isDraguleTutor) {
+    const tutor = course.attributes.tutor?.data?.attributes;
+  
+    if (tutor && tutor.tutorname === "Dragule Swaib") {
       draguleCourses.push(course);
     }
   });
+  
  
   const images = [
     { src: "/twitter.svg", alt: "sms" },
