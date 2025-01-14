@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useMemo,Dispatch, SetStateAction  } from "react";
 import Image from "next/image";
 import { GrCloudUpload } from "react-icons/gr";
-import { RxSwitch } from "react-icons/rx";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import CustomModal from "../topicUpload/modal";
@@ -189,8 +188,8 @@ const Step2:React.FC<StepProps> = ({topicname,
                <label className="flex-shrink-0 sm:mb-0 mb-2">Topic duration</label>
                <input
                  type="text"
-                 value={topicDuration}
-                 onChange={(e) => setTopicDuration(e.target.value)}
+                 value={topicduration}
+                 onChange={(e) => setTopicduration(e.target.value)}
                  className="border sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
                />
              </div>
