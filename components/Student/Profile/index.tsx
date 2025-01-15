@@ -11,12 +11,14 @@ import { uploadMedia } from "@/hooks/useCourseUpload";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ProfilePage: React.FC = () => {
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
   const [toggle, setToggle] = useState(false);
-  const [bio, setBio] = useState("");
+  const [Biography, setBiography] = useState("");
   const [role, setRole] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [uploadImage, setUploadImage] = useState<string | null>(null);
+
   const [socialLinks, setSocialLinks] = useState({
     email: "",
     facebook: "",
@@ -25,36 +27,34 @@ const ProfilePage: React.FC = () => {
   });
 
   const handleSuccess = () => {
-    console.log("Profile saved successfully!");
     message.success("Profile saved successfully!");
   };
 
   const handleError = () => {
-    console.log("Failed to save profile.");
     message.error("Failed to save changes.");
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     console.log("Selected image file:", file);
+
     if (file) {
+      setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string);
-        console.log("Image set to state:", reader.result);
+        setUploadImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+    } else {
+      message.error("No course image selected. Please try again.");
     }
   };
-
   const handleRemoveImage = () => {
-    console.log("Image removed.");
     setImage(null);
   };
 
   const handleToggleChange = () => {
     setToggle(!toggle);
-    console.log("Toggle switched. Current state:", !toggle);
   };
 
   const { mutate: postTutorProfile } = useMutation({
@@ -64,6 +64,7 @@ const ProfilePage: React.FC = () => {
       role,
       lastName,
       firstName,
+      Biography,
       socialLinks,
     }: {
       tutorname: string;
@@ -71,6 +72,7 @@ const ProfilePage: React.FC = () => {
       role: string;
       lastName: string;
       firstName: string;
+      Biography: string;
       socialLinks: {
         email: string;
         facebook: string;
@@ -78,20 +80,13 @@ const ProfilePage: React.FC = () => {
         linkedin: string;
       };
     }) => {
-      console.log("Posting tutor profile with data:", {
-        tutorname,
-        profilepicture,
-        role,
-        lastName,
-        firstName,
-        socialLinks,
-      });
       return await addTutor(
         tutorname,
         profilepicture,
         role,
         lastName,
         firstName,
+        Biography,
         socialLinks
       );
     },
@@ -118,13 +113,6 @@ const ProfilePage: React.FC = () => {
         linkedin: string;
       };
     }) => {
-      console.log("Posting student profile with data:", {
-        studentname,
-        profilepicture,
-        lastName,
-        firstName,
-        socialLinks,
-      });
       return await addStudent(
         studentname,
         profilepicture,
@@ -151,7 +139,8 @@ const ProfilePage: React.FC = () => {
         profilePictureId = await uploadMedia(image);
         console.log("Profile picture uploaded with ID:", profilePictureId);
       } catch (error) {
-        console.error("Error uploading image:", error);
+        message.error("Error uploading image");
+        console.log("Error uploading profile picture:", error);
         return;
       }
     }
@@ -163,6 +152,7 @@ const ProfilePage: React.FC = () => {
         role,
         lastName,
         firstName,
+        Biography,
         socialLinks: updatedSocialLinks,
       });
     } else {
@@ -174,6 +164,19 @@ const ProfilePage: React.FC = () => {
         socialLinks: updatedSocialLinks,
       });
     }
+    setImage(null);
+    setUploadImage(null);
+    setToggle(false);
+    setBiography("");
+    setSocialLinks({
+      email: "",
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+    });
+    setFirstName("");
+    setLastName("");
+    setRole("");
   };
 
   return (
@@ -188,7 +191,7 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-center my-3">
           {image ? (
             <Image
-              src={image}
+              src={uploadImage || "/Ellipse 445.webp"}
               alt="Profile"
               width={120}
               height={120}
@@ -246,7 +249,6 @@ const ProfilePage: React.FC = () => {
                 id="first-name"
                 value={firstName}
                 onChange={(e) => {
-                  console.log("First name changed:", e.target.value);
                   setFirstName(e.target.value);
                 }}
                 placeholder="Enter your first name"
@@ -267,7 +269,6 @@ const ProfilePage: React.FC = () => {
                 id="last-name"
                 value={lastName}
                 onChange={(e) => {
-                  console.log("Last name changed:", e.target.value);
                   setLastName(e.target.value);
                 }}
                 placeholder="Enter your last name"
@@ -299,32 +300,44 @@ const ProfilePage: React.FC = () => {
 
         {toggle && (
           <div className="flex flex-col">
-            <h1 className="text-xl font-semibold  text-center flex justify-center mb-4">
-              Set up a Tutor Profile
-            </h1>
             <div className="sm:mb-10 mt-4 ">
               <div className="flex items-center  w-full mb-5">
-                <label className="flex-shrink-0 sm:mb-0 mb-2 mr-5">
-                  Tutor role
-                </label>
+                <label className="block text-sm mb-1 mr-2">Tutor role</label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => {
-                    console.log("Role changed:", e.target.value);
                     setRole(e.target.value);
                   }}
-                  className="border border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
+                  className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
                 />
               </div>
-              <label className="block font-medium mb-4 ">
+
+              <label className="block text-sm mb-4 ">
                 Enter your biography
               </label>
+
               <div>
                 <ReactQuill
                   placeholder="Write content here"
-                  value={bio}
-                  onChange={setBio}
+                  value={Biography}
+                  onChange={setBiography}
+                  theme="snow"
+                  className="bg-white h-[200px] mb-5"
+                />
+              </div>
+
+              <div className="mt-20 ">
+                <span>
+                  This screenshot shows how you can switch between your student
+                  and tutor profile
+                </span>
+                <Image
+                  src="/tutorprofile.png"
+                  alt="Tutor Profile Screenshot"
+                  width={300} 
+                  height={200}
+                  className="rounded-lg"
                 />
               </div>
             </div>

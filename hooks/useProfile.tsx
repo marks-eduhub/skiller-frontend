@@ -1,4 +1,6 @@
 import api from "@/lib/axios";
+import TurndownService from "turndown";
+
 
 export const addTutor = async (
   tutorname: string,
@@ -6,16 +8,21 @@ export const addTutor = async (
   role: string,
   lastName: string,
   firstName: string,
+  Biography:string,
   socialLinks: { email: string; facebook: string; twitter: string; linkedin: string }
 ) => {
+  const turndownService = new TurndownService();
+  const markdownBio = turndownService.turndown(Biography);
   try {
     const response = await api.post("/api/tutors", {
+      
       data: {
         tutorname,
         profilepicture,
         role,
         lastName,
         firstName,
+        Biography: markdownBio,
         socialLinks,
       },
     });
