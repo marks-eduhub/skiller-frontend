@@ -1,4 +1,3 @@
-import { createContext } from "react";
 export interface Child {
   text: string;
   type: string; 
@@ -173,10 +172,12 @@ export interface Tutor {
     };
     role: string;
     type: 'tutor';
-    slug?: string;
+    slug: string;
     createdAt: string;  
     updatedAt: string;  
     publishedAt: string; 
+    Qualifications:string
+    Biography: string;
   };
   id: number;
 

@@ -88,7 +88,8 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="relative">
-      <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer my-5">
+      <div className="flex items-center rounded-lg shadow bg-white p-3 cursor-pointer my-5 sm:col-span-10">
+
         <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
         <input
           type="text"

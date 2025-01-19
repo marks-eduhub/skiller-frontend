@@ -15,6 +15,7 @@ const ProfilePage: React.FC = () => {
   const [toggle, setToggle] = useState(false);
   const [Biography, setBiography] = useState("");
   const [role, setRole] = useState("");
+  const [Qualifications, setQualifications] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [uploadImage, setUploadImage] = useState<string | null>(null);
@@ -65,6 +66,7 @@ const ProfilePage: React.FC = () => {
       lastName,
       firstName,
       Biography,
+      Qualifications,
       socialLinks,
     }: {
       tutorname: string;
@@ -73,6 +75,7 @@ const ProfilePage: React.FC = () => {
       lastName: string;
       firstName: string;
       Biography: string;
+      Qualifications: string;
       socialLinks: {
         email: string;
         facebook: string;
@@ -87,6 +90,7 @@ const ProfilePage: React.FC = () => {
         lastName,
         firstName,
         Biography,
+        Qualifications,
         socialLinks
       );
     },
@@ -140,7 +144,6 @@ const ProfilePage: React.FC = () => {
         console.log("Profile picture uploaded with ID:", profilePictureId);
       } catch (error) {
         message.error("Error uploading image");
-        console.log("Error uploading profile picture:", error);
         return;
       }
     }
@@ -153,6 +156,7 @@ const ProfilePage: React.FC = () => {
         lastName,
         firstName,
         Biography,
+        Qualifications,
         socialLinks: updatedSocialLinks,
       });
     } else {
@@ -177,6 +181,7 @@ const ProfilePage: React.FC = () => {
     setFirstName("");
     setLastName("");
     setRole("");
+    setQualifications("");
   };
 
   return (
@@ -302,12 +307,24 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col">
             <div className="sm:mb-10 mt-4 ">
               <div className="flex items-center  w-full mb-5">
-                <label className="block text-sm mb-1 mr-2">Tutor role</label>
+                <label className="block text-sm mb-1 mr-16">Tutor role</label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => {
                     setRole(e.target.value);
+                  }}
+                  className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
+                />
+              </div>
+
+              <div className="flex items-center  w-full my-5">
+                <label className="block text-sm mb-1 mr-2">Tutor qualifications</label>
+                <input
+                  type="text"
+                  value={Qualifications}
+                  onChange={(e) => {
+                    setQualifications(e.target.value);
                   }}
                   className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
                 />

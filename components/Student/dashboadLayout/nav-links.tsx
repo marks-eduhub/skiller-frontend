@@ -15,9 +15,10 @@ const communityLink = {
 const subscriptionLinks = [
   { name: "Michael Kizito", slug: "michaelkizito", icon: AiOutlineUser },
   { name: "Dragule Swaib", slug: "draguleswaib", icon: AiOutlineUser },
+  { name: "Wade John", slug: "wadejohn", icon: AiOutlineUser },
 ];
 const subscriptionOptions = {
-  subscriptionLinks: ["Dragule Swaib", "Michael Kizito"],
+  subscriptionLinks: ["Dragule Swaib", "Michael Kizito", "Wade John"]
 };
 
 export default function NavLinks({

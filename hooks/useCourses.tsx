@@ -84,3 +84,19 @@ export const useFetchTutorCourses = (userId: number) => {
     },
   });
 };
+
+
+const fetchTutorSlug = async (slug:string) => {
+  const response = await api.get(`api/tutors?filters[slug][$eq]=${slug}&populate=profilepicture`);
+  return response.data;
+};
+
+export const useFetchTutorSlug = (slug:string) => {
+  return useQuery<{ data: Tutor[] }, Error>({
+    queryFn: () => fetchTutorSlug(slug), 
+    queryKey: ["tutor_slug", slug],
+    meta: {
+      errorMessage: "Failed to fetch tutor",
+    },
+  });
+};

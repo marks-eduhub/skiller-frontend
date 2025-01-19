@@ -9,6 +9,7 @@ export const addTutor = async (
   lastName: string,
   firstName: string,
   Biography:string,
+  Qualifications:string,
   socialLinks: { email: string; facebook: string; twitter: string; linkedin: string }
 ) => {
   const turndownService = new TurndownService();
@@ -23,6 +24,7 @@ export const addTutor = async (
         lastName,
         firstName,
         Biography: markdownBio,
+        Qualifications,
         socialLinks,
       },
     });
