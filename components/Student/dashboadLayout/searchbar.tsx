@@ -117,7 +117,7 @@ const SearchBar: React.FC = () => {
               <div key={result.id} className="p-3 cursor-pointer border-b border-gray-200">
                 <Link
                   href={result.type === "tutor" 
-                    ? `/dashboard/subscriptions/${result.slug}`
+                    ? `/dashboard/subscriptions/${result.id}`
                     : `/dashboard/overview/${result.id}`}
                   onClick={() => setShowDropdown(false)}
                 >

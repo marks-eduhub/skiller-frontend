@@ -68,9 +68,11 @@ const Tutorspage = () => {
           const relativeUrl =
             tutor.attributes.profilepicture?.data?.attributes?.url;
 
+
           const profilePictureUrl = relativeUrl
             ? `${api.defaults.baseURL}${relativeUrl}`
             : null;
+
 
           return (
             <div

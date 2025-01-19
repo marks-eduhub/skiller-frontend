@@ -163,6 +163,7 @@ useEffect(() => {
       message.error("Failed to post comment.");
     },
     onSettled: () => {
+      //@ts-ignore
       queryClient.invalidateQueries(["comments", topicId]);
     },
   });
@@ -210,6 +211,7 @@ useEffect(() => {
       message.error("Failed to post reply.");
     },
     onSettled: () => {
+      //@ts-ignore
       queryClient.invalidateQueries(["comment_replies", commentId]);
     },
   });
@@ -238,6 +240,7 @@ useEffect(() => {
       message.error("Failed to like comment.");
     },
     onSettled: () => {
+      //@ts-ignore
       queryClient.invalidateQueries(["comment_likes", userId]);
     },
   });
@@ -258,6 +261,7 @@ useEffect(() => {
       message.error("Failed to unlike comment.");
     },
     onSettled: () => {
+      //@ts-ignore
       queryClient.invalidateQueries(["comment_likes", userId]);
     },
   });

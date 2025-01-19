@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface MinimizedNavLinksProps {
-  links: NavLinks[];
-  communityLink: NavLinks;
-  subscriptionLinks: NavLinks[];
+  links: any;
+  communityLink: any;
+  subscriptionLinks: any;
 }
 
 export default function MinimizedNavLinks({
@@ -17,7 +17,7 @@ export default function MinimizedNavLinks({
 }: MinimizedNavLinksProps) {
   return (
     <>
-      {links.map((link) => {
+      {links.map((link: any) => {
         const LinkIcon = link.icon;
         return (
           <Link

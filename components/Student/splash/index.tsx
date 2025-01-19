@@ -8,7 +8,7 @@ import { Button } from "../../ui/button";
 import { TbArrowBadgeRight } from "react-icons/tb";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "../../../lib/userSS";
+// import { login } from "../../../lib/userSS";
 
 const Splash: React.FC = () => {
   const router = useRouter();

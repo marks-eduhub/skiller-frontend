@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import NavLinks from "@/components/Student/dashboadLayout/nav-links";
+import {NavLinks} from "@/components/Student/dashboadLayout/nav-links";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import SmallScreenSideNav from "./smallscreens";
 import { useMediaQuery } from "@mui/material";

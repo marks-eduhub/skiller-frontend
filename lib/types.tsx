@@ -164,11 +164,11 @@ export interface Tutor {
   attributes: {
     tutorname: string;
     profilepicture: {
-      data: Array<{
+      data: {
         attributes: {
           url: string;
         };
-      }>;
+      };
     };
     role: string;
     type: 'tutor';

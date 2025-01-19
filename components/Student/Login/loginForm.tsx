@@ -5,13 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import data from "./data.json";
-import { dotPulse } from "ldrs";
+// import { dotPulse } from "ldrs";
 import { useAuthContext } from "@/Context/AuthContext";
 import { login } from "../../../lib/login";
 import { message } from "antd";
 import dynamic from "next/dynamic";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-dotPulse.register();
+// dotPulse.register();
 
 const DotPulseWrapper = dynamic(() => import('@/hooks/pulse'), { ssr: false });
 
@@ -101,8 +101,8 @@ export default function LogIn() {
           >
             <span className="pr-4">Login</span>
             {isPending && (
-              //  <DotPulseWrapper size="20" speed="0.3" color="white" />
-              <l-dot-pulse size="20" speed="1.5" color="white"/>
+               <DotPulseWrapper size="20" speed="1.5" color="white" />
+              // <l-dot-pulse size="20" speed="1.5" color="white"/>
             )}
           </button>
           {/* <div className="font-bold text-gray-500 text-lg mx-auto">

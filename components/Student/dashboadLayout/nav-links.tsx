@@ -21,12 +21,12 @@ const subscriptionOptions = {
   subscriptionLinks: ["Dragule Swaib", "Michael Kizito", "Wade John"]
 };
 
-export default function NavLinks({
+export  function NavLinks({
   minimized,
   onNavigate,
 }: {
   minimized?: boolean;
-  onNavigate: (path: string) => void; 
+  onNavigate?: (path: string) => void; 
 }) {
   const pathname = usePathname();
 
