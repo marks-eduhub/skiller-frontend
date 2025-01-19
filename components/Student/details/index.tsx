@@ -2,6 +2,7 @@
 import React from "react";
 import VideoCard from "./videocard";
 import SimilarCourses from "./similar";
+
 import TopicsCard from "./topics";
 import Tabs from "./tabs";
 

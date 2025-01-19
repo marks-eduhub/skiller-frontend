@@ -82,9 +82,10 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
 
 const tutor = tutorData?.data[0]?.attributes;
 
+
 const tutorImage = tutor?.profilepicture?.data[0]?.attributes.url || "/Ellipse 445.webp";
-// const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
-// console.log("image", ImageUrl);
+const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
+
 const tutorName = tutor.tutorname;
 const tutorQualifications = tutor.Qualifications
 const tutorBiography = tutor.Biography
@@ -111,7 +112,8 @@ const tutorBiography = tutor.Biography
       <div className="flex mb-5 flex-col sm:w-full w-[345px] rounded-lg sm:px-4 p-2 sm:py-6 border border-black  h-auto relative">
         <div className="flex flex-col sm:flex-row items-start sm:gap-7 gap-3 mt-5">
           <Image
-            src={tutorImage}
+
+            src={ImageUrl}
             alt={tutorName}
             width={150}
             height={150}
