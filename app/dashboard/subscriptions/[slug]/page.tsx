@@ -83,7 +83,7 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
 const tutor = tutorData?.data[0]?.attributes;
 
 
-const tutorImage = tutor?.profilepicture?.data[0]?.attributes.url || "/Ellipse 445.webp";
+const tutorImage = tutor?.profilepicture?.data?.attributes.url || "/Ellipse 445.webp";
 const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
 
 const tutorName = tutor.tutorname;
