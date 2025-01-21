@@ -20,8 +20,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   const { coursename, card, duration, rating } = course?.attributes || {};
-  const tutorName =
-    course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
+  const tutorName = course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
   const courseId = course?.id;
   const { user } = useAuthContext();

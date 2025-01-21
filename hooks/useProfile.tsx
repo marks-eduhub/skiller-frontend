@@ -35,15 +35,43 @@ export const addTutor = async (
 };
 
   
+// export const addStudent = async (
+//   studentname: string,
+//   profilepicture: string,
+//   lastName: string,
+//   firstName: string,
+//   userId:number,
+//   socialLinks: { email: string; facebook: string; twitter: string; linkedin: string }
+// ) => {
+//   try {
+//     const response = await api.put(`/api/users/${userId}`, {
+//       data: {
+//         studentname,
+//         profilepicture,
+//         lastName,
+//         firstName,
+//         socialLinks,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 export const addStudent = async (
   studentname: string,
   profilepicture: string,
   lastName: string,
   firstName: string,
+  userId: number | null, 
   socialLinks: { email: string; facebook: string; twitter: string; linkedin: string }
 ) => {
   try {
-    const response = await api.post("/api/profiles", {
+    if (!userId) {
+      throw new Error("Try again later.");
+    }
+
+    const response = await api.put(`/api/users/${userId}`, {
       data: {
         studentname,
         profilepicture,
@@ -52,8 +80,10 @@ export const addStudent = async (
         socialLinks,
       },
     });
+
     return response.data;
   } catch (error) {
+    console.error("Error in addStudent:", error);
     throw error;
   }
 };

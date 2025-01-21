@@ -7,10 +7,13 @@ import { addTutor, addStudent } from "@/hooks/useProfile";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
+import { useAuthContext } from "@/Context/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ProfilePage: React.FC = () => {
+   const { user } = useAuthContext();
+  const userId = user?.id;
   const [image, setImage] = useState<File | null>(null);
   const [toggle, setToggle] = useState(false);
   const [Biography, setBiography] = useState("");
@@ -104,12 +107,14 @@ const ProfilePage: React.FC = () => {
       profilepicture,
       lastName,
       firstName,
+      userId,
       socialLinks,
     }: {
       studentname: string;
       profilepicture: string;
       lastName: string;
       firstName: string;
+      userId:number | null,
       socialLinks: {
         email: string;
         facebook: string;
@@ -122,6 +127,7 @@ const ProfilePage: React.FC = () => {
         profilepicture,
         lastName,
         firstName,
+        userId,
         socialLinks
       );
     },
@@ -136,6 +142,10 @@ const ProfilePage: React.FC = () => {
       twitter: socialLinks.twitter,
       linkedin: socialLinks.linkedin,
     };
+    if (!userId) {
+      message.error("Cannot update user details without a valid User ID.");
+      return;
+    }
 
     let profilePictureId = "";
     if (image) {
@@ -165,6 +175,7 @@ const ProfilePage: React.FC = () => {
         profilepicture: profilePictureId,
         lastName,
         firstName,
+        userId,
         socialLinks: updatedSocialLinks,
       });
     }
