@@ -72,6 +72,7 @@ export interface TopicAttributes {
   duration: string;
   topicExpectations: string;
   topicdescription: string;
+  isCompleted: boolean;
 }
 
 export interface Topic {

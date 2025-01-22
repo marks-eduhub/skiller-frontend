@@ -9,7 +9,8 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { UsefetchResult, useFetchTests } from "@/hooks/useSubmit";
 import { useAuthContext } from "@/Context/AuthContext";
-import { useFetchAllResults } from "@/hooks/useCourseTopics";
+import { markTopicCompleted, useFetchAllResults } from "@/hooks/useCourseTopics";
+import { useMutation } from "@tanstack/react-query";
 
 const TopicsCard: React.FC = () => {
   const { slug } = useParams();
@@ -24,6 +25,24 @@ const TopicsCard: React.FC = () => {
   const currentTopicId = searchParams.get("topicId");
   const [progress, setProgress] = useState(0);
   const { data: allTestResults, isLoading: resultsLoading, error: resultsError } = useFetchAllResults(Number(userId));
+
+  const { mutate: topicCompleted } = useMutation({
+    mutationFn: async ({ isCompleted, topicId }: { isCompleted: boolean, topicId: number }) => {
+      return await markTopicCompleted(isCompleted, topicId);
+    },
+    onSuccess: () => {
+      message.success("Topic status updated!");
+    },
+    onError: (err) => {
+      message.error("Error updating topic status");
+      console.error("Error updating topic status:", err);
+
+    },
+  });
+
+  const handleMarkTopicCompleted = (topicId: number, isCompleted: boolean) => {
+    topicCompleted({ isCompleted, topicId });
+  };
 
   useEffect(() => {
     if (currentTopicId) {
@@ -67,6 +86,44 @@ const TopicsCard: React.FC = () => {
     return hasPassedTest ?? false;
   };
 
+  // useEffect(() => {
+  //   const topics = topicsData?.data?.attributes?.topicname?.data || [];
+  //   const results = allTestResults?.data || [];
+
+  //   if (!topics.length || !results.length) {
+  //     setProgress(0);
+  //     return;
+  //   }
+
+  //   const completedTopics = topics.filter((topic: any) => {
+  //     const topicResults = results.filter(
+  //       (result: any) => result.attributes.topic.data.id === topic.id
+  //     );
+
+  //     if (topicResults.length === 0) {
+  //       return false;
+  //     }
+
+  //     const bestResult = topicResults.reduce((max: any, current: any) => {
+  //       return current.attributes.score > max.attributes.score ? current : max;
+  //     });
+
+  //     const testPassmark = parseInt(
+  //       bestResult.attributes.test.data.attributes.passmark,
+  //       10
+  //     );
+
+  //     const passed = bestResult.attributes.score >= testPassmark;
+
+  //     return passed;
+  //   });
+
+  //   const calculatedProgress = (completedTopics.length / topics.length) * 100;
+
+  //   setProgress(calculatedProgress);
+  // }, [topicsData, allTestResults]);
+
+
   useEffect(() => {
     const topics = topicsData?.data?.attributes?.topicname?.data || [];
     const results = allTestResults?.data || [];
@@ -96,13 +153,16 @@ const TopicsCard: React.FC = () => {
 
       const passed = bestResult.attributes.score >= testPassmark;
 
+      if (passed) {
+        topicCompleted({ isCompleted: true, topicId: topic.id });
+      }
+
       return passed;
     });
 
     const calculatedProgress = (completedTopics.length / topics.length) * 100;
-
     setProgress(calculatedProgress);
-  }, [topicsData, allTestResults]);
+  }, [topicsData, allTestResults, topicCompleted]);
 
   if (isLoading) {
     return (
@@ -135,7 +195,6 @@ const TopicsCard: React.FC = () => {
         <ul className="p-4 flex flex-col">
           {sortedTopics?.map((topic: Topic, index: number) => {
             const canAccess = canAccessTopic(sortedTopics, testResults, index);
-
             return (
               <Link
                 key={topic.id}
@@ -147,7 +206,6 @@ const TopicsCard: React.FC = () => {
                 onClick={(e) => {
                   if (!canAccess) {
                     e.preventDefault();
-
                     message.warning(
                       "You must pass the previous test to access this topic."
                     );
@@ -169,6 +227,7 @@ const TopicsCard: React.FC = () => {
                     {topic.attributes.duration}
                   </span>
                   {!canAccess && <span className="ml-4 text-gray-400">🔒</span>}
+                  
                 </li>
               </Link>
             );
