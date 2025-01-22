@@ -53,15 +53,15 @@ const Progress = () => {
       </p>
     );
   }
-  const courses = coursesData.data; 
-  const topics = topicsData.data; 
+  const courses = coursesData?.data; 
+  const topics = topicsData?.data; 
 
   return (
     <div className="grid grid-cols-3 gap-6 mt-10">
       {courses.map((course: any) => {
         const courseId = course.id;
 
-        const courseTopics = topics.filter(
+        const courseTopics = topics?.filter(
           (topic: any) => topic.attributes.course.data.id === courseId
         );
 
