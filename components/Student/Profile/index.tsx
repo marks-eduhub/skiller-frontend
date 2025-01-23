@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { addTutor, addStudent } from "@/hooks/useProfile";
+import { addTutor, addStudent, useFetchUserDetails, useFetchTutorDetails } from "@/hooks/useProfile";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
@@ -12,8 +12,12 @@ import { useAuthContext } from "@/Context/AuthContext";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ProfilePage: React.FC = () => {
-   const { user } = useAuthContext();
+  const { user } = useAuthContext();
   const userId = user?.id;
+  const {data, isLoading, error} = useFetchUserDetails(Number(userId))
+  const{data:tutorDetails, isLoading:tutorLoading, error:tutorError} = useFetchTutorDetails(Number(userId))
+  const tutor = tutorDetails?.data[0]
+  console.log("tt", tutor)
   const [image, setImage] = useState<File | null>(null);
   const [toggle, setToggle] = useState(false);
   const [Biography, setBiography] = useState("");
@@ -22,13 +26,35 @@ const ProfilePage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [uploadImage, setUploadImage] = useState<string | null>(null);
-
   const [socialLinks, setSocialLinks] = useState({
     email: "",
     facebook: "",
     twitter: "",
     linkedin: "",
   });
+
+  useEffect(() => {
+    if (data) {
+      setFirstName(data?.firstName || "");
+      setLastName(data?.lastName || "");
+      setSocialLinks({
+        email: data?.socialLinks?.email || "",
+        facebook: data?.socialLinks?.facebook || "",
+        twitter: data?.socialLinks?.twitter || "",
+        linkedin: data?.socialLinks?.linkedin || "",
+      });
+      setUploadImage( data?.profilepicture || "");
+
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (tutor) {
+      setBiography(tutor?.Biography || "dummy");
+      setRole(tutor?.role || "dummy");
+      setQualifications(tutor?.Qualifications || "dummy");
+    }}, [tutor]);
+  
 
   const handleSuccess = () => {
     message.success("Profile saved successfully!");
@@ -143,7 +169,7 @@ const ProfilePage: React.FC = () => {
       linkedin: socialLinks.linkedin,
     };
     if (!userId) {
-      message.error("Cannot update user details without a valid User ID.");
+      message.error("Cannot update user details .");
       return;
     }
 

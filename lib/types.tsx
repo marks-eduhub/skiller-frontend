@@ -4,6 +4,16 @@ export interface Child {
 }
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 
+export interface UserDetails {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  profilepicture: string | null;
+  socialLinks: any[];
+  studentname: string | null;
+}
 
 export  interface Reply {
   id: number;

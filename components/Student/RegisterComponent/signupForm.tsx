@@ -24,6 +24,7 @@ const SignupForm = () => {
     firstName: "",
     password: "",
     confirmPassword: "",
+    studentname:""
   });
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: register,
@@ -48,6 +49,7 @@ const SignupForm = () => {
       [name]: value,
     }));
   };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -60,13 +62,18 @@ const SignupForm = () => {
       message.error("Password must be at least 6 characters long");
       return;
     }
-  
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      message.error("First Name and Last Name are required");
+      return;
+    }
+    
     const formDataToSend = new FormData();
     formDataToSend.append("email", formData.email);
     formDataToSend.append("username", formData.username);
     formDataToSend.append("firstName", formData.firstName);
     formDataToSend.append("lastName", formData.lastName);
     formDataToSend.append("password", formData.password);
+    
   
     try {
       await mutate(formDataToSend); 
