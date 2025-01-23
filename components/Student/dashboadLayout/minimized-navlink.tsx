@@ -8,7 +8,7 @@ import Link from "next/link";
 interface MinimizedNavLinksProps {
   links: any;
   communityLink: any;
-  subscriptionLinks: any;
+  // subscriptionLinks: any;
 }
 
 export default function MinimizedNavLinks({

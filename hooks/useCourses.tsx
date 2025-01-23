@@ -19,7 +19,7 @@ export const useFetchCourses = () => {
 };
 
 const fetchTutors = async () => {
-  const response = await api.get("/api/tutors?populate=profilepicture");
+  const response = await api.get("/api/tutors?populate=profilepicture,courses");
 
   return response.data;
 };
