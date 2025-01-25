@@ -1,10 +1,10 @@
-import courses from "@/app/tutor/dashboard/courses/page";
+import courses from "@/app/tutor/dashboard/courseoverview/[slug]/page";
 import api from "@/lib/axios";
 import { Course } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchOverview = (id: number) => {
-  return useQuery<  {data: any; course: Course; }, Error>({
+  return useQuery<{ data: any; course: Course }, Error>({
     queryFn: async () => {
       if (!id) {
         throw new Error("Course ID is required");

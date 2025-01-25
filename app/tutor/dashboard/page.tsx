@@ -1,6 +1,6 @@
-"use client"
-import Courseview from "@/components/Tutor/courseView/courseview";
-import HomePage from "@/components/Tutor/dashboard";
-export default function homepage(){
-    return <Courseview/>
+"use client";
+import Courseview from "@/components/Tutor/dashboard/mainpage";
+import HomePage from "@/components/Tutor/dashboard/formermain";
+export default function homepage() {
+  return <Courseview />;
 }

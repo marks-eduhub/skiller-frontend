@@ -1,31 +1,24 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFetchOverview } from "@/hooks/useCourseOverview";
+import { useFetchCourseTopics } from "@/hooks/useCourses";
+import { useParams } from "next/navigation";
 const Assessments = () => {
-  const quizzes = [
-    "Quiz 1: (Quiz Title)",
-    "Quiz 2: (Quiz Title)",
-    "Quiz 3: (Quiz Title)",
-    "Quiz 4: (Quiz Title)",
-    "Quiz 5: (Quiz Title)",
-    "Quiz 6: (Quiz Title)",
-    "Quiz 7: (Quiz Title)",
-    "Quiz 8: (Quiz Title)",
-  ];
-  const Challenges = [
-    "Challenge 1: (Challenge Title)",
-    "Challenge 2: (Challenge Title)",
-    "Challenge 3: (Challenge Title)",
-    "Challenge 4: (Challenge Title)",
-    "Challenge 5: (Challenge Title)",
-  ];
-  const Tests = [
-    "Test 1: (Test Title)",
-    "Test 2: (Test Title)",
-    "Test 3: (Test Title)",
-    "Test 4: (Test Title)",
-    "Test 5: (Test Title)",
-  ];
+  const { slug } = useParams();
+  const courseId = Number(slug);
+  const { data: topicData } = useFetchCourseTopics(courseId);
+  const totalTests = topicData?.data.reduce(
+    (count: any, topic: any) =>
+      count + (topic.attributes?.topic_tests?.data?.length || 0),
+    0
+  );
+  const numberOfTests = totalTests > 0 ? totalTests : "No tests yet";
+  const tests = topicData?.data?.flatMap((topic:any) => 
+    topic.attributes?.topic_tests?.data.map((test:any) => test.attributes) || []
+  );
+
+ 
   const [isDown, setIsDown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isArrowOpen, setIsArrowOpen] = useState(false);
@@ -41,7 +34,71 @@ const Assessments = () => {
 
   return (
     <div className="relative w-full bg-[#E7E8EA] px-4 pt-4 pb-6 border border-gray-300">
-      <div className="relative w-full ">
+      <div className="relative w-full mt-10">
+        <div className="h-[90px] bg-gray-700">
+          <div className="flex items-center justify-between p-6">
+            <h1 className="text-white mb-5">{numberOfTests} Test(s)</h1>
+            <div className="flex items-center">
+              {/* {isDown && (
+                // <div className="flex flex-row bg-black p-4 rounded-xl mr-4 gap-2 items-center">
+                //   <Image src="/plus.svg" alt="plus" width={15} height={15} />
+                //   <h1 className="text-white">New Assignment</h1>
+                // </div>
+              )} */}
+              <Image
+                src="/drop.svg"
+                alt="plus"
+                width={20}
+                height={20}
+                onClick={toggleDown}
+                className={`transition-transform duration-200 transform cursor-pointer ${
+                  isDown ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+          </div>
+        </div>
+        {isDown && (
+          <div
+            className="p-4 space-y-2"
+          >
+            {tests.map((test: any, index: number) => {
+              const testname = test?.attributes?.testname || "No test name available";
+              console.log("kekke",`${testname} ${index} tests available in ${tests ? tests.length : 0}`);
+              return (
+                <div  key = {index} className="relative w-full ">
+                  <div className="relative w-full mt-5">
+                    
+                    {tests.length > 0 ? (
+                      <div className="p-4 space-y-2 bg-gray-300" style={{ backgroundImage: `url()` }}>
+                        {tests.map((test:any, index:any) => (
+                          <div
+                            key={index}
+                            className="bg-[#1a1b1ab0] p-4 flex justify-between items-center"
+                          >
+                            <span className="text-white">{test.testname}</span>
+                            <span className="text-white">{test.testdescription}</span>
+                            <div className="flex items-center space-x-2">
+                              <div className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer">
+                                <Image src="/pluss.svg" alt="plus" width={10} height={10} />
+                                <span className="ml-2 text-sm font-semibold">View Test</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-4 text-gray-700">No tests available</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* <div className="relative w-full ">
         <div
           className={`${
             isOpen ? "bg-gray-300" : "w-full h-[90px]  bg-gray-700"
@@ -73,66 +130,19 @@ const Assessments = () => {
               >
                 <span className="text-black  sm:text-sm">{quiz}</span>
                 <p className="underline">Add content</p>
-                {/* <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2">
                   <div className="bg-gray-700 text-white px-3 py-2 rounded flex items-center cursor-pointer sm:text-base text-sm">
                     <Image src="/plus.svg" alt="plus" width={15} height={15} />
                     <span className="ml-2 font-semibold">Add Content</span>
                   </div>
-                </div> */}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="relative w-full mt-10">
-        <div className="h-[90px] bg-gray-700">
-          <div className="flex items-center justify-between p-6">
-            <h1 className="text-white">Tests:{isDown ? Tests.length : 15} </h1>
-            <div className="flex items-center">
-              {isDown && (
-                <div className="flex flex-row bg-black p-4 rounded-xl mr-4 gap-2 items-center">
-                  <Image src="/plus.svg" alt="plus" width={15} height={15} />
-                  <h1 className="text-white">New Assignment</h1>
-                </div>
-              )}
-              <Image
-                src="/drop.svg"
-                alt="plus"
-                width={20}
-                height={20}
-                onClick={toggleDown}
-                className={`transition-transform duration-200 transform cursor-pointer ${
-                  isDown ? "rotate-180" : ""
-                }`}
-              />
-            </div>
-          </div>
-        </div>
-        {isDown && (
-          <div
-            className="p-4 space-y-2"
-            style={{ backgroundImage: `url("/cake.svg")` }}
-          >
-            {Tests.map((test, index) => (
-              <div
-                key={index}
-                className="bg-[#1a1b1ab0] p-4 flex justify-between items-center"
-              >
-                <span className="text-white">{test}</span>
-                <div className="flex items-center space-x-2">
-                  <div className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer">
-                    <Image src="/pluss.svg" alt="plus" width={10} height={10} />
-                    <span className="ml-2 text-sm font-semibold">Content</span>
-                  </div>
-                  <Image src="/drop.svg" alt="toggle" width={15} height={15} />
                 </div>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </div> */}
 
-      <div className="relative w-full mt-10">
+      {/* <div className="relative w-full mt-10">
         <div className="relative h-[90px] bg-gray-700">
           <div className=" flex items-center justify-between p-6">
             <h1 className="text-white">
@@ -169,14 +179,15 @@ const Assessments = () => {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
+
       <Link href="/tutor/dashboard/setQuiz">
-      <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300  flex items-center justify-center cursor-pointer">
-        <Image src="/pluss.svg" alt="plus" width={20} height={20} />
-        <h1 className="text-black sm:text-[20px]">
-          Add a quiz, test or challenge
-        </h1>
-      </div>
+        <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300  flex items-center justify-center cursor-pointer">
+          <Image src="/pluss.svg" alt="plus" width={20} height={20} />
+          <h1 className="text-black sm:text-[20px]">
+            Add a quiz, test or challenge
+          </h1>
+        </div>
       </Link>
     </div>
   );

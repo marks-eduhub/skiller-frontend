@@ -1,25 +1,63 @@
+import Loader from "@/components/Student/loader";
+import { useFetchOverview } from "@/hooks/useCourseOverview";
+import { useFetchCourseTopics } from "@/hooks/useCourses";
+import { useParams } from "next/navigation";
 import React from "react";
 
 const Overview = () => {
+  const { slug } = useParams();
+  const courseId = Number(slug);
+  const { data, isLoading, error } = useFetchOverview(courseId);
+  const { data: topicData } = useFetchCourseTopics(courseId);
+
+  const duration = data?.data?.attributes?.duration || "N/A";
+  const enrolledLearners = data?.data?.attributes?.users?.data || [];
+  const learners = enrolledLearners.length > 0 ? enrolledLearners.length : "No learners yet";
+
+  const likes = data?.data?.attributes?.liked_courses?.data || [];
+  const numberOfLiked = likes.length > 0 ? likes.length : "No likes yet";
+
+  const totalTests = topicData?.data.reduce(
+    (count:any, topic:any) => count + (topic.attributes?.topic_tests?.data?.length || 0),
+    0
+  );
+  const numberOfTests = totalTests > 0 ? totalTests : "No tests yet";
+
   const courses = [
-    { student: "Enrolled Students:", number: "557" },
-    { student: "Active Students:", number: "204" },
-    { student: "Likes:", number: "100k" },
-    { student: "Course Duration:", number: "47 minutes" },
-    { student: "Number of Quizzes:", number: "20" },
-    { student: "Number of Tests:", number: "15" },
+    { student: "Enrolled Students:", number: learners },
+    { student: "Active Students:", number: learners },
+    { student: "Likes:", number: numberOfLiked },
+    { student: "Course Duration:", number: duration },
+    { student: "Number of Tests:", number: numberOfTests },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-20">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-20 text-red-500 text-[17px]">
+        Error fetching data
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-gray-100 mb-10 w-full sm:h-[350px] sm:px-0 px-10 sm:py-4 py-10 items-center rounded-lg  ">
+    <div className="bg-gray-100 mb-10 w-full sm:h-[350px] sm:px-0 px-10 sm:py-4 py-10 items-center rounded-lg">
       {courses.map((course, index) => (
         <div
           key={index}
-          className="flex  sm:flex-row py-4 px-6 items-center sm:justify-between"
+          className="flex sm:flex-row py-4 px-6 items-center sm:justify-between"
         >
           <h1 className="font-bold text-center w-full sm:w-auto sm:pl-[200px]">
             {course.student}
           </h1>
-          <h1 className="justify-end flex items-center w-full sm:w-auto sm:pr-[200px] ">
+          <h1 className="justify-end flex items-center w-full sm:w-auto sm:pr-[200px]">
             {course.number}
           </h1>
         </div>

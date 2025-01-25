@@ -84,3 +84,18 @@ export const useFetchTutorCourses = (userId: number) => {
     },
   });
 };
+
+const fetchCourseTopics = async(courseId:number) => {
+  const response = await api.get(`/api/topics?filters[course][id][$eq]=${courseId}&populate=*`);
+  return response.data;
+}
+
+export const useFetchCourseTopics = (courseId: number) => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: () => fetchCourseTopics(courseId), 
+    queryKey: ["course_topics", courseId],
+    meta: {
+      errorMessage: "Failed to fetch topics",
+    },
+  });
+};
