@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useMemo,Dispatch, SetStateAction  } from "react";
 import Image from "next/image";
 import { GrCloudUpload } from "react-icons/gr";
-import { RxSwitch } from "react-icons/rx";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import CustomModal from "../topicUpload/modal";

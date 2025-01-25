@@ -1,10 +1,19 @@
-import { createContext } from "react";
 export interface Child {
   text: string;
   type: string; 
 }
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 
+export interface UserDetails {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  profilepicture: string | null;
+  socialLinks: any[];
+  studentname: string | null;
+}
 
 export  interface Reply {
   id: number;
@@ -81,11 +90,38 @@ export interface Topic {
 
 
 
-export interface Course {
-  id: number;
-  attributes: CourseAttributes;
+export interface CourseResponse {
+  data: Course[]; 
 }
 
+export interface Course {
+  id: number;
+  attributes: Coursedata;
+}
+
+export interface Coursedata {
+  id: number;
+  rating: number;
+  duration: string;
+  coursename: string;
+  type: 'course';
+  card: CourseImage;  
+  users: {
+    data: User[];
+  };
+  topicname: {
+    data: Topic[];
+  };
+  tutor: {
+    data: Tutor[];
+  };
+  reviews: {
+    data: CourseReview[];
+  };
+  categories: {
+    data: CourseCategory[];
+  };
+}
 
 
 export interface ImageData {
@@ -101,6 +137,7 @@ export interface CourseImage {
   data: {
     id: number;
     attributes: {
+      alternativeText: string;
       name: string;
       url: string; 
     };
@@ -134,7 +171,6 @@ export interface Category {
 
 
 export interface Tutor {
-  id: number;
   attributes: {
     tutorname: string;
     profilepicture: {
@@ -146,9 +182,17 @@ export interface Tutor {
     };
     role: string;
     type: 'tutor';
-    slug?: string; 
+    slug: string;
+    createdAt: string;  
+    updatedAt: string;  
+    publishedAt: string; 
+    Qualifications:string
+    Biography: string;
   };
+  id: number;
+
 }
+
 export interface CourseReview {
   id: number;
   attributes: {
@@ -165,29 +209,7 @@ export interface CourseCategory {
   };
 }
 
-export interface CourseAttributes {
-  id: number;
-  rating: number;
-  duration: string;
-  coursename: string;
-  type: 'course';
-  card: CourseImage;  
-  users: {
-    data: User[];
-  };
-  topicname: {
-    data: Topic[];
-  };
-  tutors: {
-    data: Tutor[];
-  };
-  reviews: {
-    data: CourseReview[];
-  };
-  categories: {
-    data: CourseCategory[];
-  };
-}
+
 
 
 

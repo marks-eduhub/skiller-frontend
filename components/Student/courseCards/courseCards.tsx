@@ -2,11 +2,15 @@
 import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"; 
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import api from "@/lib/axios";
 import { message } from "antd";
 import { useAuthContext } from "@/Context/AuthContext";
-import { addLikedCourse, removeLikedCourse, useLikedCourses } from "@/hooks/useLikedCourses";
+import {
+  addLikedCourse,
+  removeLikedCourse,
+  useLikedCourses,
+} from "@/hooks/useLikedCourses";
 import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { addRecentCourse } from "@/hooks/useRecentCourses";
 
@@ -15,27 +19,27 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
-  const { coursename, card, tutor, duration, rating } = course?.attributes || {};
-  const tutorName = tutor?.data?.attributes?.tutorname || "Tutor Name";
+  const { coursename, card, duration, rating } = course?.attributes || {};
+  const tutorName = course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
-  const courseId = course?.id; 
-  const { user } = useAuthContext(); 
-  const userId = user?.id; 
-  const [isLiked, setIsLiked] = useState(false); 
-  const queryClient = useQueryClient(); 
+  const courseId = course?.id;
+  const { user } = useAuthContext();
+  const userId = user?.id;
+  const [isLiked, setIsLiked] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: likedCourses } = useLikedCourses();
 
   useEffect(() => {
     if (likedCourses) {
-      const likedCourseIds = likedCourses?.data?.map((likedCourse: any) => likedCourse.attributes.course.data.id);
-      setIsLiked(likedCourseIds?.includes(courseId)); 
+      const likedCourseIds = likedCourses?.data?.map(
+        (likedCourse: any) => likedCourse.attributes.course.data.id
+      );
+      setIsLiked(likedCourseIds?.includes(courseId));
     }
   }, [likedCourses, courseId]);
 
-  
-
-const { mutate: removeFromWishlist } = useMutation({
+  const { mutate: removeFromWishlist } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
       const response = await removeLikedCourse(courseId, userId);
@@ -43,38 +47,42 @@ const { mutate: removeFromWishlist } = useMutation({
     },
     onMutate: async () => {
       if (!userId) return;
-  
+
       setIsLiked(false);
-  
-      await queryClient.cancelQueries({queryKey:["likedCourses", userId]});
-  
-      const previousLikedCourses = queryClient.getQueryData(["likedCourses", userId]);
-  
+
+      await queryClient.cancelQueries({ queryKey: ["likedCourses", userId] });
+
+      const previousLikedCourses = queryClient.getQueryData([
+        "likedCourses",
+        userId,
+      ]);
+
       queryClient.setQueryData(["likedCourses", userId], (oldData: any) => {
         return {
           ...oldData,
           data: oldData?.data?.filter((course: any) => course.id !== courseId),
         };
       });
-  
+
       return { previousLikedCourses };
     },
     onSuccess: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: ["likedCourses", userId] });
-
       }
       message.success(`Removed from wishlist.`);
     },
     onError: (err, variables, context: any) => {
       if (userId) {
-        queryClient.setQueryData(["likedCourses", userId], context.previousLikedCourses);
+        queryClient.setQueryData(
+          ["likedCourses", userId],
+          context.previousLikedCourses
+        );
       }
       message.error("Failed to remove from wishlist.");
     },
   });
-  
-  
+
   const { mutate: addToWishlist } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
@@ -82,20 +90,23 @@ const { mutate: removeFromWishlist } = useMutation({
       return response;
     },
     onMutate: async () => {
-      if (!userId) return; 
-      
+      if (!userId) return;
+
       setIsLiked(true);
-      await queryClient.cancelQueries({queryKey: ["likedCourses", userId]}); 
-  
-      const previousLikedCourses = queryClient.getQueryData(["likedCourses", userId]);
-  
+      await queryClient.cancelQueries({ queryKey: ["likedCourses", userId] });
+
+      const previousLikedCourses = queryClient.getQueryData([
+        "likedCourses",
+        userId,
+      ]);
+
       queryClient.setQueryData(["likedCourses", userId], (oldData: any) => {
-        return [...(oldData?.data || []), { id: courseId, attributes: {}}];
+        return [...(oldData?.data || []), { id: courseId, attributes: {} }];
       });
-  
+
       return { previousLikedCourses };
     },
-  
+
     onSuccess: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: ["likedCourses", userId] });
@@ -104,50 +115,55 @@ const { mutate: removeFromWishlist } = useMutation({
     },
     onError: (err, variables, context: any) => {
       if (userId) {
-        queryClient.setQueryData(["likedCourses", userId], context.previousLikedCourses); 
+        queryClient.setQueryData(
+          ["likedCourses", userId],
+          context.previousLikedCourses
+        );
       }
       message.error("Failed to add to wishlist");
     },
   });
-  
+
   const { mutate: addRecent } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
       return await addRecentCourse(courseId, userId);
     },
     onMutate: async () => {
-      if (!userId) return; 
-      
-      await queryClient.cancelQueries({queryKey: ["recentCourses", userId]}); 
-  
-      const previousLikedCourses = queryClient.getQueryData(["recentCourses", userId]);
-  
+      if (!userId) return;
+
+      await queryClient.cancelQueries({ queryKey: ["recentCourses", userId] });
+
+      const previousLikedCourses = queryClient.getQueryData([
+        "recentCourses",
+        userId,
+      ]);
+
       queryClient.setQueryData(["recentCourses", userId], (oldData: any) => {
-        return [...(oldData?.data || []), { id: courseId, attributes: { }}];
+        return [...(oldData?.data || []), { id: courseId, attributes: {} }];
       });
-  
+
       return { previousLikedCourses };
     },
     onSuccess: () => {
       if (userId) {
-        queryClient.invalidateQueries({queryKey:["recentCourses", userId]}); 
+        queryClient.invalidateQueries({ queryKey: ["recentCourses", userId] });
       }
     },
     onError: (err, variables, context: any) => {
       if (userId) {
-        queryClient.setQueryData(["recentCourses", userId], context.previousLikedCourses); 
+        queryClient.setQueryData(
+          ["recentCourses", userId],
+          context.previousLikedCourses
+        );
       }
       message.error("Failed to add to recent");
     },
-   
   });
-  
 
   const handleCourseClick = () => {
     addRecent();
   };
-
-
 
   const handleToggleWishlist = () => {
     if (isLiked) {
@@ -156,12 +172,10 @@ const { mutate: removeFromWishlist } = useMutation({
       addToWishlist();
     }
   };
-  
- 
- 
+
   return (
     <div className="mr-4 pb-10 sm:pb-0 h-full">
-      <div className="border border-gray-400"onClick={handleCourseClick}>
+      <div className="border border-gray-400" onClick={handleCourseClick}>
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
             src={imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/cake.svg"}
@@ -171,7 +185,12 @@ const { mutate: removeFromWishlist } = useMutation({
           />
 
           <div className="flex items-center absolute justify-between p-2 w-full">
-            <button onClick={handleToggleWishlist}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); 
+                handleToggleWishlist();
+              }}
+            >
               {isLiked ? (
                 <AiFillHeart size={30} className="text-red-500" />
               ) : (
@@ -180,11 +199,13 @@ const { mutate: removeFromWishlist } = useMutation({
             </button>
             <p className="text-black bg-white px-4 py-0 rounded-full">Free</p>
           </div>
-          
         </div>
       </div>
 
-      <div className="p-2 bg-[#F3F4F3] cursor-pointer text-black" >
+      <div
+        className="p-2 bg-[#F3F4F3] cursor-pointer text-black"
+        onClick={handleCourseClick}
+      >
         <div className="mb-4 sm:h-[30px] h-[50px]">
           <h3 className="font-semibold line-clamp-2 text-ellipsis">
             {coursename || "Course Name"}
