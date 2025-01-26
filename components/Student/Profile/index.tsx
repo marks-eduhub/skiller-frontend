@@ -1,23 +1,224 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+import { addTutor, addStudent, useFetchUserDetails, useFetchTutorDetails } from "@/hooks/useProfile";
+import { useMutation } from "@tanstack/react-query";
+import { message } from "antd";
+import { uploadMedia } from "@/hooks/useCourseUpload";
+import { useAuthContext } from "@/Context/AuthContext";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const ProfilePage: React.FC = () => {
-  const [image, setImage] = useState<string | null>(null);
+  const { user } = useAuthContext();
+  const userId = user?.id;
+  const {data, isLoading, error} = useFetchUserDetails(Number(userId))
+  const{data:tutorDetails, isLoading:tutorLoading, error:tutorError} = useFetchTutorDetails(Number(userId))
+  const tutor = tutorDetails?.data[0]
+  console.log("tt", tutor)
+  const [image, setImage] = useState<File | null>(null);
+  const [toggle, setToggle] = useState(false);
+  const [Biography, setBiography] = useState("");
+  const [role, setRole] = useState("");
+  const [Qualifications, setQualifications] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [uploadImage, setUploadImage] = useState<string | null>(null);
+  const [socialLinks, setSocialLinks] = useState({
+    email: "",
+    facebook: "",
+    twitter: "",
+    linkedin: "",
+  });
+
+  useEffect(() => {
+    if (data) {
+      setFirstName(data?.firstName || "");
+      setLastName(data?.lastName || "");
+      setSocialLinks({
+        email: data?.socialLinks?.email || "",
+        facebook: data?.socialLinks?.facebook || "",
+        twitter: data?.socialLinks?.twitter || "",
+        linkedin: data?.socialLinks?.linkedin || "",
+      });
+      setUploadImage( data?.profilepicture || "");
+
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (tutor) {
+      setBiography(tutor?.Biography || "dummy");
+      setRole(tutor?.role || "dummy");
+      setQualifications(tutor?.Qualifications || "dummy");
+    }}, [tutor]);
+  
+
+  const handleSuccess = () => {
+    message.success("Profile saved successfully!");
+  };
+
+  const handleError = () => {
+    message.error("Failed to save changes.");
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log("Selected image file:", file);
+
     if (file) {
+      setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string);
+        setUploadImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+    } else {
+      message.error("No course image selected. Please try again.");
     }
   };
-
   const handleRemoveImage = () => {
     setImage(null);
+  };
+
+  const handleToggleChange = () => {
+    setToggle(!toggle);
+  };
+
+  const { mutate: postTutorProfile } = useMutation({
+    mutationFn: async ({
+      tutorname,
+      profilepicture,
+      role,
+      lastName,
+      firstName,
+      Biography,
+      Qualifications,
+      socialLinks,
+    }: {
+      tutorname: string;
+      profilepicture: string;
+      role: string;
+      lastName: string;
+      firstName: string;
+      Biography: string;
+      Qualifications: string;
+      socialLinks: {
+        email: string;
+        facebook: string;
+        twitter: string;
+        linkedin: string;
+      };
+    }) => {
+      return await addTutor(
+        tutorname,
+        profilepicture,
+        role,
+        lastName,
+        firstName,
+        Biography,
+        Qualifications,
+        socialLinks
+      );
+    },
+    onError: handleError,
+    onSuccess: handleSuccess,
+  });
+
+  const { mutate: postStudentProfile } = useMutation({
+    mutationFn: async ({
+      studentname,
+      profilepicture,
+      lastName,
+      firstName,
+      userId,
+      socialLinks,
+    }: {
+      studentname: string;
+      profilepicture: string;
+      lastName: string;
+      firstName: string;
+      userId:number | null,
+      socialLinks: {
+        email: string;
+        facebook: string;
+        twitter: string;
+        linkedin: string;
+      };
+    }) => {
+      return await addStudent(
+        studentname,
+        profilepicture,
+        lastName,
+        firstName,
+        userId,
+        socialLinks
+      );
+    },
+    onError: handleError,
+    onSuccess: handleSuccess,
+  });
+
+  const handleSaveChanges = async () => {
+    const updatedSocialLinks = {
+      email: socialLinks.email,
+      facebook: socialLinks.facebook,
+      twitter: socialLinks.twitter,
+      linkedin: socialLinks.linkedin,
+    };
+    if (!userId) {
+      message.error("Cannot update user details .");
+      return;
+    }
+
+    let profilePictureId = "";
+    if (image) {
+      try {
+        profilePictureId = await uploadMedia(image);
+        console.log("Profile picture uploaded with ID:", profilePictureId);
+      } catch (error) {
+        message.error("Error uploading image");
+        return;
+      }
+    }
+
+    if (toggle) {
+      postTutorProfile({
+        tutorname: `${firstName} ${lastName}`,
+        profilepicture: profilePictureId,
+        role,
+        lastName,
+        firstName,
+        Biography,
+        Qualifications,
+        socialLinks: updatedSocialLinks,
+      });
+    } else {
+      postStudentProfile({
+        studentname: `${firstName} ${lastName}`,
+        profilepicture: profilePictureId,
+        lastName,
+        firstName,
+        userId,
+        socialLinks: updatedSocialLinks,
+      });
+    }
+    setImage(null);
+    setUploadImage(null);
+    setToggle(false);
+    setBiography("");
+    setSocialLinks({
+      email: "",
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+    });
+    setFirstName("");
+    setLastName("");
+    setRole("");
+    setQualifications("");
   };
 
   return (
@@ -32,7 +233,7 @@ const ProfilePage: React.FC = () => {
         <div className="flex items-center justify-center my-3">
           {image ? (
             <Image
-              src={image}
+              src={uploadImage || "/Ellipse 445.webp"}
               alt="Profile"
               width={120}
               height={120}
@@ -84,9 +285,15 @@ const ProfilePage: React.FC = () => {
               >
                 First Name
               </label>
+
               <input
                 type="text"
                 id="first-name"
+                value={firstName}
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
+                placeholder="Enter your first name"
                 required
                 className="mt-1 w-[300px] rounded-lg block px-3 py-2 border border-gray-200 mb-6 bg-inherit"
                 style={{ outline: "none", borderColor: "black" }}
@@ -102,6 +309,11 @@ const ProfilePage: React.FC = () => {
               <input
                 type="text"
                 id="last-name"
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
+                placeholder="Enter your last name"
                 required
                 className="mt-1 w-[300px] block rounded-lg px-3 py-2 border border-gray-200 mb-6 bg-inherit"
                 style={{ outline: "none", borderColor: "black" }}
@@ -110,69 +322,137 @@ const ProfilePage: React.FC = () => {
           </div>
         </form>
 
-        <div>
-          <h2>Biography</h2>
-        </div>
-        <div className="border-2 border-gray-200 sm:w-[640px] rounded-lg h-[150px] mt-3 mb-9">
-          <div className="items-center border border-b-2 border-gray-200 sm:w-[638px] h-[40px] py-2">
-            <span className="italic font-bold ml-7">B</span>
-            <span className="italic font-bold ml-7">I</span>
+        <div className="flex items-center my-5">
+          <label htmlFor="toggle-switch" className="mr-3 text-sm font-medium">
+            Click the toggle if you want a tutor profile
+          </label>
+          <div
+            onClick={handleToggleChange}
+            className={`relative w-12 h-4 bg-gray-300 rounded-full cursor-pointer ${
+              toggle ? "bg-green-500" : "bg-gray-300"
+            }`}
+          >
+            <div
+              className={`absolute w-6 h-4 bg-white rounded-full shadow transform transition ${
+                toggle ? "translate-x-6" : "translate-x-0"
+              }`}
+            ></div>
           </div>
         </div>
-        <div className="mb-10">
-          <h2 className="text-2xl font-semibold mb-4">Social Media</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col">
-              <label htmlFor="email" className="text-sm font-medium mb-3">
-                Email
+
+        {toggle && (
+          <div className="flex flex-col">
+            <div className="sm:mb-10 mt-4 ">
+              <div className="flex items-center  w-full mb-5">
+                <label className="block text-sm mb-1 mr-16">Tutor role</label>
+                <input
+                  type="text"
+                  value={role}
+                  onChange={(e) => {
+                    setRole(e.target.value);
+                  }}
+                  className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
+                />
+              </div>
+
+              <div className="flex items-center  w-full my-5">
+                <label className="block text-sm mb-1 mr-2">Tutor qualifications</label>
+                <input
+                  type="text"
+                  value={Qualifications}
+                  onChange={(e) => {
+                    setQualifications(e.target.value);
+                  }}
+                  className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
+                />
+              </div>
+
+              <label className="block text-sm mb-4 ">
+                Enter your biography
               </label>
-              <input
-                type="text"
-                id="email"
-                placeholder="placeholder"
-                className="rounded-lg px-3 py-2 border border-gray-300"
-                style={{ outline: "none", borderColor: "black" }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="facebook" className="text-sm font-medium mb-3">
-                Facebook
-              </label>
-              <input
-                type="text"
-                id="facebook"
-                placeholder="placeholder"
-                className="rounded-lg px-3 py-2 border border-gray-300"
-                style={{ outline: "none", borderColor: "black" }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="twitter" className="text-sm font-medium mb-3">
-                Twitter/X
-              </label>
-              <input
-                type="text"
-                id="twitter"
-                placeholder="placeholder"
-                className="rounded-lg px-3 py-2 border border-gray-300"
-                style={{ outline: "none", borderColor: "black" }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="linkedin" className="text-sm font-medium mb-3">
-                LinkedIn
-              </label>
-              <input
-                type="text"
-                id="linkedin"
-                placeholder="placeholder"
-                className="rounded-lg px-3 py-2 border border-gray-300"
-                style={{ outline: "none", borderColor: "black" }}
-              />
+
+              <div>
+                <ReactQuill
+                  placeholder="Write content here"
+                  value={Biography}
+                  onChange={setBiography}
+                  theme="snow"
+                  className="bg-white h-[200px] mb-5"
+                />
+              </div>
+
+              <div className="mt-20 ">
+                <span>
+                  This screenshot shows how you can switch between your student
+                  and tutor profile
+                </span>
+                <Image
+                  src="/tutorprofile.png"
+                  alt="Tutor Profile Screenshot"
+                  width={300} 
+                  height={200}
+                  className="rounded-lg"
+                />
+              </div>
             </div>
           </div>
+        )}
+        <div className="mb-4 grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm mb-1">Email</label>
+            <input
+              type="email"
+              value={socialLinks.email}
+              onChange={(e) =>
+                setSocialLinks({ ...socialLinks, email: e.target.value })
+              }
+              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
+              style={{ outline: "none", borderColor: "black" }}
+            />
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Facebook</label>
+            <input
+              type="text"
+              value={socialLinks.facebook}
+              onChange={(e) =>
+                setSocialLinks({ ...socialLinks, facebook: e.target.value })
+              }
+              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
+              style={{ outline: "none", borderColor: "black" }}
+            />
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Twitter</label>
+            <input
+              type="text"
+              value={socialLinks.twitter}
+              onChange={(e) =>
+                setSocialLinks({ ...socialLinks, twitter: e.target.value })
+              }
+              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
+              style={{ outline: "none", borderColor: "black" }}
+            />
+          </div>
+          <div>
+            <label className="block text-sm mb-1">LinkedIn</label>
+            <input
+              type="text"
+              value={socialLinks.linkedin}
+              onChange={(e) =>
+                setSocialLinks({ ...socialLinks, linkedin: e.target.value })
+              }
+              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
+              style={{ outline: "none", borderColor: "black" }}
+            />
+          </div>
         </div>
-        <button className="px-4 py-2 rounded-lg w-1/2 font-bold bg-[#D9D9D9]">
+
+        <button
+          type="button"
+          onClick={handleSaveChanges}
+          className="mt-5 bg-black text-white py-2 px-6 rounded-md"
+        >
           Save Changes
         </button>
       </div>

@@ -19,7 +19,7 @@ export const useFetchCourses = () => {
 };
 
 const fetchTutors = async () => {
-  const response = await api.get("/api/tutors?populate=profilepicture");
+  const response = await api.get("/api/tutors?populate=profilepicture,courses");
 
   return response.data;
 };
@@ -96,6 +96,21 @@ export const useFetchCourseTopics = (courseId: number) => {
     queryKey: ["course_topics", courseId],
     meta: {
       errorMessage: "Failed to fetch topics",
+      },
+  });
+};
+
+const fetchTutorSlug = async (slug:string) => {
+  const response = await api.get(`api/tutors?filters[slug][$eq]=${slug}&populate=profilepicture`);
+  return response.data;
+};
+
+export const useFetchTutorSlug = (slug:string) => {
+  return useQuery<{ data: Tutor[] }, Error>({
+    queryFn: () => fetchTutorSlug(slug), 
+    queryKey: ["tutor_slug", slug],
+    meta: {
+      errorMessage: "Failed to fetch tutor",
     },
   });
 };

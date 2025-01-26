@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { TriangleDownIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthContext } from "@/Context/AuthContext";
@@ -38,9 +38,9 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
             <>
               {!hideGreetingAndSearch && <Greeting username={username} />}
               <div className="flex items-center gap-10 ml-auto">
-                <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
-                </p>
+                </p> */}
                 <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
                   <Image
                     src="/Ellipse 1.svg"
@@ -54,7 +54,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                   </Link>
                   <TriangleDownIcon
                     className={`w-6 h-6 text-white mr-2 transform transition-transform duration-300 ${
-                      showDropdown ? 'rotate-180' : 'rotate-0'
+                      showDropdown ? "rotate-180" : "rotate-0"
                     }`}
                     onClick={handleDropdownToggle}
                   />
@@ -64,7 +64,10 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                         <Link href="/auth">
                           <p className="text-white p-2">Sign Out</p>
                         </Link>
-                        <Link href="/tutor/dashboard" className="text-white p-2">
+                        <Link
+                          href="/tutor/dashboard"
+                          className="text-white p-2"
+                        >
                           <p>Switch to tutor profile</p>
                         </Link>
                       </div>
@@ -74,27 +77,19 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
               </div>
             </>
           ) : (
-            <div className="w-full flex items-center justify-between mt-3 mb-10">
-              <div className="w-32 h-10 mr-10">
+            <div className="w-full flex items-center justify-between mt-3 mb-10 relative">
+              <div className="w-36 h-10 mr-10">
                 <SkillerLogo />
               </div>
-              {/* <div>
-                <SearchBar />
-              </div> */}
-              <div className="sm:col-span-10 w-1/2 flex items-center rounded-lg shadow bg-white p-3 cursor-pointer">
-                {/* <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
-                <input
-                  type="text"
-                  placeholder="Search for classes or tutors"
-                  className="flex-1 outline-none bg-transparent"
-                 
-                /> */}
+
+              <div className="cursor-pointer">
                 <SearchBar />
               </div>
+
               <div className="flex items-center gap-10">
-                <p className="rounded-full px-6 py-2 shadow text-black bg-white">
+                {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
-                </p>
+                </p> */}
                 <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
                   <Image
                     src="/Ellipse 1.svg"
@@ -103,28 +98,32 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     height={20}
                     className="ml-2"
                   />
-                  <Link href="/dashboard/profile" className="text-white">
+                  <Link href="/dashboard/profile" className="text-white ml-2">
                     {username}
                   </Link>
                   <TriangleDownIcon
-                    className={`w-6 h-6 text-white mr-2 transform transition-transform duration-300 ${
-                      showDropdown ? 'rotate-180' : 'rotate-0'
+                    className={`w-6 h-6 relative text-white mr-2 transform transition-transform duration-300 ${
+                      showDropdown ? "rotate-180" : "rotate-0"
                     }`}
                     onClick={handleDropdownToggle}
                   />
                   {showDropdown && (
-                    <div className="absolute  z-50 mt-2 rounded-md bg-gray-800 shadow-lg p-2">
-                      <div className="flex flex-col">
+                    <div className="absolute z-50 mt-2 top-full left-0 right-0 rounded-md bg-gray-800 shadow-lg p-2">
+                    <div className="flex flex-col">
                         <Link href="/auth">
                           <p className="text-white p-2">Sign Out</p>
                         </Link>
-                        <Link href="/tutor/dashboard" className="text-white p-2">
+                        <Link
+                          href="/tutor/dashboard"
+                          className="text-white p-2"
+                        >
                           <p>Switch to tutor dashboard</p>
                         </Link>
                       </div>
                     </div>
                   )}
                 </div>
+
               </div>
             </div>
           )}

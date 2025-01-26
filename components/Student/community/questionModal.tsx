@@ -9,7 +9,6 @@ import Loader from "@/components/Student/loader";
 
 const QuestionModal = () => {
   const { user } = useAuthContext();
-  const userId = user?.id;
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [questionContent, setQuestionContent] = useState("");
@@ -64,7 +63,7 @@ const QuestionModal = () => {
       return;
     }
 
-    const nameofquestioner = user?.username || "Guest";
+    const nameofquestioner = user?.username || "Anonymous";
 
     postQuestionMutation({ Question: questionContent, nameofquestioner });
 

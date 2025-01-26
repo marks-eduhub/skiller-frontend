@@ -3,39 +3,43 @@ import { usePathname } from "next/navigation";
 import { AiFillHome, AiOutlineTeam, AiOutlineUser } from "react-icons/ai";
 import MinimizedNavLinks from "./minimized-navlink";
 import Image from "next/image";
-import Link from "next/link";
-
-const links = [{ name: "Home", href: "/dashboard", icon: AiFillHome }];
-const communityLink = {
-  name: "Community",
-  href: "/dashboard/community",
-  icon: AiOutlineTeam,
-};
-
-const subscriptionLinks = [
-  { name: "Michael Kizito", slug: "michaelkizito", icon: AiOutlineUser },
-  { name: "Dragule Swaib", slug: "draguleswaib", icon: AiOutlineUser },
-];
-const subscriptionOptions = {
-  subscriptionLinks: ["Dragule Swaib", "Michael Kizito"],
-};
+import { useFetchTutors } from "@/hooks/useCourses";
+import { message } from "antd";
+import Loader from "../loader";
 
 export  function NavLinks({
-  minimized,
-  onNavigate,
-}: {
-  minimized?: boolean;
-  onNavigate?: (path: string) => void; 
-}) {
+  minimized, onNavigate}: { minimized?: boolean ; onNavigate?: (path: string) => void; }) {
   const pathname = usePathname();
+  const { data, isLoading, error} = useFetchTutors()
+
+  if (isLoading) {
+    return <div><Loader/></div>;
+  }
+
+  if (error) {
+    message.error("Failed to retrieve specific tutor details")
+  }
+  console.log("lol", data)
 
   const handleNavigation = (href: string) => {
     if (onNavigate) {
       onNavigate(href); 
     }
   };
+   
+  const links = [{ name: "Home", href: "/dashboard", icon: AiFillHome }];
+  const communityLink = {
+    name: "Community",
+    href: "/dashboard/community",
+    icon: AiOutlineTeam,
+  };
+  
+  // const subscriptionLinks = [
+  //   { name: "Michael Kizito", slug: "michaelkizito", icon: AiOutlineUser },
+  //   { name: "Dragule Swaib", slug: "draguleswaib", icon: AiOutlineUser },
+  //   { name: "Wade John", slug: "wadejohn", icon: AiOutlineUser },
+  // ];
 
-  const isSubscriptionActive = pathname.startsWith("/dashboard/subscriptions");
 
   return (
     <>
@@ -43,7 +47,7 @@ export  function NavLinks({
         <MinimizedNavLinks
           links={links}
           communityLink={communityLink}
-          subscriptionLinks={subscriptionLinks}
+          // subscriptionLinks={subscriptionLinks}
         />
       ) : (
         <>
@@ -102,16 +106,15 @@ export  function NavLinks({
             >
               <p className="hover:bg-gray-900">Tutors</p>
             </div>
-            {subscriptionLinks.map(
-              (subscription) =>
-                subscriptionOptions.subscriptionLinks.includes(
-                  subscription.name
-                ) && (
+            {data?.data.map((subscription) => {
+                const slug = subscription.attributes.slug
+                const name = subscription.attributes.tutorname
+                return (
                   <div
-                    key={subscription.name}
+                    key={name}
                     onClick={() =>
                       handleNavigation(
-                        `/dashboard/subscriptions/${subscription.slug}`
+                        `/dashboard/subscriptions/${slug}`
                       )
                     }
                     className={clsx(
@@ -119,7 +122,7 @@ export  function NavLinks({
                       {
                         "bg-gray-700 text-white rounded ":
                           pathname ===
-                          `/dashboard/subscriptions/${subscription.slug}`,
+                          `/dashboard/subscriptions/${slug}`,
                       }
                     )}
                   >
@@ -130,11 +133,12 @@ export  function NavLinks({
                         width={20}
                         height={20}
                       />
-                      <p className="text-white">{subscription.name}</p>
+                      <p className="text-white">{name}</p>
                     </div>
                   </div>
                 )
-            )}
+            }
+          )}
           </div>
           <hr className="my-4 border-gray-600" />
 
