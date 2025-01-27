@@ -80,6 +80,7 @@ const SignupForm = () => {
     } catch (error) {
     }
   };
+  
   return (
     <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
         <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />

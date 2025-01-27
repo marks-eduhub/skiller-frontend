@@ -4,16 +4,35 @@ export interface Child {
 }
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 
+export interface  ProfilePicture {
+  url?: string;
+  alternativeText?: string;
+  caption?: string;
+  formats?: {
+    small?: { url: string };
+    thumbnail?: { url: string };
+  };
+}
+
+export interface SocialLinks {
+  email: string;
+  facebook: string;
+  twitter: string;
+  linkedin: string;
+}
+
 export interface UserDetails {
   id: number;
-  username: string;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-  profilepicture: string | null;
-  socialLinks: any[];
-  studentname: string | null;
-}
+
+    username: string;
+    email: string;
+    firstName: string | null;
+    lastName: string | null;
+    profilepicture: ProfilePicture
+    socialLinks: SocialLinks
+    studentname: string | null;
+  }
+ 
 
 export  interface Reply {
   id: number;
