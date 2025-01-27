@@ -23,6 +23,7 @@ const ProfilePage: React.FC = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
   const { data } = useFetchUserDetails(Number(userId));
+  console.log("data", data)
   const { data: tutorDetails } = useFetchTutorDetails(Number(userId));
   const { data: tutor } = useFetchTutorId(Number(userId));
   const [image, setImage] = useState<File | null>(null);
@@ -290,7 +291,7 @@ const ProfilePage: React.FC = () => {
       return;
     }
   
-    let profilePictureId = "";
+    let profilePictureId: string = "";
     if (image) {
       try {
         profilePictureId = await uploadMedia(image);
@@ -299,9 +300,10 @@ const ProfilePage: React.FC = () => {
         return;
       }
     } else {
-      profilePictureId = exisitingprofileId;
+      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : "";
     }
-  
+    
+    
     try {
       if (toggle) {
         if (tutorId) {

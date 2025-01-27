@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { UserDetails } from "@/lib/types";
+import { ProfilePicture } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 
@@ -100,8 +100,7 @@ export const useFetchUserDetails = (userId: number) => {
       firstName: string;
       lastName: string;
       socialLinks: any;
-      profilepicture: null;
-      data: UserDetails;
+      profilepicture: ProfilePicture | null;     
     },
     Error
   >({

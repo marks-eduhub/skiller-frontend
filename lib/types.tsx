@@ -5,6 +5,7 @@ export interface Child {
 export type SearchResult = (Course & { type: 'course' }) | (Tutor & { type: 'tutor' });
 
 export interface  ProfilePicture {
+  id: number
   url?: string;
   alternativeText?: string;
   caption?: string;
