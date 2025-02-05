@@ -10,12 +10,13 @@ import Topics from "./topics";
 import { useParams } from "next/navigation";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
 import api from "@/lib/axios";
+import Loader from "@/components/Student/loader";
+import { message } from "antd";
 
 const CourseOverview = () => {
   const [Tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
-  console.log("dd", data);
 
   const handleClicks = (tabName: string) => {
     setTab(tabName);
@@ -30,6 +31,18 @@ const CourseOverview = () => {
   const tutorname = data?.data?.attributes?.tutor?.data?.attributes?.tutorname;
   const courseImage = data?.data?.attributes?.card?.data?.attributes?.url;
   const ImageUrl = courseImage ? `${api.defaults.baseURL}${courseImage}` : null;
+
+  if(isLoading) {
+    return (
+      <div className="flex items-center  min-h-screen justify-center p-20">
+        <Loader />
+      </div>
+    );
+  }
+
+  if(error) {
+    message.error("Error displaying course information")
+  }
 
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">

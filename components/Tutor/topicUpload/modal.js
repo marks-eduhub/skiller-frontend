@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomModal = ({ isOpen, onClose, onConfirm }) => {
+const CustomModal = ({ isOpen, onClose, onConfirm, topicId }) => {
   if (!isOpen) return null;
 
   return (
@@ -16,7 +16,8 @@ const CustomModal = ({ isOpen, onClose, onConfirm }) => {
             Cancel
           </button>
           <button
-            onClick={onConfirm}
+            onClick={() => topicId && onConfirm(topicId)}
+
             className="px-4 py-2 bg-red-900 text-white rounded hover:bg-red-900"
           >
             Delete

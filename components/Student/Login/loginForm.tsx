@@ -7,13 +7,13 @@ import Link from "next/link";
 import data from "./data.json";
 // import { dotPulse } from "ldrs";
 import { useAuthContext } from "@/Context/AuthContext";
-import { login } from "../../../lib/login";
+import { login } from "../../../hooks/Authhooks/useLogin";
 import { message } from "antd";
 import dynamic from "next/dynamic";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 // dotPulse.register();
 
-const DotPulseWrapper = dynamic(() => import('@/hooks/pulse'), { ssr: false });
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 export default function LogIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -92,7 +92,7 @@ export default function LogIn() {
             </span>
           </div>
           <Link href="/auth/forgot-password">
-          <h1 className="text-blue-600 cursor-pointer">Forgot Password?</h1>
+            <h1 className="text-blue-600 cursor-pointer">Forgot Password?</h1>
           </Link>
           <button
             className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[300px]"
@@ -101,7 +101,7 @@ export default function LogIn() {
           >
             <span className="pr-4">Login</span>
             {isPending && (
-               <DotPulseWrapper size="20" speed="1.5" color="white" />
+              <DotPulseWrapper size="20" speed="1.5" color="white" />
               // <l-dot-pulse size="20" speed="1.5" color="white"/>
             )}
           </button>

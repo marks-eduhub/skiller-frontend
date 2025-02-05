@@ -22,7 +22,24 @@ import Loader from "@/components/Student/loader";
 import { useAuthContext } from "@/Context/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-const DotPulseWrapper = dynamic(() => import('@/hooks/pulse'), { ssr: false });
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
+
+interface Topic {
+  id: number | null;
+  topicname: string;
+  topicdescription: string;
+  resourceInstructions: string;
+  topicExpectations: string;
+  duration: string;
+  topicResources: any;
+  topicVideo: any;
+  topicresource: string;
+  topicexpectation: string;
+  topicduration: string;
+  instructions: string;
+  videoFile: File | null;
+  resourceFile: File | null;
+}
 
 const UploadCourse = () => {
   const { setCourseId, setTopicId } = useCourseContext();
@@ -39,7 +56,6 @@ const UploadCourse = () => {
   const [topicname, setTopicname] = useState("");
   const [topicdescription, setTopicdescription] = useState("");
   const [topicexpectation, setTopicexpectation] = useState("");
-  const [topicresource, setTopicresource] = useState("");
   const [topicduration, setTopicduration] = useState("");
   const [instructions, setInstructions] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -47,7 +63,7 @@ const UploadCourse = () => {
   const [category, setCategory] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [duration, setDuration] = useState("");
-  const [topicDuration, setTopicDuration] = useState("");
+  const [topics, setTopics] = useState<Topic[]>([]);
 
 
   const tutorName = user?.id
@@ -68,6 +84,34 @@ const UploadCourse = () => {
     }
   };
 
+  const addTopic = () => {
+    const newTopic = {
+      id: null, 
+      topicname: "",
+      topicdescription: "",
+      resourceInstructions: "",
+      topicExpectations: "",
+      duration: "",
+      topicResources: null,
+      topicVideo: null,
+      topicresource: "",
+      topicexpectation: "",
+      topicduration: "",
+      instructions: "",
+      videoFile: null,
+      resourceFile: null,
+    };
+  
+    setTopics([...topics, newTopic]);
+  };
+  
+  const updateTopic = (index: number, updatedFields: Partial<Topic>) => {
+    setTopics((prevTopics) =>
+      prevTopics.map((topic, i) =>
+        i === index ? { ...topic, ...updatedFields } : topic
+      )
+    );
+  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -374,23 +418,10 @@ const UploadCourse = () => {
 
       {currentStep === 2 && (
         <Step2
-          topicname={topicname}
-          setTopicname={setTopicname}
-          topicdescription={topicdescription}
-          setTopicdescription={setTopicdescription}
-          topicexpectation={topicexpectation}
-          setTopicexpectation={setTopicexpectation}
-          topicresource={topicresource}
-          setTopicresource={setTopicresource}
-          instructions={instructions}
-          setInstructions={setInstructions}
-          videoFile={videoFile}
-          setVideoFile={setVideoFile}
-          resourceFile={resourceFile}
-          setResourceFile={setResourceFile}
-          topicduration={topicduration}
-          setTopicduration={setTopicduration}
-
+          topics={topics}
+          setTopics={setTopics}
+          addTopic={addTopic}
+          updateTopic={updateTopic}
         />
       )}
       {currentStep === 3 && <Step3 />}

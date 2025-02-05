@@ -1,9 +1,8 @@
 import { useFetchTopic } from "@/hooks/useSetQuiz";
 import React from "react";
 import { message } from "antd";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useAuthContext } from "@/Context/AuthContext";
+import Loader from "@/components/Student/loader";
 const Step2 = ({
   duration,
   setDuration,
@@ -18,40 +17,26 @@ const Step2 = ({
   topic: string;
   setTopic: React.Dispatch<React.SetStateAction<string>>;
   courseId: number | string;
-  passmark:  string;
+  passmark: string;
   setPassmark: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { user } = useAuthContext();
   const userId = user?.id;
-  const { data, isLoading, error } = useFetchTopic(Number(courseId), Number(userId))
+  const { data, isLoading, error } = useFetchTopic(
+    Number(courseId),
+    Number(userId)
+  );
+ 
 
   if (isLoading) {
-    return (
       <div>
-        <h2 className="text-lg font-300 my-4 ">
-          <Skeleton
-            width={200}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
-
-        <div>
-          <Skeleton
-            height={300}
-            count={3}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-        </div>
+       <Loader/>
       </div>
-    );
+    
   }
 
   if (error) {
-    message.error("Error fetching courses. Please try again later.");
+    message.error("Error fetching topics. Please try again later.");
   }
   const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTopic(e.target.value);
@@ -92,25 +77,17 @@ const Step2 = ({
             onChange={handleTopicChange}
             className="mt-1 px-4 py-2 rounded-md w-full border text-black border-gray-200 outline-none"
           >
-            <option value="" className="text-black">
-              Select a topic
-            </option>
-            <div className="rounded-lg">
-              {data?.data?.map(
-                (topicData: {
-                  id: string;
-                  attributes: { topicname: string };
-                }) => (
-                  <option
-                    key={topicData.id}
-                    value={topicData.id}
-                    className="text-black"
-                  >
-                    {topicData.attributes.topicname}
-                  </option>
-                )
-              )}
-            </div>
+            <option value="">Select a topic</option>
+            {Array.isArray(data?.data) &&
+              data.data.map((topicData: any) => (
+                <option
+                  key={topicData.id}
+                  value={topicData.id}
+                  className="text-black"
+                >
+                  {topicData.attributes.topicname}
+                </option>
+              ))}
           </select>
         </div>
       </div>

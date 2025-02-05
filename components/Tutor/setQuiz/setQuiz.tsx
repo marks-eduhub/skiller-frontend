@@ -22,16 +22,11 @@ const SetQuiz = () => {
   const [testname, setTestname] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
-  const [passmark, setPassmark] = useState(""); 
+  const [passmark, setPassmark] = useState("");
   const [topic, setTopic] = useState("");
   const [quizData, setQuizData] = useState([
     { question: "", options: ["", ""], answers: "" },
   ]);
-  useEffect(() => {
-    if (courseId) {
-      console.log("Course ID passed to SetQuiz:", courseId);
-    }
-  }, [courseId]);
 
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
@@ -39,21 +34,27 @@ const SetQuiz = () => {
       testdescription,
       testduration,
       topicId,
-      passmark
+      passmark,
     }: {
       testname: string;
       testdescription: string;
       testduration: string;
       topicId: string;
-      passmark:string
+      passmark: string;
     }) => {
-      return await PostTest(testname, testdescription, testduration, topicId, passmark);
+      return await PostTest(
+        testname,
+        testdescription,
+        testduration,
+        topicId,
+        passmark
+      );
     },
     onSuccess: () => {
-      console.log("test data submitted!");
+      message.success("test data submitted!");
     },
     onError: (err) => {
-      console.error("Error submitting test data:", err);
+      message.error("Error submitting test data");
     },
   });
 
@@ -161,7 +162,9 @@ const SetQuiz = () => {
   if (!courseId) {
     return (
       <div className="text-center">
-        <p className="text-red-500">No course ID provided. Please go back and create a course.</p>
+        <p className="text-red-500">
+          Something is missing. Please go back and create a course.
+        </p>
       </div>
     );
   }
@@ -237,14 +240,24 @@ const SetQuiz = () => {
               Upload Quiz
             </button>
           </>
-        ) : (
+        ) : currentStep === 2 ? (
+          <button
+            className={`bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white ${
+              !topic ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={handleNextStep}
+            disabled={!topic}
+          >
+            Next
+          </button>
+        ) : currentStep === 1 ? (
           <button
             className="bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white"
             onClick={handleNextStep}
           >
             Next
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   );

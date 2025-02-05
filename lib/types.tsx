@@ -97,11 +97,13 @@ export interface QuizData {
 }
 
 export interface TopicAttributes {
+  id:number
   topicname: string;
   duration: string;
   topicExpectations: string;
   topicdescription: string;
   isCompleted: boolean;
+  position: number;
 }
 
 export interface Topic {

@@ -1,4 +1,4 @@
-import api from "./axios";
+import api from "../../lib/axios";
 
 export const register = async (formData: FormData) => {
   try {
