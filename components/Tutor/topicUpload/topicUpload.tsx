@@ -2,10 +2,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import TutorNav from "../dashboard/tutor-nav";
-import { useSearchParams } from "next/navigation";
 import TopicForm from "./topicform";
-import { uploadMedia } from "@/hooks/useCourseUpload";
-import { message } from "antd";
+
 
 interface Topic {
   id: number | null;

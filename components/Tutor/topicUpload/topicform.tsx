@@ -6,7 +6,7 @@ import { uploadMedia } from "@/hooks/useCourseUpload";
 import { message } from "antd";
 
 interface Topic {
-  id: number;
+  id: number | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;

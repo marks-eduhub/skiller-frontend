@@ -6,15 +6,19 @@ import { GrCloudUpload } from "react-icons/gr";
 import FileModal from "./filemodal";
 import CustomModal from "../topicUpload/modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { topicDelete, topicEditing, topicUpload } from "@/hooks/useCourseTopics";
+import {
+  topicDelete,
+  topicEditing,
+  topicUpload,
+} from "@/hooks/useCourseTopics";
 import { message } from "antd";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { uploadMedia } from "@/hooks/useCourseUpload";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface Topic {
-  id: number ;
+  id: number | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;
@@ -42,7 +46,7 @@ interface TopicFieldsProps {
   videoPreview: string;
   resourcePreview: File[];
   expandedIndex: number | null;
-  topicId: number | null ;
+  topicId: number | null;
   onClose: () => void;
 }
 
@@ -54,11 +58,18 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   videoPreview,
   resourcePreview,
   topicId,
-  onClose
+  onClose,
 }) => {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
-  const courseId = searchParams.get("courseId");
+  const courseIdParam = searchParams.get("courseId");
+
+  if (!courseIdParam || isNaN(Number(courseIdParam))) {
+    throw new Error("Invalid or missing courseId");
+  }
+
+  const courseId = Number(courseIdParam);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
@@ -102,15 +113,14 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     [imageHandler]
   );
 
-
   const { mutate: createTopic } = useMutation({
     mutationFn: async ({
       courseId,
       topicname,
       topicExpectations,
       topicdescription,
-      newResources = [], 
-      newVideos = [],     
+      newResources = [],
+      newVideos = [],
       instructions,
       duration,
     }: {
@@ -123,34 +133,32 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       instructions: string;
       duration: string;
     }) => {
-      
-  
-        const newResourceIds = newResources.length
-        ? await Promise.all(
-            newResources.map(async (file) => {
-              const id = await uploadMedia(file);  
-              return String(id); 
-            })
-          )
-        : []; 
-  
-      const newVideoIds = newVideos.length
-        ? await Promise.all(
-            newVideos.map(async (file) => {
-              const id = await uploadMedia(file);
-              return String(id);
-            })
-          )
-        : [];
-  
-      
+      const newResourceIds: number[] = newResources.length
+      ? await Promise.all(
+          newResources.map(async (file) => {
+            const id = await uploadMedia(file);
+            return Number(id); 
+          })
+        )
+      : [];
+    
+    const newVideoIds: number[] = newVideos.length
+      ? await Promise.all(
+          newVideos.map(async (file) => {
+            const id = await uploadMedia(file);
+            return Number(id); 
+          })
+        )
+      : [];
+    
+
       return await topicUpload(
         courseId,
         topicname,
         topicExpectations,
         topicdescription,
-        newResourceIds,  
-        newVideoIds.length > 0 ? newVideoIds[0] : null,  
+        newResourceIds,
+        newVideoIds.length > 0 ? newVideoIds[0] : null,
         instructions,
         duration
       );
@@ -158,7 +166,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     onSuccess: () => {
       message.success("New topic created successfully");
       queryClient.invalidateQueries({
-        queryKey: ["course_topics", String(courseId)], 
+        queryKey: ["course_topics", String(courseId)],
       });
       onClose();
     },
@@ -166,8 +174,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error creating new topic. Please try again later.");
     },
   });
-  
-  
+
   const { mutate: editTopic } = useMutation({
     mutationFn: async ({
       topicId,
@@ -197,18 +204,24 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
-          return String(id);  
+          return String(id);
         })
       );
-      
+
       const newVideoIds = await Promise.all(
         newVideos.map(async (file) => {
           const id = await uploadMedia(file);
-          return String(id);  
+          return String(id);
         })
       );
-      const allResourceIds = [...existingResourceIds.map(String), ...newResourceIds].join(","); 
-      const allVideoIds = newVideoIds.length > 0 ? String(newVideoIds[0]) : String(existingVideoIds[0] || "");
+      const allResourceIds = [
+        ...existingResourceIds.map(String),
+        ...newResourceIds,
+      ].join(",");
+      const allVideoIds =
+        newVideoIds.length > 0
+          ? String(newVideoIds[0])
+          : String(existingVideoIds[0] || "");
       return await topicEditing(
         topicId,
         courseId,
@@ -224,10 +237,10 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     onSuccess: () => {
       message.success("Topic data edited successfully");
       queryClient.invalidateQueries({
-        queryKey: ["course_topics", String(courseId)], 
+        queryKey: ["course_topics", String(courseId)],
       });
-      onClose()
-      },
+      onClose();
+    },
     onError: (err) => {
       message.error("Error editing topic. Please try again later.");
     },
@@ -235,22 +248,26 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
 
   const handleSaveChanges = async () => {
     try {
-     
-  
-      const existingVideoIds = !newVideoFile && topic.topicVideo ? [topic.topicVideo] : topic.topicVideo || [];
+      const existingVideoIds =
+        !newVideoFile && topic.topicVideo
+          ? [topic.topicVideo]
+          : topic.topicVideo || [];
       const newVideos = newVideoFile ? [newVideoFile] : [];
-      
-      const existingResourceIds = (topic.topicResources?.length || newResourceFiles.length) ? topic.topicResources : [];
+
+      const existingResourceIds =
+        topic.topicResources?.length || newResourceFiles.length
+          ? topic.topicResources
+          : [];
       const newResources = newResourceFiles;
-      
+
       if (!topicId || topicId === 0) {
         createTopic({
           courseId,
           topicname: topic.topicname,
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
-          topicResources: newResources,
-          topicVideo: newVideos,
+          newResources, 
+          newVideos, 
           instructions: topic.resourceInstructions,
           duration: topic.duration,
         });
@@ -273,10 +290,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error saving changes");
     }
   };
-  
 
-
- 
   const { mutate: deleteTopics } = useMutation({
     mutationFn: async (topicId: number) => {
       return await topicDelete(topicId);
@@ -284,9 +298,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     onSuccess: () => {
       message.success("Topic deleted successfully!");
       queryClient.invalidateQueries({
-        queryKey: ["course_topics"], 
+        queryKey: ["course_topics"],
       });
-      closeModal(); 
+      closeModal();
       onClose();
     },
     onError: (err) => {
@@ -294,11 +308,12 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
   });
 
-  const handleDeleteClick = (topicId: number) => {
-    setSelectedTopicId(topicId);
-    setIsModalOpen(true);
+  const handleDeleteClick = (topicId: number | null) => {
+    if (topicId !== null) {
+      setSelectedTopicId(topicId);
+      setIsModalOpen(true);
+    }
   };
-
 
   return (
     <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
@@ -441,16 +456,23 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           <input
             type="file"
             className="absolute inset-0 opacity-0 cursor-pointer"
-            onChange={(e) => onVideoChange(topic.id, e)}
+            onChange={(e) => {
+              if (topic.id !== null) {
+                onVideoChange(topic.id, e);
+              }
+            }}
             accept="video/*"
           />
         </div>
       </div>
 
       <div className="flex justify-between items-center my-4">
-       
         <button
-          onClick={() => handleDeleteClick(topicId)}
+          onClick={() => {
+            if (topicId !== null) {
+              handleDeleteClick(topicId);
+            }
+          }}
           className="bg-black text-white rounded-md py-2 px-4"
         >
           Delete Topic
@@ -471,7 +493,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           deleteTopics(id);
         }}
         topicId={selectedTopicId}
-
       />
       {ModalOpen && (
         <FileModal
