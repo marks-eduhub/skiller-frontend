@@ -3,7 +3,15 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { addTutor, addStudent, useFetchUserDetails, useFetchTutorDetails } from "@/hooks/useProfile";
+import {
+  addTutor,
+  addStudent,
+  useFetchUserDetails,
+  useFetchTutorDetails,
+  updateTutor,
+  useFetchTutorId,
+  linkTutorToUser,
+} from "@/hooks/useProfile";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
@@ -14,10 +22,9 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const ProfilePage: React.FC = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
-  const {data, isLoading, error} = useFetchUserDetails(Number(userId))
-  const{data:tutorDetails, isLoading:tutorLoading, error:tutorError} = useFetchTutorDetails(Number(userId))
-  const tutor = tutorDetails?.data[0]
-  console.log("tt", tutor)
+  const { data } = useFetchUserDetails(Number(userId));
+  const { data: tutorDetails } = useFetchTutorDetails(Number(userId));
+  const { data: tutor } = useFetchTutorId(Number(userId));
   const [image, setImage] = useState<File | null>(null);
   const [toggle, setToggle] = useState(false);
   const [Biography, setBiography] = useState("");
@@ -25,7 +32,8 @@ const ProfilePage: React.FC = () => {
   const [Qualifications, setQualifications] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [uploadImage, setUploadImage] = useState<string | null>(null);
+  const [uploadImage, setUploadImage] = useState("");
+
   const [socialLinks, setSocialLinks] = useState({
     email: "",
     facebook: "",
@@ -33,28 +41,49 @@ const ProfilePage: React.FC = () => {
     linkedin: "",
   });
 
+  const tutorId = tutor?.data[0]?.id;
+
   useEffect(() => {
     if (data) {
-      setFirstName(data?.firstName || "");
-      setLastName(data?.lastName || "");
+      setFirstName(data.firstName || "");
+      setLastName(data.lastName || "");
       setSocialLinks({
-        email: data?.socialLinks?.email || "",
-        facebook: data?.socialLinks?.facebook || "",
-        twitter: data?.socialLinks?.twitter || "",
-        linkedin: data?.socialLinks?.linkedin || "",
+        email: data.socialLinks?.email || "",
+        facebook: data.socialLinks?.facebook || "",
+        twitter: data.socialLinks?.twitter || "",
+        linkedin: data.socialLinks?.linkedin || "",
       });
-      setUploadImage( data?.profilepicture || "");
 
+      if (data?.profilepicture?.url) {
+        const imageUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${data.profilepicture.url}`;
+        setUploadImage(imageUrl);
+      } else {
+        setUploadImage("/Ellipse 445.webp");
+      }
     }
   }, [data]);
 
   useEffect(() => {
-    if (tutor) {
+    if (tutorDetails && tutorDetails.data.length > 0) {
+      const tutor = tutorDetails.data[0].attributes;
       setBiography(tutor?.Biography || "dummy");
       setRole(tutor?.role || "dummy");
       setQualifications(tutor?.Qualifications || "dummy");
-    }}, [tutor]);
-  
+      setSocialLinks({
+        email: tutor.socialLinks?.email || "",
+        facebook: tutor.socialLinks?.facebook || "",
+        twitter: tutor.socialLinks?.twitter || "",
+        linkedin: tutor.socialLinks?.linkedin || "",
+      });
+
+      if (tutor?.profilepicture?.data?.attributes?.url) {
+        const imageUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${tutor?.profilepicture?.data?.attributes?.url}`;
+        setUploadImage(imageUrl);
+      } else {
+        setUploadImage("/Ellipse 445.webp");
+      }
+    }
+  }, [tutorDetails]);
 
   const handleSuccess = () => {
     message.success("Profile saved successfully!");
@@ -64,9 +93,10 @@ const ProfilePage: React.FC = () => {
     message.error("Failed to save changes.");
   };
 
+  const exisitingprofileId = data?.profilepicture?.id || null;
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log("Selected image file:", file);
 
     if (file) {
       setImage(file);
@@ -76,7 +106,7 @@ const ProfilePage: React.FC = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      message.error("No course image selected. Please try again.");
+      message.error("No profile picture selected.");
     }
   };
   const handleRemoveImage = () => {
@@ -87,7 +117,9 @@ const ProfilePage: React.FC = () => {
     setToggle(!toggle);
   };
 
-  const { mutate: postTutorProfile } = useMutation({
+ 
+
+  const { mutateAsync: postTutorProfile } = useMutation({
     mutationFn: async ({
       tutorname,
       profilepicture,
@@ -112,7 +144,7 @@ const ProfilePage: React.FC = () => {
         linkedin: string;
       };
     }) => {
-      return await addTutor(
+      const response = await addTutor(
         tutorname,
         profilepicture,
         role,
@@ -122,11 +154,23 @@ const ProfilePage: React.FC = () => {
         Qualifications,
         socialLinks
       );
+  
+      const tutorId =
+        response?.id || response?.data?.id || response?.data?.data?.id || null;
+  
+      if (!tutorId) {
+        throw new Error("Failed to retrieve tutor ID from the response");
+      }
+  
+      return tutorId; 
     },
-    onError: handleError,
-    onSuccess: handleSuccess,
+    onError: () => {
+      message.error("Error creating tutor");
+    },
   });
-
+  
+  
+  
   const { mutate: postStudentProfile } = useMutation({
     mutationFn: async ({
       studentname,
@@ -140,7 +184,7 @@ const ProfilePage: React.FC = () => {
       profilepicture: string;
       lastName: string;
       firstName: string;
-      userId:number | null,
+      userId: number | null;
       socialLinks: {
         email: string;
         facebook: string;
@@ -161,6 +205,78 @@ const ProfilePage: React.FC = () => {
     onSuccess: handleSuccess,
   });
 
+  const { mutate: updateTutorProfile } = useMutation({
+    mutationFn: async ({
+      tutorId,
+      tutorname,
+      profilepicture,
+      role,
+      lastName,
+      firstName,
+      Biography,
+      Qualifications,
+      socialLinks,
+    }: {
+      tutorId: number;
+      tutorname: string;
+      profilepicture: string;
+      role: string;
+      lastName: string;
+      firstName: string;
+      Biography: string;
+      Qualifications: string;
+      socialLinks: {
+        email: string;
+        facebook: string;
+        twitter: string;
+        linkedin: string;
+      };
+    }) => {
+      return await updateTutor(
+        tutorId,
+        tutorname,
+        profilepicture,
+        role,
+        lastName,
+        firstName,
+        Biography,
+        Qualifications,
+        socialLinks
+      );
+    },
+
+    onSuccess: () => {
+      message.success("Tutor details updated successfully");
+    },
+
+    onError: () => {
+      message.error("Error updating tutor");
+    },
+  });
+
+  const { mutate: linkTutor } = useMutation({
+    mutationFn: async ({
+      userId,
+      tutorId,
+
+    }: {
+      userId: number;
+      tutorId: number;
+
+    }) => {
+      return await linkTutorToUser(userId, tutorId );
+    },
+
+    onSuccess: () => {
+      message.success("Tutor linked successfully");
+    },
+
+    onError: () => {
+      message.error("Error in linking tutor to user");
+    },
+  });
+
+  
   const handleSaveChanges = async () => {
     const updatedSocialLinks = {
       email: socialLinks.email,
@@ -168,45 +284,76 @@ const ProfilePage: React.FC = () => {
       twitter: socialLinks.twitter,
       linkedin: socialLinks.linkedin,
     };
+  
     if (!userId) {
-      message.error("Cannot update user details .");
+      message.error("Cannot update user details.");
       return;
     }
-
-    let profilePictureId = "";
+  
+    let profilePictureId: string = "";
     if (image) {
       try {
         profilePictureId = await uploadMedia(image);
-        console.log("Profile picture uploaded with ID:", profilePictureId);
       } catch (error) {
         message.error("Error uploading image");
         return;
       }
-    }
-
-    if (toggle) {
-      postTutorProfile({
-        tutorname: `${firstName} ${lastName}`,
-        profilepicture: profilePictureId,
-        role,
-        lastName,
-        firstName,
-        Biography,
-        Qualifications,
-        socialLinks: updatedSocialLinks,
-      });
     } else {
-      postStudentProfile({
-        studentname: `${firstName} ${lastName}`,
-        profilepicture: profilePictureId,
-        lastName,
-        firstName,
-        userId,
-        socialLinks: updatedSocialLinks,
-      });
+      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : "";
     }
+    
+    
+    try {
+      if (toggle) {
+        if (tutorId) {
+          updateTutorProfile({
+            tutorId,
+            tutorname: `${firstName} ${lastName}`,
+            profilepicture: profilePictureId,
+            role,
+            lastName,
+            firstName,
+            Biography,
+            Qualifications,
+            socialLinks: updatedSocialLinks,
+          });
+        } else {
+          const newTutorId = await postTutorProfile({
+            tutorname: `${firstName} ${lastName}`,
+            profilepicture: profilePictureId,
+            role,
+            lastName,
+            firstName,
+            Biography,
+            Qualifications,
+            socialLinks: updatedSocialLinks,
+          });
+  
+  
+          if (newTutorId) {
+            linkTutor({ userId, tutorId: newTutorId });
+            message.success("Tutor profile created and linked successfully!");
+          } else {
+            throw new Error("Tutor ID is not available after creation");
+          }
+        }
+      } else {
+        postStudentProfile({
+          studentname: `${firstName} ${lastName}`,
+          profilepicture: profilePictureId,
+          lastName,
+          firstName,
+          userId,
+          socialLinks: updatedSocialLinks,
+        });
+        message.success("Student profile created successfully!");
+      }
+    } catch (error) {
+      message.error("Failed to save profile data. Please try again.");
+    }
+  
     setImage(null);
-    setUploadImage(null);
+    setUploadImage("/Ellipse 445.webp");
     setToggle(false);
     setBiography("");
     setSocialLinks({
@@ -220,7 +367,7 @@ const ProfilePage: React.FC = () => {
     setRole("");
     setQualifications("");
   };
-
+  
   return (
     <div className="max-md:p-0 max-md:pr-4 sm:pl-10 items-center sm:w-1/2">
       <h2 className="font-bold text-[30px] mb-3 max-md:mt-0">Profile</h2>
@@ -231,23 +378,14 @@ const ProfilePage: React.FC = () => {
 
       <div className="h-[200px] border border-gray-200 rounded-lg mb-5 mt-5 items-center">
         <div className="flex items-center justify-center my-3">
-          {image ? (
-            <Image
-              src={uploadImage || "/Ellipse 445.webp"}
-              alt="Profile"
-              width={120}
-              height={120}
-              className="rounded-full object-cover"
-            />
-          ) : (
-            <Image
-              src="/Ellipse 445.webp"
-              alt=""
-              width={120}
-              height={120}
-              className="rounded-full"
-            />
-          )}
+          <Image
+            src={uploadImage}
+            alt={image ? "userimage" : "no image selected"}
+            width={120}
+            height={120}
+            className="rounded-full object-cover"
+          />
+
           <div className="flex flex-col gap-5 ml-9">
             <input
               type="file"
@@ -356,7 +494,9 @@ const ProfilePage: React.FC = () => {
               </div>
 
               <div className="flex items-center  w-full my-5">
-                <label className="block text-sm mb-1 mr-2">Tutor qualifications</label>
+                <label className="block text-sm mb-1 mr-2">
+                  Tutor qualifications
+                </label>
                 <input
                   type="text"
                   value={Qualifications}
@@ -389,7 +529,7 @@ const ProfilePage: React.FC = () => {
                 <Image
                   src="/tutorprofile.png"
                   alt="Tutor Profile Screenshot"
-                  width={300} 
+                  width={300}
                   height={200}
                   className="rounded-lg"
                 />

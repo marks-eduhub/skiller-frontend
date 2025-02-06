@@ -1,7 +1,8 @@
 import api from "@/lib/axios";
-import { UserDetails } from "@/lib/types";
+import { ProfilePicture } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
+
 
 export const addTutor = async (
   tutorname: string,
@@ -33,7 +34,7 @@ export const addTutor = async (
         socialLinks,
       },
     });
-    return response.data;
+    return response.data; 
   } catch (error) {
     throw error;
   }
@@ -67,7 +68,23 @@ export const addStudent = async (
 
     return response.data;
   } catch (error) {
-    console.error("Error in addStudent:", error);
+    throw error;
+  }
+};
+
+
+export const linkTutorToUser = async (userId: number, tutorId: number) => {
+  try {
+    if (!userId || !tutorId) {
+      throw new Error("Both User ID and Tutor ID are required.");
+    }
+
+    const response = await api.put(`/api/users/${userId}`, {
+      tutor: tutorId, 
+    });
+
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };
@@ -83,8 +100,7 @@ export const useFetchUserDetails = (userId: number) => {
       firstName: string;
       lastName: string;
       socialLinks: any;
-      profilepicture: null;
-      data: UserDetails;
+      profilepicture: ProfilePicture | null;     
     },
     Error
   >({
@@ -98,7 +114,7 @@ export const useFetchUserDetails = (userId: number) => {
 
 const fetchTutorDetails = async (userId: number) => {
   const response = await api.get(
-    `/api/tutors?filters[user][id]=${userId}&populate=user`
+    `/api/tutors?filters[user][id]=${userId}&populate=user, profilepicture,socialLinks`
   );
 
   return response.data;
@@ -123,6 +139,7 @@ export const useFetchTutorDetails = (userId: number) => {
 };
 
 export const updateTutor = async (
+  tutorId: number, 
   tutorname: string,
   profilepicture: string,
   role: string,
@@ -140,20 +157,41 @@ export const updateTutor = async (
   const turndownService = new TurndownService();
   const markdownBio = turndownService.turndown(Biography);
   try {
-    const response = await api.put("/api/tutors", {
-      // data: {
-      tutorname,
-      profilepicture,
-      role,
-      lastName,
-      firstName,
-      Biography: markdownBio,
-      Qualifications,
-      socialLinks,
-      // },
+    const response = await api.put(`/api/tutors/${tutorId}`, {
+      data: {
+        tutorId,
+        tutorname,
+        profilepicture,
+        role,
+        lastName,
+        firstName,
+        Biography: markdownBio,
+        Qualifications,
+        socialLinks,
+      },
     });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
+
+
+
+const fetchTutorId = async (userId:number) => {
+  const response = await api.get(`/api/tutors?filters[user][id]=${userId}`);
+
+  return response.data;
+};
+
+export const useFetchTutorId = (userId:number) => {
+  return useQuery<{ data:any}, Error>({
+    queryFn: () => fetchTutorId(userId),
+
+    queryKey: ["profile_tutorId,", userId],
+    meta: {
+      errorMessage: "Failed to fetch tutor information",
+    },
+  });
+};
+

@@ -1,5 +1,4 @@
-import CoursePage from "@/components/Tutor/coursePage/courses";
-
-export default function courses() {
-  return <CoursePage />;
+import MainPage from "@/components/Tutor/dashboard/mainpage";
+export default function main() {
+  return <MainPage />;
 }

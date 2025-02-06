@@ -8,6 +8,7 @@ import clsx from "clsx";
 const SideLinks = () => {
   const router = useRouter();
   const pathname = usePathname();
+  
   const handleOptions = (subOptions: string) => {
     router.push(`/tutor/dashboard/communications/${subOptions}`);
   };
@@ -23,7 +24,7 @@ const SideLinks = () => {
       src: "/people.svg",
       alt: "community",
       name: "Community",
-      path: "/tutor/dashboard/courses",
+      // path: "/tutor/dashboard/courses",
     },
     // {
     //   src: "/tools.svg",
@@ -68,7 +69,7 @@ const SideLinks = () => {
             <Link href={link.path}>
               <div
                 className={clsx(
-                  link.path === pathname ? "bg-gray-700 rounded px-4 py-2" : "text-white",
+                  pathname.startsWith(link.path) ? "bg-gray-700 rounded px-4 py-2" : "text-white",
                   "flex flex-row cursor-pointer"
                 )}
               >

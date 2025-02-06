@@ -31,11 +31,10 @@ const TopicsCard: React.FC = () => {
       return await markTopicCompleted(isCompleted, topicId);
     },
     onSuccess: () => {
-      message.success("Topic status updated!");
+      // message.success("Topic status updated!");
     },
     onError: (err) => {
       message.error("Error updating topic status");
-      console.error("Error updating topic status:", err);
 
     },
   });

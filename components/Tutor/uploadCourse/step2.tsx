@@ -1,67 +1,56 @@
-import React, { useState, useCallback, useMemo,Dispatch, SetStateAction  } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { GrCloudUpload } from "react-icons/gr";
-import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import CustomModal from "../topicUpload/modal";
-import {message} from "antd"
-import FileModal from "./filemodal";
+import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import TopicFields from "./topicfields";
 
-interface StepProps{
+interface Topic {
+  id: number | null; 
   topicname: string;
-  setTopicname: Dispatch<SetStateAction<string>>;
   topicdescription: string;
-  setTopicdescription: Dispatch<SetStateAction<string>>;
-  instructions: string;
-  setInstructions: Dispatch<SetStateAction<string>>;
+  resourceInstructions: string;
+  topicExpectations: string;
+  duration: string;
+  topicResources: any;
+  topicVideo: any;
   topicresource: string;
-  setTopicresource: Dispatch<SetStateAction<string>>;
   topicexpectation: string;
-  setTopicexpectation: Dispatch<SetStateAction<string>>;
-  videoFile:File | null
-  setVideoFile: Dispatch<SetStateAction<File | null>>
-  resourceFile:File | null
-  setResourceFile: Dispatch<SetStateAction<File | null>>
   topicduration: string;
-  setTopicduration: Dispatch<SetStateAction<string>>;
-  
+  instructions: string;
+  videoFile: File | null;
+  resourceFile: File | null;
 }
-const Step2:React.FC<StepProps> = ({topicname,
-  setTopicname,
-  topicdescription,
-  instructions,
-  topicresource,
-  setTopicdescription,
-  setInstructions,
-  topicexpectation,
-  setTopicexpectation,
-  videoFile,
-  setVideoFile,
-  resourceFile,
-  setResourceFile,
-  setTopicresource,
-  topicduration,
-  setTopicduration
 
-}) => {
-  const [topics, setTopics] = useState<string[]>([]);
-  const [isAdding, setIsAdding] = useState(false);
+interface Step2Props {
+  topics: Topic[];
+  setTopics: (topics: Topic[]) => void;
+  addTopic: () => void;
+  updateTopic: (index: number, updatedFields: Partial<Topic>) => void;
+}
+
+const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
+  const [videoPreview, setVideoPreview] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [ModalOpen, setModalOpen] = useState(false);
+  const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(null);
+  const [resourcePreview, setResourcePreview] = useState<File[]>([]);
+  const [topicId, setTopicId] = useState<number | null>(null); 
 
+  const toggleExpanded = (index: number) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+    setCurrentTopicIndex(index);
 
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTopicId(topics[index]?.id || null);
+  };
+
+  const onVideoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
       if (validVideoTypes.includes(file.type)) {
-        setVideoFile(file);
-        setFileName(file.name);
+        setVideoPreview(URL.createObjectURL(file));
+        updateTopic(index, { topicVideo: file });
       } else {
         message.error("Please select a valid video file.");
       }
@@ -69,37 +58,26 @@ const Step2:React.FC<StepProps> = ({topicname,
       message.error("No topic video selected. Please try again.");
     }
   };
- 
-  
-  const addTopic = () => {
-    setTopics([...topics, `Topic ${topics.length + 1}`]);
-  };
 
-  const deleteTopic = (indexToDelete: number) => {
-    setTopics(topics.filter((_, index) => index !== indexToDelete));
-    setIsModalOpen(false);
-  };
+  const onFileChange = async (file: File | null) => {
+    if (currentTopicIndex === null) return;
 
-  const toggleExpanded = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
-
-
-  const handleFileChange = async (file: File | null) => {  
     if (file) {
-      const fileType = file.type;  
-      if (
-        fileType === "application/pdf" ||
-        fileType === "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
-        fileType === "application/vnd.ms-powerpoint"
-      ) {  
+      const validFileTypes = [
+        "application/pdf",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      ];
+
+      if (validFileTypes.includes(file.type)) {
         try {
-          const resourceId = await uploadMedia(file);  
+          const resourceId = await uploadMedia(file);
           if (resourceId) {
-            setResourceFile(resourceId); 
-            setTopicresource(resourceId);
-          } else {
-            message.error("Resource upload failed.");
+            updateTopic(currentTopicIndex, {
+              topicResources: file,
+              topicresource: resourceId,
+            });
+            setResourcePreview((prev) => [...prev, file]);
           }
         } catch (error) {
           message.error("Failed to upload the resource.");
@@ -109,51 +87,19 @@ const Step2:React.FC<StepProps> = ({topicname,
       }
     }
   };
-  
- 
-  
-  const handleTextChange = (text: string) => {};
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-  const openModal = () => setIsModalOpen(true);
+
   const closeModal = () => setIsModalOpen(false);
-  const imageHandler = useCallback(() => {
-    setModalOpen(true);
-  }, []);
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: [
-          [{ header: "1" }, { header: "2" }, { font: [] }],
-          [{ size: [] }],
-          ["bold", "italic", "underline", "strike", "blockquote"],
-          [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-          ],
-          ["link", "image"],
-          ["clean"],
-        ],
-        handlers: {
-          image: imageHandler,
-        },
-      },
-    }),
-    [imageHandler]
-  );
+
   return (
     <div className="sm:p-4">
-      {topics.map((topic, index) => (
+      {topics?.map((topic, index) => (
         <div key={index} className="flex flex-col mt-5 mb-5 cursor-pointer">
-          <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300  bg-gray-100 sm:mt-3">
+          <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300 bg-gray-100 sm:mt-3">
             <div
               onClick={() => toggleExpanded(index)}
               className="flex items-center justify-between p-9 relative"
             >
-              <h1 className="font-bold text-[20px]">{topic}</h1>
+              <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
               <div
                 className={`transition-transform duration-200 transform ${
                   expandedIndex === index ? "rotate-90" : ""
@@ -164,155 +110,19 @@ const Step2:React.FC<StepProps> = ({topicname,
             </div>
           </div>
           {expandedIndex === index && (
-             <div className="p-4 w-full h-auto  bg-gray-100 rounded-md overflow-hidden break-words">
-              <div className="flex gap-5">
-             <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
-              <div className="flex items-center justify-between w-full">
-               <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
-               <input
-                 type="text"
-                 value={topicname}
-                 onChange={(e) => setTopicname(e.target.value)}
-                 className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
-               />
-               <label className="flex-shrink-0 sm:mb-0 mb-2 ml-[50px]">Topic duration</label>
-               <input
-                 type="text"
-                 value={topicduration}
-                 onChange={(e) => setTopicduration(e.target.value)}
-                 className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
-               />
-               </div>
-             </div>
-             {/* <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
-               <label className="flex-shrink-0 sm:mb-0 mb-2">Topic duration</label>
-               <input
-                 type="text"
-                 value={topicduration}
-                 onChange={(e) => setTopicduration(e.target.value)}
-                 className="border sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
-               />
-             </div> */}
-             </div>
-             <div className="sm:mb-10 mt-4 ">
-               <label className="block text-sm font-medium mb-4 mt-6">
-                 Enter a brief description about the topic
-               </label>
-               <div className="bg-white w-full overflow-hidden">
-                 <ReactQuill
-                   placeholder="Write content here"
-                   value={topicdescription}
-                   onChange={(value) => {
-                     setTopicdescription(value);
-                   }}
-                   className="bg-white h-[200px]"
-                 />
-               </div>
-             </div>
-             <div>
-               <div className="sm:mb-6 sm:mt-10">
-                 <label className="block text-sm font-medium mb-4 sm:mt-20 mt-5">
-                   What will the student learn?
-                 </label>
-                 <div className="bg-white w-full overflow-hidden">
-                   <ReactQuill
-                     placeholder="Write content here"
-                     value={topicexpectation}
-                     onChange={(value) => {
-                       setTopicexpectation(value);
-                     }}
-                     className="bg-white h-[200px]"
-                   />
-                 </div>
-               </div>
-             </div>
-             <div>
-               <div>
-                 <div className="sm:mb-6 sm:mt-10">
-                   <label className="block sm:text-sm font-medium mb-6 sm:mt-6">
-                     Add instructions on how to use the resources
-                   </label>
-                   <div className="bg-white w-full overflow-hidden">
-                     <ReactQuill
-                       modules={modules}
-                       formats={[
-                         "header",
-                         "font",
-                         "size",
-                         "bold",
-                         "italic",
-                         "underline",
-                         "strike",
-                         "blockquote",
-                         "list",
-                         "bullet",
-                         "indent",
-                         "link",
-                         "image",
-                       ]}
-                       className="bg-white h-[210px]"
-                       placeholder="Write content here..."
-                       onChange={(value) => {
-                         setInstructions(value);
-                       }}
-                     />
-                     <div className="p-3 bg-gray-100 text-gray-700 text-sm rounded-md border-l-4 border-blue-500">
-                       <span className="font-semibold">Tip:</span> Click the
-                       <strong> Image icon</strong> in the toolbar to add PDFs,
-                       PowerPoints, or links as resources for this topic.
-                     </div>
-                   </div>
-                 </div>
-               </div>
-               <div className="sm:mt-10 mt-5">
-                 <h1>Upload Video</h1>
-   
-                 <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
-                   {!videoFile ? (
-                     <>
-                       <GrCloudUpload className="text-blue-800 w-10 h-10" />
-                       <span className="text-gray-500">
-                         Drag & drop files or
-                         <span className="text-blue-500 ml-1 cursor-pointer">
-                           Browse
-                         </span>
-                       </span>
-                     </>
-                   ) : (
-                     <div className="flex flex-col items-center">
-                       <p className="text-gray-600">{fileName}</p>
-                       <video width="200" controls>
-                         <source
-                           src={URL.createObjectURL(videoFile)}
-                           type={videoFile.type}
-                         />
-                         Your browser does not support the video tag.
-                       </video>
-                     </div>
-                   )}
-                   <input
-                     type="file"
-                     className="absolute inset-0 opacity-0 cursor-pointer"
-                     onChange={handleVideoChange}
-                   />
-                 </div>
-               </div>
-               <div className="flex justify-between items-center my-4">
-                 <button
-                   onClick={openModal}
-                   className="bg-black text-white rounded-md py-2 px-4"
-                 >
-                   Delete Topic
-                 </button>
-   
-                 <button
-                   className="border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px]"
-                 >
-                   Save changes
-                 </button>
-               </div>
-             </div>
-           </div>
+            <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
+              <TopicFields
+                topic={topic}
+                topicId={topicId} 
+                onFieldChange={(field: any, value: any) => updateTopic(index, { [field]: value })}
+                onVideoChange={onVideoChange}  
+                onFileChange={onFileChange}
+                videoPreview={videoPreview}
+                expandedIndex={expandedIndex}
+                resourcePreview={resourcePreview}
+                onClose={closeModal}
+              />
+            </div>
           )}
         </div>
       ))}
@@ -326,20 +136,6 @@ const Step2:React.FC<StepProps> = ({topicname,
           <p>Add your topics</p>
         </div>
       </div>
-
-      <CustomModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={() => deleteTopic(expandedIndex!)}
-      />
-       {ModalOpen && (
-        <FileModal
-          closeModal={handleModalClose}
-          handleFileChange={handleFileChange}
-          handleTextChange={handleTextChange}
-          isModalOpen={ModalOpen}
-        />
-      )}
     </div>
   );
 };

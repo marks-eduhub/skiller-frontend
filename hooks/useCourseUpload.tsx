@@ -48,14 +48,13 @@ export const uploadMedia = async (file: File | null) => {
     return;
   }
 
-  const maxSize = 1 * 1024 * 1024; // 1MB
-  if (file.size > maxSize) {
-    message.error("File size exceeds 1MB.");
-    return;
-  }
+  // const maxSize = 1 * 1024 * 1024; 
+  // if (file.size > maxSize) {
+  //   message.error("File size exceeds 1MB.");
+  //   return;
+  // }
   const formData = new FormData();
   formData.append("files", file);
-  console.log("FormData contents:", formData.get("files"));
 
 
   //   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;

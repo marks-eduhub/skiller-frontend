@@ -8,7 +8,7 @@ import { useAuthContext } from "../../../Context/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import {register} from "../../../lib/register"
+import { register } from "../../../hooks/Authhooks/useRegister";
 const SignupForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
@@ -24,7 +24,7 @@ const SignupForm = () => {
     firstName: "",
     password: "",
     confirmPassword: "",
-    studentname:""
+    studentname: "",
   });
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: register,
@@ -80,6 +80,7 @@ const SignupForm = () => {
     } catch (error) {
     }
   };
+  
   return (
     <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
         <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />

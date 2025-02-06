@@ -7,12 +7,43 @@ import Assessments from "./assessments";
 import Analytics from "./analytics";
 import TutorNav from "../dashboard/tutor-nav";
 import Topics from "./topics";
+import { useParams } from "next/navigation";
+import { useFetchOverview } from "@/hooks/useCourseOverview";
+import api from "@/lib/axios";
+import Loader from "@/components/Student/loader";
+import { message } from "antd";
 
-const CoursePage = () => {
+const CourseOverview = () => {
   const [Tab, setTab] = useState("Course Overview");
+  const { slug } = useParams();
+  const { data, isLoading, error } = useFetchOverview(Number(slug));
+
   const handleClicks = (tabName: string) => {
     setTab(tabName);
   };
+
+  const rating = data?.data?.attributes?.rating;
+  const days = data?.data?.attributes?.days;
+  const enrolledLearners = data?.data?.attributes?.users?.data || [];
+  const learners = enrolledLearners.length;
+  const coursename = data?.data?.attributes?.coursename;
+  const description = data?.data?.attributes?.coursedescription;
+  const tutorname = data?.data?.attributes?.tutor?.data?.attributes?.tutorname;
+  const courseImage = data?.data?.attributes?.card?.data?.attributes?.url;
+  const ImageUrl = courseImage ? `${api.defaults.baseURL}${courseImage}` : null;
+
+  if(isLoading) {
+    return (
+      <div className="flex items-center  min-h-screen justify-center p-20">
+        <Loader />
+      </div>
+    );
+  }
+
+  if(error) {
+    message.error("Error displaying course information")
+  }
+
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
@@ -21,19 +52,17 @@ const CoursePage = () => {
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
           <div className="flex pl-5 gap-1">
-            <h1>4.5</h1>
             <Image src="/star.svg" alt="star" width={15} height={15} />
-            <h1>Ratings</h1>
+            {rating}
           </div>
           <div className="flex pl-5 gap-1">
-            <h1>27</h1>
             <Image src="/clock.svg" alt="clock" width={15} height={15} />
-            <h1>Days</h1>
+            {days}
           </div>
           <div className="flex pl-5 gap-1">
-            <h1>45</h1>
+            {learners}
             <Image src="/learners.svg" alt="learners" width={20} height={20} />
-            <h1>Learners</h1>
+            <h1>Learner(s)</h1>
           </div>
         </div>
         <div className="justify-end">
@@ -43,38 +72,25 @@ const CoursePage = () => {
 
       <div
         className="w-full sm:h-[450px] h-[300px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url("/keyboard.webp")` }}
+        style={{ backgroundImage: `url(${ImageUrl})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl"></div>
 
         <div className="p-6 z-20 w-full relative sm:block hidden">
-          <h1 className="text-white font-bold sm:text-[50px] sm:w-1/4 mb-10 text-[20px] sm:mx-0 mx-2">
-            FUNDAMENTALS OF DESIGN
+          <h1 className="text-white font-bold sm:text-[40px] sm:w-1/4 mb-10 text-[20px] sm:mx-0 mx-2">
+            {coursename}
           </h1>
-          <p className="text-white mt-6">
-            Lorem ipsum dolor sit amet consectetur. Orci faucibus proin interdum
-            eleifend condimentum tellus. Purus ut rutrum ultrices malesuada
-            purus tempor massa sagittis. Vulputate at ut vitae vitae vel
-            odio.osuere tellus suspendisse.
-          </p>
-          <p className="text-white mt-6">
-            A quisque metus maecenas diam viverra facilisis ultricies. Massa
-            enim faucibus eu iaculis integer eget. Turpis ultricies faucibus
-            elementum aliquet viverra eget enim scelerisque. Rhoncus diam amet
-            et at ut tincidunt varius viverra.
-          </p>
+          <p className="text-white mt-6 sm:w-2/3 ">{description}</p>
         </div>
 
         <div className="p-6 z-20 w-full relative sm:hidden flex flex-col justify-end h-full">
-          <h1 className="text-white font-bold text-[20px] mx-2">
-            FUNDAMENTALS OF DESIGN
-          </h1>
-          <p className="text-white font-bold text-[20px] mx-2">
-            By Sarah Muwangunzi
-          </p>
+          <h1 className="text-white font-bold text-[20px] ">{coursename}</h1>
+          <p className="text-white font-bold text-[20px]  mt-10">{tutorname}</p>
         </div>
       </div>
-      <p className="mt-4  mb-6 sm:hidden text-gray-600 font-bold text-[17px] mx-2 underline">See course description</p>
+      <p className="mt-4  mb-6 sm:hidden text-gray-600 font-bold text-[17px] mx-2 underline">
+        See course description
+      </p>
 
       <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center hide-scrollbar overflow-x-scroll">
         <div
@@ -117,6 +133,8 @@ const CoursePage = () => {
         >
           <h2>Analytics</h2>
         </div>
+        
+        
       </div>
       {Tab === "Topics" && <Topics />}
 
@@ -128,4 +146,4 @@ const CoursePage = () => {
   );
 };
 
-export default CoursePage;
+export default CourseOverview;
