@@ -4,8 +4,8 @@ const CustomModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-5 rounded-lg shadow-lg w-[90%] max-w-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 sm:pr-0 pr-6">
+      <div className="bg-white p-5 rounded-lg shadow-lg sm:w-[90%] max-w-[350px]">
         <h2 className="text-xl font-semibold mb-4">Confirm Submitting</h2>
         <p className="mb-6">Once you submit you cant change your answers</p>
         <div className="flex justify-end space-x-4">

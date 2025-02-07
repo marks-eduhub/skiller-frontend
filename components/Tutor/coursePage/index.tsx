@@ -47,7 +47,7 @@ const CourseOverview = () => {
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
-        <div className="flex gap-2 items-center hidden md:flex">
+        <div className="flex gap-2 items-center">
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
@@ -76,21 +76,13 @@ const CourseOverview = () => {
       >
         <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl"></div>
 
-        <div className="p-6 z-20 w-full relative sm:block hidden">
+        <div className="p-6 z-20 w-full relative sm:block ">
           <h1 className="text-white font-bold sm:text-[40px] sm:w-1/4 mb-10 text-[20px] sm:mx-0 mx-2">
             {coursename}
           </h1>
           <p className="text-white mt-6 sm:w-2/3 ">{description}</p>
         </div>
-
-        <div className="p-6 z-20 w-full relative sm:hidden flex flex-col justify-end h-full">
-          <h1 className="text-white font-bold text-[20px] ">{coursename}</h1>
-          <p className="text-white font-bold text-[20px]  mt-10">{tutorname}</p>
         </div>
-      </div>
-      <p className="mt-4  mb-6 sm:hidden text-gray-600 font-bold text-[17px] mx-2 underline">
-        See course description
-      </p>
 
       <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center hide-scrollbar overflow-x-scroll">
         <div

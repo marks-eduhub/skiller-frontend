@@ -43,7 +43,6 @@ const fetchQuestionResultsByTestResult = async (testResultId: number) => {
   const response = await api.get(
     `/api/user-question-results?filters[test_result][id][$eq]=${testResultId}&populate=questions`
   );
-  console.log("Fetched User Question Results:", response.data);
   return response.data;
 };
 

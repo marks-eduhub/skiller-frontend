@@ -36,7 +36,6 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({introduction,requirement
       {parsedExpectations.length > 0 ? (
         parsedExpectations.map((expectation, index) => (
           <div key={index} className="flex my-2">
-            {/* <Image src="/tick1.svg" width={20} height={20} alt="tick" /> */}
             <p className="ml-2">{expectation.text}</p>
           </div>
         ))
@@ -57,8 +56,12 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({introduction,requirement
           <h1 className="font-semibold">Course Topics</h1>
           <h1 className="font-semibold">Duration</h1>
         </div>
-        <div className="divide-y divide-gray-300">
-          {topics.map((topic) => (
+        <div>
+          {topics.length === 0? (
+            <p className="flex items-center justify-center font-semibold p-4">No topics available yet for this course</p>
+          ) : (
+            <div className="divide-y divide-gray-300">
+              {topics.map((topic) => (
             <div
               key={topic.id}
               className="flex items-center  cursor-pointer w-full justify-between p-6"
@@ -67,6 +70,8 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({introduction,requirement
               <h1 className="font-semibold">{topic.attributes.duration}</h1>
             </div>
           ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

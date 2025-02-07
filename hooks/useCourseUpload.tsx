@@ -48,27 +48,13 @@ export const uploadMedia = async (file: File | null) => {
     return;
   }
 
-  // const maxSize = 1 * 1024 * 1024; 
-  // if (file.size > maxSize) {
-  //   message.error("File size exceeds 1MB.");
-  //   return;
-  // }
   const formData = new FormData();
   formData.append("files", file);
-
-
-  //   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  // console.log("token", token);
-  //   if (!token) {
-  //     console.error("No token found.");
-  //     throw new Error("Unauthorized: Token not found.");
-  //   }
 
   try {
     const response = await api.post("/api/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        // Authorization: `Bearer ${token}`,
       },
     });
 

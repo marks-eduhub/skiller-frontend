@@ -237,8 +237,8 @@ const Knowledge = () => {
                             </button>
                           )}
                         </div>
-                        <div className="bg-gray-700 w-full sm:w-1/5 mb-2 sm:mb-0">
-                          <div className="flex flex-col">
+                        <div className="bg-gray-700 w-full sm:w-1/5 mb-2 sm:mb-0 ">
+                          <div className="flex flex-col sm:my-0 sm:ml-0 my-4 ml-2">
                             <h1 className="text-white text-[15px] sm:p-6">
                               <h1 className="my-2">
                                 Highest Score: {highestScore}

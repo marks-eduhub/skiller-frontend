@@ -57,17 +57,17 @@ const Progress = () => {
   const topics = topicsData?.data; 
 
   return (
-    <div className="grid grid-cols-3 gap-6 mt-10">
-      {courses.map((course: any) => {
+    <div className="grid sm:grid-cols-3  grid-cols-1 gap-6 mt-10">
+      {courses?.map((course: any) => {
         const courseId = course.id;
 
         const courseTopics = topics?.filter(
-          (topic: any) => topic.attributes.course.data.id === courseId
+          (topic: any) => topic?.attributes?.course.data.id === courseId
         );
 
-        const totalTopics = courseTopics.length;
-        const completedTopics = courseTopics.filter(
-          (topic: any) => topic.attributes.isCompleted
+        const totalTopics = courseTopics?.length;
+        const completedTopics = courseTopics?.filter(
+          (topic: any) => topic?.attributes.isCompleted
         ).length;
 
         const progress = totalTopics

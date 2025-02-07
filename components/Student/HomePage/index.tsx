@@ -24,7 +24,6 @@ const HomePage: React.FC = () => {
   };
 
   const { data, isLoading, error } = useFetchCourses();
-  console.log("courses", data)
 
   if (isLoading || loadingRecent) {
     return (

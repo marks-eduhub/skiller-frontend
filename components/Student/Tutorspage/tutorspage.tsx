@@ -4,7 +4,6 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useFetchTutors } from "@/hooks/useCourses";
-// import { Tutor } from "@/lib/types";
 import api from "@/lib/axios";
 import Skeleton from "react-loading-skeleton";
 import { message } from "antd";
@@ -12,7 +11,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const Tutorspage = () => {
   const { data, isLoading, error } = useFetchTutors();
-  console.log("data", data);
   const tutors = useMemo(() => data?.data || [], [data]);
 
   const [favorites, setFavorites] = useState<boolean[]>([]);

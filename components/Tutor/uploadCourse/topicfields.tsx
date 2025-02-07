@@ -12,8 +12,9 @@ import {
   topicUpload,
 } from "@/hooks/useCourseTopics";
 import { message } from "antd";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { uploadMedia } from "@/hooks/useCourseUpload";
+import { useAuthContext } from "@/Context/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -61,14 +62,18 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   onClose,
 }) => {
   const queryClient = useQueryClient();
+  const { user } = useAuthContext();
+  const tutorId = Number(user?.id);
+
+  const { slug } = useParams();
   const searchParams = useSearchParams();
   const courseIdParam = searchParams.get("courseId");
 
-  if (!courseIdParam || isNaN(Number(courseIdParam))) {
-    throw new Error("Invalid or missing courseId");
-  }
-
-  const courseId = Number(courseIdParam);
+  const courseId = slug
+    ? Number(slug)
+    : courseIdParam
+    ? Number(courseIdParam)
+    : 0;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
@@ -123,6 +128,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       newVideos = [],
       instructions,
       duration,
+      tutorId,
     }: {
       courseId: number;
       topicname: string;
@@ -132,25 +138,24 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       newVideos: File[];
       instructions: string;
       duration: string;
+      tutorId: number;
     }) => {
-      const newResourceIds: number[] = newResources.length
-      ? await Promise.all(
-          newResources.map(async (file) => {
-            const id = await uploadMedia(file);
-            return Number(id); 
-          })
-        )
-      : [];
-    
-    const newVideoIds: number[] = newVideos.length
-      ? await Promise.all(
-          newVideos.map(async (file) => {
-            const id = await uploadMedia(file);
-            return Number(id); 
-          })
-        )
-      : [];
-    
+      const newResourceIds = await Promise.all(
+        newResources.map(async (file) => {
+          const id = await uploadMedia(file);
+          return { id: String(id) };
+        })
+      );
+
+      const newVideoIds = await Promise.all(
+        newVideos.map(async (file) => {
+          const id = await uploadMedia(file);
+          return String(id);
+        })
+      );
+
+      console.log("New Resource Files:", newResourceFiles);
+      console.log("New Video File:", newVideoFile);
 
       return await topicUpload(
         courseId,
@@ -158,9 +163,10 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         topicExpectations,
         topicdescription,
         newResourceIds,
-        newVideoIds.length > 0 ? newVideoIds[0] : null,
+        newVideoIds,
         instructions,
-        duration
+        duration,
+        tutorId
       );
     },
     onSuccess: () => {
@@ -215,13 +221,17 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         })
       );
       const allResourceIds = [
-        ...existingResourceIds.map(String),
-        ...newResourceIds,
-      ].join(",");
+        ...existingResourceIds.map((id) => ({ id: String(id) })),
+        ...newResourceIds.map((id) => ({ id: String(id) })),
+      ];
+
       const allVideoIds =
         newVideoIds.length > 0
-          ? String(newVideoIds[0])
-          : String(existingVideoIds[0] || "");
+          ? newVideoIds.map((id) => String(id))
+          : existingVideoIds.length > 0
+          ? existingVideoIds.map((id) => String(id))
+          : [];
+
       return await topicEditing(
         topicId,
         courseId,
@@ -266,10 +276,11 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           topicname: topic.topicname,
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
-          newResources, 
-          newVideos, 
+          newResources,
+          newVideos,
           instructions: topic.resourceInstructions,
           duration: topic.duration,
+          tutorId,
         });
       } else {
         editTopic({
@@ -317,25 +328,27 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
 
   return (
     <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
-      <div className="flex gap-5">
-        <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
-          <div className="flex items-center justify-between w-full">
+      <div className="flex flex-col sm:flex-row gap-5">
+        <div className="mt-5 flex flex-col sm:flex-row sm:items-center w-full gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center w-full">
             <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
             <input
               type="text"
               value={topic?.topicname}
               onChange={(e) => onFieldChange("topicname", e.target.value)}
-              className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border sm:ml-5 border-black sm:w-1/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
+          </div>
 
-            <label className="flex-shrink-0 sm:mb-0 mb-2 ml-[50px]">
+          <div className="flex flex-col sm:flex-row sm:items-center w-full">
+            <label className="flex-shrink-0 sm:mb-0 mb-2 sm:ml-5">
               Topic duration
             </label>
             <input
               type="text"
               value={topic?.duration}
               onChange={(e) => onFieldChange("duration", e.target.value)}
-              className="border sm:ml-5 border-black w-2/3 bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border sm:ml-5 border-black sm:w-1/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
           </div>
         </div>
@@ -370,7 +383,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       </div>
 
       <div className="sm:mb-6 sm:mt-10">
-        <label className="block sm:text-sm font-medium mb-6 sm:mt-6">
+        <label className="block sm:text-sm font-medium mb-6  mt-6">
           Add instructions on how to use the resources
         </label>
         <div className="bg-white w-full overflow-hidden">

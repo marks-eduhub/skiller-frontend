@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchRecentCourses = async (userId: number) => {
   const response = await api.get(
-    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateAccessed:desc&populate[course][populate]=card,tutors`
+    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateAccessed:desc&populate[course][populate]=card,tutor`
   );
 
   return response.data;

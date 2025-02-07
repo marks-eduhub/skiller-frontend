@@ -58,7 +58,7 @@ const MainPage = () => {
   return (
     <div className="p-6 w-full">
       <TutorNav />
-      <h1 className="font-semibold text-[25px]">Courses by {username} Tutor</h1>
+      <h1 className="font-semibold sm:text-[25px]  sm:mt-0 mt-20">Courses by {username} Tutor</h1>
 
       <div className="mt-10">
         {coursedata?.length === 0 ? (

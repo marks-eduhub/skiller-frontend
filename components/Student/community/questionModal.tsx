@@ -23,7 +23,7 @@ const QuestionModal = () => {
       Question: string;
       nameofquestioner: string;
     }) => {
-      return await postQuestion(Question, nameofquestioner); 
+      return await postQuestion(Question, nameofquestioner);
     },
     onMutate: async ({ Question, nameofquestioner }) => {
       const previousData = queryClient.getQueryData(["communityDetails"]);
@@ -67,8 +67,8 @@ const QuestionModal = () => {
 
     postQuestionMutation({ Question: questionContent, nameofquestioner });
 
-    setQuestionContent(""); 
-    setIsModalOpen(false)
+    setQuestionContent("");
+    setIsModalOpen(false);
   };
 
   return (
@@ -82,8 +82,8 @@ const QuestionModal = () => {
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 ">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-md">
             <h2 className="text-lg font-semibold mb-4">Add Your Question</h2>
 
             <ReactQuill
@@ -93,15 +93,15 @@ const QuestionModal = () => {
               theme="snow"
             />
 
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-center sm:flex-row sm:justify-end sm:gap-2 gap-8">
               <button
-                className="px-4 py-2 bg-gray-600 text-white rounded "
+                className=" sm:w-auto px-4 py-2 bg-gray-600 text-white rounded "
                 onClick={handleQuestion}
               >
                 {isSubmittingQuestion ? <Loader /> : "Post your Question"}
               </button>
               <button
-                className="px-4 py-2 bg-red-600 text-white rounded "
+                className="sm:w-auto px-4 py-2 bg-red-600 text-white rounded"
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancel

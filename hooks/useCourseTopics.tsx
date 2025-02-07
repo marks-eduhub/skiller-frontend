@@ -38,10 +38,11 @@ export const topicUpload = async (
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
-  topicResourcesId: number[] | File[],
-  topicVideoId: number | null,
+  resourceIds: string,
+  videoIds: string[],
   instructions:string,
-  duration : string
+  duration : string,
+  tutor:number
 
 ) => {
   try {
@@ -56,10 +57,11 @@ export const topicUpload = async (
         topicname,
         topicExpectations: markdownExpectations,
         topicdescription: markdownDescription,
-        topicResources: topicResourcesId,
-        topicVideo: topicVideoId, 
+        topicResources: resourceIds,
+        topicVideo: videoIds, 
         resourceInstructions: markdownInstructions,
-        duration
+        duration,
+        tutor
 
       },
     });
@@ -73,13 +75,13 @@ export const topicUpload = async (
 
 
 export const topicEditing = async (
-  topicId : number,
+  topicId: number,
   courseId: number,
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
   resourceIds: string,
-  videoIds: string,
+  videoIds: string[], 
   instructions: string,
   duration: string
 ) => {
@@ -95,7 +97,7 @@ export const topicEditing = async (
           resourceInstructions: instructions,
           duration,
           topicResources: resourceIds,
-          topicVideo: videoIds.length > 0 ? videoIds[0] : null,
+          topicVideo: videoIds.length > 0 ? videoIds.join(",") : null, 
         },
       },
       {
@@ -110,6 +112,7 @@ export const topicEditing = async (
     throw error;
   }
 };
+
 
 
 export const topicDelete = async (topicId: number) => {

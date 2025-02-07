@@ -7,43 +7,45 @@ import { useFetchTutors } from "@/hooks/useCourses";
 import { message } from "antd";
 import Loader from "../loader";
 
-export  function NavLinks({
-  minimized, onNavigate}: { minimized?: boolean ; onNavigate?: (path: string) => void; }) {
+export function NavLinks({
+  minimized,
+  onNavigate,
+}: {
+  minimized?: boolean;
+  onNavigate?: (path: string) => void;
+}) {
   const pathname = usePathname();
-  const { data, isLoading, error} = useFetchTutors()
+  const { data, isLoading, error } = useFetchTutors();
 
   if (isLoading) {
-    return <div><Loader/></div>;
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
 
   if (error) {
-    message.error("Failed to retrieve specific tutor details")
+    message.error("Failed to retrieve specific tutor details");
   }
-  console.log("lol", data)
 
   const handleNavigation = (href: string) => {
     if (onNavigate) {
-      onNavigate(href); 
+      onNavigate(href);
     }
   };
-   
+
   const links = [{ name: "Home", href: "/dashboard", icon: AiFillHome }];
   const communityLink = {
     name: "Community",
     href: "/dashboard/community",
     icon: AiOutlineTeam,
   };
-  
-  
-
 
   return (
     <>
       {minimized ? (
-        <MinimizedNavLinks
-          links={links}
-          communityLink={communityLink}
-        />
+        <MinimizedNavLinks links={links} communityLink={communityLink} />
       ) : (
         <>
           {links.map((link) => {
@@ -70,21 +72,32 @@ export  function NavLinks({
 
           <div
             onClick={() => handleNavigation("/dashboard/learning")}
-            className={clsx("flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer", {
-              "bg-gray-700 text-white rounded ":
-                pathname === "/dashboard/learning",
-            })}
+            className={clsx(
+              "flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer",
+              {
+                "bg-gray-700 text-white rounded ":
+                  pathname === "/dashboard/learning",
+              }
+            )}
           >
-            <Image src="/mylearning.svg" alt="learning" width={20} height={20} />
+            <Image
+              src="/mylearning.svg"
+              alt="learning"
+              width={20}
+              height={20}
+            />
             <p>My Learning</p>
           </div>
 
           <div
             onClick={() => handleNavigation("/dashboard/wishlist")}
-            className={clsx("flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer", {
-              "bg-gray-700 text-white rounded ":
-                pathname === "/dashboard/wishlist",
-            })}
+            className={clsx(
+              "flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer",
+              {
+                "bg-gray-700 text-white rounded ":
+                  pathname === "/dashboard/wishlist",
+              }
+            )}
           >
             <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} />
             <p>Wishlist</p>
@@ -101,39 +114,35 @@ export  function NavLinks({
             >
               <p className="hover:bg-gray-900">Tutors</p>
             </div>
-            {data?.data.slice(0,5).map((subscription) => {
-                const slug = subscription.attributes.slug
-                const name = subscription.attributes.tutorname
-                return (
-                  <div
-                    key={name}
-                    onClick={() =>
-                      handleNavigation(
-                        `/dashboard/subscriptions/${slug}`
-                      )
+            {data?.data.slice(0, 5).map((subscription) => {
+              const slug = subscription.attributes.slug;
+              const name = subscription.attributes.tutorname;
+              return (
+                <div
+                  key={name}
+                  onClick={() =>
+                    handleNavigation(`/dashboard/subscriptions/${slug}`)
+                  }
+                  className={clsx(
+                    "flex items-center justify-between bg-black sm:pl-4 pb-4 sm:p-3 cursor-pointer",
+                    {
+                      "bg-gray-700 text-white rounded ":
+                        pathname === `/dashboard/subscriptions/${slug}`,
                     }
-                    className={clsx(
-                      "flex items-center justify-between bg-black sm:pl-4 pb-4 sm:p-3 cursor-pointer",
-                      {
-                        "bg-gray-700 text-white rounded ":
-                          pathname ===
-                          `/dashboard/subscriptions/${slug}`,
-                      }
-                    )}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <Image
-                        src="/subscriptions.svg"
-                        alt=""
-                        width={20}
-                        height={20}
-                      />
-                      <p className="text-white">{name}</p>
-                    </div>
+                  )}
+                >
+                  <div className="flex items-center space-x-2">
+                    <Image
+                      src="/subscriptions.svg"
+                      alt=""
+                      width={20}
+                      height={20}
+                    />
+                    <p className="text-white">{name}</p>
                   </div>
-                )
-            }
-          )}
+                </div>
+              );
+            })}
           </div>
           <hr className="my-4 border-gray-600" />
 
