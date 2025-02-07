@@ -42,6 +42,45 @@ export const courseUpload = async (
   }
 };
 
+export const courseEditing = async (
+  courseId:number,
+  coursename: string,
+  expectations: string,
+  coursedescription: string,
+  requirements: string,
+  cardId: number,
+  categories:string,
+
+  duration: string
+) => {
+  try {
+    const turndownService = new TurndownService();
+
+    const markdownExpectations = turndownService.turndown(expectations);
+    const markdownDescription = turndownService.turndown(coursedescription);
+    const markdownRequirements = turndownService.turndown(requirements);
+
+    const response = await api.put(`/api/courses/${courseId}?populate=*`, {
+      data: {
+        courseId,
+        coursename,
+        expectations: markdownExpectations,
+        coursedescription: markdownDescription,
+        requirements: markdownRequirements,
+        card: cardId,
+        categories,
+        duration
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      "There was an error editing the course. Please try again."
+    );
+  }
+};
+
 export const uploadMedia = async (file: File | null) => {
   if (!file) {
     message.error("No file selected");

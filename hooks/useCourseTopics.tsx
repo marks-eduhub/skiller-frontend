@@ -38,11 +38,11 @@ export const topicUpload = async (
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
-  resourceIds: string,
-  videoIds: string[],
+  resourceIds: string[],
+  videoIds: string | null,
   instructions:string,
   duration : string,
-  tutor:number
+  tutor:number | undefined
 
 ) => {
   try {
@@ -86,15 +86,19 @@ export const topicEditing = async (
   duration: string
 ) => {
   try {
+    const turndownService = new TurndownService();
+    const markdownInstructions = turndownService.turndown(instructions);
+    const markdownExpectations = turndownService.turndown(topicExpectations);
+    const markdownDescription = turndownService.turndown(topicdescription);
     const response = await api.put(
-      `/api/topics/${topicId}`,
-      {
+      `/api/topics/${topicId}`, {
+    
         data: {
           course: courseId,
           topicname,
-          topicExpectations,
-          topicdescription,
-          resourceInstructions: instructions,
+          topicExpectations: markdownExpectations,
+          topicdescription: markdownDescription,
+          resourceInstructions: markdownInstructions,
           duration,
           topicResources: resourceIds,
           topicVideo: videoIds.length > 0 ? videoIds.join(",") : null, 

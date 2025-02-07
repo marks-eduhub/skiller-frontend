@@ -6,7 +6,7 @@ import { uploadMedia } from "@/hooks/useCourseUpload";
 import TopicFields from "./topicfields";
 
 interface Topic {
-  id: number | null; 
+  id: number | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;
@@ -33,9 +33,11 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
   const [videoPreview, setVideoPreview] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(null);
+  const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(
+    null
+  );
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
-  const [topicId, setTopicId] = useState<number | null>(null); 
+  const [topicId, setTopicId] = useState<number | null>(null);
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -44,7 +46,10 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     setTopicId(topics[index]?.id || null);
   };
 
-  const onVideoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const onVideoChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (file) {
       const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
@@ -83,7 +88,9 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
           message.error("Failed to upload the resource.");
         }
       } else {
-        message.error("Unsupported file type. Please upload a PDF or PowerPoint.");
+        message.error(
+          "Unsupported file type. Please upload a PDF or PowerPoint."
+        );
       }
     }
   };
@@ -94,12 +101,15 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     <div className="sm:p-4">
       {topics?.map((topic, index) => (
         <div key={index} className="flex flex-col mt-5 mb-5 cursor-pointer">
+          <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
+
           <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300 bg-gray-100 sm:mt-3">
             <div
               onClick={() => toggleExpanded(index)}
               className="flex items-center justify-between p-9 relative"
             >
-              <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
+              <h1 className="font-bold text-[20px]">Get Started</h1>
+
               <div
                 className={`transition-transform duration-200 transform ${
                   expandedIndex === index ? "rotate-90" : ""
@@ -113,9 +123,11 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
             <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
               <TopicFields
                 topic={topic}
-                topicId={topicId} 
-                onFieldChange={(field: any, value: any) => updateTopic(index, { [field]: value })}
-                onVideoChange={onVideoChange}  
+                topicId={topicId}
+                onFieldChange={(field: any, value: any) =>
+                  updateTopic(index, { [field]: value })
+                }
+                onVideoChange={onVideoChange}
                 onFileChange={onFileChange}
                 videoPreview={videoPreview}
                 expandedIndex={expandedIndex}
