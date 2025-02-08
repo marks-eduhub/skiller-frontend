@@ -149,7 +149,7 @@ const UploadCourse = () => {
         return;
       }
 
-      let videoId: string | null = null;
+      let videoId: string[] | null = null;
       if (videoFile) {
         videoId = await uploadMedia(videoFile);
         if (!videoId) {
