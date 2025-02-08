@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CourseFields from "../uploadCourse/coursefileds";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
+import Loader from "@/components/Student/loader";
+import { message } from "antd";
 
 interface CourseModalProps {
   isOpen: boolean;
@@ -20,7 +22,6 @@ const CourseModal: React.FC<CourseModalProps> = ({
   const [courseName, setCourseName] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [category, setCategory] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
   const [duration, setDuration] = useState("");
   const [existingMediaId, setExistingMediaId] = useState<number | null>(null);  
 
@@ -47,6 +48,18 @@ const CourseModal: React.FC<CourseModalProps> = ({
       setExistingMediaId(mediaId);
     }
   }, [data]);
+
+  if(isLoading) {
+      <div className="flex items-center  min-h-screen justify-center p-20">
+        <Loader />
+      </div>
+    
+  }
+
+  if(error) {
+    message.error("Error displaying course information")
+  }
+
 
   return (
     <div

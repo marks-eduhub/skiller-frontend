@@ -39,7 +39,7 @@ export const topicUpload = async (
   topicExpectations: string,
   topicdescription: string,
   resourceIds: string[],
-  videoIds: string | null,
+  videoIds: string[] | null,
   instructions:string,
   duration : string,
   tutor:number | undefined
@@ -80,7 +80,7 @@ export const topicEditing = async (
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
-  resourceIds: string,
+  resourceIds: string[],
   videoIds: string[], 
   instructions: string,
   duration: string

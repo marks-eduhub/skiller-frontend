@@ -143,20 +143,14 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
-          return { id: String(id) };
-        })
-      );
-
-      const newVideoIds = await Promise.all(
-        newVideos.map(async (file) => {
-          const id = await uploadMedia(file);
           return String(id);
         })
       );
-
-      console.log("New Resource Files:", newResourceFiles);
-      console.log("New Video File:", newVideoFile);
-
+  
+      const newVideoIds = newVideos.length > 0 ? [String(await uploadMedia(newVideos[0]))] : null;
+  
+      
+  
       return await topicUpload(
         courseId,
         topicname,
@@ -180,6 +174,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error creating new topic. Please try again later.");
     },
   });
+  
 
   const { mutate: editTopic } = useMutation({
     mutationFn: async ({
@@ -200,7 +195,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       topicname: string;
       topicExpectations: string;
       topicdescription: string;
-      existingResourceIds: number[];
+      existingResourceIds: number[]; 
       existingVideoIds: number[];
       newResources: File[];
       newVideos: File[];
@@ -210,28 +205,29 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
-          return String(id);
+          return String(id); 
         })
       );
-
+  
       const newVideoIds = await Promise.all(
         newVideos.map(async (file) => {
           const id = await uploadMedia(file);
           return String(id);
         })
       );
-      const allResourceIds = [
-        ...existingResourceIds.map((id) => ({ id: String(id) })),
-        ...newResourceIds.map((id) => ({ id: String(id) })),
+  
+      const allResourceIds: string[] = [
+        ...existingResourceIds.map((id) => String(id)), 
+        ...newResourceIds, 
       ];
-
-      const allVideoIds =
+  
+      const allVideoIds: string[] =
         newVideoIds.length > 0
           ? newVideoIds.map((id) => String(id))
           : existingVideoIds.length > 0
           ? existingVideoIds.map((id) => String(id))
           : [];
-
+  
       return await topicEditing(
         topicId,
         courseId,
@@ -255,6 +251,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error editing topic. Please try again later.");
     },
   });
+  
 
   const handleSaveChanges = async () => {
     try {
