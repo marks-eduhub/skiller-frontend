@@ -45,7 +45,7 @@ const Description = () => {
       <div className="flex flex-col md:flex-row gap-9 pt-9 sm:pr-0 pr-10">
         <div className="mb-2 sm:ml-3 bg-[#FFF] sm:w-[800px] w-full sm:h-[600px] ml-5 ">
           <div className="ml-5 mt-8 mr-3">
-            {description?.trim().length > 0 ? (
+            {description?.length > 0 ? (
               <p>{description}</p>
             ) : (
               <div className="flex items-center justify-center font-bold sm:p-10">

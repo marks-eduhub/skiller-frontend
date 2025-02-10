@@ -1,10 +1,10 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
 import FileModal from "./filemodal";
-import CustomModal from "../topicUpload/modal";
+import CustomModal from "./modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   topicDelete,
@@ -37,18 +37,22 @@ interface Topic {
 
 interface TopicFieldsProps {
   topic: Topic;
-  onFieldChange: (field: keyof Topic, value: string) => void;
-
+  topicId: number | null;
+  onFieldChange: (
+    field: keyof Topic,
+    value: string | File | null | string[]
+  ) => void;
   onVideoChange: (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
   onFileChange: (file: File | null) => void;
-  videoPreview: string;
-  resourcePreview: File[];
+  videoPreview: string | undefined;
   expandedIndex: number | null;
-  topicId: number | null;
+  resourcePreview: File[];
   onClose: () => void;
+  index: number;
+  topicVideo: File | null;
 }
 
 const TopicFields: React.FC<TopicFieldsProps> = ({
@@ -60,6 +64,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   resourcePreview,
   topicId,
   onClose,
+  index,
+  topicVideo,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
@@ -91,7 +97,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setModalOpen(true);
   }, []);
 
-  const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const modules = useMemo(
@@ -143,21 +148,22 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
-          return String(id);
+          return String(id); 
         })
       );
-  
-      const newVideoIds = newVideos.length > 0 ? [String(await uploadMedia(newVideos[0]))] : null;
-  
-      
-  
+
+      let newVideoIds = null;
+      if (newVideos.length > 0) {
+        newVideoIds = String(await uploadMedia(newVideos[0]));
+      }
+
       return await topicUpload(
         courseId,
         topicname,
         topicExpectations,
         topicdescription,
-        newResourceIds,
-        newVideoIds,
+        newResourceIds, 
+        newVideoIds, 
         instructions,
         duration,
         tutorId
@@ -174,7 +180,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error creating new topic. Please try again later.");
     },
   });
-  
 
   const { mutate: editTopic } = useMutation({
     mutationFn: async ({
@@ -195,39 +200,43 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       topicname: string;
       topicExpectations: string;
       topicdescription: string;
-      existingResourceIds: number[]; 
+      existingResourceIds: number[];
       existingVideoIds: number[];
       newResources: File[];
       newVideos: File[];
       instructions: string;
       duration: string;
     }) => {
+     
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
-          return String(id); 
+          return String(id);
         })
       );
-  
+
       const newVideoIds = await Promise.all(
         newVideos.map(async (file) => {
           const id = await uploadMedia(file);
           return String(id);
         })
       );
-  
+
+
       const allResourceIds: string[] = [
-        ...existingResourceIds.map((id) => String(id)), 
-        ...newResourceIds, 
+        ...existingResourceIds.map((id) => String(id)),
+        ...newResourceIds,
       ];
-  
-      const allVideoIds: string[] =
+
+      const allVideoIds =
         newVideoIds.length > 0
-          ? newVideoIds.map((id) => String(id))
+          ? String(newVideoIds[0])
           : existingVideoIds.length > 0
-          ? existingVideoIds.map((id) => String(id))
-          : [];
-  
+          ? String(existingVideoIds[0])
+          : null;
+
+      
+
       return await topicEditing(
         topicId,
         courseId,
@@ -251,7 +260,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error editing topic. Please try again later.");
     },
   });
-  
+
+ 
 
   const handleSaveChanges = async () => {
     try {
@@ -267,14 +277,15 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           : [];
       const newResources = newResourceFiles;
 
-      if (!topicId || topicId === 0) {
+
+      if (!topicId || topicId ===0 ) {
         createTopic({
           courseId,
           topicname: topic.topicname,
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
-          newResources,
-          newVideos,
+          newResources: resourcePreview, 
+          newVideos: topicVideo ? [topicVideo] : [], 
           instructions: topic.resourceInstructions,
           duration: topic.duration,
           tutorId,
@@ -317,10 +328,12 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   });
 
   const handleDeleteClick = (topicId: number | null) => {
-    if (topicId !== null) {
-      setSelectedTopicId(topicId);
-      setIsModalOpen(true);
+    if (topicId === null) {
+      message.warning("You can't delete an unsaved topic.");
+      return;
     }
+    setSelectedTopicId(topicId);
+    setIsModalOpen(true);
   };
 
   return (
@@ -333,7 +346,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               type="text"
               value={topic?.topicname}
               onChange={(e) => onFieldChange("topicname", e.target.value)}
-              className="border sm:ml-5 border-black sm:w-1/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
           </div>
 
@@ -345,7 +358,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               type="text"
               value={topic?.duration}
               onChange={(e) => onFieldChange("duration", e.target.value)}
-              className="border sm:ml-5 border-black sm:w-1/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
           </div>
         </div>
@@ -447,6 +460,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             <div className="flex flex-col items-center">
               <video width="200" controls>
                 <source src={videoPreview} type="video/mp4" />
+                Your browser does not support the video tag.
               </video>
             </div>
           ) : (
@@ -457,6 +471,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               <span className="text-gray-500">
                 Drag & drop files or
                 <span className="text-blue-500 ml-1 cursor-pointer">
+                  {" "}
                   Browse
                 </span>
               </span>
@@ -469,6 +484,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             onChange={(e) => {
               if (topic.id !== null) {
                 onVideoChange(topic.id, e);
+              } else {
+                onVideoChange(index, e);
               }
             }}
             accept="video/*"
@@ -478,11 +495,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
 
       <div className="flex justify-between items-center my-4">
         <button
-          onClick={() => {
-            if (topicId !== null) {
-              handleDeleteClick(topicId);
-            }
-          }}
+          onClick={() => handleDeleteClick(topicId)}
           className="bg-black text-white rounded-md py-2 px-4"
         >
           Delete Topic
@@ -504,6 +517,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         }}
         topicId={selectedTopicId}
       />
+
       {ModalOpen && (
         <FileModal
           closeModal={handleModalClose}

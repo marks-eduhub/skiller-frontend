@@ -58,6 +58,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
   const [topics, setTopics] = useState<Topic[]>([]);
   const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
+  const [index, setIndex] = useState(0);
 
  
   useEffect(() => {
@@ -179,6 +180,9 @@ const TopicModal: React.FC<TopicModalProps> = ({
             resourcePreview={resourcePreview}
             expandedIndex={null}
             onClose={onClose}
+            topicVideo={newVideoFile}
+            index={index}
+
           />
         </div>
       </div>

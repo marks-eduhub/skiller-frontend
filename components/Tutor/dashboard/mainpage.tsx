@@ -36,7 +36,7 @@ const MainPage = () => {
           <Skeleton width={200} height={24} />
         </h2>
         <div>
-          <Skeleton height={300} count={2} />
+          <Skeleton height={300} count={3} />
         </div>
       </div>
     );

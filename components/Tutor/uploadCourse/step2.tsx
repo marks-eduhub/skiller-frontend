@@ -30,7 +30,9 @@ interface Step2Props {
 }
 
 const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
-  const [videoPreview, setVideoPreview] = useState("");
+  const [videoPreview, setVideoPreview] = useState<{ [key: number]: string }>(
+    {}
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(
@@ -38,6 +40,8 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
   );
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
   const [topicId, setTopicId] = useState<number | null>(null);
+  const [topicVideo, setTopicVideo] = useState<File | null>(null);
+
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -46,16 +50,20 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     setTopicId(topics[index]?.id || null);
   };
 
-  const onVideoChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onVideoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+  
     if (file) {
       const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
       if (validVideoTypes.includes(file.type)) {
-        setVideoPreview(URL.createObjectURL(file));
+        const videoPreviewURL = URL.createObjectURL(file);
+        setVideoPreview((prev) => ({
+          ...prev,
+          [index]: videoPreviewURL,
+        }));
         updateTopic(index, { topicVideo: file });
+  
+        setTopicVideo(file); 
       } else {
         message.error("Please select a valid video file.");
       }
@@ -63,30 +71,23 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
       message.error("No topic video selected. Please try again.");
     }
   };
-
+  
+  
   const onFileChange = async (file: File | null) => {
     if (currentTopicIndex === null) return;
-
+  
     if (file) {
       const validFileTypes = [
         "application/pdf",
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       ];
-
+  
       if (validFileTypes.includes(file.type)) {
-        try {
-          const resourceId = await uploadMedia(file);
-          if (resourceId) {
-            updateTopic(currentTopicIndex, {
-              topicResources: file,
-              topicresource: resourceId,
-            });
-            setResourcePreview((prev) => [...prev, file]);
-          }
-        } catch (error) {
-          message.error("Failed to upload the resource.");
-        }
+        setResourcePreview((prev) => [...prev, file]);
+        updateTopic(currentTopicIndex, {
+          topicResources: file,
+        });
       } else {
         message.error(
           "Unsupported file type. Please upload a PDF or PowerPoint."
@@ -94,7 +95,8 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
       }
     }
   };
-
+  
+  
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -124,15 +126,17 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
               <TopicFields
                 topic={topic}
                 topicId={topicId}
+                index={index}
                 onFieldChange={(field: any, value: any) =>
                   updateTopic(index, { [field]: value })
                 }
-                onVideoChange={onVideoChange}
-                onFileChange={onFileChange}
-                videoPreview={videoPreview}
+                onVideoChange={(topicKey, e) => onVideoChange(topicKey, e)}
+                videoPreview={videoPreview[index]}
                 expandedIndex={expandedIndex}
                 resourcePreview={resourcePreview}
                 onClose={closeModal}
+                onFileChange={onFileChange}
+                topicVideo={topicVideo}
               />
             </div>
           )}

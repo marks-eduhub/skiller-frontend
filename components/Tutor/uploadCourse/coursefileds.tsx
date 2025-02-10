@@ -10,7 +10,7 @@ import {
 } from "@/hooks/useCourseUpload";
 import { message } from "antd";
 import { useParams, usePathname } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -55,7 +55,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   existingMediaId
 
 }) => {
-  const pathname = usePathname();
+  const queryClient = useQueryClient();
+const pathname = usePathname();
   const { slug } = useParams();
   const courseId = Number(slug);
   const { data, isLoading, error } = useFetchCategory();
@@ -112,6 +113,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
     },
     onSuccess: () => {
       message.success("Course edited successfully!");
+      queryClient.invalidateQueries({ queryKey:["courses"]}); 
+     
       onClose();
     },
     onError: () => {

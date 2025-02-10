@@ -39,7 +39,7 @@ export const topicUpload = async (
   topicExpectations: string,
   topicdescription: string,
   resourceIds: string[],
-  videoIds: string[] | null,
+  videoIds: string | null,
   instructions:string,
   duration : string,
   tutor:number | undefined
@@ -81,7 +81,7 @@ export const topicEditing = async (
   topicExpectations: string,
   topicdescription: string,
   resourceIds: string[],
-  videoIds: string[], 
+  videoIds: string | null, 
   instructions: string,
   duration: string
 ) => {
@@ -101,7 +101,7 @@ export const topicEditing = async (
           resourceInstructions: markdownInstructions,
           duration,
           topicResources: resourceIds,
-          topicVideo: videoIds.length > 0 ? videoIds.join(",") : null, 
+          topicVideo: videoIds 
         },
       },
       {
