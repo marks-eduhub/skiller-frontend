@@ -57,4 +57,72 @@ const fetchTopic = async (courseId:number, userId:number) => {
     });
   };
 
+  const fetchTestQuestions = async(testId:number) => {
+    const response = await api.get(`/api/questions?filters[test][id]=${testId}&populate=test`);
+    return response.data;
+  }
+
+  export const useFetchTestQuestions = (testId:number) => {
+    return useQuery({
+      queryKey: ["test_questions", testId],
+      queryFn: () => fetchTestQuestions(testId),
+      meta: {
+        errorMessage: "Failed to fetch test questions",
+      },
+    });
+  };
+  export const EditTest = async (
+    testId: number,
+    testname: string,
+    testdescription: string,
+    testduration: string,
+    topicId: string,
+    passmark: string
+  ) => {
+    const turndownService = new TurndownService();
+    const description = turndownService.turndown(testdescription);
+  
+    const response = await api.put(`/api/tests/${testId}?populate=*`, {
+      data: {
+        testname,
+        testdescription: description,
+        testduration,
+        topic: topicId,
+        passmark,
+      },
+      meta: {
+        errorMessage: "Failed to edit test details",
+      },
+    });
+  
+    return response.data;
+  };
+  
+  export const EditTestQuestion = async ({
+    questionId,   
+    questions,
+    options,
+    answers,
+    testId,
+  }: {
+    questionId: number;  
+    questions: string;
+    options: string[];
+    answers: string;
+    testId: number;
+  }) => {
+    const response = await api.put(`/api/questions/${questionId}`, {   
+      data: {
+        questions,
+        options,
+        answers,
+        test: testId, 
+      },
+      meta: {
+        errorMessage: "Failed to edit quiz questions",
+      },
+    });
+    return response.data;
+  };
+  
   

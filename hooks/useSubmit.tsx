@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { Question, Test } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchTestResult = async (userId: number, topicId: number) => {
@@ -75,6 +76,20 @@ export const useFetchTests = (
     enabled,
   });
 };
+
+const fetchCourseTests = async(topicId:number) => {
+  const response = await api.get(`/api/tests?filters[topic][id]=${topicId}&populate=*`);
+  return response.data;
+}
+
+export const useFetchCourseTests = (topicId: number) => {
+  return useQuery<{ data: Test }, Error>({
+    queryKey: ["topic_tests", topicId],
+    queryFn: () => fetchCourseTests(topicId),
+  });
+ 
+}
+
 
 export const createTestResult = async (
   userId: number,

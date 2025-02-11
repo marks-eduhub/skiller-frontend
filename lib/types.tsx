@@ -67,10 +67,10 @@ export interface Responses {
   responderName: string;
 }
 export interface Question {
-  id: number; 
+  id: number;
   attributes: {
-    questions: string; 
-    options: Option[]; 
+    questions: string;
+    options: Option[];
     answers: string;
   };
 }
@@ -82,11 +82,15 @@ export interface TestResult {
   userQuestionResults: any[]; 
 }
 export interface Test {
-  id: number; 
+  id: number;
   attributes: {
-    quizname: string; 
+    quizname: string;
+    testdescription: string;
+    passmark: string;
+    testduration: string;
+    testname: string;
     questions: {
-      data: Question[]; 
+      data: Question[];
     };
   };
 }
