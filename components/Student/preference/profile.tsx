@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 // List of country codes
 const countryCodes = [
-  { code: "+1", country: "USA" },
-  { code: "+44", country: "UK" },
-  { code: "+91", country: "India" },
+  // { code: "+1", country: "USA" },
+  // { code: "+44", country: "UK" },
+  // { code: "+91", country: "India" },
   { code: "+256", country: "Uganda" },
   { code: "+254", country: "Kenya" },
 ];
-
-const Profile: React.FC = () => {
-  const [selectedCode, setSelectedCode] = useState(countryCodes[3].code); // Default to +256
+interface ProfileProps {
+  updateForm(newData: any): void;
+}
+const Profile: React.FC<ProfileProps> = ({ updateForm }) => {
+  const [selectedCode, setSelectedCode] = useState(countryCodes[0].code); // Default to +256
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState<Date | null>(null);
@@ -43,20 +45,35 @@ const Profile: React.FC = () => {
     return valid;
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (validate()) {
-      console.log("Form submitted successfully!", {
-        selectedCode,
-        phone,
-        gender,
-        dob,
-      });
-    }
-  };
+  // const handleSubmit = (e: any) => {
+  //   e.preventDefault();
+  //   if (validate()) {
+  //     // console.log("Form submitted successfully!", {
+  //     //   selectedCode,
+  //     //   phone,
+  //     //   gender,
+  //     //   dob,
+  //     // });
+  //     updateForm({
+  //       selectedCode:selectedCode,
+  //       phone:phone,
+  //       gender:gender,
+  //       date_birth: dob,
+  //       isLoading: false,
+  //     });
+  //   }
+  // };
+
+  useEffect(() => {
+    updateForm({
+      phone: selectedCode + phone,
+      gender,
+      date_birth: dob,
+    });
+  }, [phone, gender, dob]);
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <form className="flex flex-col gap-6">
       {/* Phone Input */}
       <div>
         <label className="py-2 font-medium text-[16px] sm:text-[20px]">
@@ -76,10 +93,6 @@ const Profile: React.FC = () => {
                 </option>
               ))}
             </select>
-            {/* <RiArrowDropDownLine
-              size={25}
-              className="absolute right-2 text-gray-500"
-            /> */}
           </div>
 
           {/* Phone Number Input */}

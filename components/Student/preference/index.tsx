@@ -6,8 +6,9 @@ import BottomSlider from "./bottom-slider";
 import Content from "./content";
 import Header from "./header";
 import { useAuthContext } from "@/Context/AuthContext";
-import { usePostBio } from "@/hooks/usePreference";
-
+import { postPreferences, postBio } from "@/hooks/usePreference";
+import { message } from "antd";
+import { useMutation } from "@tanstack/react-query";
 interface PreferenceProps {
   errorMessage?: string;
 }
@@ -22,39 +23,98 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
 
   // Store form data
   const [formData, setFormData] = useState({
-    selectedCode: "+256",
     phone: "",
     gender: "",
     date_birth: "",
   });
 
-  // ✅ Use mutation hook correctly
-  const { mutate: postBio, isLoading, error } = usePostBio();
+  const [prefData, setPrefData] = useState({});
 
   // Update form data from child components
   const updateFormData = (newData: any) => {
     setFormData((prev) => ({ ...prev, ...newData }));
   };
 
-  // ✅ Handle form submission
-  const handleSubmit = async () => {
+  const mutation = useMutation({
+    mutationFn: async ({
+      userId,
+      preferences,
+    }: {
+      userId: number;
+      preferences: Record<string, any>;
+    }) => {
+      return postPreferences(userId, preferences);
+    },
+  });
+  const mutationBio = useMutation({
+    mutationFn: async ({
+      userId,
+      date_birth,
+      gender,
+      phone,
+    }: {
+      userId: number;
+      date_birth: string;
+      gender: string;
+      phone: string;
+    }) => {
+      return postBio(userId, date_birth, gender, phone);
+    },
+  });
+
+  const updatePreferences = (preference: any) => {
+    setPrefData({ preference });
+  };
+
+  const handleSubmitBio = async () => {
     if (!userId) {
       console.error("User ID is missing!");
       return;
     }
+    try {
+      mutationBio.mutate(
+        { userId, ...formData },
+        {
+          onSuccess: () => {
+            message.success("Bio submitted successfully!");
+            console.log("Bio submitted successfully!");
+          },
+          onError: (error: any) => {
+            message.error("Error submitting bio:", error);
+            console.error("Error submitting bio:", error);
+          },
+        }
+      );
+    } catch (e) {
+      console.error("Error submitting bio:", e);
+      message.error("Error submitting bio");
+    }
+  };
 
-    postBio(
-      { userId, ...formData },
-      {
-        onSuccess: () => {
-          console.log("Bio submitted successfully!");
-          router.push("/splash"); // Redirect after successful submission
-        },
-        onError: (error: any) => {
-          console.error("Error submitting bio:", error);
-        },
-      }
-    );
+  const handleSubmitPreferences = async () => {
+    if (!userId) {
+      console.error("User ID is missing!");
+      return;
+    }
+    try {
+      mutation.mutate(
+        { userId, preferences: prefData },
+        {
+          onSuccess: () => {
+            message.success("Preferences submitted successfully!");
+            console.log("Preference submitted successfully!");
+            router.push("/splash"); // Redirect after successful submission
+          },
+          onError: (error: any) => {
+            message.error("Error submitting preferences:", error);
+            console.error("Error submitting preferences:", error);
+          },
+        }
+      );
+    } catch (e) {
+      console.error("Error submitting preferences:", e);
+      message.error("Error submitting preferences");
+    }
   };
 
   const nextSlide = () => {
@@ -77,7 +137,11 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
       <Header data2={{ currentIndex }} />
 
       {/* Content */}
-      <Content data2={{ currentIndex }} />
+      <Content
+        data2={{ currentIndex }}
+        updateForm={updateFormData}
+        updatePreferences={updatePreferences}
+      />
 
       {/* Bottom Slider */}
       <BottomSlider
@@ -85,12 +149,16 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
         skipToSplash={handleSkip}
         data2={{ currentIndex }}
         prevSlide={prevSlide}
-        handleSubmit={handleSubmit} // Pass handleSubmit to trigger API call
+        handleSubmitBio={handleSubmitBio}
+        handleSubmitPreferences={handleSubmitPreferences}
+        formData={formData}
+        prefData={prefData}
+        // Pass handleSubmit to trigger API call
       />
 
       {/* Show loading state if needed */}
-      {isLoading && <p>Submitting...</p>}
-      {error && <p className="text-red-500">Error: {error.message}</p>}
+      {/* {isLoading && <p>Submitting...</p>} */}
+      {/* {error && <p className="text-red-500">Error: {error.message}</p>} */}
     </div>
   );
 };

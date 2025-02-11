@@ -9,10 +9,28 @@ interface MyComponentProps {
   data2: {
     currentIndex: number;
   };
+  updateForm(newData: any): void;
+  updatePreferences(newData: any): void;
 }
-const Options: React.FC = () => {
+
+interface MyOptionsProps {
+  updatePreferences(newData: any): void;
+}
+const Options: React.FC<MyOptionsProps> = ({ updatePreferences }) => {
   const options = data.preference_options || {};
   const [selected, setSelected] = useState<string[]>([]);
+
+  const handleOptionClick = (option: string) => {
+    let newSelected;
+    if (selected.includes(option)) {
+      newSelected = selected.filter((item) => item !== option);
+    } else {
+      newSelected = [...selected, option];
+    }
+    setSelected(newSelected);
+    updatePreferences(newSelected);
+  };
+
   return (
     <div className="flex flex-wrap">
       {options.map((option, index) => (
@@ -23,13 +41,7 @@ const Options: React.FC = () => {
               ? "bg-black text-white"
               : "bg-white text-black"
           }`}
-          onClick={() => {
-            if (selected.includes(option)) {
-              setSelected(selected.filter((item) => item !== option));
-            } else {
-              setSelected([...selected, option]);
-            }
-          }}
+          onClick={() => handleOptionClick(option)}
         >
           {option}
         </div>
@@ -38,17 +50,22 @@ const Options: React.FC = () => {
   );
 };
 
-const Content: React.FC<MyComponentProps> = ({ data2 }) => {
+const Content: React.FC<MyComponentProps> = ({
+  data2,
+  updateForm,
+  updatePreferences,
+}) => {
   return (
     <>
       <div className="col-span-1 row-span-2"></div>
       <div className="col-span-2  row-span-2 ">
-        {data2.currentIndex === 0 && <Profile />}
-        {data2.currentIndex === 1 && <Options />}
+        {data2.currentIndex === 0 && <Profile updateForm={updateForm} />}
+        {data2.currentIndex === 1 && (
+          <Options updatePreferences={updatePreferences} />
+        )}
         {data2.currentIndex === 2 && <Splash />}
       </div>
       <div className="col-span-1  row-span-2"></div>
-      
     </>
   );
 };

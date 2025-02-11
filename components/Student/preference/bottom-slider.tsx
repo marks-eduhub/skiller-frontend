@@ -4,7 +4,8 @@ import data from "./data.json";
 import withAuth from "@/components/AuthProvider/Auth";
 import { useAuthContext } from "@/Context/AuthContext";
 import { useFetchUserDetails } from "@/hooks/useProfile";
-
+import { message } from "antd";
+import { useRouter } from "next/navigation";
 interface SliderProps {
   data2: {
     currentIndex: number;
@@ -12,7 +13,14 @@ interface SliderProps {
   nextSlide: () => void;
   prevSlide: () => void; // Added function to go back
   skipToSplash: () => void;
-  handleSubmit: () => void;
+  handleSubmitBio: () => void;
+  handleSubmitPreferences: () => void;
+  formData: {
+    phone: string;
+    gender: string;
+    date_birth: string;
+  };
+  prefData: Record<string, any>;
 }
 
 const BottomSlider: React.FC<SliderProps> = ({
@@ -20,19 +28,31 @@ const BottomSlider: React.FC<SliderProps> = ({
   nextSlide,
   prevSlide, // Accept prevSlide function
   skipToSplash,
-  handleSubmit,
+  handleSubmitBio,
+  handleSubmitPreferences,
+  formData,
+  prefData,
 }) => {
+  const router = useRouter();
+
   const lastIndex = 2;
 
   const handleLastSlide = async () => {
     if (data2.currentIndex === lastIndex - 1) {
-      skipToSplash();
+      if (Object.keys(prefData).length > 0) {
+        handleSubmitPreferences();
+      } else {
+        router.push("/splash");
+      }
     } else {
-      await handleSubmit();
-      nextSlide();
+      if (formData.phone && formData.gender && formData.date_birth) {
+        await handleSubmitBio();
+        nextSlide();
+      } else {
+        nextSlide();
+      }
     }
   };
-
   return (
     <>
       {/* Desktop View */}
@@ -42,7 +62,9 @@ const BottomSlider: React.FC<SliderProps> = ({
           onClick={data2.currentIndex === 1 ? prevSlide : skipToSplash} // Show "Back" on second slide
         >
           <p className="break-all">
-            {data2.currentIndex === 1 ? "Back" : data.skip}
+            {data2.currentIndex === 1 || data2.currentIndex === 2
+              ? "Back"
+              : data.skip}
           </p>
         </button>
       </div>
@@ -53,7 +75,9 @@ const BottomSlider: React.FC<SliderProps> = ({
             src={data.slider1}
             alt={"slider icon"}
             priority={true}
-            fill
+            // fill
+            width={150}
+            height={200}
             onClick={handleLastSlide}
           />
         )}
@@ -62,7 +86,9 @@ const BottomSlider: React.FC<SliderProps> = ({
             src={data.slider}
             alt={"slider icon"}
             priority={true}
-            fill
+            // fill
+            width={150}
+            height={200}
             onClick={handleLastSlide}
           />
         )}
@@ -71,7 +97,9 @@ const BottomSlider: React.FC<SliderProps> = ({
             src={data.slider2}
             alt={"slider icon"}
             priority={true}
-            fill
+            // fill
+            width={150}
+            height={200}
             onClick={handleLastSlide}
           />
         )}
