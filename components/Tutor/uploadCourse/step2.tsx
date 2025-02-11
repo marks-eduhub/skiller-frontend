@@ -30,18 +30,19 @@ interface Step2Props {
 }
 
 const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
-  const [videoPreview, setVideoPreview] = useState<{ [key: number]: string }>(
-    {}
-  );
+  const [videoPreview, setVideoPreview] = useState<{
+    [key: number]: string | null;
+  }>({});
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(
     null
   );
+  const [videoId, setVideoId] = useState("");
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
   const [topicId, setTopicId] = useState<number | null>(null);
   const [topicVideo, setTopicVideo] = useState<File | null>(null);
-
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -50,9 +51,12 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     setTopicId(topics[index]?.id || null);
   };
 
-  const onVideoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const onVideoChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
-  
+
     if (file) {
       const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
       if (validVideoTypes.includes(file.type)) {
@@ -62,8 +66,8 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
           [index]: videoPreviewURL,
         }));
         updateTopic(index, { topicVideo: file });
-  
-        setTopicVideo(file); 
+
+        setTopicVideo(file);
       } else {
         message.error("Please select a valid video file.");
       }
@@ -71,18 +75,17 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
       message.error("No topic video selected. Please try again.");
     }
   };
-  
-  
+
   const onFileChange = async (file: File | null) => {
     if (currentTopicIndex === null) return;
-  
+
     if (file) {
       const validFileTypes = [
         "application/pdf",
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       ];
-  
+
       if (validFileTypes.includes(file.type)) {
         setResourcePreview((prev) => [...prev, file]);
         updateTopic(currentTopicIndex, {
@@ -95,8 +98,7 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
       }
     }
   };
-  
-  
+
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -125,7 +127,7 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
             <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
               <TopicFields
                 topic={topic}
-                topicId={topicId}
+                topicId={topicId ?? 0}
                 index={index}
                 onFieldChange={(field: any, value: any) =>
                   updateTopic(index, { [field]: value })
@@ -137,6 +139,14 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
                 onClose={closeModal}
                 onFileChange={onFileChange}
                 topicVideo={topicVideo}
+                setVideoPreview={(updatedPreview) =>
+                  setVideoPreview((prev) => ({
+                    ...prev,
+                    [index]: updatedPreview,
+                  }))
+                }
+                videoId={videoId}
+                setVideoId={setVideoId}
               />
             </div>
           )}

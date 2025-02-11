@@ -129,6 +129,29 @@ export const topicDelete = async (topicId: number) => {
 };
 
 
+export const deleteTopicVideo = async (topicId: number, videoId: string) => {
+  try {
+    const response = await api.get(`/api/topics/${topicId}?populate=topicVideo`);
+    const topicData = response.data?.data;
+
+    if (!topicData || !topicData.attributes?.topicVideo) {
+      throw new Error("No video found for this topic");
+    }
+
+    await api.delete(`/api/upload/files/${videoId}`);
+
+    await api.put(`/api/topics/${topicId}`, {
+      data: { topicVideo: null },
+    });
+
+    return { message: "Video deleted successfully" };
+  } catch (error) {
+    throw new Error("Failed to delete the video. Please try again.");
+  }
+};
+
+
+
 const fetchAllResults = async (userId: number) => {
   const response = await api.get(
     `/api/test-results?filters[user][id][$eq]=${userId}&populate=user_question_results,topic,test,user`

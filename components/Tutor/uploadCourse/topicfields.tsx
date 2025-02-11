@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
@@ -7,6 +7,7 @@ import FileModal from "./filemodal";
 import CustomModal from "./modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  deleteTopicVideo,
   topicDelete,
   topicEditing,
   topicUpload,
@@ -15,6 +16,8 @@ import { message } from "antd";
 import { useParams, useSearchParams } from "next/navigation";
 import { uploadMedia } from "@/hooks/useCourseUpload";
 import { useAuthContext } from "@/Context/AuthContext";
+import VideoModal from "./videoModal";
+import ResourceModal from "./resourceModal";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -37,7 +40,7 @@ interface Topic {
 
 interface TopicFieldsProps {
   topic: Topic;
-  topicId: number | null;
+  topicId: number;
   onFieldChange: (
     field: keyof Topic,
     value: string | File | null | string[]
@@ -47,12 +50,16 @@ interface TopicFieldsProps {
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
   onFileChange: (file: File | null) => void;
-  videoPreview: string | undefined;
+  videoPreview: string | null;
   expandedIndex: number | null;
   resourcePreview: File[];
   onClose: () => void;
   index: number;
   topicVideo: File | null;
+  setVideoPreview: (updatedPreview: string | null) => void;
+
+  videoId: string;
+  setVideoId: (prev: string) => void;
 }
 
 const TopicFields: React.FC<TopicFieldsProps> = ({
@@ -66,6 +73,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   onClose,
   index,
   topicVideo,
+  setVideoPreview,
+  videoId,
+  setVideoId,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
@@ -84,13 +94,21 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
-  const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
   const [newResourceFiles, setNewResourceFiles] = useState<File[]>([]);
+  const [videoModalOpen, setVideModalOpen] = useState(false);
+  const [resourceModalOpen, setResourceModalOpen] = useState(false);
 
   const handleTextChange = (text: string) => {};
 
   const handleModalClose = () => {
     setModalOpen(false);
+  };
+  const handleVideoModalClose = () => {
+    setVideModalOpen(false);
+  };
+
+  const handleResourceModalClose = () => {
+    setResourceModalOpen(false);
   };
 
   const imageHandler = useCallback(() => {
@@ -148,7 +166,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
-          return String(id); 
+          return String(id);
         })
       );
 
@@ -162,8 +180,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         topicname,
         topicExpectations,
         topicdescription,
-        newResourceIds, 
-        newVideoIds, 
+        newResourceIds,
+        newVideoIds,
         instructions,
         duration,
         tutorId
@@ -174,6 +192,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["course_topics", String(courseId)],
       });
+      queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
+
       onClose();
     },
     onError: (err) => {
@@ -201,13 +221,12 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       topicExpectations: string;
       topicdescription: string;
       existingResourceIds: number[];
-      existingVideoIds: number[];
+      existingVideoIds: string[];
       newResources: File[];
       newVideos: File[];
       instructions: string;
       duration: string;
     }) => {
-     
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
           const id = await uploadMedia(file);
@@ -215,27 +234,23 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         })
       );
 
-      const newVideoIds = await Promise.all(
-        newVideos.map(async (file) => {
-          const id = await uploadMedia(file);
-          return String(id);
-        })
-      );
+      let allVideoIds: string[] = [];
 
+      if (existingVideoIds.length > 0) {
+        allVideoIds = existingVideoIds.map(String);
+      }
+
+      if (newVideos.length > 0) {
+        const newVideoId = await uploadMedia(newVideos[0]);
+        allVideoIds = [String(newVideoId)];
+      }
+
+      const finalVideoId = allVideoIds.length > 0 ? allVideoIds[0] : null;
 
       const allResourceIds: string[] = [
         ...existingResourceIds.map((id) => String(id)),
         ...newResourceIds,
       ];
-
-      const allVideoIds =
-        newVideoIds.length > 0
-          ? String(newVideoIds[0])
-          : existingVideoIds.length > 0
-          ? String(existingVideoIds[0])
-          : null;
-
-      
 
       return await topicEditing(
         topicId,
@@ -244,7 +259,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         topicExpectations,
         topicdescription,
         allResourceIds,
-        allVideoIds,
+        finalVideoId,
         instructions,
         duration
       );
@@ -254,6 +269,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["course_topics", String(courseId)],
       });
+      queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
+
       onClose();
     },
     onError: (err) => {
@@ -261,15 +278,10 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
   });
 
- 
-
   const handleSaveChanges = async () => {
     try {
       const existingVideoIds =
-        !newVideoFile && topic.topicVideo
-          ? [topic.topicVideo]
-          : topic.topicVideo || [];
-      const newVideos = newVideoFile ? [newVideoFile] : [];
+        topic.topicVideo && topic.topicVideo !== null ? [topic.topicVideo] : [];
 
       const existingResourceIds =
         topic.topicResources?.length || newResourceFiles.length
@@ -277,15 +289,14 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           : [];
       const newResources = newResourceFiles;
 
-
-      if (!topicId || topicId ===0 ) {
+      if (!topicId || topicId === 0) {
         createTopic({
           courseId,
           topicname: topic.topicname,
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
-          newResources: resourcePreview, 
-          newVideos: topicVideo ? [topicVideo] : [], 
+          newResources: resourcePreview,
+          newVideos: topicVideo ? [topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,
           tutorId,
@@ -300,7 +311,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           existingResourceIds: existingResourceIds,
           existingVideoIds: existingVideoIds,
           newResources,
-          newVideos,
+          newVideos: topicVideo ? [topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,
         });
@@ -319,6 +330,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       queryClient.invalidateQueries({
         queryKey: ["course_topics"],
       });
+      queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
+
       closeModal();
       onClose();
     },
@@ -327,13 +340,53 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
   });
 
-  const handleDeleteClick = (topicId: number | null) => {
+  const { mutate: topicVideoDelete } = useMutation({
+    mutationFn: async ({
+      topicId,
+      videoId,
+    }: {
+      topicId: number;
+      videoId: string;
+    }) => {
+      return await deleteTopicVideo(topicId, videoId);
+    },
+    onSuccess: (_, { topicId }) => {
+      message.success("Video deleted successfully!");
+
+      queryClient.invalidateQueries({
+        queryKey: ["course_topics"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
+
+      closeModal();
+      onClose();
+    },
+    onError: () => {
+      message.error("Error deleting topic video. Please try again later.");
+    },
+  });
+
+  const handleDeleteClick = (topicId: number) => {
     if (topicId === null) {
       message.warning("You can't delete an unsaved topic.");
       return;
     }
     setSelectedTopicId(topicId);
     setIsModalOpen(true);
+  };
+
+  const handleVideoModal = (videoId: string, topicId: number) => {
+    setVideoId(videoId);
+    setVideModalOpen(true);
+  };
+
+  const handleDeleteVideo = () => {
+    if (videoId && topicId) {
+      topicVideoDelete({ topicId, videoId });
+    } else {
+      message.error("An error has occurred while deleting video.");
+    }
+    setVideModalOpen(false);
   };
 
   return (
@@ -431,7 +484,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         <h1 className="mb-2 font-semibold">Resource Preview</h1>
         {Array.isArray(resourcePreview) && resourcePreview.length > 0 ? (
           resourcePreview.map((preview: any, index: any) => (
-            <div key={index} className="border border-gray-300 p-2 rounded">
+            <div key={index} className="border border-gray-300 p-2 rounded mb-5">
               {typeof preview === "string" && preview.startsWith("http") ? (
                 <a
                   href={preview}
@@ -442,7 +495,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
                   View Resource {index + 1}
                 </a>
               ) : preview instanceof File ? (
-                <p className="text-gray-500">Uploaded File: {preview.name}</p>
+                <p className="text-gray-500 ">Uploaded File: {preview.name}</p>
               ) : (
                 <p className="text-gray-500">Invalid resource</p>
               )}
@@ -454,7 +507,24 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       </div>
 
       <div className="sm:mt-10 mt-5">
-        <h1>Upload Video</h1>
+        <div className="flex justify-between items-center sm:mt-10 mt-5">
+          <h1>Upload Video</h1>
+          {videoPreview && (
+            <button
+              onClick={() => {
+                if (topicVideo) {
+                  setVideoPreview("");
+                } else {
+                  handleVideoModal(videoId, topicId);
+                }
+              }}
+              className=" text-white bg-gray-600 rounded-md px-4 py-1  hover:bg-white hover:border-2 hover:border-black hover:text-black"
+            >
+              {topicVideo ? "Remove Video" : "Edit Existing Video"}
+            </button>
+          )}
+        </div>
+
         <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
           {videoPreview ? (
             <div className="flex flex-col items-center">
@@ -518,6 +588,16 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         topicId={selectedTopicId}
       />
 
+      {videoModalOpen && (
+        <VideoModal
+          onClose={handleVideoModalClose}
+          onDelete={() => handleDeleteVideo()}
+        />
+      )}
+      {/* <ResourceModal
+        isOpen={resourceModalOpen}
+        onClose={handleResourceModalClose}
+      /> */}
       {ModalOpen && (
         <FileModal
           closeModal={handleModalClose}
