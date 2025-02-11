@@ -22,7 +22,7 @@ interface Topic {
 }
 
 const defaultTopic = {
-  id: 0, 
+  id: 0,
   topicname: "",
   topicdescription: "",
   topicExpectations: "",
@@ -37,8 +37,6 @@ const defaultTopic = {
   videoFile: null,
   resourceFile: null,
 };
-
-
 
 interface TopicModalProps {
   isOpen: boolean;
@@ -55,11 +53,11 @@ const TopicModal: React.FC<TopicModalProps> = ({
 }) => {
   const [topic, setTopic] = useState({ ...defaultTopic });
   const [videoPreview, setVideoPreview] = useState("");
-  const [topics, setTopics] = useState<Topic[]>([]);
   const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
+  const [index, setIndex] = useState(0);
+  const [videoId, setVideoId] = useState("");
 
- 
   useEffect(() => {
     if (currentTopic && currentTopic.attributes) {
       const videoData = currentTopic.attributes.topicVideo.data;
@@ -80,6 +78,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
               `${process.env.NEXT_PUBLIC_API_BASE_URL}${res.attributes.url}`
           )
         : [];
+
+      setVideoId(videoId);
 
       setTopic((prev) => ({
         ...prev,
@@ -102,7 +102,6 @@ const TopicModal: React.FC<TopicModalProps> = ({
     setTopic((prev) => ({ ...prev, [field]: value }));
   }, []);
 
- 
   const onVideoChange = (
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
@@ -179,6 +178,13 @@ const TopicModal: React.FC<TopicModalProps> = ({
             resourcePreview={resourcePreview}
             expandedIndex={null}
             onClose={onClose}
+            topicVideo={newVideoFile}
+            index={index}
+            videoId={videoId}
+            setVideoId={setVideoId}
+            setVideoPreview={(updatedPreview) =>
+              setVideoPreview(updatedPreview ?? "")
+            }
           />
         </div>
       </div>

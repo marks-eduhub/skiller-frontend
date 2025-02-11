@@ -47,43 +47,52 @@ const ProfilePage: React.FC = () => {
     if (data) {
       setFirstName(data.firstName || "");
       setLastName(data.lastName || "");
+  
+      const socialData = tutorDetails && tutorDetails.data.length > 0 ? tutorDetails.data[0].attributes.socialLinks : data.socialLinks;
       setSocialLinks({
-        email: data.socialLinks?.email || "",
-        facebook: data.socialLinks?.facebook || "",
-        twitter: data.socialLinks?.twitter || "",
-        linkedin: data.socialLinks?.linkedin || "",
+        email: socialData?.email || "",
+        facebook: socialData?.facebook || "",
+        twitter: socialData?.twitter || "",
+        linkedin: socialData?.linkedin || "",
       });
-
-      if (data?.profilepicture?.url) {
-        const imageUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${data.profilepicture.url}`;
-        setUploadImage(imageUrl);
+  
+      const profilePicUrl = tutorDetails && tutorDetails.data.length > 0 
+        ? tutorDetails.data[0].attributes.profilepicture?.data?.attributes?.url 
+        : data.profilepicture?.url;
+  
+      if (profilePicUrl) {
+        setUploadImage(`${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`);
       } else {
-        setUploadImage("/Ellipse 445.webp");
+        setUploadImage("/Ellipse 445.webp");  
       }
     }
-  }, [data]);
-
+  }, [data, tutorDetails]);
+  
   useEffect(() => {
     if (tutorDetails && tutorDetails.data.length > 0) {
       const tutor = tutorDetails.data[0].attributes;
+  
       setBiography(tutor?.Biography || "dummy");
       setRole(tutor?.role || "dummy");
       setQualifications(tutor?.Qualifications || "dummy");
+  
+      const socialData = tutor.socialLinks || data?.socialLinks;
       setSocialLinks({
-        email: tutor.socialLinks?.email || "",
-        facebook: tutor.socialLinks?.facebook || "",
-        twitter: tutor.socialLinks?.twitter || "",
-        linkedin: tutor.socialLinks?.linkedin || "",
+        email: socialData?.email || "",
+        facebook: socialData?.facebook || "",
+        twitter: socialData?.twitter || "",
+        linkedin: socialData?.linkedin || "",
       });
-
-      if (tutor?.profilepicture?.data?.attributes?.url) {
-        const imageUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${tutor?.profilepicture?.data?.attributes?.url}`;
-        setUploadImage(imageUrl);
+  
+      const profilePicUrl = tutor.profilepicture?.data?.attributes?.url || data?.profilepicture?.url;
+      if (profilePicUrl) {
+        setUploadImage(`${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`);
       } else {
         setUploadImage("/Ellipse 445.webp");
       }
     }
-  }, [tutorDetails]);
+  }, [data?.profilepicture?.url, data?.socialLinks, tutorDetails]);
+  
 
   const handleSuccess = () => {
     message.success("Profile saved successfully!");

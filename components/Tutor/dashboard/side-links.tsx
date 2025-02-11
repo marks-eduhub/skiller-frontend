@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import Loader from "@/components/Student/loader";
 
 const SideLinks = () => {
   const router = useRouter();
   const pathname = usePathname();
-  
+  const [loading, setLoading] = useState(false);
+
   const handleOptions = (subOptions: string) => {
     router.push(`/tutor/dashboard/communications/${subOptions}`);
   };
@@ -62,7 +64,12 @@ const SideLinks = () => {
   };
 
   return (
-    <div className="">
+    <div className="relative">
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
+          <Loader />
+        </div>
+      )}
       {links.map((link, index) => (
         <div key={index} className="ml-5 mt-6">
           {link.path ? (

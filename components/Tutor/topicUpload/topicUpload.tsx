@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import TutorNav from "../dashboard/tutor-nav";
-import TopicForm from "./topicform";
-
+import Step2 from "../uploadCourse/step2";
 
 interface Topic {
   id: number | null;
@@ -24,9 +23,6 @@ interface Topic {
 
 const TopicUpload = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [selectedTopicIndex, setSelectedTopicIndex] = useState<number | null>(
-    null
-  );
 
   const addTopic = () => {
     const newTopic: Topic = {
@@ -46,25 +42,13 @@ const TopicUpload = () => {
       resourceFile: null,
     };
 
-    setTopics((prev) => {
-      const newTopics = [...prev, newTopic];
-      setSelectedTopicIndex(newTopics.length - 1);
-      return newTopics;
-    });
+    setTopics([...topics, newTopic]);
   };
 
-  const handleFieldChange = (
-    index: number,
-    field: keyof Topic,
-    value: string | File | null
-  ) => {
-    const updatedTopics = [...topics];
-    updatedTopics[index] = {
-      ...updatedTopics[index],
-      [field]: value,
-    };
-    setTopics(updatedTopics);
-
+  const updateTopic = (index: number, updatedFields: Partial<Topic>) => {
+    setTopics((prev) =>
+      prev.map((topic, i) => (i === index ? { ...topic, ...updatedFields } : topic))
+    );
   };
 
   return (
@@ -90,25 +74,8 @@ const TopicUpload = () => {
         </div>
       </div>
 
-      {topics.map((topic, index) => (
-        <TopicForm
-          key={index}
-          topic={topic}
-          onFieldChange={(field, value) =>
-            handleFieldChange(index, field, value)
-          }
-        />
-      ))}
+      <Step2 topics={topics} setTopics={setTopics} addTopic={addTopic} updateTopic={updateTopic} />
 
-      <div className="flex mt-7 mb-5 justify-end">
-        <div
-          onClick={addTopic}
-          className="flex gap-2 bg-black w-[180px] h-[40px] px-9 py-7 items-center justify-center rounded-lg cursor-pointer"
-        >
-          <Image src="/plus.svg" alt="add topic" width={20} height={20} />
-          <p className="text-white">Add topic</p>
-        </div>
-      </div>
     </div>
   );
 };

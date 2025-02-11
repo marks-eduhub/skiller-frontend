@@ -38,10 +38,11 @@ export const topicUpload = async (
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
-  topicResourcesId: number[] | File[],
-  topicVideoId: number | null,
+  resourceIds: string[],
+  videoIds: string | null,
   instructions:string,
-  duration : string
+  duration : string,
+  tutor:number | undefined
 
 ) => {
   try {
@@ -56,10 +57,11 @@ export const topicUpload = async (
         topicname,
         topicExpectations: markdownExpectations,
         topicdescription: markdownDescription,
-        topicResources: topicResourcesId,
-        topicVideo: topicVideoId, 
+        topicResources: resourceIds,
+        topicVideo: videoIds, 
         resourceInstructions: markdownInstructions,
-        duration
+        duration,
+        tutor
 
       },
     });
@@ -73,29 +75,33 @@ export const topicUpload = async (
 
 
 export const topicEditing = async (
-  topicId : number,
+  topicId: number,
   courseId: number,
   topicname: string,
   topicExpectations: string,
   topicdescription: string,
-  resourceIds: string,
-  videoIds: string,
+  resourceIds: string[],
+  videoIds: string | null, 
   instructions: string,
   duration: string
 ) => {
   try {
+    const turndownService = new TurndownService();
+    const markdownInstructions = turndownService.turndown(instructions);
+    const markdownExpectations = turndownService.turndown(topicExpectations);
+    const markdownDescription = turndownService.turndown(topicdescription);
     const response = await api.put(
-      `/api/topics/${topicId}`,
-      {
+      `/api/topics/${topicId}`, {
+    
         data: {
           course: courseId,
           topicname,
-          topicExpectations,
-          topicdescription,
-          resourceInstructions: instructions,
+          topicExpectations: markdownExpectations,
+          topicdescription: markdownDescription,
+          resourceInstructions: markdownInstructions,
           duration,
           topicResources: resourceIds,
-          topicVideo: videoIds.length > 0 ? videoIds[0] : null,
+          topicVideo: videoIds 
         },
       },
       {
@@ -112,6 +118,7 @@ export const topicEditing = async (
 };
 
 
+
 export const topicDelete = async (topicId: number) => {
   try {
     const response = await api.delete(`/api/topics/${topicId}`);
@@ -120,6 +127,29 @@ export const topicDelete = async (topicId: number) => {
     throw new Error("Failed to delete the topic. Please try again.");
   }
 };
+
+
+export const deleteTopicVideo = async (topicId: number, videoId: string) => {
+  try {
+    const response = await api.get(`/api/topics/${topicId}?populate=topicVideo`);
+    const topicData = response.data?.data;
+
+    if (!topicData || !topicData.attributes?.topicVideo) {
+      throw new Error("No video found for this topic");
+    }
+
+    await api.delete(`/api/upload/files/${videoId}`);
+
+    await api.put(`/api/topics/${topicId}`, {
+      data: { topicVideo: null },
+    });
+
+    return { message: "Video deleted successfully" };
+  } catch (error) {
+    throw new Error("Failed to delete the video. Please try again.");
+  }
+};
+
 
 
 const fetchAllResults = async (userId: number) => {

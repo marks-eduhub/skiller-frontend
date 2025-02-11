@@ -14,7 +14,7 @@ interface CourseReviewProps {
 
 const CourseReview: React.FC<CourseReviewProps> = ({ reviews }) => {
   if (reviews.length === 0) {
-    return <div className="flex items-center justify-center font-semibold text-[18px] p-20">No reviews available.</div>;
+    return <div className="flex items-center justify-center font-semibold text-[18px] sm:p-20 p-10">No reviews available.</div>;
   }
   
   return (

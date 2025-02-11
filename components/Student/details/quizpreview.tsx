@@ -112,11 +112,11 @@ const QuizPreview = () => {
           questionId: variables.questionId,
         });
       } else {
-        console.error("Test Result ID is undefined.");
+        message.error("Test detail is missing.");
       }
     },
     onError: (err) => {
-      console.error("Error creating test result:", err);
+      message.error("Error creating test result:");
     },
   });
 

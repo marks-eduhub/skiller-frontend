@@ -2,7 +2,6 @@
 import React from "react";
 import ProductCard from "../courseCards/courseCards";
 import { useLikedCourses } from "@/hooks/useLikedCourses";
-import { useAuthContext } from "@/Context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
@@ -43,7 +42,7 @@ const Wishlist: React.FC = () => {
   
   if (!wishlist || wishlist.length === 0) {
     return (
-      <p className="font-semibold flex items-center justify-center p-20 text-[20px]">
+      <p className="font-semibold flex items-center justify-center sm:p-20 p-10 sm:mt-0 mt-10 text-[20px]">
         Your wishlist is empty.
       </p>
     );

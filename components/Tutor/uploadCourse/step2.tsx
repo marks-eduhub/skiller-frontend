@@ -6,7 +6,7 @@ import { uploadMedia } from "@/hooks/useCourseUpload";
 import TopicFields from "./topicfields";
 
 interface Topic {
-  id: number | null; 
+  id: number | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;
@@ -30,12 +30,19 @@ interface Step2Props {
 }
 
 const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
-  const [videoPreview, setVideoPreview] = useState("");
+  const [videoPreview, setVideoPreview] = useState<{
+    [key: number]: string | null;
+  }>({});
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(null);
+  const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(
+    null
+  );
+  const [videoId, setVideoId] = useState("");
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
-  const [topicId, setTopicId] = useState<number | null>(null); 
+  const [topicId, setTopicId] = useState<number | null>(null);
+  const [topicVideo, setTopicVideo] = useState<File | null>(null);
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -44,13 +51,23 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     setTopicId(topics[index]?.id || null);
   };
 
-  const onVideoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const onVideoChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
+
     if (file) {
       const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
       if (validVideoTypes.includes(file.type)) {
-        setVideoPreview(URL.createObjectURL(file));
+        const videoPreviewURL = URL.createObjectURL(file);
+        setVideoPreview((prev) => ({
+          ...prev,
+          [index]: videoPreviewURL,
+        }));
         updateTopic(index, { topicVideo: file });
+
+        setTopicVideo(file);
       } else {
         message.error("Please select a valid video file.");
       }
@@ -70,20 +87,14 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
       ];
 
       if (validFileTypes.includes(file.type)) {
-        try {
-          const resourceId = await uploadMedia(file);
-          if (resourceId) {
-            updateTopic(currentTopicIndex, {
-              topicResources: file,
-              topicresource: resourceId,
-            });
-            setResourcePreview((prev) => [...prev, file]);
-          }
-        } catch (error) {
-          message.error("Failed to upload the resource.");
-        }
+        setResourcePreview((prev) => [...prev, file]);
+        updateTopic(currentTopicIndex, {
+          topicResources: file,
+        });
       } else {
-        message.error("Unsupported file type. Please upload a PDF or PowerPoint.");
+        message.error(
+          "Unsupported file type. Please upload a PDF or PowerPoint."
+        );
       }
     }
   };
@@ -94,12 +105,15 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     <div className="sm:p-4">
       {topics?.map((topic, index) => (
         <div key={index} className="flex flex-col mt-5 mb-5 cursor-pointer">
+          <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
+
           <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300 bg-gray-100 sm:mt-3">
             <div
               onClick={() => toggleExpanded(index)}
               className="flex items-center justify-between p-9 relative"
             >
-              <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
+              <h1 className="font-bold text-[20px]">Get Started</h1>
+
               <div
                 className={`transition-transform duration-200 transform ${
                   expandedIndex === index ? "rotate-90" : ""
@@ -113,14 +127,26 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
             <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
               <TopicFields
                 topic={topic}
-                topicId={topicId} 
-                onFieldChange={(field: any, value: any) => updateTopic(index, { [field]: value })}
-                onVideoChange={onVideoChange}  
-                onFileChange={onFileChange}
-                videoPreview={videoPreview}
+                topicId={topicId ?? 0}
+                index={index}
+                onFieldChange={(field: any, value: any) =>
+                  updateTopic(index, { [field]: value })
+                }
+                onVideoChange={(topicKey, e) => onVideoChange(topicKey, e)}
+                videoPreview={videoPreview[index]}
                 expandedIndex={expandedIndex}
                 resourcePreview={resourcePreview}
                 onClose={closeModal}
+                onFileChange={onFileChange}
+                topicVideo={topicVideo}
+                setVideoPreview={(updatedPreview) =>
+                  setVideoPreview((prev) => ({
+                    ...prev,
+                    [index]: updatedPreview,
+                  }))
+                }
+                videoId={videoId}
+                setVideoId={setVideoId}
               />
             </div>
           )}

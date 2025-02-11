@@ -11,10 +11,8 @@ export const Learning = () => {
   };
   return (
     <div className="sm:pl-0">
-      <Link href="/dashboard">
-      {/* <h1 className="text-end mb-2 hover:text-blue-600 underline">See more categories</h1> */}
-      </Link>
-      <div className="flex gap-3 items-center border-t-2 border-t-gray-300  w-full ">
+      
+      <div className="flex gap-3 items-center  w-full ">
         <div
           className={`rounded-md px-6 py-3 shadow-lg mt-5  cursor-pointer ${
             clicked == "My Progress" ? "border-b-4 border-black" : "bg-gray-100"
@@ -23,9 +21,7 @@ export const Learning = () => {
         >
           <h1>
             My Progress
-            {/* <span className="bg-gray-700 ml-2 text-white px-2 py-1 rounded-xl">
-              {2}
-            </span> */}
+           
           </h1>
         </div>
         <div
@@ -36,9 +32,7 @@ export const Learning = () => {
         >
           <h1>
             Wishlist
-            {/* <span className="bg-gray-700 ml-2 text-white px-2 py-1 rounded-xl">
-              {2}
-            </span> */}
+            
           </h1>
         </div>
       </div>

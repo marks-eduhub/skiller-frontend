@@ -18,7 +18,6 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
     isLoading: tutorLoading,
     error: tutorError,
   } = useFetchTutorSlug(slug);
-  console.log("lol", tutorData)
 
   const { data, isLoading, error } = useFetchCourses();
 
@@ -47,16 +46,15 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
   }
 
   if (isLoading) {
-    
-        <div>
-          <Skeleton
-            height={300}
-            count={1}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-      </div>
+    <div>
+      <Skeleton
+        height={300}
+        count={1}
+        baseColor="#e0e0e0"
+        highlightColor="#f5f5f5"
+        enableAnimation={true}
+      />
+    </div>;
   }
   if (tutorError) {
     message.error("Error fetching tutor  data. Please try again later.");
@@ -77,19 +75,17 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
     );
   }
 
+  const tutor = tutorData?.data[0]?.attributes;
 
+  const tutorImage =
+    tutor?.profilepicture?.data?.attributes.url || "/Ellipse 445.webp";
+  const ImageUrl = tutorImage
+    ? `${api.defaults.baseURL}${tutorImage}`
+    : "/Ellipse 445.webp";
 
-
-const tutor = tutorData?.data[0]?.attributes;
-
-
-const tutorImage = tutor?.profilepicture?.data?.attributes.url || "/Ellipse 445.webp";
-const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
-
-const tutorName = tutor.tutorname;
-const tutorQualifications = tutor.Qualifications
-const tutorBiography = tutor.Biography
-
+  const tutorName = tutor.tutorname;
+  const tutorQualifications = tutor.Qualifications;
+  const tutorBiography = tutor.Biography;
 
   const tutorCourses: Course[] = [];
   data?.data.forEach((course: any) => {
@@ -112,7 +108,6 @@ const tutorBiography = tutor.Biography
       <div className="flex mb-5 flex-col sm:w-full w-[345px] rounded-lg sm:px-4 p-2 sm:py-6 border border-black  h-auto relative">
         <div className="flex flex-col sm:flex-row items-start sm:gap-7 gap-3 mt-5">
           <Image
-
             src={ImageUrl}
             alt={tutorName}
             width={150}
@@ -137,21 +132,18 @@ const tutorBiography = tutor.Biography
             <h2 className="mt-3 sm:mt-0">
               <span className="underline">Qualifications:</span>
               <span className="text-gray-600 sm:ml-2">
-                {tutorQualifications ||
-                  "No qualifications available"}
+                {tutorQualifications || "No qualifications available"}
               </span>
             </h2>
           </div>
         </div>
         <div className="mt-5 sm:mt-10">
-          <p className="mb-5">
-            {tutorBiography || "No biography available."}
-          </p>
+          <p className="mb-5">{tutorBiography || "No biography available."}</p>
         </div>
       </div>
 
       <div className="mt-8">
-      {tutorCourses.length > 0 ? (
+        {tutorCourses.length > 0 ? (
           <>
             <h1 className="mb-6">Courses by {tutorName}</h1>
             <ProductContainer courses={tutorCourses} />

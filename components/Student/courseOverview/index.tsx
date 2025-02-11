@@ -80,7 +80,7 @@ const Enroll = () => {
       name: review.attributes.name,
       image: imageUrl
         ? `${api.defaults.baseURL}${imageUrl}`
-        : "/default-image.jpg",
+        : "/Ellipse 445.webp",
       comment: review.attributes.comment,
       rating: review.attributes.rating,
     };
@@ -92,6 +92,10 @@ const Enroll = () => {
     if (firstTopicId) {
       setIsEnroll(true);
       router.push(`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`);
+    }else{
+      if(!firstTopicId) { 
+        message.warning("No topics available yet for you to enroll")
+      }
     }
   };
 
@@ -105,7 +109,7 @@ const Enroll = () => {
           className="object-cover bg-no-repeat rounded-2xl"
         />
         <div className="absolute inset-0 video-overlay rounded-lg"></div>
-        <div className="flex justify-between w-full absolute inset-0 mb-5 z-50">
+        <div className="flex justify-between w-full absolute inset-0 mb-5 z-30">
           <div className="flex flex-col text-white p-4 gap-2 self-end">
             <h1 className="font-bold text-[20px]">{coursename}</h1>
             <p className="font-semibold sm:mt-0">By {tutorName}</p>
@@ -126,7 +130,7 @@ const Enroll = () => {
           <span className="font-bold text-[18px] ml-1">{duration}</span>
         </h1>
         <h1 className="font-semibold text-[18px] sm:mb-0 mb-2">
-          Students enrolled :{" "}
+          Students enrolled :
           <span className="font-bold text-[18px]">{studentsenrolled}</span>
         </h1>
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">

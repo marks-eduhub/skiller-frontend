@@ -42,15 +42,15 @@ const Description = () => {
 
   return (
     <div className="bg-[#F5F5F5] ">
-      <div className="flex flex-col md:flex-row gap-9 pt-9 ">
-        <div className="mb-2 sm:ml-3 bg-[#FFF] sm:w-[800px] w-full sm:h-[600px] ml-5 sm:pr-0 pr-4">
+      <div className="flex flex-col md:flex-row gap-9 pt-9 sm:pr-0 pr-10">
+        <div className="mb-2 sm:ml-3 bg-[#FFF] sm:w-[800px] w-full sm:h-[600px] ml-5 ">
           <div className="ml-5 mt-8 mr-3">
             {description?.length > 0 ? (
-              
-              <p>{description}</p>            ) : (
-              <div className="flex items-center justify-center font-bold p-10">
+              <p>{description}</p>
+            ) : (
+              <div className="flex items-center justify-center font-bold sm:p-10">
                 <p className="text-[18px]">
-                  No learning decsription available.
+                  No learning description available.
                 </p>
               </div>
             )}
@@ -58,7 +58,7 @@ const Description = () => {
         </div>
 
         <div className="flex flex-col mr-8 pb-10">
-          <div className="flex items-center justify-between gap-8 sm:mt-0 mt-20">
+          <div className="flex items-center justify-between gap-8 sm:mt-0 mt-20 ">
             <button className="rounded-t-md  rounded-b-md border border-black bg-white px-8 py-2 ml-5 md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
               <BsBookmarkCheck className="text-lg" />
               <span className="ml-2">Save</span>
@@ -69,7 +69,7 @@ const Description = () => {
             </button>
           </div>
 
-          <div className="bg-[#ffffff8e] flex flex-col justify-center md:w-[570px] h-[500px] items-center mt-7 max-md:w-[320px] max-md:ml-5">
+          <div className="bg-[#ffffff8e] flex flex-col justify-center md:w-[570px] h-[500px] items-center mt-7 max-md:w-[280px] max-md:ml-5 sm:pr-0 pr-2">
             <h2 className="font-bold">Screenshots go here</h2>
           </div>
         </div>

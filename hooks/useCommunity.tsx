@@ -143,7 +143,6 @@ export const addLiked = async (responseId: number, userId: number) => {
         user: userId,
       },
     });
-    console.log("Like Success:", response.data);
     return response.data;
   } catch (error) {
     throw new Error("Failed to add like.");
@@ -164,7 +163,6 @@ export const removeLiked = async (responseId: number, userId: number) => {
 
     const likedId = likedEntry.id;
     await api.delete(`/api/response-likes/${likedId}`);
-    console.log("Unlike Success:", likedId);
   } catch (error) {
     throw new Error("Failed to remove like.");
   }
