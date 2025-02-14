@@ -2,24 +2,7 @@ import api from "@/lib/axios";
 import { Question, Test } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchTestResult = async (userId: number, topicId: number) => {
-  const response = await api.get(
-    `/api/test-results?user=${userId}&topic=${topicId}&populate=user_question_results,topic,test,user`
-  );
-  return response.data;
-};
 
-export const UsefetchTestResult = (topicId: number, userId: number) => {
-  return useQuery({
-    queryKey: ["testresults_1", topicId, userId],
-    queryFn: () => fetchTestResult(userId, topicId),
-
-    meta: {
-      errorMessage: "Failed to fetch test result",
-    },
-    enabled: !!userId && !!topicId,
-  });
-};
 
 const fetchResult = async (userId: number, topicId: number) => {
   const response = await api.get(
