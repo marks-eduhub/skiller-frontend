@@ -57,6 +57,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
   const [index, setIndex] = useState(0);
   const [videoId, setVideoId] = useState("");
+  const [resourceId, setResourceIds] = useState("")
 
   useEffect(() => {
     if (currentTopic && currentTopic.attributes) {
@@ -67,7 +68,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
           : "";
       const videoId =
         videoData && videoData.length > 0 ? videoData[0].id : null;
-
+  
       const resourceData = currentTopic.attributes.topicResources;
       const resourceIds = resourceData?.data
         ? resourceData.data.map((res: { id: any }) => res.id)
@@ -78,9 +79,10 @@ const TopicModal: React.FC<TopicModalProps> = ({
               `${process.env.NEXT_PUBLIC_API_BASE_URL}${res.attributes.url}`
           )
         : [];
-
+  
       setVideoId(videoId);
-
+      setResourceIds(resourceIds); 
+  
       setTopic((prev) => ({
         ...prev,
         topicname: currentTopic.attributes.topicname || "",
@@ -92,12 +94,12 @@ const TopicModal: React.FC<TopicModalProps> = ({
         topicVideo: videoId,
         topicResources: resourceIds,
       }));
-
+  
       setVideoPreview(firstTopicVideoUrl);
-      setResourcePreview(resourceUrls);
+      setResourcePreview(resourceUrls); 
     }
   }, [currentTopic]);
-
+  
   const onFieldChange = useCallback((field: any, value: any) => {
     setTopic((prev) => ({ ...prev, [field]: value }));
   }, []);
@@ -182,8 +184,15 @@ const TopicModal: React.FC<TopicModalProps> = ({
             index={index}
             videoId={videoId}
             setVideoId={setVideoId}
+            resourceIds={resourceId}
+            setResourceIds={setResourceIds}
             setVideoPreview={(updatedPreview) =>
               setVideoPreview(updatedPreview ?? "")
+            }
+            onRemoveResource={(resourceIndex) =>
+              setResourcePreview((prev) =>
+                prev.filter((_, i) => i!== resourceIndex)
+              )
             }
           />
         </div>

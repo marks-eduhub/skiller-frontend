@@ -7,6 +7,7 @@ import FileModal from "./filemodal";
 import CustomModal from "./modal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  deleteTopicResource,
   deleteTopicVideo,
   topicDelete,
   topicEditing,
@@ -57,9 +58,11 @@ interface TopicFieldsProps {
   index: number;
   topicVideo: File | null;
   setVideoPreview: (updatedPreview: string | null) => void;
-
   videoId: string;
   setVideoId: (prev: string) => void;
+  onRemoveResource: (resourceIndex: number) => void;
+  resourceIds: string 
+  setResourceIds: (prev: string) => void;
 }
 
 const TopicFields: React.FC<TopicFieldsProps> = ({
@@ -76,6 +79,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   setVideoPreview,
   videoId,
   setVideoId,
+  onRemoveResource,
+  resourceIds,
+  setResourceIds,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
@@ -95,8 +101,10 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
   const [newResourceFiles, setNewResourceFiles] = useState<File[]>([]);
-  const [videoModalOpen, setVideModalOpen] = useState(false);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
+  const [resourceIndex, setResourceIndex] = useState<number | null>(null); 
+
 
   const handleTextChange = (text: string) => {};
 
@@ -104,7 +112,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setModalOpen(false);
   };
   const handleVideoModalClose = () => {
-    setVideModalOpen(false);
+    setVideoModalOpen(false);
   };
 
   const handleResourceModalClose = () => {
@@ -366,6 +374,38 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
   });
 
+  const { mutate: topicResourceDelete } = useMutation({
+    mutationFn: async ({
+      topicId,
+      resourceId,
+    }: {
+      topicId: number;
+      resourceId: string;
+    }) => {
+      try {
+        const result = await deleteTopicResource(topicId, resourceId);
+        return result;
+      } catch (error) {
+        throw new Error("Deletion failed");
+      }
+    },
+    onSuccess: (_, { topicId }) => {
+      message.success("Resource deleted successfully!");
+  
+      queryClient.invalidateQueries({
+        queryKey: ["course_topics"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
+  
+      closeModal();
+      onClose();
+    },
+    onError: (error) => {
+      message.error("Error deleting topic resource. Please try again later.");
+    },
+  });
+  
+  
   const handleDeleteClick = (topicId: number) => {
     if (topicId === null) {
       message.warning("You can't delete an unsaved topic.");
@@ -377,18 +417,41 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
 
   const handleVideoModal = (videoId: string, topicId: number) => {
     setVideoId(videoId);
-    setVideModalOpen(true);
+    setVideoModalOpen(true);
   };
 
-  const handleDeleteVideo = () => {
+ const handleDeleteVideo = () => {
     if (videoId && topicId) {
       topicVideoDelete({ topicId, videoId });
     } else {
       message.error("An error has occurred while deleting video.");
     }
-    setVideModalOpen(false);
+    setVideoModalOpen(false);
   };
 
+  const handleResourceModal = (resourceId: number, resourceIndex:number) => {
+    setResourceIndex(resourceIndex);
+    setResourceModalOpen(true);
+  };
+
+  const handleResourceDelete = () => {
+    if (resourceIndex !== null && resourceIds && topicId) {
+      const resourceId = resourceIds[resourceIndex]; 
+  
+      if (resourceId) {
+        topicResourceDelete({ topicId, resourceId });
+      } else {
+        message.error("An error has occurred while deleting the resource.");
+      }
+    } else {
+      message.error("An error has occurred while deleting the resource.");
+    }
+  
+    setResourceModalOpen(false); 
+  };
+  
+  
+  
   return (
     <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
       <div className="flex flex-col sm:flex-row gap-5">
@@ -481,28 +544,53 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       </div>
 
       <div className="sm:mt-10 mt-5">
-        <h1 className="mb-2 font-semibold">Resource Preview</h1>
+        <h1>Resource Preview</h1>
         {Array.isArray(resourcePreview) && resourcePreview.length > 0 ? (
-          resourcePreview.map((preview: any, index: any) => (
-            <div key={index} className="border border-gray-300 p-2 rounded mb-5">
-              {typeof preview === "string" && preview.startsWith("http") ? (
-                <a
-                  href={preview}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500"
-                >
-                  View Resource {index + 1}
-                </a>
-              ) : preview instanceof File ? (
-                <p className="text-gray-500 ">Uploaded File: {preview.name}</p>
-              ) : (
-                <p className="text-gray-500">Invalid resource</p>
-              )}
-            </div>
-          ))
+          resourcePreview.map((resource: any, resourceIndex: number) => {
+            const resourceId = resourceIds[resourceIndex]; 
+
+            return (
+              <div
+                key={resourceIndex}
+                className="border border-gray-300 p-2 rounded mb-5 flex justify-between items-center"
+              >
+                {typeof resource === "string" && resource.startsWith("http") ? (
+                  <>
+                    <a
+                      href={resource}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500"
+                    >
+                      Resource {resourceIndex + 1}
+                    </a>
+                    <button
+                      className="text-red-500 hover:text-red-700 ml-2"
+                      onClick={() => handleResourceModal(Number(resourceId), resourceIndex)} 
+                    >
+                      Delete
+                    </button>
+                  </>
+                ) : resource instanceof File ? (
+                  <div className="flex items-center">
+                    <p className="text-gray-500">
+                      Uploaded File: {resource.name}
+                    </p>
+                    <button
+                      onClick={() => onRemoveResource(resourceIndex)}
+                      className="text-blue-500 hover:text-gray-700 ml-2"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-gray-500">Invalid resource</p>
+                )}
+              </div>
+            );
+          })
         ) : (
-          <p className="text-gray-500">No resources uploaded</p>
+          <p className="text-gray-500 mt-2">No resources uploaded</p>
         )}
       </div>
 
@@ -594,10 +682,14 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           onDelete={() => handleDeleteVideo()}
         />
       )}
-      {/* <ResourceModal
-        isOpen={resourceModalOpen}
-        onClose={handleResourceModalClose}
-      /> */}
+      {resourceModalOpen && (
+        <ResourceModal
+          isOpen={resourceModalOpen}
+          onClose={handleResourceModalClose}
+          onDelete={() => handleResourceDelete()}
+        />
+      )}
+
       {ModalOpen && (
         <FileModal
           closeModal={handleModalClose}
