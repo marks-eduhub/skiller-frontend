@@ -8,7 +8,11 @@ import { useAuthContext } from "../../../Context/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { register } from "../../../hooks/Authhooks/useRegister";
+import {
+  register,
+  registerUserWithGoogle,
+  redirectToGoogleAuth,
+} from "../../../hooks/Authhooks/useRegister";
 const SignupForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
@@ -29,11 +33,29 @@ const SignupForm = () => {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
-      message.success(`Welcome ${data.user.username}`);
+      message.success(`Welcome ${data.user.displayName}`);
       if (setUser) {
         setUser(data.user);
       }
       router.push("/dashboard");
+    },
+    onError: (error) => {
+      message.error((error as Error).message || "Something went wrong!");
+    },
+  });
+  const {
+    mutate: mutateGoogle,
+    isPending: isPendingGoogle,
+    isError: isErrorGoogle,
+    error: errorGoogle,
+  } = useMutation({
+    mutationFn: redirectToGoogleAuth,
+    onSuccess: (data) => {
+      // message.success(`Welcome ${data.user.displayName}`);
+      // if (setUser) {
+      //   setUser(data.user);
+      // }
+      // router.push("/google-callback");
     },
     onError: (error) => {
       message.error((error as Error).message || "Something went wrong!");
@@ -49,7 +71,7 @@ const SignupForm = () => {
       [name]: value,
     }));
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -66,30 +88,32 @@ const SignupForm = () => {
       message.error("First Name and Last Name are required");
       return;
     }
-    
+
     const formDataToSend = new FormData();
     formDataToSend.append("email", formData.email);
     formDataToSend.append("username", formData.username);
     formDataToSend.append("firstName", formData.firstName);
     formDataToSend.append("lastName", formData.lastName);
     formDataToSend.append("password", formData.password);
-    
-  
+
     try {
-      await mutate(formDataToSend); 
-    } catch (error) {
-    }
+      await mutate(formDataToSend);
+    } catch (error) {}
   };
-  
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await mutateGoogle();
+    } catch (error) {}
+  };
   return (
     <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
-        <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
+      <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
       <h2 className="font-[400] sm:text-[50px] text-[38px]">
         {data.registerForm.title}
       </h2>
       {isError && <p className="text-red-500">{isError}</p>}
       <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[1.5rem] mt-[2rem]">
-
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
             <label className="sm:text-[22px]">First Name</label>
@@ -215,24 +239,35 @@ const SignupForm = () => {
         </div>
 
         <div className="flex justify-center">
-          <button className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4">
+          <button
+            onClick={handleGoogleSignUp}
+            disabled={isPendingGoogle}
+            className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
+          >
+            {" "}
             <Image
               src={data.registerForm.action.googlelogo}
               alt={"google"}
               width={50}
               height={50}
             />
-            <p className="text-[16px]">Sign in with Google</p>
+            <p className="text-[16px]">
+              {" "}
+              {isPendingGoogle ? "Loading..." : "Sign In with Google"}
+            </p>
           </button>
         </div>
 
         <div className="sm:hidden flex items-center ">
-          <h1>Already have an account? <Link href="/auth" className="text-blue-600">Login</Link></h1>
+          <h1>
+            Already have an account?{" "}
+            <Link href="/auth" className="text-blue-600">
+              Login
+            </Link>
+          </h1>
         </div>
       </div>
-    
     </div>
-    
   );
 };
 
