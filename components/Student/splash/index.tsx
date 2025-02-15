@@ -1,6 +1,4 @@
 "use client";
-import { useEffect } from "react";
-
 import React from "react";
 import data from "./data.json";
 import Image from "next/image";
@@ -9,38 +7,20 @@ import { TbArrowBadgeRight } from "react-icons/tb";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 // import { login } from "../../../lib/userSS";
+import { useAuthContext } from "@/Context/AuthContext";
 
 const Splash: React.FC = () => {
   const router = useRouter();
   const [button, setButton] = useState(false);
+  const { user } = useAuthContext();
 
   const handleDash = async () => {
-    // const formData = new FormData();
-    // // // here we can pick the email from the user profile setup
-    // formData.append("email", "black@gmail.com");
-    // // // here we could use a default password
-    // formData.append("password", "123456");
-    // // // perform default login action
-    // await login(formData);
-    // // finally redirect user to dashboard
-    // // setButton(true);
-
-    const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-    if (isLoggedIn === "true") {
+    if (user) {
       router.push("/dashboard");
     } else {
       router.push("/auth");
     }
   };
-
-  // useEffect(() => {
-  //   if (button) {
-  //     const isLoggedIn = sessionStorage.getItem("isLoggedIn");
-  //     if (isLoggedIn === "true") {
-  //       router.push("/dashboard");
-  //     }
-  //   }
-  // }, []);
 
   return (
     <div
@@ -48,7 +28,9 @@ const Splash: React.FC = () => {
       style={{ backgroundImage: "url('/backgroundImage.svg')" }}
     >
       <div className="absolute top-1/4 transform -translate-y-1/2 text-center z-10">
-        <p className="text-2xl font-bold text-black">{data.title}</p>
+        <p className="text-2xl font-bold text-black">
+          Ready to Start?, Hello {user?.username}.
+        </p>
       </div>
       <div className="absolute bottom-16">
         <button
