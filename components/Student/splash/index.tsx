@@ -29,7 +29,7 @@ const Splash: React.FC = () => {
     >
       <div className="absolute top-1/4 transform -translate-y-1/2 text-center z-10">
         <p className="text-2xl font-bold text-black">
-          Ready to Start?, Hello {user!.username}.
+          Ready to Start?, Hello {user?.username}.
         </p>
       </div>
       <div className="absolute bottom-16">

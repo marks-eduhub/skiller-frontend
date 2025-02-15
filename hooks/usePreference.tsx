@@ -43,16 +43,27 @@ interface UserResponse {
   prereferences: Record<string, any>;
 }
 
+// export const fetchPreferences = async (
+//   userId: number
+// ): Promise<UserResponse> => {
+//   const response = await api.get<UserResponse>(`/api/users/me`, {
+//     headers: {
+//       Authorization: `Bearer ${localStorage.getItem("token")}`,
+//     },
+//   });
+
+//   return response.data;
+// };
 export const fetchPreferences = async (
   userId: number
-): Promise<UserResponse> => {
+): Promise<{ data: UserResponse }> => {
   const response = await api.get<UserResponse>(`/api/users/me`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
 
-  return response.data;
+  return { data: response.data }; // Wrap the response in a `data` property
 };
 
 export const useFetchPreferences = (userId: number) => {
