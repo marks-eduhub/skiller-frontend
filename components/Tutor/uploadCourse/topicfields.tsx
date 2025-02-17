@@ -462,7 +462,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               type="text"
               value={topic?.topicname}
               onChange={(e) => onFieldChange("topicname", e.target.value)}
-              className="border sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              className="border rounded-md sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
           </div>
 
@@ -471,11 +471,13 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               Topic duration
             </label>
             <input
-              type="text"
+              type="time"
               value={topic?.duration}
               onChange={(e) => onFieldChange("duration", e.target.value)}
-              className="border sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              step="60"
+              className="border rounded-md sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
+           
           </div>
         </div>
       </div>
