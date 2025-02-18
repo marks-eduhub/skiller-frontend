@@ -112,7 +112,7 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
             alt={tutorName}
             width={150}
             height={150}
-            className="flex-shrink-0"
+            className="flex-shrink-0 rounded-full object-cover"
           />
           <div className="flex flex-col sm:mt-6 mt-3">
             <h1 className="font-semibold text-[20px] mb-3">{tutorName}</h1>

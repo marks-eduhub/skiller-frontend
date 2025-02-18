@@ -8,6 +8,7 @@ import Image from "next/image";
 import AttemptTestModal from "@/lib/warning";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
+import { UsefetchTestResult } from "@/hooks/useQuestions";
 
 const Knowledge = () => {
   const searchParams = useSearchParams();
@@ -15,85 +16,76 @@ const Knowledge = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
   const [selectedTab, setselectedTab] = useState("Tests");
-  const handleselectedClick = (tabName: string) => {
-    setselectedTab(tabName);
-  };
-  const [highestScore, setHighestScore] = useState(0);
-  const [mostRecentScore, setMostRecentScore] = useState(0);
+  const handleselectedClick = (tabName: string) => {setselectedTab(tabName); };
+  const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
+  const [highestScores, setHighestScores] = useState<{ [key: number]: number }>({});
+  const [mostRecentScores, setMostRecentScores] = useState<{[key: number]: number }>({});
   const [showModal, setShowModal] = useState(false);
+  const [attemptsByTest, setAttemptsByTest] = useState<{[key: number]: number}>({});
   const [isFirstAttempt, setIsFirstAttempt] = useState(false);
   const [isLastAttempt, setIsLastAttempt] = useState(false);
-  const [attemptsByTopic, setAttemptsByTopic] = useState<{
-    [key: number]: number;
-  }>({});
-  const { data, isLoading, error } = UsefetchResult(
-    Number(topicId),
-    Number(userId)
-  );
-  const testresultdata = data?.data;
-  const isTestAvailable = Boolean(testresultdata && testresultdata.length > 0);
-
-  const {
-    data: tests,
-    isLoading: isTests,
-    error: isError,
-  } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
-  const {
-    data: testlength,
-    isLoading: isTest,
-    error: iserror,
-  } = useFetchTests(Number(topicId), Number(userId));
-  const hasTests = testlength?.data?.length > 0;
   const router = useRouter();
   const totalAttempts = 3;
 
-  const getHighestAndMostRecentScore = (testResults: any) => {
-    let highestScore = 0;
-    let mostRecentScore = 0;
-    let latestDate = new Date(0);
+  const { data, isLoading, error } = UsefetchTestResult(Number(topicId),Number(userId));
+  const testresultdata = data?.data;
 
+  const isTestAvailable = Boolean(testresultdata && testresultdata.length > 0);
+  const {data: tests,isLoading: isTests, error: isError } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
+
+  const hasTests = tests?.data?.length > 0;
+ 
+
+  const getHighestAndMostRecentScores = (testResults: any) => {
+    const scoresByTest: { [key: number]: number } = {};
+    const mostRecentByTest: { [key: number]: number } = {};
+  
     testResults.forEach((test: any) => {
+      const testId = test.attributes.test?.data?.id; 
+      if (!testId) return; 
+  
       const score = test.attributes.score;
       const createdAt = new Date(test.attributes.latestscore);
-
-      if (score > highestScore) {
-        highestScore = score;
+  
+      if (!scoresByTest[testId] || score > scoresByTest[testId]) {
+        scoresByTest[testId] = score;
       }
-
-      if (createdAt > latestDate) {
-        latestDate = createdAt;
-        mostRecentScore = score;
+  
+      if (!mostRecentByTest[testId] || createdAt > new Date(mostRecentByTest[testId])) {
+        mostRecentByTest[testId] = score;
       }
     });
-
-    return { highestScore, mostRecentScore };
+  
+    return { scoresByTest, mostRecentByTest };
   };
-
+  
+  
   useEffect(() => {
     if (testresultdata && testresultdata.length > 0) {
-      const { highestScore, mostRecentScore } =
-        getHighestAndMostRecentScore(testresultdata);
-      setHighestScore(highestScore);
-      setMostRecentScore(mostRecentScore);
+      const { scoresByTest, mostRecentByTest } = getHighestAndMostRecentScores(testresultdata);
+      setHighestScores(scoresByTest);
+      setMostRecentScores(mostRecentByTest);
     }
   }, [testresultdata, topicId, userId]);
+  
 
   useEffect(() => {
-    const fetchAndSetTimesAttempted = () => {
-      if (data) {
-        const attemptCount = data?.data?.length || 0;
-        setAttemptsByTopic((prev) => ({
-          ...prev,
-          [Number(topicId)]: attemptCount,
-        }));
-      }
-    };
+    if (data) {
+      const attempts = data?.data?.reduce((acc: any, test: any) => {
+        const testId = test.attributes.test?.data?.id;
+        if (!testId) return acc; 
+        acc[testId] = (acc[testId] || 0) + 1;
+        return acc;
+      }, {});
+      setAttemptsByTest(attempts || {});
+    }
+  }, [data, topicId, userId]); 
+  
 
-    fetchAndSetTimesAttempted();
-  }, [data, topicId, userId]);
-
-  const handleAttemptTest = () => {
-    const timesAttempted = attemptsByTopic[Number(topicId)] || 0;
+  const handleAttemptTest = (testId: number) => {
+    setSelectedTestId(testId);
+    setShowModal(true);
+    const timesAttempted = attemptsByTest[testId] || 0;
     const attemptsRemaining = totalAttempts - timesAttempted;
 
     if (attemptsRemaining <= 0) {
@@ -104,34 +96,36 @@ const Knowledge = () => {
     if (attemptsRemaining > 0) {
       if (timesAttempted === 0) {
         setIsFirstAttempt(true);
-        setShowModal(true);
       } else if (attemptsRemaining === 1) {
         setIsLastAttempt(true);
-        setShowModal(true);
       } else {
         setIsFirstAttempt(false);
         setIsLastAttempt(false);
-        router.push(`/dashboard/quizreview?topicId=${topicId}`);
+        router.push(
+          `/dashboard/quizreview?topicId=${topicId}&testId=${testId}`
+        );
       }
     }
   };
 
   const handleStartTest = () => {
-    if (isFirstAttempt || isLastAttempt) {
-      setIsFirstAttempt(false);
-      setIsLastAttempt(false);
-    }
-
-    router.push(`/dashboard/quizreview?topicId=${topicId}`);
-
+    setIsFirstAttempt(false);
+    setIsLastAttempt(false);
+  
+    router.push(
+      `/dashboard/quizreview?topicId=${topicId}&testId=${selectedTestId}`
+    );
+  
     setShowModal(false);
   };
+ 
 
   const handleCancel = () => {
     setShowModal(false);
   };
 
-  const passmark = tests?.data[0]?.attributes?.passmark;
+  
+
   if (isLoading || isLoading || isTests) {
     return (
       <div>
@@ -203,106 +197,103 @@ const Knowledge = () => {
       {selectedTab === "Tests" && (
         <>
           {hasTests ? (
-            tests?.data && tests?.data.length > 0 ? (
-              isTestAvailable ? (
-                tests?.data?.map((test: any) => {
-                  const testname = test.attributes?.testname || "Test1";
-                  const attemptsremaining =
-                    totalAttempts - (attemptsByTopic[Number(topicId)] || 0);
+             tests?.data?.map((test: any) => {
+              const testname = test.attributes?.testname || "Test1";
+               const attemptsremaining = totalAttempts - (attemptsByTest[test.id] || 0);
+                 const hasAttempted = attemptsremaining < totalAttempts;
+                 const passmark = tests?.data[0]?.attributes?.passmark;
 
-                  return (
-                    <div key={test.id} className="w-full py-6 cursor-pointer">
-                      <div className="flex flex-col sm:flex-row sm:space-x-4">
-                        <div className="bg-gray-200 w-full sm:w-1/3 mb-2 sm:mb-0">
-                          <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                            {testname}
-                          </h1>
-                        </div>
-                        <div className="bg-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0">
-                          <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">
-                            Attempts left: {attemptsremaining}
-                          </h1>
-                        </div>
-                        <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
-                          {attemptsremaining === 0 ? (
-                            <h1 className="font-bold text-[15px] p-4 sm:p-6 cursor-not-allowed opacity-50">
-                              No attempts left
-                            </h1>
-                          ) : (
-                            <button
-                              onClick={() => handleAttemptTest()}
-                              className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline"
-                            >
-                              Re-attempt Test
-                            </button>
-                          )}
-                        </div>
-                        <div className="bg-gray-700 w-full sm:w-1/5 mb-2 sm:mb-0 ">
-                          <div className="flex flex-col sm:my-0 sm:ml-0 my-4 ml-2">
-                            <h1 className="text-white text-[15px] sm:p-6">
-                              <h1 className="my-2">
-                                Highest Score: {highestScore}
-                              </h1>
-                              <h1>Most Recent Score: {mostRecentScore}</h1>
-                            </h1>
-                          </div>
-                        </div>
-                        <div className="bg-gray-200 w-full sm:w-1/6 flex flex-col items-center justify-center py-3">
-                          <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                            {highestScore >= passmark ? "Passed" : "Failed"}
-                          </h1>
-                          {highestScore >= passmark ? (
-                            <Image
-                              src="/tick1.svg"
-                              alt="tick"
-                              width={25}
-                              height={25}
-                            />
-                          ) : (
-                            <Image
-                              src="/fail.svg"
-                              alt="fail"
-                              width={20}
-                              height={20}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
+                 return (
+                  <div key={test.id} className="w-full py-6 cursor-pointer">
+                  <div className="flex flex-col sm:flex-row sm:space-x-4">
+          
+                  <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
+                  <h1 className="font-bold text-[15px] p-4 sm:p-6">{testname}</h1>
+                   </div>
+
+                 {!hasAttempted ? (
+                  <div className="w-full sm:w-1/4 mb-2 sm:mb-0">
+                  <button
+                  onClick={() => handleAttemptTest(test.id)}
+                  className="bg-gray-600 text-white font-bold text-[15px] p-4 sm:p-6 rounded-md"
+                    >
+                   Attempt Test
+                  </button>
+                   </div>
+                  ) : (
+                  <>
+                  <div className="bg-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0">
+                   <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">
+                    Attempts left: {attemptsremaining}
+                    </h1>
+                   </div>
+
+                   <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
+                   {attemptsremaining === 0 ? (
+                    <h1 className="font-bold text-[15px] p-4 sm:p-6 cursor-not-allowed opacity-50">
+                      No attempts left
+                      </h1>
+                    ) : (
+                    <button
+                    onClick={() => handleAttemptTest(test.id)}
+                    className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline"
+                  >
+                    Re-attempt Test
+                  </button>
+                   )}
+                  </div>
+
+                  <div className="bg-gray-700 w-full sm:w-1/5 mb-2 sm:mb-0">
+                   <div className="flex flex-col sm:my-0 sm:ml-0 my-4 ml-2">
+                  <h1 className="font-semibold text-[15px] p-4  text-white">
+                    Highest Score: {highestScores[test.id] || 0}
+                  </h1>
+                  <h1 className="font-semibold text-[15px] p-4 text-white">
+                    Most Recent Score: {mostRecentScores[test.id] || 0}
+                  </h1>
+                   </div>
+                  </div>
+
+                  <div className="bg-gray-300 w-full sm:w-1/6 flex flex-col items-center justify-center py-3">
+                  <h1 className="font-bold text-[15px] p-4 sm:p-6">
+                  {highestScores[test.id] >= passmark ? "Passed" : "Failed"}
+                   </h1>
+                  {highestScores[test.id] >= passmark ? (
+                  <Image
+                    src="/tick1.svg"
+                    alt="tick"
+                    width={25}
+                    height={25}
+                  />
+                    ) : (
+                  <Image
+                    src="/fail.svg"
+                    alt="fail"
+                    width={20}
+                    height={20}
+                  />
+                    )}
+                  </div>
+                   </>
+                  )}
+                  </div>
+                  </div>
+                 );
                 })
               ) : (
-                <div className="w-full flex flex-col items-center justify-center py-6">
-                  <h1 className="font-bold text-[15px] p-4">
-                    No attempts made yet.
-                  </h1>
-                  <button
-                    className="bg-slate-900 text-white p-2 rounded hover:bg-gray-300 hover:text-black"
-                    onClick={() => handleAttemptTest()}
-                  >
-                    Attempt Test
-                  </button>
-                </div>
-              )
-            ) : (
-              <div className="w-full flex flex-col items-center justify-center py-6">
-                <h1 className="font-bold text-[15px] p-4">
-                  No tests available for this topic.
-                </h1>
-              </div>
-            )
-          ) : (
             <div className="w-full flex flex-col items-center justify-center py-6">
-              <h1 className="font-bold text-[15px] p-4">
-                No tests available for this topic yet.
+             <h1 className="font-bold text-[15px] p-4">
+              No tests available for this topic.
               </h1>
-            </div>
-          )}
-        </>
-      )}
+              </div>
+              )}
 
-      {showModal && (
+              </>
+              )}
+
+         {showModal && selectedTestId && (
         <AttemptTestModal
+          testId={selectedTestId}
           isFirstAttempt={isFirstAttempt}
           isLastAttempt={isLastAttempt}
           onClose={handleCancel}
@@ -315,4 +306,3 @@ const Knowledge = () => {
 };
 
 export default Knowledge;
-

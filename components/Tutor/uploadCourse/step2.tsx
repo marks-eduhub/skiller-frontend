@@ -29,7 +29,12 @@ interface Step2Props {
   updateTopic: (index: number, updatedFields: Partial<Topic>) => void;
 }
 
-const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
+const Step2: React.FC<Step2Props> = ({
+  topics,
+  addTopic,
+  updateTopic,
+  setTopics,
+}) => {
   const [videoPreview, setVideoPreview] = useState<{
     [key: number]: string | null;
   }>({});
@@ -43,6 +48,8 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
   const [resourcePreview, setResourcePreview] = useState<File[]>([]);
   const [topicId, setTopicId] = useState<number | null>(null);
   const [topicVideo, setTopicVideo] = useState<File | null>(null);
+  const [resourceId, setResourceIds] = useState("")
+  
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -76,21 +83,21 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
     }
   };
 
-  const onFileChange = async (file: File | null) => {
-    if (currentTopicIndex === null) return;
-
+  const onFileChange = (index: number, file: File | null) => {
     if (file) {
       const validFileTypes = [
         "application/pdf",
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       ];
-
+  
       if (validFileTypes.includes(file.type)) {
-        setResourcePreview((prev) => [...prev, file]);
-        updateTopic(currentTopicIndex, {
-          topicResources: file,
-        });
+        const currentResources = Array.isArray(topics[index].topicResources)
+          ? topics[index].topicResources
+          : [];
+  
+        const updatedResources = [...currentResources, file]; 
+        updateTopic(index, { topicResources: updatedResources }); 
       } else {
         message.error(
           "Unsupported file type. Please upload a PDF or PowerPoint."
@@ -98,7 +105,16 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
       }
     }
   };
+  
 
+  const removeResource = (topicIndex: number, resourceIndex: number) => {
+    const updatedResources = topics[topicIndex].topicResources.filter(
+      (_: any, index: number) => index !== resourceIndex
+    );
+    updateTopic(topicIndex, { topicResources: updatedResources });
+  };
+
+ 
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -125,6 +141,7 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
           </div>
           {expandedIndex === index && (
             <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
+              
               <TopicFields
                 topic={topic}
                 topicId={topicId ?? 0}
@@ -135,9 +152,8 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
                 onVideoChange={(topicKey, e) => onVideoChange(topicKey, e)}
                 videoPreview={videoPreview[index]}
                 expandedIndex={expandedIndex}
-                resourcePreview={resourcePreview}
                 onClose={closeModal}
-                onFileChange={onFileChange}
+                onFileChange={(file) => onFileChange(index, file)} 
                 topicVideo={topicVideo}
                 setVideoPreview={(updatedPreview) =>
                   setVideoPreview((prev) => ({
@@ -147,6 +163,12 @@ const Step2: React.FC<Step2Props> = ({ topics, addTopic, updateTopic }) => {
                 }
                 videoId={videoId}
                 setVideoId={setVideoId}
+                onRemoveResource={(resourceIndex) =>
+                  removeResource(index, resourceIndex)
+                } 
+                resourcePreview={topic.topicResources} 
+                resourceIds={resourceId}
+                setResourceIds={setResourceIds}
               />
             </div>
           )}

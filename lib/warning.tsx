@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 interface WarningProps {
+  testId: number;
   isFirstAttempt: boolean;
   isLastAttempt: boolean;
   onClose: () => void;
@@ -10,18 +11,25 @@ interface WarningProps {
   MAX_ATTEMPTS: number;
 }
 
-const WarningModal: React.FC<WarningProps> = ({isFirstAttempt,isLastAttempt,onClose,onStartTest, MAX_ATTEMPTS}) => {
+const WarningModal: React.FC<WarningProps> = ({
+  testId,
+  isFirstAttempt,
+  isLastAttempt,
+  onClose,
+  onStartTest,
+  MAX_ATTEMPTS,
+}) => {
   const [show, setShow] = useState(true);
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
   const handleClose = () => {
     setShow(false);
-    onClose(); 
+    onClose();
   };
 
   const handleStartTest = () => {
-    onStartTest(); 
-    setShow(false); 
+    onStartTest();
+    setShow(false);
   };
 
   return (
@@ -32,18 +40,19 @@ const WarningModal: React.FC<WarningProps> = ({isFirstAttempt,isLastAttempt,onCl
             <h2 className="text-lg font-semibold text-red-500">WARNING</h2>
           </div>
           <div className="mb-4">
-          {isFirstAttempt
-          ? `There is a maximum number of ${MAX_ATTEMPTS} attempts for this test. Please be aware that if you reach the limit, you won't be able to reattempt.`
-          : isLastAttempt
-          ? `This is your last attempt for this test.`
-          : null}
-
+            {isFirstAttempt
+              ? `There is a maximum number of ${MAX_ATTEMPTS} attempts for this test. Please be aware that if you reach the limit, you won't be able to reattempt.`
+              : isLastAttempt
+              ? `This is your last attempt for this test.`
+              : null}
           </div>
           <div className="flex justify-between p-2">
             <button onClick={handleClose} className="bg-gray-300 px-5 rounded">
               Close
             </button>
-            <Link href={`/dashboard/quizreview?topicId=${topicId}`}>
+            <Link
+              href={`/dashboard/quizreview?topicId=${topicId}&testId=${testId}`}
+            >
               <button
                 onClick={handleStartTest}
                 className="bg-gray-300 px-4 py-1 rounded"
