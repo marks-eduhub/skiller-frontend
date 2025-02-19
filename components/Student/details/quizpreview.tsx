@@ -101,7 +101,6 @@ const QuizPreview = () => {
           [variables.questionId]: createdUserQuestionResultId,
         }));
       }
-      message.success("Answer saved!");
     },
     onError: (err) => {
       message.error("Error saving answer:");

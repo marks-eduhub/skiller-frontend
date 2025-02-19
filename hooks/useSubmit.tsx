@@ -73,6 +73,18 @@ export const useFetchCourseTests = (topicId: number) => {
  
 }
 
+const fetchAllCourseTests = async(courseId:number) => {
+  const response = await api.get(`/api/tests?filters[course][id]=${courseId}&populate=*`);
+  return response.data;
+}
+
+export const useFetchAllCourseTests = (courseId: number) => {
+  return useQuery<{ data: Test }, Error>({
+    queryKey: ["course_tests", courseId],
+    queryFn: () => fetchAllCourseTests(courseId),
+  });
+ 
+}
 
 export const createTestResult = async (
   userId: number,
@@ -139,3 +151,65 @@ export const updateTestResultScore = async (
   });
   return response.data;
 };
+
+export const courseRating = async (userId:number, courseId:number, score:number) => {
+  try {
+    const response = await api.post(`/api/courseratings`, {
+      data: {
+      user: userId,
+      course: courseId,
+      score,  
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error attaching a rating to course');
+  }
+};
+export const createCourseProgress = async (userId:number, courseId:number, progressStatus:boolean) => {
+  try {
+    const response = await api.post(`/api/user-course-progresses`, {
+      data: {
+      user: userId,
+      course: courseId,
+      completed: progressStatus,  
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error creating course progress');
+  }
+};
+
+// export const updateCourseProgress = async (userId: number, courseId: number, progressStatus: boolean) => {
+//   try {
+//     const progressResponse = await api.get(`/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`);
+
+//     const progressEntries = progressResponse.data?.data || [];
+
+//     if (progressEntries.length > 0) {
+//       const progressId = progressEntries[0].id;
+//       const response = await api.put(`/api/user-course-progresses/${progressId}`, {
+//         data: {
+//         user:userId,
+//         course:courseId,
+//         completed: progressStatus,  
+//         }
+//       });
+
+//       return response.data;
+//     } else {
+//       const response = await api.post(`/api/user-course-progresses`, {
+//         data: {
+//         user:userId,
+//         course:courseId,
+//         completed: progressStatus,  
+//         }
+//       });
+
+//       return response.data;
+//     }
+//   } catch (error) {
+//     throw new Error('Error updating course progress');
+//   }
+// };

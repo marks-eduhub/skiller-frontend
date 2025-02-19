@@ -1,21 +1,26 @@
 import { useAuthContext } from "@/Context/AuthContext";
-import { UsefetchResult, useFetchTests } from "@/hooks/useSubmit";
+import { useFetchTests,createCourseProgress, useFetchAllCourseTests, courseRating } from "@/hooks/useSubmit";
 import { message } from "antd";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect,useState } from "react";
 import Image from "next/image";
 import AttemptTestModal from "@/lib/warning";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
 import { UsefetchTestResult } from "@/hooks/useQuestions";
+import { useMutation } from "@tanstack/react-query";
+import RatingModal from "./ratingmodal";
 
 const Knowledge = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
   const { user } = useAuthContext();
-  const userId = user?.id;
+  const userId = Number(user?.id);
+  const { slug } = useParams();
+  const courseId = Number(slug);
   const [selectedTab, setselectedTab] = useState("Tests");
+  const [isCourseCompleted, setIsCourseCompleted] = useState(false);
   const handleselectedClick = (tabName: string) => {setselectedTab(tabName); };
   const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
   const [highestScores, setHighestScores] = useState<{ [key: number]: number }>({});
@@ -26,16 +31,93 @@ const Knowledge = () => {
   const [isLastAttempt, setIsLastAttempt] = useState(false);
   const router = useRouter();
   const totalAttempts = 3;
-
+  const [showRatingModal, setShowRatingModal] = useState(false);
   const { data, isLoading, error } = UsefetchTestResult(Number(topicId),Number(userId));
   const testresultdata = data?.data;
-
   const isTestAvailable = Boolean(testresultdata && testresultdata.length > 0);
   const {data: tests,isLoading: isTests, error: isError } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
-
   const hasTests = tests?.data?.length > 0;
- 
+  const { data: allCourseTests, isLoading: topicTestsLoading, error: topicTestsError } = useFetchAllCourseTests(courseId);
 
+  const { mutate:createProgress } = useMutation({
+  mutationFn: async ({ userId, courseId, progressStatus }: { userId: number; courseId: number; progressStatus: boolean }) => {
+    return await createCourseProgress(userId, courseId, progressStatus);
+  },
+  onSuccess: () => {
+    setIsCourseCompleted(true);
+    setShowRatingModal(true)
+    message.success("Course completed successfully");
+  },
+  onError: (err) => {
+    message.error("Error updating course progress");
+  },
+  });
+const { mutate: createCourseRating } = useMutation({
+    mutationFn: async ({
+      userId,
+      courseId,
+      score,
+    }: {
+      userId: number;
+      courseId: number;
+      score: number;
+    }) => {
+      return await courseRating(userId, courseId, score);
+    },
+    onSuccess: () => {
+      message.success("Course rated successfully");
+    },
+    onError: () => {
+      message.error("Error attaching a rating to course");
+    },
+  });
+const checkCourseCompletion = useCallback(() => {
+
+  if (!allCourseTests || !Array.isArray(allCourseTests.data) || allCourseTests.data.length === 0) {
+    message.warning("No tests found ");
+    return;
+  }
+
+  let allTestsAttempted = true;
+  let allTestsPassed = true;
+
+  allCourseTests.data.forEach((test: any, index: number) => {
+
+    const testResults = test.attributes.test_results?.data || [];
+
+    if (testResults.length === 0) {
+      allTestsAttempted = false;
+    } else {
+      const latestTestResult = testResults
+        .map((result: any) => result.attributes)
+        .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0];
+
+      const userScore = Number(latestTestResult?.score) || 0;
+      const passmark = Number(test.attributes.passmark) || 0;
+
+      if (userScore < passmark) {
+        allTestsPassed = false;
+      }
+    }
+  });
+
+  if (allTestsAttempted && allTestsPassed) {
+    createProgress({ userId, courseId, progressStatus: true });
+  } 
+}, [allCourseTests, userId, courseId, createProgress]);
+
+useEffect(() => {
+  if (Array.isArray(allCourseTests?.data) && allCourseTests.data.length > 0) {
+    checkCourseCompletion();
+  }
+}, [allCourseTests, checkCourseCompletion]);
+
+
+const submitRating = (rating:number) => {
+  createCourseRating({userId, courseId, score:rating})
+  message.success("Thank you for your submission!");
+  setShowRatingModal(false);
+};
   const getHighestAndMostRecentScores = (testResults: any) => {
     const scoresByTest: { [key: number]: number } = {};
     const mostRecentByTest: { [key: number]: number } = {};
@@ -59,7 +141,7 @@ const Knowledge = () => {
     return { scoresByTest, mostRecentByTest };
   };
   
-  
+ 
   useEffect(() => {
     if (testresultdata && testresultdata.length > 0) {
       const { scoresByTest, mostRecentByTest } = getHighestAndMostRecentScores(testresultdata);
@@ -207,7 +289,7 @@ const Knowledge = () => {
                   <div key={test.id} className="w-full py-6 cursor-pointer">
                   <div className="flex flex-col sm:flex-row sm:space-x-4">
           
-                  <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
+                  <div className="bg-gray-200 w-full sm:w-[300px] mb-2 sm:mb-0">
                   <h1 className="font-bold text-[15px] p-4 sm:p-6">{testname}</h1>
                    </div>
 
@@ -301,6 +383,12 @@ const Knowledge = () => {
           MAX_ATTEMPTS={totalAttempts}
         />
       )}
+      <RatingModal
+        isOpen={showRatingModal}
+        onClose={() => setShowRatingModal(false)}
+        onSubmit={submitRating}
+        
+      />
     </div>
   );
 };
