@@ -13,6 +13,7 @@ import {
 } from "@/hooks/useLikedCourses";
 import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { addRecentCourse } from "@/hooks/useRecentCourses";
+import { useFetchSpecificCourseRate } from "@/hooks/useSubmit";
 
 interface ProductCardProps {
   course: any;
@@ -20,7 +21,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   const { coursename, card, duration, rating } = course?.attributes || {};
-  const tutorName = course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
+  const tutorName =
+    course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
   const courseId = course?.id;
   const { user } = useAuthContext();
@@ -30,6 +32,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
 
   const { data: likedCourses } = useLikedCourses();
 
+  const { data: specificCourseRate } = useFetchSpecificCourseRate(courseId);
+  const ratings = specificCourseRate?.data || [];
+  const totalRatings = ratings.length;
+  const averageRating =
+    totalRatings > 0
+      ? ratings.reduce((sum: number, rating: any) => sum + rating.attributes.score, 0) / totalRatings
+      : 0;
+    
+      
   useEffect(() => {
     if (likedCourses) {
       const likedCourseIds = likedCourses?.data?.map(
@@ -38,6 +49,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
       setIsLiked(likedCourseIds?.includes(courseId));
     }
   }, [likedCourses, courseId]);
+
+   
 
   const { mutate: removeFromWishlist } = useMutation({
     mutationFn: async () => {
@@ -187,7 +200,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
           <div className="flex items-center absolute justify-between p-2 w-full">
             <button
               onClick={(e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 handleToggleWishlist();
               }}
             >
@@ -216,8 +229,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
         </div>
         <div className="flex justify-between mt-3 gap-2 text-[0.8rem]">
           <div className="flex gap-1">
-            <StarFilledIcon className="w-4 h-4 text-black" />
-            <p>{rating}</p>
+          <p>{totalRatings > 0 ? `⭐ ${averageRating} ` : "No ratings yet."}</p>
+
+
           </div>
           <div className="flex gap-1">
             <ClockIcon className="w-4 h-4 text-black" />

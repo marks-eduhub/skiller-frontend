@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { message } from "antd";
-import { courseRating } from "@/hooks/useSubmit";
-import { useMutation } from "@tanstack/react-query";
-import { useAuthContext } from "@/Context/AuthContext";
-import { useParams } from "next/navigation";
+
 
 interface RatingModalProps {
   isOpen: boolean;
@@ -29,7 +26,7 @@ const RatingModal: React.FC<RatingModalProps> = ({
     }
   }, [isOpen]);
   const handleSubmit = () => {
-    if (rating === 0) {
+        if (rating === 0) {
       message.warning("Please select a rating before submitting.");
       return;
     }

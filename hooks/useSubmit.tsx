@@ -72,19 +72,21 @@ export const useFetchCourseTests = (topicId: number) => {
   });
  
 }
+const fetchAllCourseTests = async (courseId: number, userId: number) => {
+  const response = await api.get(
+    `/api/tests?filters[course][id][$eq]=${courseId}&populate[test_results][filters][user][id][$eq]=${userId}&populate=*`
+  );
 
-const fetchAllCourseTests = async(courseId:number) => {
-  const response = await api.get(`/api/tests?filters[course][id]=${courseId}&populate=*`);
   return response.data;
-}
+};
 
-export const useFetchAllCourseTests = (courseId: number) => {
+export const useFetchAllCourseTests = (courseId: number, userId: number) => {
   return useQuery<{ data: Test }, Error>({
-    queryKey: ["course_tests", courseId],
-    queryFn: () => fetchAllCourseTests(courseId),
+    queryKey: ["course_tests", courseId, userId],
+    queryFn: () => fetchAllCourseTests(courseId, userId),
   });
- 
-}
+};
+
 
 export const createTestResult = async (
   userId: number,
@@ -152,13 +154,14 @@ export const updateTestResultScore = async (
   return response.data;
 };
 
-export const courseRating = async (userId:number, courseId:number, score:number) => {
+export const courseRating = async (userId:number, courseId:number, score:number, progressId:number) => {
   try {
     const response = await api.post(`/api/courseratings`, {
       data: {
       user: userId,
       course: courseId,
       score,  
+      user_course_progress: progressId
       }
     });
     return response.data;
@@ -166,50 +169,104 @@ export const courseRating = async (userId:number, courseId:number, score:number)
     throw new Error('Error attaching a rating to course');
   }
 };
-export const createCourseProgress = async (userId:number, courseId:number, progressStatus:boolean) => {
+
+export const createCourseProgress = async (userId: number, courseId: number, progressStatus: boolean) => {
   try {
-    const response = await api.post(`/api/user-course-progresses`, {
-      data: {
-      user: userId,
-      course: courseId,
-      completed: progressStatus,  
-      }
-    });
-    return response.data;
+    const progressResponse = await api.get(`/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`);
+
+    const progressEntries = progressResponse.data?.data || [];
+
+    if (progressEntries.length > 0) {
+      const progressId = progressEntries[0].id;
+      const response = await api.put(`/api/user-course-progresses/${progressId}`, {
+        data: {
+        user:userId,
+        course:courseId,
+        completed: progressStatus,  
+        }
+      });
+
+      return response.data;
+    } else {
+      const response = await api.post(`/api/user-course-progresses`, {
+        data: {
+        user:userId,
+        course:courseId,
+        completed: progressStatus,  
+        }
+      });
+
+      return response.data;
+    }
   } catch (error) {
-    throw new Error('Error creating course progress');
+    throw new Error('Error updating course progress');
   }
 };
 
-// export const updateCourseProgress = async (userId: number, courseId: number, progressStatus: boolean) => {
-//   try {
-//     const progressResponse = await api.get(`/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`);
 
-//     const progressEntries = progressResponse.data?.data || [];
 
-//     if (progressEntries.length > 0) {
-//       const progressId = progressEntries[0].id;
-//       const response = await api.put(`/api/user-course-progresses/${progressId}`, {
-//         data: {
-//         user:userId,
-//         course:courseId,
-//         completed: progressStatus,  
-//         }
-//       });
+const fetchCourseRating = async (courseId: number, userId: number) => {
+  const response = await api.get(
+    `/api/courseratings?filters[course][id][$eq]=${courseId}&filters[user][id][$eq]=${userId}&populate=user-course-progresses`
+  );
+  return response.data;
+};
 
-//       return response.data;
-//     } else {
-//       const response = await api.post(`/api/user-course-progresses`, {
-//         data: {
-//         user:userId,
-//         course:courseId,
-//         completed: progressStatus,  
-//         }
-//       });
+export const useFetchCourseRating = (courseId: number, userId: number) => {
+  return useQuery({
+    queryKey: ["course_rating", courseId, userId],
+    queryFn: () => fetchCourseRating(courseId, userId),
+    meta: {
+      errorMessage: "Failed to fetch course rating",
+    },
+    enabled: !!userId && !!courseId, 
+  });
+};
+const fetchCourseCompletion = async (courseId: number, userId: number) => {
+  const response = await api.get(
+    `/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&populate=*`
+  );
+  return response.data;
+};
 
-//       return response.data;
-//     }
-//   } catch (error) {
-//     throw new Error('Error updating course progress');
-//   }
-// };
+export const useFetchCourseCompletion = (courseId: number, userId: number) => {
+  return useQuery({
+    queryKey: ["course_completion", courseId, userId],
+    queryFn: () => fetchCourseCompletion(courseId, userId), 
+    meta: {
+      errorMessage: "Failed to fetch course status",
+    },
+    enabled: !!userId && !!courseId, 
+  });
+};
+
+const fetchSpecificCourseRate = async (courseId: number) => {
+  const response = await api.get(
+    `/api/courseratings?filters[course][id][$eq]=${courseId}&populate=*`
+  );
+  return response.data;
+};
+
+export const useFetchSpecificCourseRate = (courseId: number) => {
+  return useQuery({
+    queryKey: ["specific-course-rating", courseId],
+    queryFn: () => fetchSpecificCourseRate(courseId), 
+    meta: {
+      errorMessage: "Failed to fetch course status",
+    },
+    enabled:  !!courseId, 
+  });
+};
+
+export const updateCourseRating = async (courseId: number, averageRating: number) => {
+  try {
+    const response = await api.put(`/api/courses/${courseId}`, {
+      data: {
+        averageRating,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

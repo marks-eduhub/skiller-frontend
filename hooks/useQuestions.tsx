@@ -20,14 +20,14 @@ export const useFetchQuizQuestions = (testId: number) => {
 
 const fetchTestResult = async (userId: number, testId: number) => {
     const response = await api.get(
-      `/api/test-results?user=${userId}&test=${testId}&populate=user_question_results,topic,test,user`
+      `/api/test-results?filters[user][id][$eq]=${userId}&filters[test][id][$eq]=${testId}&populate=user_question_results,topic,test,user`
     );
     return response.data;
   };
   
-  export const UsefetchTestResult = (testId: number, userId: number) => {
+  export const UsefetchTestResult = (userId: number, testId: number) => {
     return useQuery({
-      queryKey: ["testresults_1", testId, userId],
+      queryKey: ["testresults_1", userId, testId],
       queryFn: () => fetchTestResult(userId, testId),
   
       meta: {
@@ -37,5 +37,23 @@ const fetchTestResult = async (userId: number, testId: number) => {
     });
   };
 
+  const fetchTopicResult = async (userId: number, topicId: number) => {
+    const response = await api.get(
+      `/api/test-results?filters[user][id][$eq]=${userId}&filters[topic][id][$eq]=${topicId}&populate=user_question_results,topic,test,user`
+    );
+    return response.data;
+  };
+  
+  export const useFetchTopicResult = (userId: number, topicId: number) => {
+    return useQuery({
+      queryKey: ["topicresults_1", userId, topicId],
+      queryFn: () => fetchTopicResult(userId, topicId),
+  
+      meta: {
+        errorMessage: "Failed to fetch topic test results",
+      },
+      enabled: !!userId && !!topicId,
+    });
+  };
 
   

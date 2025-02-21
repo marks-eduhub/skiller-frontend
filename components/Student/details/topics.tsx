@@ -39,9 +39,6 @@ const TopicsCard: React.FC = () => {
     },
   });
 
-  const handleMarkTopicCompleted = (topicId: number, isCompleted: boolean) => {
-    topicCompleted({ isCompleted, topicId });
-  };
 
   useEffect(() => {
     if (currentTopicId) {
@@ -67,61 +64,27 @@ const TopicsCard: React.FC = () => {
     }
 
     const previousTopic = topics[currentTopicIndex - 1];
-
-    const previousTest = testsData?.data?.find(
+  
+    const previousTests = testsData?.data?.filter(
       (test: any) => test.attributes.topic.data.id === previousTopic.id
-    );
-
-    if (!previousTest) {
-      return true;
+    ) || [];
+  
+    if (previousTests.length === 0) {
+      return true; 
     }
-
-    const hasPassedTest = testResults?.data?.some(
-      (result: any) =>
-        result.attributes.test.data.id === previousTest.id &&
-        result.attributes.score >= previousTest.attributes.passmark
-    );
-
-    return hasPassedTest ?? false;
+  
+    const allPassed = previousTests.every((test: any) => {
+      return testResults?.data?.some(
+        (result: any) =>
+          result.attributes.test.data.id === test.id &&
+          result.attributes.score >= test.attributes.passmark
+      );
+    });
+  
+    return allPassed;
   };
-
-  // useEffect(() => {
-  //   const topics = topicsData?.data?.attributes?.topicname?.data || [];
-  //   const results = allTestResults?.data || [];
-
-  //   if (!topics.length || !results.length) {
-  //     setProgress(0);
-  //     return;
-  //   }
-
-  //   const completedTopics = topics.filter((topic: any) => {
-  //     const topicResults = results.filter(
-  //       (result: any) => result.attributes.topic.data.id === topic.id
-  //     );
-
-  //     if (topicResults.length === 0) {
-  //       return false;
-  //     }
-
-  //     const bestResult = topicResults.reduce((max: any, current: any) => {
-  //       return current.attributes.score > max.attributes.score ? current : max;
-  //     });
-
-  //     const testPassmark = parseInt(
-  //       bestResult.attributes.test.data.attributes.passmark,
-  //       10
-  //     );
-
-  //     const passed = bestResult.attributes.score >= testPassmark;
-
-  //     return passed;
-  //   });
-
-  //   const calculatedProgress = (completedTopics.length / topics.length) * 100;
-
-  //   setProgress(calculatedProgress);
-  // }, [topicsData, allTestResults]);
-
+  
+  
 
   useEffect(() => {
     const topics = topicsData?.data?.attributes?.topicname?.data || [];
