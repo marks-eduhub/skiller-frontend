@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import ClientWrapper from "./ClientWrapper";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import Loader from "@/components/Student/loader";
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
@@ -17,7 +17,6 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [user, isLoading, router]);
 
-  
   if (isLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
@@ -29,6 +28,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
     );
   }
 
-  return <ClientWrapper>{children}</ClientWrapper>;};
+  return <ClientWrapper>{children}</ClientWrapper>;
+};
 
 export default DashboardLayout;

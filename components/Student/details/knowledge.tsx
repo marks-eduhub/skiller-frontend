@@ -1,4 +1,4 @@
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import {
   useFetchTests,
   createCourseProgress,
@@ -14,10 +14,10 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import AttemptTestModal from "@/lib/warning";
+import AttemptTestModal from "@/components/Student/details/warning";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
-import {  useFetchTopicResult } from "@/hooks/useQuestions";
+import { useFetchTopicResult } from "@/hooks/useQuestions";
 import { useMutation } from "@tanstack/react-query";
 import RatingModal from "./ratingmodal";
 
@@ -49,22 +49,29 @@ const Knowledge = () => {
   const router = useRouter();
   const totalAttempts = 3;
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const {data: allCourseTests} = useFetchAllCourseTests(courseId, userId);
+  const { data: allCourseTests } = useFetchAllCourseTests(courseId, userId);
   const { data: courseStatus } = useFetchCourseCompletion(courseId, userId);
   const { data: courseratings } = useFetchCourseRating(courseId, userId);
   const hasRated = courseratings?.data?.length > 0;
   const courseprogress = courseStatus?.data?.[0]?.attributes?.completed;
-  const shouldShowRatingModal = !hasRated && courseprogress ;
+  const shouldShowRatingModal = !hasRated && courseprogress;
   const { data: specificCourseRate } = useFetchSpecificCourseRate(courseId);
   const ratings = specificCourseRate?.data || [];
-  const totalRatings = ratings.length  
-  const { data, isLoading, error } = useFetchTopicResult(Number(userId), Number(topicId));
+  const totalRatings = ratings.length;
+  const { data, isLoading, error } = useFetchTopicResult(
+    Number(userId),
+    Number(topicId)
+  );
   const testresultdata = data?.data;
   const isTestAvailable = Boolean(testresultdata && testresultdata.length > 0);
-  const { data: tests, isLoading: isTests, error: isError, } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
-  const hasTests = tests?.data?.length > 0;  
-      
-const { mutate: createProgress } = useMutation({
+  const {
+    data: tests,
+    isLoading: isTests,
+    error: isError,
+  } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
+  const hasTests = tests?.data?.length > 0;
+
+  const { mutate: createProgress } = useMutation({
     mutationFn: async ({
       userId,
       courseId,
@@ -79,7 +86,7 @@ const { mutate: createProgress } = useMutation({
     onSuccess: () => {
       setIsCourseCompleted(true);
       setShowRatingModal(true);
-      },
+    },
     onError: (err) => {
       message.error("Error updating course progress");
     },
@@ -102,23 +109,20 @@ const { mutate: createProgress } = useMutation({
       message.error("Error updating rating");
     },
   });
-  
 
-  const handleRatingUpdate = async (rating: number) => {  
-    let averageRating;
-  
-    if (totalRatings > 0) {
-      averageRating =
-        ratings.reduce((sum: number, r: any) => sum + r.attributes.score, 0) /
-        totalRatings;
-    } else {
-      averageRating = rating;
-    }  
+  const handleRatingUpdate = async (rating: number) => {
+    const totalRatings = ratings?.length || 0;
+    const totalScore = ratings.reduce(
+      (sum: number, r: any) => sum + r.attributes.score,
+      0
+    );
+
+    const averageRating =
+      totalRatings > 0 ? (totalScore + rating) / (totalRatings + 1) : rating;
     updateRate({ courseId, averageRating });
   };
-  
 
-const { mutate: createCourseRating } = useMutation({
+  const { mutate: createCourseRating } = useMutation({
     mutationFn: async ({
       userId,
       courseId,
@@ -140,7 +144,6 @@ const { mutate: createCourseRating } = useMutation({
       message.error("Error attaching a rating to course");
     },
   });
-  
 
   const checkCourseCompletion = useCallback(() => {
     if (
@@ -151,15 +154,15 @@ const { mutate: createCourseRating } = useMutation({
       message.warning("No tests found ");
       return;
     }
-  
+
     let allTestsAttempted = true;
     let allTestsPassed = true;
-  
+
     allCourseTests.data.forEach((test: any) => {
       const testResults = (test.attributes.test_results?.data || []).filter(
         (result: any) => result.attributes.userId === userId
       );
-    
+
       if (testResults.length === 0) {
         allTestsAttempted = false;
       } else {
@@ -169,16 +172,16 @@ const { mutate: createCourseRating } = useMutation({
             (a: any, b: any) =>
               new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
           )[0];
-  
+
         const userScore = Number(latestTestResult?.score) || 0;
         const passmark = Number(test.attributes.passmark) || 0;
-  
+
         if (userScore < passmark) {
           allTestsPassed = false;
         }
       }
     });
-  
+
     if (allTestsAttempted && allTestsPassed) {
       createProgress({ userId, courseId, progressStatus: true });
     }
@@ -189,10 +192,8 @@ const { mutate: createCourseRating } = useMutation({
       setShowRatingModal(true);
     }
   }, [shouldShowRatingModal]);
-  
 
-
-useEffect(() => {
+  useEffect(() => {
     if (Array.isArray(allCourseTests?.data) && allCourseTests.data.length > 0) {
       checkCourseCompletion();
     }
@@ -242,14 +243,18 @@ useEffect(() => {
     return { scoresByTest, mostRecentByTest };
   };
 
-  useEffect(() => {
+  const calculateScores = useCallback(() => {
     if (testresultdata && testresultdata.length > 0) {
       const { scoresByTest, mostRecentByTest } =
         getHighestAndMostRecentScores(testresultdata);
       setHighestScores(scoresByTest);
       setMostRecentScores(mostRecentByTest);
     }
-  }, [testresultdata, topicId, userId]);
+  }, [testresultdata]);
+
+  useEffect(() => {
+    calculateScores();
+  }, [calculateScores]);
 
   useEffect(() => {
     if (data) {
@@ -305,7 +310,7 @@ useEffect(() => {
     setShowModal(false);
   };
 
-  if (isLoading || isLoading || isTests) {
+  if (isLoading || isTests) {
     return (
       <div>
         <Skeleton
@@ -327,12 +332,10 @@ useEffect(() => {
       </div>
     );
   }
-  if (error) {
-    message.error("Error fetching testresults.");
+  if (error || isError) {
+    message.error("Error fetching results.");
   }
-  if (isError) {
-    message.error("Error fetching tests");
-  }
+
   return (
     <div className="flex flex-col rounded-lg">
       <div className="flex w-full mb-4 cursor-pointer">

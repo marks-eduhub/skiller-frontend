@@ -2,23 +2,31 @@
 import React from "react";
 import ProductContainer from "../courseCards/cardContainer";
 import { useFetchCourses } from "@/hooks/useCourses";
+import Loader from "../loader";
+import { message } from "antd";
 
 const SimilarCourses: React.FC = () => {
   const { data, isLoading, error } = useFetchCourses();
+  const courses = data?.data || []
 
-
-  if (isLoading) return <p>Loading similar courses...</p>;
-  if (error) return <p>Failed to load similar courses</p>;
+  if (isLoading)
+    return (
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
+        <Loader />
+      </div>
+    );
+  if (error) {
+    message.error("Error fetching courses. Please try again later.");
+  }
 
   return (
-
     <div className=" bg-white ">
       <h2 className="text-lg font-semibold pt-10">
         <b>Similar Courses</b>
       </h2>
 
-      <ProductContainer courses={data?.data || []} />
-      </div>
+      <ProductContainer courses={courses} />
+    </div>
   );
 };
 

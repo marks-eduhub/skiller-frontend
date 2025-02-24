@@ -56,7 +56,7 @@ const Tutorspage = () => {
   }
 
   if (error) {
-    message.error("Error fetching courses. Please try again later.");
+    message.error("Error fetching tutors. Please try again later.");
   }
 
   return (

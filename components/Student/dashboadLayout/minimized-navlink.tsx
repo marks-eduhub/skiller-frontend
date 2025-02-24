@@ -1,5 +1,4 @@
 import { AiOutlineTeam } from "react-icons/ai";
-import { NavLinks } from "./nav-links";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import clsx from "clsx";
 import Image from "next/image";
@@ -8,7 +7,6 @@ import Link from "next/link";
 interface MinimizedNavLinksProps {
   links: any;
   communityLink: any;
-  // subscriptionLinks: any;
 }
 
 export default function MinimizedNavLinks({
@@ -61,6 +59,7 @@ export default function MinimizedNavLinks({
           />
         </div>
       </Link>
+      <Link href = "/dashboard/wishlist">
       <div className="flex  items-center ml-14">
         <Image
           src="/wishlist.svg"
@@ -70,6 +69,7 @@ export default function MinimizedNavLinks({
           title="Wishlist"
         />
       </div>
+      </Link>
     </>
   );
 }

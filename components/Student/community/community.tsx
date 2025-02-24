@@ -17,7 +17,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFetchCategory } from "@/hooks/useCourseUpload";
 import Loader from "@/components/Student/loader";
@@ -25,57 +25,71 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import QuestionModal from "./questionModal";
 import { useDebounce } from "use-debounce";
 
-
-
 const Community = () => {
   const { user } = useAuthContext();
   const userId = user?.id ?? 0;
   const { data, isLoading, error } = useFetchCommunityDetails();
   const questions = data?.data;
   const queryClient = useQueryClient();
-  const { data: category,isLoading: categoryLoading,error: categoryError} = useFetchCategory();
+  const {
+    data: category,
+    isLoading: categoryLoading,
+    error: categoryError,
+  } = useFetchCategory();
   const categoryData = category?.data;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [questionId, setQuestionId] = useState("");
-  const [responsesMap, setResponsesMap] = useState<{ [key: string]: any[] }>({});
-  const [showAllResponsesMap, setShowAllResponsesMap] = useState<{ [key: string]: boolean;}>({});
-  const [responsesContentMap, setResponsesContentMap] = useState<{[key: string]: string;}>({});
-  const [filteredData, setFilteredData] = useState<any[]>([]); 
+  const [responsesMap, setResponsesMap] = useState<{ [key: string]: any[] }>(
+    {}
+  );
+  const [showAllResponsesMap, setShowAllResponsesMap] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [responsesContentMap, setResponsesContentMap] = useState<{
+    [key: string]: string;
+  }>({});
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const DEFAULT_RESPONSES_LIMIT = 3;
-  const [likedResponsesMap, setLikedResponsesMap] = useState<{[responseId: number]: boolean;}>({});
+  const [likedResponsesMap, setLikedResponsesMap] = useState<{
+    [responseId: number]: boolean;
+  }>({});
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
-  const [selectedResult, setSelectedResult] = useState(""); 
-  const { data: searchResults, isLoading: isSearchLoading, error: searchError,} = useFetchSearchCommuity(searchQuery);
+  const [selectedResult, setSelectedResult] = useState("");
+  const { data: searchResults } = useFetchSearchCommuity(searchQuery);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
-  const { data: responsesData, isLoading: responsesLoading, error: responsesError,} = useFetchQuestionResponses(Number(questionId));
-  const { data: likedResponses = [], isLoading: likesLoading } = useLikedResponses(Number(userId));
-  const [currentPage, setCurrentPage] = useState(1); 
-  const questionsPerPage = 2; 
-  const indexOfLastQuestion = currentPage * questionsPerPage; 
+  const {
+    data: responsesData,
+    isLoading: responsesLoading,
+    error: responsesError,
+  } = useFetchQuestionResponses(Number(questionId));
+  const { data: likedResponses = [], isLoading: likesLoading } =
+    useLikedResponses(Number(userId));
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 2;
+  const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
   const [likeCounts, setLikeCounts] = useState<{ [key: string]: number }>({});
 
-  
-  
-  const{data:likedCount} = useFetchLikeCount()
+  const { data: likedCount } = useFetchLikeCount();
   useEffect(() => {
     if (likedCount) {
-      const initialLikeCounts = likedCount?.data.reduce((acc:any, item:any) => {
-        const communityResponse = item.attributes.community_response?.data;
-        if (communityResponse) {
-          const responseId = communityResponse.id;
-          acc[responseId] = (acc[responseId] || 0) + 1;
-        }
-        return acc;
-      }, {});
+      const initialLikeCounts = likedCount?.data.reduce(
+        (acc: any, item: any) => {
+          const communityResponse = item.attributes.community_response?.data;
+          if (communityResponse) {
+            const responseId = communityResponse.id;
+            acc[responseId] = (acc[responseId] || 0) + 1;
+          }
+          return acc;
+        },
+        {}
+      );
       setLikeCounts(initialLikeCounts);
     }
   }, [likedCount]);
 
-
-  
   useEffect(() => {
     if (likedResponses.length > 0) {
       const initialMap = likedResponses.reduce((acc, id) => {
@@ -95,27 +109,27 @@ const Community = () => {
 
   const handleSearchResultClick = (result: any) => {
     setSelectedResult(result);
-    setShowDropdown(false)
+    setShowDropdown(false);
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchResults?.data?.length) {
       setSelectedResult(searchResults.data[0]);
       setShowDropdown(false);
+    }
   };
-}
   useEffect(() => {
-  if (debouncedSearchQuery && searchResults) {
-    const filtered = searchResults.data.filter((item: any) =>
-      item.attributes.Question.toLowerCase().includes(
-        debouncedSearchQuery.toLowerCase()
-      )
-    );
-    setFilteredData(filtered);
-  } else {
-    setFilteredData(searchResults?.data || []);
-  }
-}, [debouncedSearchQuery, searchResults]);
+    if (debouncedSearchQuery && searchResults) {
+      const filtered = searchResults.data.filter((item: any) =>
+        item.attributes.Question.toLowerCase().includes(
+          debouncedSearchQuery.toLowerCase()
+        )
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(searchResults?.data || []);
+    }
+  }, [debouncedSearchQuery, searchResults]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -223,48 +237,46 @@ const Community = () => {
     onSuccess: () => {
       message.success("Response posted successfully!");
     },
-    onSettled: (data, error, variables) => {
+    onSettled: (variables) => {
       //@ts-ignore
       queryClient.invalidateQueries([
         "question_responses",
         variables.questionId,
       ]);
-      
     },
   });
 
   const handleSubmitResponse = (questionId: number) => {
-    const responseText = responsesContentMap[questionId] || ""; 
-  
+    const responseText = responsesContentMap[questionId] || "";
+
     if (!responseText.trim()) {
       message.error("Please enter a response to submit!");
       return;
     }
-  
+
     if (!questionId) {
       message.error("Something went wrong. Please try again later.");
       return;
     }
-  
+
     const responderName = user?.username || "Anonymous";
-  
+
     postResponseMutation({
       responseText,
       responderName,
       questionId,
     });
-  
+
     setResponsesContentMap((prev) => ({
       ...prev,
       [questionId]: "",
     }));
-  
+
     setShowAllResponsesMap((prev) => ({
       ...prev,
       [questionId]: true,
     }));
   };
-  
 
   const { mutate: removeFromLiked } = useMutation({
     mutationFn: async ({
@@ -354,23 +366,27 @@ const Community = () => {
     setLikeCounts((prevLikeCounts) => ({
       ...prevLikeCounts,
       [responseId]: isLiked
-        ? (prevLikeCounts[responseId] || 0) - 1 
+        ? (prevLikeCounts[responseId] || 0) - 1
         : (prevLikeCounts[responseId] || 0) + 1,
     }));
-  
+
     setLikedResponsesMap((prev) => ({ ...prev, [responseId]: !isLiked }));
-  
+
     if (isLiked) {
-      removeFromLiked({ responseId, userId }); 
+      removeFromLiked({ responseId, userId });
     } else {
-      addToLiked({ responseId, userId }); 
+      addToLiked({ responseId, userId });
     }
   };
-  
-  const displayedQuestions = selectedResult ? [selectedResult] : filteredData.length > 0 ? filteredData : questions;
+
+  const displayedQuestions = selectedResult
+    ? [selectedResult]
+    : filteredData.length > 0
+    ? filteredData
+    : questions;
 
   const currentQuestions = displayedQuestions?.slice(
-    indexOfFirstQuestion, 
+    indexOfFirstQuestion,
     indexOfLastQuestion
   );
 
@@ -402,6 +418,15 @@ const Community = () => {
   if (error || categoryError) {
     message.error("Error fetching community data. Please try again later.");
   }
+  if (responsesLoading) {
+    <div className="flex items-center justify-center">
+      <Loader />
+      <span>Question responses loading...</span>
+    </div>;
+  }
+  if (responsesError) {
+    message.error("Error fetching question responses. Please try again later.");
+  }
 
   return (
     <div className="flex flex-col gap-6 w-full p-4 relative">
@@ -414,7 +439,7 @@ const Community = () => {
 
       <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
         <div className="flex items-center relative rounded-lg shadow bg-white p-3 w-full sm:w-1/2">
-          <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2" />
+          <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2 max-md:hidden" />
           <input
             type="text"
             placeholder="Search through community"
@@ -440,19 +465,18 @@ const Community = () => {
       {showDropdown && (
         <div
           ref={dropdownRef}
-          className="absolute bg-white top-[165px] shadow-lg rounded-lg mt-2 w-full max-h-60 overflow-y-auto"
+          className="absolute bg-white top-[165px] shadow-lg rounded-lg mt-2 w-full z-50 max-h-60 overflow-y-auto"
         >
           {searchResults?.data?.length > 0 ? (
             <div className="gap-6">
               {searchResults?.data?.map((item: any) => (
-                 <div
-                 key={item.id}
-                 className="p-3 cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSearchResultClick(item)}
-
-               >
-                 {item.attributes.Question}
-               </div>
+                <div
+                  key={item.id}
+                  className="p-3 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSearchResultClick(item)}
+                >
+                  {item.attributes.Question}
+                </div>
               ))}
             </div>
           ) : (
@@ -464,100 +488,144 @@ const Community = () => {
       )}
 
       <div className="flex flex-col sm:flex-row gap-6 w-full h-auto mt-5">
-  <div className="w-full sm:w-[80%]">
-    {currentQuestions && currentQuestions.length > 0 ? (
-     currentQuestions.map((q: any, index: number) => {
-        const { Question, nameofquestioner, id } = q.attributes;
-        const questionId = q.id;
-        const responses = responsesMap[questionId] || [];
-        const plainQuestion = Question.replace(/(\*\*|\_)/g, ""); 
-        return (
-          <div key={index} className="flex flex-col border mb-5 rounded-lg py-6 border-black">
-            <div className="flex flex-col px-4 border-b pb-2 border-gray-400">
-              <h1 className="font-semibold">
-                Question: <span className="font-normal">{plainQuestion}</span>
-              </h1>
-              <p className="text-gray-500">Asked by: {nameofquestioner}</p>
-            </div>
-
-            <div className="px-4 mt-4">
-              {responses.length === 0 ? (
-                <p className="text-gray-700 mt-4 text-center">
-                  No responses yet for this question.
-                </p>
-              ) : (
-                (showAllResponsesMap[questionId] ? responses : responses.slice(0, DEFAULT_RESPONSES_LIMIT)).map(
-                  (response: any, resIndex: number) => {
-                    const isLiked = likedResponsesMap[response.id] || false;
-                    const responseId = response.id;
-                    const likeCount = (likeCounts ? likeCounts[responseId] : 0 ) || 0;
-
-
-                    return (
-                      <div
-                    key={resIndex}
-                   className="flex items-start mb-3 p-2">
-                  <div className="h-[40px] w-[40px] relative">
-                 <Image
-                  src={response?.profilepictureUrl || "/pic.svg"}
-                   alt={response?.responderName}
-                   fill
-                    className="rounded-full"/>
-                   </div>
-                    <div className="ml-2">
-                   <p className="font-medium text-sm mb-1">{response?.responderName}</p>
-                   <p className="text-gray-600 text-sm">{response?.responseText}</p>
-                   <div className="flex gap-1 mt-2">
-                   <button  onClick={() => handleToggleLike(responseId, isLiked, userId)} >
-                   {isLiked ? (
-                  <AiFillHeart size={20} className="text-red-500" /> ) : ( <AiOutlineHeart size={20} className="text-gray-500" />)}
-                  </button>
-                  <span className="text-gray-500">{likeCount}</span>
-                  </div>
-                   </div>
-                  </div>
-
-                    );
-                  }
-                )
-              )}
-              {responses.length > DEFAULT_RESPONSES_LIMIT && (
-                <button
-                  onClick={() => handleLoadMoreResponses(questionId)}
-                  className="text-blue-600 mt-3"
+        <div className="w-full sm:w-[80%]">
+          {currentQuestions && currentQuestions.length > 0 ? (
+            currentQuestions.map((q: any, index: number) => {
+              const { Question, nameofquestioner, id } = q.attributes;
+              const questionId = q.id;
+              const responses = responsesMap[questionId] || [];
+              const plainQuestion = Question.replace(/(\*\*|\_)/g, "");
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col border mb-5 rounded-lg py-6 border-black"
                 >
-                  {showAllResponsesMap[questionId] ? "Hide Responses" : `See ${responses.length - DEFAULT_RESPONSES_LIMIT} more response(s)`}
-                </button>
-              )}
-            </div>
+                  <div className="flex flex-col px-4 border-b pb-2 border-gray-400">
+                    <h1 className="font-semibold">
+                      Question:
+                      <span className="font-normal">{plainQuestion}</span>
+                    </h1>
+                    <p className="text-gray-500">
+                      Asked by: {nameofquestioner}
+                    </p>
+                  </div>
 
-            <div className="mt-5 pt-5 px-4">
-              <h2>Add a Response:</h2>
-              <ReactQuill
-                value={responsesContentMap[questionId] || ""}
-                placeholder="Write your response here..."
-                onChange={(value) => handleResponseChange(questionId, value)}
-                className="mb-4 mt-2"
-                theme="snow"
-              />
-              <button
-                className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg transition"
-                onClick={() => handleSubmitResponse(questionId)}
-              >
-                {isSubmittingResponse ? <Loader /> : "Submit Response"}
-              </button>
-            </div>
-          </div>
-        );
-      })
-    ) : (
-      <div className="text-center py-10 text-gray-600">
-        <h2 className="text-xl font-semibold">No questions yet!</h2>
-        <p className="mt-4">Start the conversation by asking a question.</p>
-      </div>
-    )}
-  </div>
+                  <div className="px-4 mt-4">
+                    {responses.length === 0 ? (
+                      <p className="text-gray-700 mt-4 text-center">
+                        No responses yet for this question.
+                      </p>
+                    ) : (
+                      (showAllResponsesMap[questionId]
+                        ? responses
+                        : responses.slice(0, DEFAULT_RESPONSES_LIMIT)
+                      ).map((response: any, resIndex: number) => {
+                        const isLiked = likedResponsesMap[response.id] || false;
+                        const responseId = response.id;
+                        const likeCount =
+                          (likeCounts ? likeCounts[responseId] : 0) || 0;
 
+                        return (
+                          <>
+                            <div
+                              key={resIndex}
+                              className="flex-col items-start mb-3 p-2 "
+                            >
+                              <div className="flex items-center gap-2 mb-5">
+                                <div className="h-[50px] w-[50px] relative ">
+                                  <Image
+                                    src={
+                                      response?.profilepictureUrl || "/pic.svg"
+                                    }
+                                    alt={response?.responderName}
+                                    fill
+                                    className="rounded-full object-cover"
+                                  />
+                                </div>
+                                <p className="font-medium text-sm mb-1">
+                                  {response?.responderName}
+                                </p>
+                              </div>
+                              <div className="ml-2">
+                                <p className="text-gray-600 text-sm">
+                                  {response?.responseText}
+                                </p>
+                                <div className="flex gap-1 mt-2">
+                                  <button
+                                    onClick={() =>
+                                      handleToggleLike(
+                                        responseId,
+                                        isLiked,
+                                        userId
+                                      )
+                                    }
+                                  >
+                                    {isLiked ? (
+                                      <AiFillHeart
+                                        size={20}
+                                        className="text-red-500"
+                                      />
+                                    ) : (
+                                      <AiOutlineHeart
+                                        size={20}
+                                        className="text-gray-500"
+                                      />
+                                    )}
+                                  </button>
+                                  <span className="text-gray-500">
+                                    {likeCount}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })
+                    )}
+                    {responses.length > DEFAULT_RESPONSES_LIMIT && (
+                      <button
+                        onClick={() => handleLoadMoreResponses(questionId)}
+                        className="text-blue-600 mt-3"
+                      >
+                        {showAllResponsesMap[questionId]
+                          ? "Hide Responses"
+                          : `See ${
+                              responses.length - DEFAULT_RESPONSES_LIMIT
+                            } more response(s)`}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="mt-5 pt-5 px-4">
+                    <h2>Add a Response:</h2>
+                    <ReactQuill
+                      value={responsesContentMap[questionId] || ""}
+                      placeholder="Write your response here..."
+                      onChange={(value) =>
+                        handleResponseChange(questionId, value)
+                      }
+                      className="mb-4 mt-2"
+                      theme="snow"
+                    />
+                    <button
+                      className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg transition"
+                      onClick={() => handleSubmitResponse(questionId)}
+                    >
+                      {isSubmittingResponse ? <Loader /> : "Submit Response"}
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-10 text-gray-600">
+              <h2 className="text-xl font-semibold">No questions yet!</h2>
+              <p className="mt-4">
+                Start the conversation by asking a question.
+              </p>
+            </div>
+          )}
+        </div>
 
         <div className="sm:w-[20%] border border-black max-h-[350px] overflow-y-auto">
           <div className="flex flex-col">
@@ -575,35 +643,37 @@ const Community = () => {
         </div>
       </div>
       <div className="flex justify-center items-center mt-4 gap-4">
-  <button
-    onClick={() => setCurrentPage(currentPage - 1)}
-    disabled={currentPage === 1}
-    className={`px-4 py-2 rounded-lg text-white font-medium ${
-      currentPage === 1
-        ? "bg-gray-300 cursor-not-allowed"
-        : "bg-zinc-500 hover:bg-zinc-700"
-    }`}
-  >
-    Previous
-  </button>
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg text-white font-medium ${
+            currentPage === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-zinc-500 hover:bg-zinc-700"
+          }`}
+        >
+          Previous
+        </button>
 
-  <span className="text-gray-700 font-medium">
-    Page {currentPage} of {Math.ceil(displayedQuestions.length / questionsPerPage)}
-  </span>
+        <p className="text-gray-700 font-medium ">
+          Page {currentPage} of
+          <span className="ml-1">
+            {Math.ceil(displayedQuestions.length / questionsPerPage)}
+          </span>
+        </p>
 
-  <button
-    onClick={() => setCurrentPage(currentPage + 1)}
-    disabled={currentPage * questionsPerPage >= displayedQuestions.length}
-    className={`px-4 py-2 rounded-lg text-white font-medium ${
-      currentPage * questionsPerPage >= displayedQuestions.length
-        ? "bg-gray-300 cursor-not-allowed"
-        : "bg-zinc-500 hover:bg-zinc-700"
-    }`}
-  >
-    Next
-  </button>
-</div>
-
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage * questionsPerPage >= displayedQuestions.length}
+          className={`px-4 py-2 rounded-lg text-white font-medium ${
+            currentPage * questionsPerPage >= displayedQuestions.length
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-zinc-500 hover:bg-zinc-700"
+          }`}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

@@ -4,7 +4,6 @@ import { useFetchOverview } from "@/hooks/useCourseOverview";
 import { useFetchCourseTopics } from "@/hooks/useCourses";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
-import CourseFields from "../uploadCourse/coursefileds";
 import CourseModal from "./courseModal";
 
 const Overview = () => {
@@ -14,8 +13,7 @@ const Overview = () => {
   const { data: topicData } = useFetchCourseTopics(courseId);
   const duration = data?.data?.attributes?.duration || "N/A";
   const enrolledLearners = data?.data?.attributes?.users?.data || [];
-  const learners =
-    enrolledLearners.length > 0 ? enrolledLearners.length : "No learners yet";
+  const learners = enrolledLearners.length > 0 ? enrolledLearners.length : "No learners yet";
   const likes = data?.data?.attributes?.liked_courses?.data || [];
   const numberOfLiked = likes.length > 0 ? likes.length : "No likes yet";
   const [isModal, setModalOpen] = useState(false);
@@ -60,7 +58,7 @@ const Overview = () => {
   }
 
   return (
-    <div className="bg-gray-100 mb-10 w-full relative  sm:h-[350px] sm:px-0 px-10 sm:py-4 py-10 items-center rounded-lg">
+    <div className="bg-gray-100 mb-10 w-full relative sm:mt-0 mt-5  sm:h-[350px] sm:px-0 px-10 sm:py-4 py-10 items-center rounded-lg">
       {courses.map((course, index) => (
         <div
           key={index}
@@ -73,7 +71,7 @@ const Overview = () => {
             {course.number}
           </h1>
           <button
-            className="absolute top-4 right-4 bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-white hover:border-2 hover:border-black hover:text-black"
+            className="absolute top-4 sm:mb-0 mb-5 right-4 bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-white hover:border-2 hover:border-black hover:text-black"
             onClick={handleModalOpen}
           >
             Edit

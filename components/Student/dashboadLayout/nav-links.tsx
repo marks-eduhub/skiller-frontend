@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { AiFillHome, AiOutlineTeam, AiOutlineUser } from "react-icons/ai";
+import { AiFillHome, AiOutlineTeam } from "react-icons/ai";
 import MinimizedNavLinks from "./minimized-navlink";
 import Image from "next/image";
 import { useFetchTutors } from "@/hooks/useCourses";

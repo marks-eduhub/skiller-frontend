@@ -1,7 +1,7 @@
 import { useFetchTopic } from "@/hooks/useSetQuiz";
 import React from "react";
 import { message } from "antd";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import Loader from "@/components/Student/loader";
 const Step2 = ({
   duration,
@@ -26,13 +26,11 @@ const Step2 = ({
     Number(courseId),
     Number(userId)
   );
- 
 
   if (isLoading) {
-      <div>
-       <Loader/>
-      </div>
-    
+    <div>
+      <Loader />
+    </div>;
   }
 
   if (error) {
@@ -64,7 +62,7 @@ const Step2 = ({
             type="text"
             id="passmark"
             value={passmark}
-            onChange={(e) => setPassmark((e.target.value))}
+            onChange={(e) => setPassmark(e.target.value)}
             placeholder="e.g,50"
             className="mt-1 px-4 py-2 rounded-md w-full border border-gray-200"
           />

@@ -8,8 +8,11 @@ import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { UsefetchResult, useFetchTests } from "@/hooks/useSubmit";
-import { useAuthContext } from "@/Context/AuthContext";
-import { markTopicCompleted, useFetchAllResults } from "@/hooks/useCourseTopics";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+import {
+  markTopicCompleted,
+  useFetchAllResults,
+} from "@/hooks/useCourseTopics";
 import { useMutation } from "@tanstack/react-query";
 
 const TopicsCard: React.FC = () => {
@@ -24,10 +27,20 @@ const TopicsCard: React.FC = () => {
   const { data: testsData } = useFetchTests(Number(topicId), Number(userId));
   const currentTopicId = searchParams.get("topicId");
   const [progress, setProgress] = useState(0);
-  const { data: allTestResults, isLoading: resultsLoading, error: resultsError } = useFetchAllResults(Number(userId));
+  const {
+    data: allTestResults,
+    isLoading: resultsLoading,
+    error: resultsError,
+  } = useFetchAllResults(Number(userId));
 
   const { mutate: topicCompleted } = useMutation({
-    mutationFn: async ({ isCompleted, topicId }: { isCompleted: boolean, topicId: number }) => {
+    mutationFn: async ({
+      isCompleted,
+      topicId,
+    }: {
+      isCompleted: boolean;
+      topicId: number;
+    }) => {
       return await markTopicCompleted(isCompleted, topicId);
     },
     onSuccess: () => {
@@ -35,10 +48,8 @@ const TopicsCard: React.FC = () => {
     },
     onError: (err) => {
       message.error("Error updating topic status");
-
     },
   });
-
 
   useEffect(() => {
     if (currentTopicId) {
@@ -64,15 +75,16 @@ const TopicsCard: React.FC = () => {
     }
 
     const previousTopic = topics[currentTopicIndex - 1];
-  
-    const previousTests = testsData?.data?.filter(
-      (test: any) => test.attributes.topic.data.id === previousTopic.id
-    ) || [];
-  
+
+    const previousTests =
+      testsData?.data?.filter(
+        (test: any) => test.attributes.topic.data.id === previousTopic.id
+      ) || [];
+
     if (previousTests.length === 0) {
-      return true; 
+      return true;
     }
-  
+
     const allPassed = previousTests.every((test: any) => {
       return testResults?.data?.some(
         (result: any) =>
@@ -80,11 +92,9 @@ const TopicsCard: React.FC = () => {
           result.attributes.score >= test.attributes.passmark
       );
     });
-  
+
     return allPassed;
   };
-  
-  
 
   useEffect(() => {
     const topics = topicsData?.data?.attributes?.topicname?.data || [];
@@ -189,7 +199,6 @@ const TopicsCard: React.FC = () => {
                     {topic.attributes.duration}
                   </span>
                   {!canAccess && <span className="ml-4 text-gray-400">🔒</span>}
-                  
                 </li>
               </Link>
             );

@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { Course } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
@@ -43,7 +43,7 @@ export const removeLikedCourse = async (courseId: number, userId: number) => {
     `/api/liked-courses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`
   );
 
-  const likedCourseEntry = response.data?.data?.[0]; 
+  const likedCourseEntry = response.data?.data?.[0];
 
   if (!likedCourseEntry) {
     throw new Error("Liked course not found");

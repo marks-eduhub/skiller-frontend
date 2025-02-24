@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect } from "react";
-import { AuthContext } from "../../Context/AuthContext";
+import { AuthContext } from "./AuthContext";
 import { message } from "antd";
 import { BEARER } from "../../lib/constants";
 import { getToken } from "../../lib/helpers";
@@ -15,11 +15,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchLoggedInUser = async (token: string) => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/users/me', {
+      const response = await api.get("/api/users/me", {
         headers: { Authorization: `${BEARER} ${token}` },
       });
 
-      setUserData(response.data); 
+      setUserData(response.data);
     } catch (error) {
       message.error("Error while getting logged-in user details");
     } finally {
@@ -35,12 +35,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (authToken) {
       fetchLoggedInUser(authToken);
     } else {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ user: userData, setUser: handleUser, isLoading }}>
+    <AuthContext.Provider
+      value={{ user: userData, setUser: handleUser, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -11,7 +11,7 @@ import { message } from "antd";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useSearchParams } from "next/navigation";
-import { useCourseContext } from "@/lib/CourseContext";
+import { useCourseContext } from "@/Context/CourseContext";
 
 const SetQuiz = () => {
   const router = useRouter();
@@ -78,7 +78,6 @@ const SetQuiz = () => {
   };
 
   const handleSubmitQuiz = () => {
-  
     if (!testname) {
       message.error("Test name is missing.");
       return;
@@ -102,7 +101,7 @@ const SetQuiz = () => {
       message.error("Please enter the test passmark.");
       return;
     }
-   
+
     if (quizData.some(({ question }) => !question)) {
       message.error("Question field is missing data.");
       return;
@@ -124,7 +123,7 @@ const SetQuiz = () => {
         testdescription: description,
         testduration: duration,
         topicId: topic,
-        passmark
+        passmark,
       },
       {
         onSuccess: (data) => {

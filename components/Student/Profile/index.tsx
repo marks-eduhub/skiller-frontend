@@ -15,7 +15,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -47,35 +47,42 @@ const ProfilePage: React.FC = () => {
     if (data) {
       setFirstName(data.firstName || "");
       setLastName(data.lastName || "");
-  
-      const socialData = tutorDetails && tutorDetails.data.length > 0 ? tutorDetails.data[0].attributes.socialLinks : data.socialLinks;
+
+      const socialData =
+        tutorDetails && tutorDetails.data.length > 0
+          ? tutorDetails.data[0].attributes.socialLinks
+          : data.socialLinks;
       setSocialLinks({
         email: socialData?.email || "",
         facebook: socialData?.facebook || "",
         twitter: socialData?.twitter || "",
         linkedin: socialData?.linkedin || "",
       });
-  
-      const profilePicUrl = tutorDetails && tutorDetails.data.length > 0 
-        ? tutorDetails.data[0].attributes.profilepicture?.data?.attributes?.url 
-        : data.profilepicture?.url;
-  
+
+      const profilePicUrl =
+        tutorDetails && tutorDetails.data.length > 0
+          ? tutorDetails.data[0].attributes.profilepicture?.data?.attributes
+              ?.url
+          : data.profilepicture?.url;
+
       if (profilePicUrl) {
-        setUploadImage(`${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`);
+        setUploadImage(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`
+        );
       } else {
-        setUploadImage("/Ellipse 445.webp");  
+        setUploadImage("/Ellipse 445.webp");
       }
     }
   }, [data, tutorDetails]);
-  
+
   useEffect(() => {
     if (tutorDetails && tutorDetails.data.length > 0) {
       const tutor = tutorDetails.data[0].attributes;
-  
+
       setBiography(tutor?.Biography || "dummy");
       setRole(tutor?.role || "dummy");
       setQualifications(tutor?.Qualifications || "dummy");
-  
+
       const socialData = tutor.socialLinks || data?.socialLinks;
       setSocialLinks({
         email: socialData?.email || "",
@@ -83,16 +90,19 @@ const ProfilePage: React.FC = () => {
         twitter: socialData?.twitter || "",
         linkedin: socialData?.linkedin || "",
       });
-  
-      const profilePicUrl = tutor.profilepicture?.data?.attributes?.url || data?.profilepicture?.url;
+
+      const profilePicUrl =
+        tutor.profilepicture?.data?.attributes?.url ||
+        data?.profilepicture?.url;
       if (profilePicUrl) {
-        setUploadImage(`${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`);
+        setUploadImage(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`
+        );
       } else {
         setUploadImage("/Ellipse 445.webp");
       }
     }
   }, [data?.profilepicture?.url, data?.socialLinks, tutorDetails]);
-  
 
   const handleSuccess = () => {
     message.success("Profile saved successfully!");
@@ -125,8 +135,6 @@ const ProfilePage: React.FC = () => {
   const handleToggleChange = () => {
     setToggle(!toggle);
   };
-
- 
 
   const { mutateAsync: postTutorProfile } = useMutation({
     mutationFn: async ({
@@ -163,23 +171,21 @@ const ProfilePage: React.FC = () => {
         Qualifications,
         socialLinks
       );
-  
+
       const tutorId =
         response?.id || response?.data?.id || response?.data?.data?.id || null;
-  
+
       if (!tutorId) {
         throw new Error("Failed to retrieve tutor ID from the response");
       }
-  
-      return tutorId; 
+
+      return tutorId;
     },
     onError: () => {
       message.error("Error creating tutor");
     },
   });
-  
-  
-  
+
   const { mutate: postStudentProfile } = useMutation({
     mutationFn: async ({
       studentname,
@@ -267,13 +273,11 @@ const ProfilePage: React.FC = () => {
     mutationFn: async ({
       userId,
       tutorId,
-
     }: {
       userId: number;
       tutorId: number;
-
     }) => {
-      return await linkTutorToUser(userId, tutorId );
+      return await linkTutorToUser(userId, tutorId);
     },
 
     onSuccess: () => {
@@ -285,7 +289,6 @@ const ProfilePage: React.FC = () => {
     },
   });
 
-  
   const handleSaveChanges = async () => {
     const updatedSocialLinks = {
       email: socialLinks.email,
@@ -293,12 +296,12 @@ const ProfilePage: React.FC = () => {
       twitter: socialLinks.twitter,
       linkedin: socialLinks.linkedin,
     };
-  
+
     if (!userId) {
       message.error("Cannot update user details.");
       return;
     }
-  
+
     let profilePictureId: string = "";
     if (image) {
       try {
@@ -310,8 +313,7 @@ const ProfilePage: React.FC = () => {
     } else {
       profilePictureId = exisitingprofileId ? String(exisitingprofileId) : "";
     }
-    
-    
+
     try {
       if (toggle) {
         if (tutorId) {
@@ -337,8 +339,7 @@ const ProfilePage: React.FC = () => {
             Qualifications,
             socialLinks: updatedSocialLinks,
           });
-  
-  
+
           if (newTutorId) {
             linkTutor({ userId, tutorId: newTutorId });
             message.success("Tutor profile created and linked successfully!");
@@ -360,7 +361,7 @@ const ProfilePage: React.FC = () => {
     } catch (error) {
       message.error("Failed to save profile data. Please try again.");
     }
-  
+
     setImage(null);
     setUploadImage("/Ellipse 445.webp");
     setToggle(false);
@@ -376,7 +377,7 @@ const ProfilePage: React.FC = () => {
     setRole("");
     setQualifications("");
   };
-  
+
   return (
     <div className="max-md:p-0 max-md:pr-4 sm:pl-10 items-center sm:w-1/2">
       <h2 className="font-bold text-[30px] mb-3 max-md:mt-0">Profile</h2>

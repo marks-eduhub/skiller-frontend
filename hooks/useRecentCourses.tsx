@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchRecentCourses = async (userId: number) => {

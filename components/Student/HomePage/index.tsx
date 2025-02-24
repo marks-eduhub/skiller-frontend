@@ -54,9 +54,7 @@ const HomePage: React.FC = () => {
     message.error("Error fetching courses. Please try again later.");
   }
 
-  const coursesByCategory: {
-    [key: string]: { title: string; courses: any[] };
-  } = {};
+  const coursesByCategory: {[key: string]: { title: string; courses: any[] }} = {};
 
   data?.data.forEach((course: any) => {
     const categories = course.attributes.categories.data;
@@ -90,7 +88,7 @@ const HomePage: React.FC = () => {
                   </div>
 
                   <div
-                    className="block md:hidden flex items-center justify-between"
+                    className="md:hidden flex items-center justify-between"
                     onClick={() => handleNavigation(categorySlug)}
                   >
                     <b>{categoryData.title}</b>

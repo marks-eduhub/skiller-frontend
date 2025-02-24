@@ -3,12 +3,14 @@ import Step1 from "../setQuiz/step1";
 import Step2 from "../setQuiz/step2";
 import Step3 from "../setQuiz/step3";
 import { useFetchCourseTests } from "@/hooks/useSubmit";
-import { useAuthContext } from "@/Context/AuthContext";
 import StepTracker from "../setQuiz/tracker";
 import QuizPreview from "../setQuiz/quizPreview";
 import Loader from "@/components/Student/loader";
 import { useMutation } from "@tanstack/react-query";
-import { EditTest, EditTestQuestion, useFetchTestQuestions } from "@/hooks/useSetQuiz";
+import {
+  EditTest,
+  EditTestQuestion,
+} from "@/hooks/useSetQuiz";
 import { message } from "antd";
 
 interface QuizModalProps {
@@ -39,17 +41,17 @@ const QuizModal: React.FC<QuizModalProps> = ({
       const test = testData.data.find(
         (t: any) => t.id === selectedTest.testId
       )?.attributes;
-  
+
       if (test) {
         setTestname(test.testname || "");
         setDescription(test.testdescription || "");
         setDuration(test.testduration || "");
         setPassmark(test.passmark || "");
-  
+
         setQuizData(
           Array.isArray(test.questions?.data)
             ? test.questions.data.map((q: any) => ({
-                questionId: q.id, 
+                questionId: q.id,
                 question: q.attributes.questions,
                 options: q.attributes.options,
                 answer: q.attributes.answers,
@@ -59,24 +61,22 @@ const QuizModal: React.FC<QuizModalProps> = ({
       }
     }
   }, [testData, selectedTest]);
-  
 
   const { mutate: editTestMutation } = useMutation({
     mutationFn: async ({
-        testId,
-        testname,
-        testdescription,
-        testduration,
-        topicId,
-        passmark,
+      testId,
+      testname,
+      testdescription,
+      testduration,
+      topicId,
+      passmark,
     }: {
-        testId: number;
-        testname: string;
-        testdescription: string;
-        testduration: string;
-        topicId: string;
-        passmark: string;
-     
+      testId: number;
+      testname: string;
+      testdescription: string;
+      testduration: string;
+      topicId: string;
+      passmark: string;
     }) => {
       return await EditTest(
         testId,
@@ -97,13 +97,13 @@ const QuizModal: React.FC<QuizModalProps> = ({
 
   const { mutate: editTestQuestionMutation } = useMutation({
     mutationFn: async ({
-     questionId,
+      questionId,
       questions,
       options,
       answers,
       testId,
     }: {
-     questionId: number;
+      questionId: number;
       questions: string;
       options: string[];
       answers: string;
@@ -145,9 +145,9 @@ const QuizModal: React.FC<QuizModalProps> = ({
       message.error("Please enter the test passmark.");
       return;
     }
-  
+
     try {
-       editTestMutation({
+      editTestMutation({
         testId: selectedTest.testId,
         testname,
         testdescription: description,
@@ -155,27 +155,25 @@ const QuizModal: React.FC<QuizModalProps> = ({
         topicId: String(topicId),
         passmark,
       });
-  
+
       quizData.forEach(({ questionId, question, options, answer }) => {
         if (question && options.length > 0 && answer) {
           editTestQuestionMutation({
-            questionId,  
+            questionId,
             questions: question,
             options,
             answers: answer,
-            testId: selectedTest.testId,  
+            testId: selectedTest.testId,
           });
         }
       });
-  
+
       message.success("Quiz edited successfully");
       onClose();
     } catch (error) {
       message.error("Failed to edit quiz.");
     }
   };
-  
-  
 
   return (
     <div

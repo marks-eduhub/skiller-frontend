@@ -1,5 +1,5 @@
 "use client";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import {
   useFetchQuizQuestions,
   UsefetchTestResult,
@@ -10,7 +10,7 @@ import {
   updateTestResultScore,
   UseUpdateQuestionResult,
 } from "@/hooks/useSubmit";
-import { CorrectAnswer, Question } from "@/lib/types";
+import { CorrectAnswer} from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import CustomModal from "./modal";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
-const QuizPreview = () => {
+const TestQuestions= () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user } = useAuthContext();
@@ -62,7 +62,7 @@ const QuizPreview = () => {
 
     fetchAndSetTimesAttempted();
   }, [Resultdata]);
-  
+
   const handlePreviousStep = () => {
     router.back();
   };
@@ -217,13 +217,13 @@ const QuizPreview = () => {
       message.error("Can't submit an empty test");
       return;
     }
-  
+
     const correctAnswers: CorrectAnswer[] =
       data?.data?.map((quiz: any) => ({
         questionId: quiz.id,
-        correctAnswer: quiz.attributes.answers, 
+        correctAnswer: quiz.attributes.answers,
       })) || [];
-  
+
     const correctAnswerMap = correctAnswers.reduce(
       (
         acc: Record<number, string | string[]>,
@@ -234,28 +234,23 @@ const QuizPreview = () => {
       },
       {}
     );
- 
-  
+
     let passedCount = 0;
     const totalQuestions = Object.keys(userAnswers).length;
-  
+
     for (const questionId in userAnswers) {
       const userAnswer = userAnswers[questionId];
       const correctAnswer = correctAnswerMap[Number(questionId)];
-  
-      
-  
-      const passed =
-        Array.isArray(correctAnswer)
-          ? correctAnswer.includes(userAnswer)
-          : userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
-  
-     
-  
+
+      const passed = Array.isArray(correctAnswer)
+        ? correctAnswer.includes(userAnswer)
+        : userAnswer.trim().toLowerCase() ===
+          correctAnswer.trim().toLowerCase();
+
       if (passed) {
         passedCount++;
       }
-  
+
       const userQuestionResultId = userQuestionResultsMap[Number(questionId)];
       if (userQuestionResultId) {
         updating({ userQuestionResultId, userAnswer, passed });
@@ -268,19 +263,16 @@ const QuizPreview = () => {
         });
       }
     }
-  
+
     const scorePercentage = (passedCount / totalQuestions) * 100;
     const roundedScore = Math.round(scorePercentage);
-  
+
     await updateTestResultScore(testResultId, roundedScore);
-  
+
     message.success(`Quiz submitted successfully!`);
     setUserAnswers({});
     router.back();
   };
-  
-
-  
 
   if (isLoading) {
     return (
@@ -341,13 +333,13 @@ const QuizPreview = () => {
                 <h1 className="underline">Question {index + 1}:</h1>
                 <div className="sm:ml-5 mt-4 bg-white p-6">
                   <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between">
-                  <h1 className="font-semibold my-3">{questionText}</h1>
-                  <button
-                    className="sm:ml-4 border-2 border-black rounded-md bg-white sm:py-1 sm:px-4 sm:w-[150px] w-1/2 sm:mb-0 mb-4"
-                    onClick={() => handleResetAnswer(questionItem.id)}
-                  >
-                    Reset option
-                  </button>
+                    <h1 className="font-semibold my-3">{questionText}</h1>
+                    <button
+                      className="sm:ml-4 border-2 border-black rounded-md bg-white sm:py-1 sm:px-4 sm:w-[150px] w-1/2 sm:mb-0 mb-4"
+                      onClick={() => handleResetAnswer(questionItem.id)}
+                    >
+                      Reset option
+                    </button>
                   </div>
                   {options.map((option: any, optionIndex: string) => {
                     return (
@@ -363,7 +355,7 @@ const QuizPreview = () => {
                           onChange={() =>
                             handleOptionSelect(option, true, questionItem.id)
                           }
-                          checked={userAnswers[questionItem.id] === option} 
+                          checked={userAnswers[questionItem.id] === option}
                         />
                         <label
                           htmlFor={`option-${index}-${optionIndex}`}
@@ -394,4 +386,4 @@ const QuizPreview = () => {
   );
 };
 
-export default QuizPreview;
+export default TestQuestions;

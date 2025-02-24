@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Progress from "./progress";
-import Link from "next/link";
 import Wishlist from "../wishlist/wishlist";
 export const Learning = () => {
 

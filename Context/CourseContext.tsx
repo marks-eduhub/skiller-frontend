@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useMemo } from "react";
 
 interface CourseContextType {
   courseId: number | null;
@@ -13,8 +13,10 @@ export const CourseProvider = ({ children }: { children: ReactNode }) => {
   const [courseId, setCourseId] = useState<number | null>(null);
   const [topicId, setTopicId] = useState<number | null>(null);
 
-  return (
-    <CourseContext.Provider value={{ courseId, setCourseId, topicId, setTopicId}}>
+  const value = useMemo(() => ({ courseId, setCourseId, topicId, setTopicId }), [courseId, topicId]);
+
+return (
+    <CourseContext.Provider value={value}>
       {children}
     </CourseContext.Provider>
   );

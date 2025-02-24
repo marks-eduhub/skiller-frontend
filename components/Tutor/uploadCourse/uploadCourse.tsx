@@ -9,10 +9,10 @@ import { courseUpload, uploadMedia } from "@/hooks/useCourseUpload";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { topicUpload } from "@/hooks/useCourseTopics";
-import { useCourseContext } from "@/lib/CourseContext";
+import { useCourseContext } from "@/Context/CourseContext";
 import CourseFields from "./coursefileds";
 
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -55,7 +55,7 @@ const UploadCourse = () => {
   const [duration, setDuration] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
   const [isOpen, setModalOpen] = useState(false);
-  const [existingMediaId, setExistingMediaId] = useState<number | null>(null)
+  const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
 
   const tutorId = user?.id;
 
@@ -157,7 +157,7 @@ const UploadCourse = () => {
         }
       }
 
-      let resourceId: string| null = null;
+      let resourceId: string | null = null;
       if (resourceFile) {
         resourceId = await uploadMedia(resourceFile);
         if (!resourceId) {

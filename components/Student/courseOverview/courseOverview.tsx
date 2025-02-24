@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import {Topic } from "@/lib/types";
 
 interface CourseOverviewProps {

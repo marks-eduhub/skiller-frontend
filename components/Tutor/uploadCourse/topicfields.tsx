@@ -16,7 +16,7 @@ import {
 import { message } from "antd";
 import { useParams, useSearchParams } from "next/navigation";
 import { uploadMedia } from "@/hooks/useCourseUpload";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import VideoModal from "./videoModal";
 import ResourceModal from "./resourceModal";
 
@@ -61,7 +61,7 @@ interface TopicFieldsProps {
   videoId: string;
   setVideoId: (prev: string) => void;
   onRemoveResource: (resourceIndex: number) => void;
-  resourceIds: string 
+  resourceIds: string;
   setResourceIds: (prev: string) => void;
 }
 
@@ -103,8 +103,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [newResourceFiles, setNewResourceFiles] = useState<File[]>([]);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
-  const [resourceIndex, setResourceIndex] = useState<number | null>(null); 
-
+  const [resourceIndex, setResourceIndex] = useState<number | null>(null);
 
   const handleTextChange = (text: string) => {};
 
@@ -391,12 +390,12 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
     onSuccess: (_, { topicId }) => {
       message.success("Resource deleted successfully!");
-  
+
       queryClient.invalidateQueries({
         queryKey: ["course_topics"],
       });
       queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
-  
+
       closeModal();
       onClose();
     },
@@ -404,8 +403,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       message.error("Error deleting topic resource. Please try again later.");
     },
   });
-  
-  
+
   const handleDeleteClick = (topicId: number) => {
     if (topicId === null) {
       message.warning("You can't delete an unsaved topic.");
@@ -420,7 +418,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setVideoModalOpen(true);
   };
 
- const handleDeleteVideo = () => {
+  const handleDeleteVideo = () => {
     if (videoId && topicId) {
       topicVideoDelete({ topicId, videoId });
     } else {
@@ -429,15 +427,15 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setVideoModalOpen(false);
   };
 
-  const handleResourceModal = (resourceId: number, resourceIndex:number) => {
+  const handleResourceModal = (resourceId: number, resourceIndex: number) => {
     setResourceIndex(resourceIndex);
     setResourceModalOpen(true);
   };
 
   const handleResourceDelete = () => {
     if (resourceIndex !== null && resourceIds && topicId) {
-      const resourceId = resourceIds[resourceIndex]; 
-  
+      const resourceId = resourceIds[resourceIndex];
+
       if (resourceId) {
         topicResourceDelete({ topicId, resourceId });
       } else {
@@ -446,12 +444,10 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     } else {
       message.error("An error has occurred while deleting the resource.");
     }
-  
-    setResourceModalOpen(false); 
+
+    setResourceModalOpen(false);
   };
-  
-  
-  
+
   return (
     <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
       <div className="flex flex-col sm:flex-row gap-5">
@@ -477,7 +473,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               step="60"
               className="border rounded-md sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
             />
-           
           </div>
         </div>
       </div>
@@ -549,7 +544,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         <h1>Resource Preview</h1>
         {Array.isArray(resourcePreview) && resourcePreview.length > 0 ? (
           resourcePreview.map((resource: any, resourceIndex: number) => {
-            const resourceId = resourceIds[resourceIndex]; 
+            const resourceId = resourceIds[resourceIndex];
 
             return (
               <div
@@ -568,7 +563,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
                     </a>
                     <button
                       className="text-red-500 hover:text-red-700 ml-2"
-                      onClick={() => handleResourceModal(Number(resourceId), resourceIndex)} 
+                      onClick={() =>
+                        handleResourceModal(Number(resourceId), resourceIndex)
+                      }
                     >
                       Delete
                     </button>

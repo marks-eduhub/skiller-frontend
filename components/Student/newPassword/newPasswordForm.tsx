@@ -4,6 +4,11 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function NewPasswordForm() {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -39,14 +44,14 @@ export default function NewPasswordForm() {
           <div className="relative">
             <input
               placeholder="***********"
-              type={passwordVisible ? "text" : "password"}
+              type={confirmPasswordVisible? "text" : "password"}
               className="bg-inherit border border-gray-400 rounded-md px-3 py-[1.3rem] w-full pr-10"
             />
             <span
-              onClick={togglePasswordVisibility}
+              onClick={toggleConfirmPasswordVisibility}
               className="absolute right-3 top-[50%] transform -translate-y-[50%] cursor-pointer"
             >
-              {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+              {confirmPasswordVisible ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
         </div>

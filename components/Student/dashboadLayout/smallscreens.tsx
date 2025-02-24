@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { HamburgerMenuIcon} from "@radix-ui/react-icons";
 import {NavLinks} from "@/components/Student/dashboadLayout/nav-links";
 import SkillerLogo from "@/components/ui/logo";
 import { IoMdClose } from "react-icons/io";
