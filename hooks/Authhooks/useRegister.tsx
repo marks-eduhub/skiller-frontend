@@ -56,37 +56,23 @@ export const registerUserWithGoogle = async () => {
   }
 };
 
-// export const getGoogleAuthURL = async () => {
-//   try {
-//     const response = await api.get(`/strapi-googleauth-extended/init`);
-//     if (response.status === 200) {
-//       window.location.href = response.data.url; // Redirect user to Google login page
-//     } else {
-//       throw new Error("Failed to fetch Google authentication URL");
-//     }
-//   } catch (error) {
-//     console.error("Error getting Google Auth URL:", error);
-//     throw error;
-//   }
-// };
 
 // 2️⃣ Authenticate User with Redirect Code
 export const authenticateUserWithGoogle = async (code: string) => {
+  console.log("code" + code);
   try {
-    const response = await api.post(
-      `/strapi-googleauth-extended/user-profile`,
-      {
-        code,
-      }
-    );
-
+    const response = await api.post(`/strapi-google-auth/user-profile`, {
+      code,
+    });
+    console.log(response.data);
     if (response.status === 200) {
       console.log("profile" + response.data);
 
       return response.data; // Returns user details and JWT token
-    } else {
-      throw new Error("Failed to authenticate user");
     }
+    // } else {
+    //   throw new Error("Failed to authenticate user");
+    // }
   } catch (error) {
     console.error("Error authenticating user:", error);
     throw error;
@@ -95,7 +81,7 @@ export const authenticateUserWithGoogle = async (code: string) => {
 
 export const getAuthenticatedUser = async (token: string) => {
   try {
-    const response = await api.get(`/strapi-googleauth-extended/me`, {
+    const response = await api.get(`/strapi-google-auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

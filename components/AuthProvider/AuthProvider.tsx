@@ -15,17 +15,52 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchLoggedInUser = async (token: string) => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/users/me', {
+      // Try the default Strapi endpoint first
+      let response = await api.get("/api/users/me", {
         headers: { Authorization: `${BEARER} ${token}` },
       });
 
-      setUserData(response.data); 
-    } catch (error) {
-      message.error("Error while getting logged-in user details");
+      // If the default endpoint succeeds, set the user data
+      setUserData(response.data);
+    } catch (firstError) {
+      // console.error(
+      //   "Default endpoint failed, trying fallback endpoint:",
+      //   firstError
+      // );
+
+      try {
+        // If the default endpoint fails, try the Google Auth endpoint
+        const fallbackResponse = await api.get(
+          "/strapi-googleauth-extended/me",
+          {
+            headers: { Authorization: `${BEARER} ${token}` },
+          }
+        );
+
+        // If the fallback endpoint succeeds, set the user data
+        setUserData(fallbackResponse.data);
+      } catch (secondError) {
+        console.error("Fallback endpoint also failed:", secondError);
+        message.error("Error while getting logged-in user details");
+      }
     } finally {
       setIsLoading(false);
     }
   };
+  // const fetchLoggedInUser = async (token: string) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await api.get('/api/users/me', {
+  //       headers: { Authorization: `${BEARER} ${token}` },
+  //     });
+
+  //     setUserData(response.data);
+  //   } catch (error) {
+  //     message.error("Error while getting logged-in user details");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleUser = (user: User) => {
     setUserData(user);
@@ -35,12 +70,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (authToken) {
       fetchLoggedInUser(authToken);
     } else {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ user: userData, setUser: handleUser, isLoading }}>
+    <AuthContext.Provider
+      value={{ user: userData, setUser: handleUser, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
