@@ -11,6 +11,8 @@ import {
 import { message } from "antd";
 import { useParams, usePathname } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -32,7 +34,7 @@ interface CourseFieldsProps {
   setDuration: React.Dispatch<React.SetStateAction<string>>;
   setSelectedImage: React.Dispatch<React.SetStateAction<File | null>>;
   onClose: () => void;
-  existingMediaId: number | null
+  existingMediaId: number | null;
 }
 const CourseFields: React.FC<CourseFieldsProps> = ({
   courseName,
@@ -56,7 +58,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
 
 }) => {
   const queryClient = useQueryClient();
-const pathname = usePathname();
+  const pathname = usePathname();
   const { slug } = useParams();
   const courseId = Number(slug);
   const { data, isLoading, error } = useFetchCategory();
@@ -123,11 +125,13 @@ const pathname = usePathname();
   });
   
   const handleSaveChanges = async () => {
-    const mediaId = selectedImage ? await uploadMedia(selectedImage) : existingMediaId;
-  if (!mediaId) {
-    throw new Error("Course image upload failed.");
-  }
-  
+    const mediaId = selectedImage
+      ? await uploadMedia(selectedImage)
+      : existingMediaId;
+    if (!mediaId) {
+      throw new Error("Course image upload failed.");
+    }
+
     try {
       courseEdit({
         courseId,
@@ -156,7 +160,7 @@ const pathname = usePathname();
             onChange={(e) => {
               setCourseName(e.target.value);
             }}
-            className="border sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+            className="border rounded-md sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
           />
         </div>
         <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
@@ -164,13 +168,15 @@ const pathname = usePathname();
             Course duration:
           </label>
           <input
-            type="text"
+            type="time"
             value={duration}
             onChange={(e) => {
               setDuration(e.target.value);
             }}
-            className="border sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+            step="60"
+            className="border rounded-md sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
           />
+        
         </div>
       </div>
       <div className="mb-10 mt-4">

@@ -21,6 +21,8 @@ export const courseUpload = async (
     const markdownDescription = turndownService.turndown(coursedescription);
     const markdownRequirements = turndownService.turndown(requirements);
 
+    const formattedDuration = duration.includes(":") ? `${duration}:00` : duration;
+
     const response = await api.post("/api/courses?populate[card][populate][categories]=*", {
       data: {
         coursename,
@@ -30,7 +32,7 @@ export const courseUpload = async (
         card: cardId,
         categories,
         tutor,
-        duration
+        duration: formattedDuration,
       },
     });
 
@@ -60,16 +62,17 @@ export const courseEditing = async (
     const markdownDescription = turndownService.turndown(coursedescription);
     const markdownRequirements = turndownService.turndown(requirements);
 
+    const formattedDuration = duration.includes(":") ? `${duration}:00` : duration;
+
     const response = await api.put(`/api/courses/${courseId}?populate=*`, {
       data: {
-        courseId,
         coursename,
         expectations: markdownExpectations,
         coursedescription: markdownDescription,
         requirements: markdownRequirements,
         card: cardId,
         categories,
-        duration
+        duration: formattedDuration, 
       },
     });
 

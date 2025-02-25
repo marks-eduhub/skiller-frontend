@@ -61,7 +61,7 @@ const Tutorspage = () => {
 
   return (
     <div className="sm:pl-10 py-5 sm:w-full">
-      <div className="grid sm:grid-cols-3 grid-cols-2 gap-10 ">
+      <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">
         {tutors?.map((tutor: any, index: number) => {
           const relativeUrl =
             tutor.attributes.profilepicture?.data?.attributes?.url;
@@ -80,12 +80,12 @@ const Tutorspage = () => {
               onMouseLeave={() => setHovered(null)}
             >
               {profilePictureUrl ? (
-                <div className="sm:w-[300px] w-[150px] h-[150px] sm:h-[300px] relative">
+                <div className="sm:w-[200px] w-[150px] h-[150px] sm:h-[200px] relative">
                   <Image
                     src={profilePictureUrl}
                     alt={tutor.attributes.tutorname}
                     fill
-                    className="hover:scale-110 transition duration-300 hover:brightness-75"
+                    className="hover:scale-110 rounded-full object-cover transition duration-300 hover:brightness-75"
                   />
                   {hovered === index && (
                     <FontAwesomeIcon

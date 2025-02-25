@@ -150,6 +150,34 @@ export const deleteTopicVideo = async (topicId: number, videoId: string) => {
   }
 };
 
+export const deleteTopicResource = async (topicId: number, resourceId: string) => {
+  try {
+    const response = await api.get(`/api/topics/${topicId}?populate=topicResources`);
+    const topicData = response.data?.data;
+    if (!topicData || !topicData.attributes?.topicResources) {
+      throw new Error("No resources found for this topic");
+    }
+    const topicResources = Array.isArray(topicData.attributes.topicResources)
+      ? topicData.attributes.topicResources
+      : [];
+
+
+    await api.delete(`/api/upload/files/${resourceId}`);
+
+    const updatedResources = topicResources.filter(
+      (resource: { id: string }) => resource.id !== resourceId
+    );
+
+    await api.put(`/api/topics/${topicId}`, {
+      data: { topicResources: updatedResources },
+    });
+
+    return { message: "Resource deleted successfully", updatedResources };
+  } catch (error) {
+    throw new Error("Failed to delete the resource. Please try again.");
+  }
+};
+
 
 
 const fetchAllResults = async (userId: number) => {
