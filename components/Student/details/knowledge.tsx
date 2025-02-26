@@ -103,7 +103,7 @@ const Knowledge = () => {
       return await updateCourseRating(courseId, averageRating);
     },
     onSuccess: () => {
-      message.success("Rating sent to backend");
+      // message.success("Rating sent to backend");
     },
     onError: (err) => {
       message.error("Error updating rating");
@@ -138,66 +138,60 @@ const Knowledge = () => {
     },
     onSuccess: (_, { score }) => {
       handleRatingUpdate(score);
-      message.success("Course rating updated");
+      // message.success("Course rating updated");
     },
     onError: () => {
       message.error("Error attaching a rating to course");
     },
   });
 
-  const checkCourseCompletion = useCallback(() => {
-    if (
-      !allCourseTests ||
-      !Array.isArray(allCourseTests.data) ||
-      allCourseTests.data.length === 0
-    ) {
-      message.warning("No tests found ");
-      return;
-    }
-
-    let allTestsAttempted = true;
-    let allTestsPassed = true;
-
-    allCourseTests.data.forEach((test: any) => {
-      const testResults = (test.attributes.test_results?.data || []).filter(
-        (result: any) => result.attributes.userId === userId
-      );
-
-      if (testResults.length === 0) {
-        allTestsAttempted = false;
-      } else {
-        const latestTestResult = testResults
-          .map((result: any) => result.attributes)
-          .sort(
-            (a: any, b: any) =>
-              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-          )[0];
-
-        const userScore = Number(latestTestResult?.score) || 0;
-        const passmark = Number(test.attributes.passmark) || 0;
-
+  const checkCourseCompletion = useCallback(
+    (testresultdata: any[], allCourseTests: any) => {
+    
+      if (!testresultdata || !Array.isArray(testresultdata) || testresultdata.length === 0) {
+        return;
+      }
+  
+      const courseTests = Array.isArray(allCourseTests.data) ? allCourseTests.data : [allCourseTests.data];
+  
+      const courseTestIds = courseTests.map((test: { id: any; }) => test.id);
+  
+      const attemptedTestIds = testresultdata.map(result => result.attributes.test?.data?.id);
+  
+      const allTestsAttempted = courseTestIds.every((testId: any) => attemptedTestIds.includes(testId));
+  
+      let allTestsPassed = true;
+  
+      testresultdata.forEach((testResult) => {
+        const userScore = Number(testResult.attributes.score) || 0;
+        const passmark = Number(testResult.attributes.test?.data?.attributes?.passmark) || 0;
+  
         if (userScore < passmark) {
           allTestsPassed = false;
-        }
-      }
-    });
-
-    if (allTestsAttempted && allTestsPassed) {
-      createProgress({ userId, courseId, progressStatus: true });
-    }
-  }, [allCourseTests, userId, courseId, createProgress]);
-
+        } 
+      });
+  
+  
+      if (allTestsAttempted && allTestsPassed) {
+        createProgress({ userId, courseId, progressStatus: true });
+      } 
+    },
+    [userId, courseId, createProgress]
+  );
+  
   useEffect(() => {
     if (shouldShowRatingModal) {
       setShowRatingModal(true);
     }
   }, [shouldShowRatingModal]);
+  
 
   useEffect(() => {
-    if (Array.isArray(allCourseTests?.data) && allCourseTests.data.length > 0) {
-      checkCourseCompletion();
+    if (Array.isArray(allCourseTests?.data) && allCourseTests.data.length > 0 && testresultdata) {
+      checkCourseCompletion(testresultdata, allCourseTests);
     }
-  }, [allCourseTests, checkCourseCompletion]);
+  }, [allCourseTests, testresultdata, checkCourseCompletion]);
+  
 
   const submitRating = async (rating: number) => {
     if (!courseStatus || courseStatus.length === 0) {
