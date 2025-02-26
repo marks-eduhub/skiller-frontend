@@ -2,12 +2,13 @@ import api from "@/lib/axios"
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 
-export const PostTest = async(testname:string, testdescription:string, testduration:string, topicId:string, passmark:string) => {
+export const PostTest = async(courseId:number, testname:string, testdescription:string, testduration:string, topicId:string, passmark:string) => {
     const turndownService = new TurndownService();
     const description = turndownService.turndown(testdescription);
 
     const response = await api.post("/api/tests?populate=*", {
         data: {
+            course:courseId,
             testname,
             testdescription:description,
             testduration,

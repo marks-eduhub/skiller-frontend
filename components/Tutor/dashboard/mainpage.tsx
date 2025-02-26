@@ -4,7 +4,7 @@ import TutorNav from "./tutor-nav";
 import Image from "next/image";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useFetchTutorCourses } from "@/hooks/useCourses";
+import { useFetchCourses} from "@/hooks/useCourses";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import api from "@/lib/axios";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -15,13 +15,10 @@ import Loader from "@/components/Student/loader";
 
 const MainPage = () => {
   const { user } = useAuthContext();
-  const userId = user?.id;
   const router = useRouter();
-
   const username = user?.username;
-  const { data, isLoading, error } = useFetchTutorCourses(Number(userId));
+  const { data, isLoading, error } = useFetchCourses();
   const coursedata = data?.data;
-
   const [loadingCourseId, setLoadingCourseId] = useState<number | null>(null);
 
   const handleCourseClick = (courseId: number) => {
@@ -29,6 +26,9 @@ const MainPage = () => {
     router.push(`/tutor/dashboard/courseoverview/${courseId}`);
   };
 
+const tutorCourses = coursedata?.filter(
+  (course: any) => course.attributes.tutor?.data?.attributes?.tutorname === user?.studentname
+);
   if (isLoading) {
     return (
       <div>
@@ -53,7 +53,7 @@ const MainPage = () => {
       </h1>
 
       <div className="mt-10">
-        {coursedata?.length === 0 ? (
+        {tutorCourses?.length === 0 ? (
           <div className="flex flex-col">
             <h1 className="font-medium text-[25px] mb-5">Welcome!</h1>
             <p className="text-[20px] mb-5">
@@ -70,7 +70,7 @@ const MainPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-6 relative">
-            {coursedata?.map((course: any) => {
+            {tutorCourses?.map((course: any) => {
               const courseAttributes = course?.attributes;
               const image =
                 courseAttributes?.card?.data?.attributes?.url ||

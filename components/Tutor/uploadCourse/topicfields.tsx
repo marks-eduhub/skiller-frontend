@@ -14,11 +14,12 @@ import {
   topicUpload,
 } from "@/hooks/useCourseTopics";
 import { message } from "antd";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { uploadMedia } from "@/hooks/useCourseUpload";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import VideoModal from "./videoModal";
 import ResourceModal from "./resourceModal";
+import { useCourseContext } from "@/Context/CourseContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -86,17 +87,21 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const tutorId = Number(user?.id);
-
+  const pathname = usePathname();
   const { slug } = useParams();
   const searchParams = useSearchParams();
   const courseIdParam = searchParams.get("courseId");
+  const { courseId: contextCourseId } = useCourseContext();
+  const isUploadingCourse = pathname === "/tutor/dashboard/uploadCourse";
 
-  const courseId = slug
-    ? Number(slug)
-    : courseIdParam
-    ? Number(courseIdParam)
-    : 0;
-
+  let courseId: number = 0; 
+  if (isUploadingCourse) {
+  courseId = contextCourseId ?? 0; 
+  } else {
+  courseId = slug ? Number(slug) : courseIdParam ? Number(courseIdParam) : 0;
+   }
+  
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
@@ -615,7 +620,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
           {videoPreview ? (
             <div className="flex flex-col items-center">
-              <video width="200" controls>
+              <video width="300" controls>
                 <source src={videoPreview} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
@@ -657,13 +662,16 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         >
           Delete Topic
         </button>
-
         <button
           onClick={handleSaveChanges}
-          className="border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px]"
-        >
-          Save changes
+          className={`border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px] 
+          ${pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload" ? 'w-[100px] flex justify-center' : 'w-[180px]'}`}
+          >
+         {pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload"
+           ? "Upload"  
+          : "Save changes"}
         </button>
+        
       </div>
 
       <CustomModal

@@ -8,11 +8,11 @@ import Step2 from "./step2";
 import { courseUpload, uploadMedia } from "@/hooks/useCourseUpload";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
-import { topicUpload } from "@/hooks/useCourseTopics";
 import { useCourseContext } from "@/Context/CourseContext";
 import CourseFields from "./coursefileds";
 
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+import Loader from "@/components/Student/loader";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -34,7 +34,7 @@ interface Topic {
 }
 
 const UploadCourse = () => {
-  const { setCourseId, setTopicId } = useCourseContext();
+  const { setCourseId, courseId } = useCourseContext();
   const { user } = useAuthContext();
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
@@ -43,11 +43,6 @@ const UploadCourse = () => {
   const [courseName, setCourseName] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [topicname, setTopicname] = useState("");
-  const [topicdescription, setTopicdescription] = useState("");
-  const [topicexpectation, setTopicexpectation] = useState("");
-  const [topicduration, setTopicduration] = useState("");
-  const [instructions, setInstructions] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [resourceFile, setResourceFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
@@ -56,7 +51,6 @@ const UploadCourse = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [isOpen, setModalOpen] = useState(false);
   const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
-
   const tutorId = user?.id;
 
   const handleNextStep = () => {
@@ -70,6 +64,7 @@ const UploadCourse = () => {
       setCurrentStep((prevStep) => prevStep - 1);
     }
   };
+
   const onClose = () => {
     setModalOpen(false);
   };
@@ -199,26 +194,7 @@ const UploadCourse = () => {
             if (!courseId) {
               throw new Error("An error has occurred. Try again later!");
             }
-
-            topicUpload(
-              courseId,
-              topicname,
-              topicexpectation,
-              topicdescription,
-              resourceId ? [resourceId] : [],
-              videoId,
-              instructions,
-              topicduration,
-              tutorId
-            )
-              .then(() => {
-                message.success("Course and topic submitted successfully!");
-                const topicId = data?.data?.id;
-                setTopicId(topicId);
-              })
-              .catch((err) => {
-                message.error("Failed to upload topic.");
-              });
+            message.success("Course uploaded successfully!");
           },
           onError: (err) => {
             message.error("Failed to upload course details.");
@@ -231,14 +207,36 @@ const UploadCourse = () => {
   };
 
   const handleClick = async () => {
-    if (currentStep === 3) {
+    if (currentStep === 1) {
       setIsUploading(true);
       try {
+        if (!selectedImage) {
+          message.error("Please select a course image to upload.");
+          return;
+        }
+        if (
+          !courseName ||
+          !courseDescription ||
+          !courseRequirements ||
+          !courseLearning ||
+          !category
+        ) {
+          message.error("Please fill out all required course details.");
+          return;
+        }
+
         await handleSubmit();
+
+        if (!courseId) {
+          message.error("Course upload failed. Please try again.");
+          return;
+        }
+
+        handleNextStep();
       } finally {
         setIsUploading(false);
       }
-    } else {
+    } else if (currentStep === 2) {
       handleNextStep();
     }
   };
@@ -299,22 +297,19 @@ const UploadCourse = () => {
           </button>
         )}
 
-        <button
-          className="bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white"
-          onClick={handleClick}
-          disabled={isUploading}
-        >
-          {isUploading ? (
-            <div>
-              {/* <l-dot-pulse size="20" speed="1.5" color="white" /> */}
-              <DotPulseWrapper size="20" speed="1.5" color="white" />
-            </div>
-          ) : currentStep === 3 ? (
-            "Upload"
-          ) : (
-            "Continue"
-          )}
-        </button>
+        {currentStep !== 3 && (
+          <button
+            className="bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white"
+            onClick={handleClick}
+            disabled={isUploading}
+          >
+            {isUploading ? (
+              <Loader/>
+            ) : currentStep === 1 || currentStep === 2 ? (
+              <span>Continue</span>
+            ) : null}
+          </button>
+        )}
       </div>
     </div>
   );
