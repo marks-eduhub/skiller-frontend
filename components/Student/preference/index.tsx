@@ -5,7 +5,7 @@ import data from "./data.json";
 import BottomSlider from "./bottom-slider";
 import Content from "./content";
 import Header from "./header";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { postPreferences, postBio } from "@/hooks/usePreference";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 // import { login } from "../../../lib/userSS";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const Splash: React.FC = () => {
   const router = useRouter();
