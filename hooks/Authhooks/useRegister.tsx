@@ -122,7 +122,7 @@ export const updateUserPassword = async (
 
 export const redirectToGoogleAuth = async () => {
   try {
-    const response = await api.get(`/strapi-googleauth-extended/init`);
+    const response = await api.get(`/strapi-google-auth/init`);
     if (response.status >= 200 && response.status < 300) {
       window.location.href = response.data.url; // Redirect user to Google login page
     } else {
