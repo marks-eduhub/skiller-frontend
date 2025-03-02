@@ -8,7 +8,11 @@ import { useAuthContext } from "../../AuthProvider/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { register } from "../../../hooks/Authhooks/useRegister";
+import {
+  register,
+  registerUserWithGoogle,
+  redirectToGoogleAuth,
+} from "../../../hooks/Authhooks/useRegister";
 const SignupForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -36,11 +40,29 @@ const SignupForm = () => {
   const { mutate, isPending, isError} = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
-      message.success(`Welcome ${data.user.username}`);
+      message.success(`Welcome ${data.user.displayName}`);
       if (setUser) {
         setUser(data.user);
       }
-      router.push("/dashboard");
+      router.push("/preference");
+    },
+    onError: (error) => {
+      message.error((error as Error).message || "Something went wrong!");
+    },
+  });
+  const {
+    mutate: mutateGoogle,
+    isPending: isPendingGoogle,
+    isError: isErrorGoogle,
+    error: errorGoogle,
+  } = useMutation({
+    mutationFn: redirectToGoogleAuth,
+    onSuccess: (data) => {
+      // message.success(`Welcome ${data.user.displayName}`);
+      // if (setUser) {
+      //   setUser(data.user);
+      // }
+      // router.push("/google-callback");
     },
     onError: (error) => {
       message.error((error as Error).message || "Something went wrong!");
@@ -82,10 +104,15 @@ const SignupForm = () => {
     formDataToSend.append("password", formData.password);
 
     try {
-      mutate(formDataToSend);
+      await mutate(formDataToSend);
     } catch (error) {}
   };
 
+  const handleGoogleSignUp = async () => {
+    try {
+      await mutateGoogle();
+    } catch (error) {}
+  };
   return (
     <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
       <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
@@ -219,20 +246,28 @@ const SignupForm = () => {
         </div>
 
         <div className="flex justify-center">
-          <button className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4">
+          <button
+            onClick={handleGoogleSignUp}
+            disabled={isPendingGoogle}
+            className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
+          >
+            {" "}
             <Image
               src={data.registerForm.action.googlelogo}
               alt={"google"}
               width={50}
               height={50}
             />
-            <p className="text-[16px]">Sign in with Google</p>
+            <p className="text-[16px]">
+              {" "}
+              {isPendingGoogle ? "Loading..." : "Sign In with Google"}
+            </p>
           </button>
         </div>
 
         <div className="sm:hidden flex items-center ">
           <h1>
-            Already have an account?
+            Already have an account?{" "}
             <Link href="/auth" className="text-blue-600">
               Login
             </Link>
