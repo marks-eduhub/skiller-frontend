@@ -33,7 +33,7 @@ const SignupForm = () => {
       if (setUser) {
         setUser(data.user);
       }
-      router.push("/dashboard");
+      router.push("/preference");
     },
     onError: (error) => {
       message.error((error as Error).message || "Something went wrong!");
