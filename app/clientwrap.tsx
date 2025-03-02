@@ -1,19 +1,9 @@
+"use client";
 import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { QueryClientProvider } from '@tanstack/react-query';
-import queryClient from '../lib/queyClient';
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Skiller App",
-  description: "Skiller App",
-  icons: {
-    icon: '/favicon.ico',
-  },
-};
-
+import { QueryClientProvider } from "@tanstack/react-query";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { CourseProvider } from "@/Context/CourseContext";
+import queryClient from "@/lib/queryClient";
 
 export default function ClientWrap({
   children,
@@ -23,7 +13,9 @@ export default function ClientWrap({
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <AuthProvider>
+          <CourseProvider>{children}</CourseProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </>
   );

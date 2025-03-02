@@ -22,13 +22,12 @@ const CourseOverview = () => {
     setTab(tabName);
   };
 
-  const rating = data?.data?.attributes?.rating;
+  const rating = data?.data?.attributes?.averageRating || "No rating";
   const days = data?.data?.attributes?.days;
   const enrolledLearners = data?.data?.attributes?.users?.data || [];
   const learners = enrolledLearners.length;
   const coursename = data?.data?.attributes?.coursename;
   const description = data?.data?.attributes?.coursedescription;
-  const tutorname = data?.data?.attributes?.tutor?.data?.attributes?.tutorname;
   const courseImage = data?.data?.attributes?.card?.data?.attributes?.url;
   const ImageUrl = courseImage ? `${api.defaults.baseURL}${courseImage}` : null;
 
@@ -47,19 +46,19 @@ const CourseOverview = () => {
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
-        <div className="flex gap-2 items-center">
+        <div className="flex sm: items-center">
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
-          <div className="flex pl-5 gap-1">
+          <div className="flex sm:pl-5 pl-3 gap-2">
             <Image src="/star.svg" alt="star" width={15} height={15} />
             {rating}
           </div>
-          <div className="flex pl-5 gap-1">
+          <div className="flex sm:pl-5 pl-3 gap-1">
             <Image src="/clock.svg" alt="clock" width={15} height={15} />
             {days}
           </div>
-          <div className="flex pl-5 gap-1">
+          <div className="flex sm:pl-5 pl-3 gap-1">
             {learners}
             <Image src="/learners.svg" alt="learners" width={20} height={20} />
             <h1>Learner(s)</h1>

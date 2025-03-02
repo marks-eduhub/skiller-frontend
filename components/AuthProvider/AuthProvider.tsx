@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect } from "react";
-import { AuthContext } from "../../Context/AuthContext";
+import { AuthContext } from "./AuthContext";
 import { message } from "antd";
 import { BEARER } from "../../lib/constants";
 import { getToken } from "../../lib/helpers";

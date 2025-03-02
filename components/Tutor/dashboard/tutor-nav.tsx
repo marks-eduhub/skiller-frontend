@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ShadowInnerIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import SmallScreen from "./smallscreen";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const TutorNav = () => {
   const { user } = useAuthContext();
@@ -52,13 +52,12 @@ const TutorNav = () => {
         {showDropdown && (
           <div className="absolute top-[60px] z-50 mt-2 rounded-xl bg-gray-800 shadow-lg w-40 p-2">
             <div className="flex flex-col">
-            <Link href="/auth/logout" className="text-white p-2">
+              <Link href="/auth" className="text-white p-2">
                 Sign Out
               </Link>
               <Link href="/dashboard" className="text-white p-2">
                 Switch to student profile
               </Link>
-             
             </div>
           </div>
         )}

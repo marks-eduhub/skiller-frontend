@@ -16,7 +16,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
     setSidebarMinimized(!sidebarMinimized);
   };
 
-  const excludeNavbar = ["/dashboard/quizreview", "/dashboard/community"];
+  const excludeNavbar = ["/dashboard/quizreview", "/dashboard/community", "/dashboard/profile"];
   const showNavbar = !excludeNavbar.includes(pathname);
   
   const handleNavigation = (path: string) => {
@@ -32,7 +32,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
     <div className="relative flex h-screen flex-col md:flex-row md:overflow-hidden">
       {isLoading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
-          <div><Loader/></div>
+          <Loader/>
         </div>
       )}
 

@@ -1,11 +1,12 @@
-import { useAuthContext } from "@/Context/AuthContext";
 import api from "@/lib/axios";
 
 import { useQuery } from "@tanstack/react-query";
 import TurndownService from "turndown";
 
 const fetchCommunitydetails = async () => {
-  const response = await api.get("/api/communities?sort=createdAt:desc&populate=*");
+  const response = await api.get(
+    "/api/communities?sort=createdAt:desc&populate=*"
+  );
 
   return response.data;
 };
@@ -25,7 +26,7 @@ const fetchLikeCounts = async () => {
   return response.data;
 };
 
-export const useFetchLikeCount= () => {
+export const useFetchLikeCount = () => {
   return useQuery<{ data: any }, Error>({
     queryFn: fetchLikeCounts,
     queryKey: ["likeCount"],
@@ -52,7 +53,6 @@ export const useFetchQuestionResponses = (questionId: number) => {
   });
 };
 
-
 export const postQuestion = async (
   Question: string,
   nameofquestioner: string
@@ -77,7 +77,7 @@ export const addResponse = async (
   responderName: string,
   questionId: number
 ) => {
-  try{
+  try {
     const turndownService = new TurndownService();
     const markdownResponse = turndownService.turndown(responseText);
     const response = await api.post("/api/community-responses", {
@@ -88,10 +88,10 @@ export const addResponse = async (
       },
     });
     return response.data;
-  }
-  catch (error) {
+  } catch (error) {
     throw error;
-  }};
+  }
+};
 
 const fetchSearchCommunity = async (searchTerm: string) => {
   const response = await api.get(`/api/communities?_q=${searchTerm}`);
@@ -100,7 +100,7 @@ const fetchSearchCommunity = async (searchTerm: string) => {
 };
 
 export const useFetchSearchCommuity = (searchTerm: string) => {
-  return useQuery<{ data:any}, Error>({
+  return useQuery<{ data: any }, Error>({
     queryKey: ["searchcommunity", searchTerm],
     queryFn: () => fetchSearchCommunity(searchTerm),
     enabled: Boolean(searchTerm),
@@ -109,8 +109,6 @@ export const useFetchSearchCommuity = (searchTerm: string) => {
     },
   });
 };
-
-
 
 const fetchLikedResponses = async (userId: number) => {
   const response = await api.get(
@@ -133,7 +131,6 @@ export const useLikedResponses = (userId: number) => {
     },
   });
 };
-
 
 export const addLiked = async (responseId: number, userId: number) => {
   try {

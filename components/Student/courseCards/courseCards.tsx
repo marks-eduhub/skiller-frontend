@@ -5,21 +5,22 @@ import Image from "next/image";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import api from "@/lib/axios";
 import { message } from "antd";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import {
   addLikedCourse,
   removeLikedCourse,
   useLikedCourses,
 } from "@/hooks/useLikedCourses";
-import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import { ClockIcon} from "@radix-ui/react-icons";
 import { addRecentCourse } from "@/hooks/useRecentCourses";
+import { useFetchSpecificCourseRate } from "@/hooks/useSubmit";
 
 interface ProductCardProps {
   course: any;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
-  const { coursename, card, duration, rating } = course?.attributes || {};
+  const { coursename, card, duration} = course?.attributes || {};
   const tutorName = course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
   const courseId = course?.id;
@@ -29,6 +30,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   const queryClient = useQueryClient();
 
   const { data: likedCourses } = useLikedCourses();
+
+  const { data: specificCourseRate } = useFetchSpecificCourseRate(courseId);
+  const ratings = specificCourseRate?.data || [];
+  const totalRatings = ratings.length;
+  const averageRating = totalRatings > 0  ? ratings.reduce((sum: number, rating: any) => sum + rating.attributes.score, 0 ) / totalRatings : 0;
 
   useEffect(() => {
     if (likedCourses) {
@@ -72,7 +78,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
       }
       message.success(`Removed from wishlist.`);
     },
-    onError: (err, variables, context: any) => {
+    onError: (context: any) => {
       if (userId) {
         queryClient.setQueryData(
           ["likedCourses", userId],
@@ -113,7 +119,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
       }
       message.success(`Added to wishlist.`);
     },
-    onError: (err, variables, context: any) => {
+    onError: (context: any) => {
       if (userId) {
         queryClient.setQueryData(
           ["likedCourses", userId],
@@ -150,7 +156,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
         queryClient.invalidateQueries({ queryKey: ["recentCourses", userId] });
       }
     },
-    onError: (err, variables, context: any) => {
+    onError: (context: any) => {
       if (userId) {
         queryClient.setQueryData(
           ["recentCourses", userId],
@@ -161,7 +167,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
     },
   });
 
-  const handleCourseClick = () => {
+  const handleCourseRecent= () => {
     addRecent();
   };
 
@@ -175,10 +181,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
 
   return (
     <div className="mr-4 pb-10 sm:pb-0 h-full">
-      <div className="border border-gray-400" onClick={handleCourseClick}>
+      <div className="border border-gray-400" onClick={handleCourseRecent}>
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
-            src={imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/cake.svg"}
+            src={imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/fallback.webp"}
             alt={card?.data?.attributes?.alternativeText || "Cake"}
             fill
             className="object-cover object-center p-1"
@@ -187,7 +193,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
           <div className="flex items-center absolute justify-between p-2 w-full">
             <button
               onClick={(e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 handleToggleWishlist();
               }}
             >
@@ -202,22 +208,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
         </div>
       </div>
 
-      <div
-        className="p-2 bg-[#F3F4F3] cursor-pointer text-black"
-        onClick={handleCourseClick}
-      >
+      <div className="p-2 bg-[#F3F4F3] cursor-pointer text-black" onClick={handleCourseRecent}>
+      
         <div className="mb-4 sm:h-[30px] h-[50px]">
           <h3 className="font-semibold line-clamp-2 text-ellipsis">
-            {coursename || "Course Name"}
+            {coursename || "Course name not available"}
           </h3>
         </div>
         <div className="flex items-center mb-4">
           <p>{tutorName}</p>
         </div>
-        <div className="flex justify-between mt-3 gap-2 text-[0.8rem]">
+        <div className="flex justify-between mt-3 gap-2 sm:text-[0.8rem] text-[15px]">
           <div className="flex gap-1">
-            <StarFilledIcon className="w-4 h-4 text-black" />
-            <p>{rating}</p>
+            <p>
+              {totalRatings > 0 ? `⭐ ${averageRating} ` : "No ratings yet."}
+            </p>
           </div>
           <div className="flex gap-1">
             <ClockIcon className="w-4 h-4 text-black" />

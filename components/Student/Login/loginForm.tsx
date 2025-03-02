@@ -2,15 +2,14 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import Image from "next/image";
 import Link from "next/link";
 import data from "./data.json";
-// import { dotPulse } from "ldrs";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { login } from "../../../hooks/Authhooks/useLogin";
 import { message } from "antd";
 import dynamic from "next/dynamic";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Image from "next/image";
 import { redirectToGoogleAuth } from "@/hooks/Authhooks/useRegister";
 // dotPulse.register();
 

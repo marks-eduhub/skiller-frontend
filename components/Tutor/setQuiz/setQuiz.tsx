@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState} from "react";
 import StepTracker from "./tracker";
 import Step3 from "./step3";
 import Step2 from "./step2";
@@ -11,12 +11,12 @@ import { message } from "antd";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useSearchParams } from "next/navigation";
-import { useCourseContext } from "@/lib/CourseContext";
 
 const SetQuiz = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const courseId = searchParams.get("courseId");
+  const IdCourse = searchParams.get("courseId");
+  const courseId = Number(IdCourse)
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
   const [testname, setTestname] = useState("");
@@ -30,12 +30,14 @@ const SetQuiz = () => {
 
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
+      courseId,
       testname,
       testdescription,
       testduration,
       topicId,
       passmark,
     }: {
+      courseId:number
       testname: string;
       testdescription: string;
       testduration: string;
@@ -43,6 +45,7 @@ const SetQuiz = () => {
       passmark: string;
     }) => {
       return await PostTest(
+        courseId,
         testname,
         testdescription,
         testduration,
@@ -78,7 +81,6 @@ const SetQuiz = () => {
   };
 
   const handleSubmitQuiz = () => {
-  
     if (!testname) {
       message.error("Test name is missing.");
       return;
@@ -102,7 +104,7 @@ const SetQuiz = () => {
       message.error("Please enter the test passmark.");
       return;
     }
-   
+
     if (quizData.some(({ question }) => !question)) {
       message.error("Question field is missing data.");
       return;
@@ -120,11 +122,12 @@ const SetQuiz = () => {
 
     testdata(
       {
+        courseId,
         testname,
         testdescription: description,
         testduration: duration,
         topicId: topic,
-        passmark
+        passmark,
       },
       {
         onSuccess: (data) => {

@@ -8,44 +8,28 @@ import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import api from "@/lib/axios";
 import { useFetchTopics } from "@/hooks/useCourseTopics";
 
-
-
 const Progress = () => {
-
   const { data: coursesData, isLoading, error } = useFetchCourses();
   const { data: topicsData } = useFetchTopics();
- 
 
   if (isLoading) {
     return (
       <div>
-        <h2 className="text-lg font-300 my-4 ">
-          <Skeleton
-            width={200}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
-
-        <div>
-          <Skeleton
-            height={300}
-            count={3}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-        </div>
+        <Skeleton
+          height={300}
+          count={3}
+          baseColor="#e0e0e0"
+          highlightColor="#f5f5f5"
+          enableAnimation={true}
+        />
       </div>
     );
   }
 
   if (error) {
-    message.error("Error fetching liked courses. Please try again later.");
+    message.error("Error fetching course progress. Please try again later.");
   }
 
- 
   if (!coursesData?.data || coursesData.data.length === 0) {
     return (
       <p className="font-semibold flex items-center justify-center p-20 text-[20px]">
@@ -53,8 +37,8 @@ const Progress = () => {
       </p>
     );
   }
-  const courses = coursesData?.data; 
-  const topics = topicsData?.data; 
+  const courses = coursesData?.data;
+  const topics = topicsData?.data;
 
   return (
     <div className="grid sm:grid-cols-3  grid-cols-1 gap-6 mt-10">
@@ -75,14 +59,17 @@ const Progress = () => {
           : 0;
 
         const imageUrl = course?.attributes?.card?.data?.attributes?.url;
-        const tutorname = course?.attributes?.tutor?.data?.attributes?.tutorname;
+        const tutorname =
+          course?.attributes?.tutor?.data?.attributes?.tutorname;
 
         return (
           <div key={courseId} className="border border-gray-400">
             <div className="rounded-lg flex relative overflow-hidden h-[180px]">
               <Image
                 src={
-                  imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/cake.svg"
+                  imageUrl
+                    ? `${api.defaults.baseURL}${imageUrl}`
+                    : "/fallback.webp"
                 }
                 alt={course?.attributes?.alternativeText || "Course Image"}
                 fill

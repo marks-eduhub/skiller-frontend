@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Image from "next/image";
 import { useFetchCourses, useFetchTutorSlug } from "@/hooks/useCourses";
@@ -77,18 +76,15 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
 
   const tutor = tutorData?.data[0]?.attributes;
 
-  const tutorImage =
-    tutor?.profilepicture?.data?.attributes.url || "/Ellipse 445.webp";
-  const ImageUrl = tutorImage
-    ? `${api.defaults.baseURL}${tutorImage}`
-    : "/Ellipse 445.webp";
+  const tutorImage = tutor?.profilepicture?.data?.attributes.url || "/Ellipse 445.webp";
+  const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
 
   const tutorName = tutor.tutorname;
   const tutorQualifications = tutor.Qualifications;
   const tutorBiography = tutor.Biography;
 
   const tutorCourses: Course[] = [];
-  data?.data.forEach((course: any) => {
+   data?.data.forEach((course: any) => {
     const courseTutor = course.attributes.tutor?.data?.attributes;
 
     if (courseTutor?.tutorname === tutorName) {

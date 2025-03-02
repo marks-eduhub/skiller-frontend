@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import "react-quill/dist/quill.snow.css";
 import { message } from "antd";
-import { uploadMedia } from "@/hooks/useCourseUpload";
 import TopicFields from "./topicfields";
 
 interface Topic {

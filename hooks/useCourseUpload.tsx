@@ -107,6 +107,7 @@ export const uploadMedia = async (file: File | null) => {
   }
 };
 
+
 const fetchCategory = async () => {
 
   const response = await api.get (`/api/categories?populate=*`);

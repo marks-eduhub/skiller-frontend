@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import data from "./data.json";
-import { useAuthContext } from "../../../Context/AuthContext";
+import { useAuthContext } from "../../AuthProvider/AuthContext";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -15,9 +15,16 @@ import {
 } from "../../../hooks/Authhooks/useRegister";
 const SignupForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
   const authContext = useAuthContext();
   const { setUser } = authContext || {};
   const router = useRouter();
@@ -30,7 +37,7 @@ const SignupForm = () => {
     confirmPassword: "",
     studentname: "",
   });
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending, isError} = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
       message.success(`Welcome ${data.user.displayName}`);
@@ -198,10 +205,10 @@ const SignupForm = () => {
                 className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
               />
               <span
-                onClick={togglePasswordVisibility}
+                onClick={toggleConfirmPasswordVisibility}
                 className="absolute right-3 top-[50%] transform -translate-y-[50%] cursor-pointer"
               >
-                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                {confirmPasswordVisible? <FaEye /> : <FaEyeSlash />}
               </span>
             </div>
           </div>
@@ -216,7 +223,7 @@ const SignupForm = () => {
             className="w-[1.2rem] h-[1.2rem]"
           />
           <label>
-            I agree to <span className="text-blue-600">terms of service </span>{" "}
+            I agree to <span className="text-blue-600">terms of service </span>
             and <span className="text-blue-600">privacy policy</span>
           </label>
         </div>

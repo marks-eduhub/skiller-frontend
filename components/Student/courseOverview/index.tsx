@@ -13,13 +13,13 @@ import { message } from "antd";
 
 const Enroll = () => {
   const router = useRouter();
-  const[isEnroll, setIsEnroll] = useState(false)
+  const [isEnroll, setIsEnroll] = useState(false)
   const [tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
   const { data: reviews, isLoading: loadingreviews, error: reviewError} = useFetchReviews(Number(slug));
   if (!slug) {
-    return <div>Course ID is missing</div>;
+    return 
   }
   if (isLoading || loadingreviews) {
     return (
@@ -46,7 +46,7 @@ const Enroll = () => {
     );
   }
 
-  if (error) {
+  if (error || reviewError) {
     message.error("Error fetching details. Please try again later.");
   }
 
@@ -103,7 +103,7 @@ const Enroll = () => {
     <div>
       <div className="w-full relative sm:h-[500px] h-[300px]">
         <Image
-          src={card ? `${api.defaults.baseURL}${card}` : "/cake.svg"}
+          src={card ? `${api.defaults.baseURL}${card}` : "/fallback.webp"}
           alt="Course Image"
           fill
           className="object-cover bg-no-repeat rounded-2xl"

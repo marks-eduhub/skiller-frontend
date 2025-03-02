@@ -3,16 +3,18 @@ import Image from "next/image";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useCourseContext } from "@/lib/CourseContext"; 
+import { useCourseContext } from "@/Context/CourseContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const Step3 = () => {
-  const { courseId } = useCourseContext(); 
+  const { courseId } = useCourseContext();
   if (!courseId) {
     return (
       <div className="text-center">
-        <p className="text-red-500">Please upload a course before adding a quiz!</p>
+        <p className="text-red-500">
+          Please upload a course before adding a quiz!
+        </p>
       </div>
     );
   }

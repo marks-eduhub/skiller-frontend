@@ -50,6 +50,17 @@ export const topicUpload = async (
     const markdownInstructions = turndownService.turndown(instructions);
     const markdownExpectations = turndownService.turndown(topicExpectations);
     const markdownDescription = turndownService.turndown(topicdescription);
+    const formatDuration = (duration: string) => {
+      if (/^\d{1,2}:\d{2}$/.test(duration)) {
+        return `${duration}:00.000`;
+      }
+      if (/^\d{1,2}:\d{2}:\d{2}$/.test(duration)) {
+        return `${duration}.000`;
+      }
+      return "00:00:00.000"; 
+    };
+    const formattedDuration = formatDuration(duration);
+    
 
     const response = await api.post("/api/topics?populate=*", {
       data: {
@@ -60,7 +71,7 @@ export const topicUpload = async (
         topicResources: resourceIds,
         topicVideo: videoIds, 
         resourceInstructions: markdownInstructions,
-        duration,
+        duration : formattedDuration,
         tutor
 
       },
@@ -90,6 +101,17 @@ export const topicEditing = async (
     const markdownInstructions = turndownService.turndown(instructions);
     const markdownExpectations = turndownService.turndown(topicExpectations);
     const markdownDescription = turndownService.turndown(topicdescription);
+    const formatDuration = (duration: string) => {
+      if (/^\d{1,2}:\d{2}$/.test(duration)) {
+        return `${duration}:00.000`; 
+      }
+      if (/^\d{1,2}:\d{2}:\d{2}$/.test(duration)) {
+        return `${duration}.000`; 
+      }
+      return "00:00:00.000"; 
+    };
+    const formattedDuration = formatDuration(duration);
+    
     const response = await api.put(
       `/api/topics/${topicId}`, {
     
@@ -99,7 +121,7 @@ export const topicEditing = async (
           topicExpectations: markdownExpectations,
           topicdescription: markdownDescription,
           resourceInstructions: markdownInstructions,
-          duration,
+          duration: formattedDuration,
           topicResources: resourceIds,
           topicVideo: videoIds 
         },

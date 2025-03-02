@@ -1,25 +1,26 @@
-"use client";
-
 import React, { ReactNode } from 'react';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import ClientWrap from './clientwrap';
-import AuthProvider from "../components/AuthProvider/AuthProvider";
-import { QueryClientProvider } from '@tanstack/react-query';
-import queryClient from '@/lib/queyClient';
-import { CourseProvider } from '@/lib/CourseContext';
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Skiller App",
+  description: "Skiller App",
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html>
-      <body>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <CourseProvider>
-              <ClientWrap>
-                {children}
-              </ClientWrap>
-            </CourseProvider>
-          </AuthProvider>
-        </QueryClientProvider>
+      <body className={inter.className}>
+        <ClientWrap>
+          {children}
+        </ClientWrap>
       </body>
     </html>
   );

@@ -13,22 +13,20 @@ const FeaturedProduct: React.FC = () => {
   const { data, isLoading, error } = useFetchCarouselCourses();
   if (isLoading) {
     return (
-       
-
-        <div className="rounded-lg">
-          <Skeleton
-            height={300}
-            count={1}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-        </div>
+      <div className="rounded-lg">
+        <Skeleton
+          height={300}
+          count={1}
+          baseColor="#e0e0e0"
+          highlightColor="#f5f5f5"
+          enableAnimation={true}
+        />
+      </div>
     );
   }
 
   if (error) {
-    message.error("Error fetching courses. Please try again later.");
+    message.error("Error fetching featured courses. Please try again later.");
     return null;
   }
 
@@ -46,34 +44,41 @@ const FeaturedProduct: React.FC = () => {
         >
           {carouselCourses.map((course: any) => {
             const imageUrl = course?.attributes?.card?.data?.attributes.url;
-
-
             const tutorName = course.attributes.tutor.data?.attributes.tutorname;
-            const coursename = course.attributes.coursename
-            const { rating, duration, level, days } = course.attributes;
+            const coursename = course.attributes.coursename;
+            const { duration, level, days } = course.attributes;
+            const averageRating = course?.attributes?.averageRating || "No rating"
+
 
             return (
               <div key={course.id} className="relative">
+                <div className="h-[256px] w-[800px]">
                 <Image
-                  src={imageUrl? `${api.defaults.baseURL}${imageUrl}`: "/cake.svg"}
-                  alt={course?.attributes.Image?.data[0]?.attributes.alternativeText }
-                  height={256}
-                  width={800}
+                  src={
+                    imageUrl
+                      ? `${api.defaults.baseURL}${imageUrl}`
+                      : "/fallback.webp"
+                  }
+                  alt={
+                    course?.attributes.Image?.data[0]?.attributes
+                      .alternativeText || "course image"
+                  }
+                  fill
                   className="w-full object-cover h-64 rounded-tl-2xl rounded-tr-2xl"
                 />
                 <p className="absolute top-6 right-8 bg-white px-6 rounded-lg">
                   Free
                 </p>
+                </div>
                 <div className="relative">
-
-                <ProductDescriptionBar
-                  tutorName={tutorName}
-                  duration={duration}
-                  rating={rating}
-                  description={coursename}
-                  level={level}
-                  days={days}
-                />
+                  <ProductDescriptionBar
+                    tutorName={tutorName}
+                    duration={duration}
+                    averageRating={averageRating}
+                    description={coursename}
+                    level={level}
+                    days={days}
+                  />
                 </div>
               </div>
             );

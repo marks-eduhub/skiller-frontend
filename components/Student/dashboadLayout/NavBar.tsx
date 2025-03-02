@@ -1,9 +1,8 @@
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { MagnifyingGlassIcon, TriangleDownIcon } from "@radix-ui/react-icons";
+import React, { useState } from "react";
+import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import Greeting from "@/lib/greeting";
 import SkillerLogo from "@/components/ui/logo";
 import SearchBar from "./searchbar";
@@ -13,17 +12,9 @@ interface NavBarProps {
 }
 
 const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
-  const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
   const { user } = useAuthContext();
   const username = user?.username || "Guest";
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const hiddenRoutes = ["/dashboard/profile"];
-  const hideGreetingAndSearch = isMounted && hiddenRoutes.includes(pathname);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -36,7 +27,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
         <div className="flex items-center justify-between w-full">
           {!sidebarMinimized ? (
             <>
-              {!hideGreetingAndSearch && <Greeting username={username} />}
+              <Greeting username={username} />
               <div className="flex items-center gap-10 ml-auto">
                 {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
@@ -109,7 +100,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                   />
                   {showDropdown && (
                     <div className="absolute z-50 mt-2 top-full left-0 right-0 rounded-md bg-gray-800 shadow-lg p-2">
-                    <div className="flex flex-col">
+                      <div className="flex flex-col">
                         <Link href="/auth">
                           <p className="text-white p-2">Sign Out</p>
                         </Link>
@@ -123,12 +114,11 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     </div>
                   )}
                 </div>
-
               </div>
             </div>
           )}
         </div>
-        {!sidebarMinimized && !hideGreetingAndSearch && (
+        {!sidebarMinimized && (
           <div>
             <SearchBar />
           </div>
