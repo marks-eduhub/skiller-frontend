@@ -2,7 +2,7 @@ import Image from "next/image";
 import { TbArrowBadgeRight } from "react-icons/tb";
 import data from "./data.json";
 import withAuth from "@/components/AuthProvider/Auth";
-import { useAuthContext } from "@/Context/AuthContext";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useFetchUserDetails } from "@/hooks/useProfile";
 import { message } from "antd";
 import { useRouter } from "next/navigation";
