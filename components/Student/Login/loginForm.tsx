@@ -11,6 +11,7 @@ import { login } from "../../../hooks/Authhooks/useLogin";
 import { message } from "antd";
 import dynamic from "next/dynamic";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { redirectToGoogleAuth } from "@/hooks/Authhooks/useRegister";
 // dotPulse.register();
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -47,6 +48,31 @@ export default function LogIn() {
 
     mutate(formData);
   };
+
+  const {
+    mutate: mutateGoogle,
+    isPending: isPendingGoogle,
+    isError: isErrorGoogle,
+    error: errorGoogle,
+  } = useMutation({
+    mutationFn: redirectToGoogleAuth,
+    onSuccess: (data) => {
+      // message.success(`Welcome ${data.user.displayName}`);
+      // if (setUser) {
+      //   setUser(data.user);
+      // }
+      // router.push("/google-callback");
+    },
+    onError: (error) => {
+      message.error((error as Error).message || "Something went wrong!");
+    },
+  });
+
+  const handleGoogleSignUp = async () => {
+     try {
+       await mutateGoogle();
+     } catch (error) {}
+   };
 
   return (
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
@@ -125,6 +151,25 @@ export default function LogIn() {
           height={130}
         />
       </div> */}
+      <div className="flex justify-center">
+        <button
+          onClick={handleGoogleSignUp}
+          disabled={isPendingGoogle}
+          className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
+        >
+          {" "}
+          <Image
+            src={data.loginForm.googlelogo}
+            alt={"google"}
+            width={50}
+            height={50}
+          />
+          <p className="text-[16px]">
+            {" "}
+            {isPendingGoogle ? "Loading..." : "Sign In with Google"}
+          </p>
+        </button>
+      </div>
       <div className="flex sm:hidden items-center  justify-center w-full  mt-10">
         <h1>
           Dont have an account?{" "}
