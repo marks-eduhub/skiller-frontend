@@ -28,7 +28,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
     setTimeout(() => {
       router.push(path);
       setIsLoading(false);
-    }, 2000);
+    }, 500);
   };
 
   return (

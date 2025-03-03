@@ -12,7 +12,6 @@ export default async function Layout({
         <SideBar />
       </div>
       <div className="flex-1 flex flex-col sm:pr-12 pr-3 pb-4">
-        {/* <TutorNav /> */}
         {children}
       </div>
     </div>
