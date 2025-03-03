@@ -548,7 +548,7 @@ const Community = () => {
                               </div>
                               <div className="ml-2">
                                 <p className="text-gray-600 text-sm">
-                                  {response?.responseText}
+                                {response?.responseText.replace(/(\*\*|\_)/g, "")}
                                 </p>
                                 <div className="flex gap-1 mt-2">
                                   <button

@@ -18,6 +18,7 @@ import { uploadMedia } from "@/hooks/useCourseUpload";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuthContext();
@@ -33,12 +34,27 @@ const ProfilePage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [uploadImage, setUploadImage] = useState("");
-
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [socialLinks, setSocialLinks] = useState({
     email: "",
     facebook: "",
     twitter: "",
     linkedin: "",
+  });
+  const [initialData, setInitialData] = useState({
+    firstName: "",
+    lastName: "",
+    role: "",
+    Biography: "",
+    Qualifications: "",
+    socialLinks: {
+      email: "",
+      facebook: "",
+      twitter: "",
+      linkedin: "",
+    },
+    profilePictureId: "",
   });
 
   const tutorId = tutor?.data[0]?.id;
@@ -47,62 +63,57 @@ const ProfilePage: React.FC = () => {
     if (data) {
       setFirstName(data.firstName || "");
       setLastName(data.lastName || "");
-
-      const socialData =
-        tutorDetails && tutorDetails.data.length > 0
-          ? tutorDetails.data[0].attributes.socialLinks
-          : data.socialLinks;
+  
       setSocialLinks({
-        email: socialData?.email || "",
-        facebook: socialData?.facebook || "",
-        twitter: socialData?.twitter || "",
-        linkedin: socialData?.linkedin || "",
+        email: data.socialLinks?.email || "",
+        facebook: data.socialLinks?.facebook || "",
+        twitter: data.socialLinks?.twitter || "",
+        linkedin: data.socialLinks?.linkedin || "",
       });
-
-      const profilePicUrl =
-        tutorDetails && tutorDetails.data.length > 0
-          ? tutorDetails.data[0].attributes.profilepicture?.data?.attributes
-              ?.url
-          : data.profilepicture?.url;
-
+  
+      const profilePicUrl = data.profilepicture?.url;
+  
       if (profilePicUrl) {
-        setUploadImage(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`
-        );
+        const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`;
+        setUploadImage(fullUrl);
+        setIsImageLoading(true);
       } else {
         setUploadImage("/Ellipse 445.webp");
+        setIsImageLoading(false);
       }
+  
+      setInitialData((prev) => ({
+        ...prev,
+        firstName: data.firstName || "",
+        lastName: data.lastName || "",
+        socialLinks: {
+          email: data.socialLinks?.email || "",
+          facebook: data.socialLinks?.facebook || "",
+          twitter: data.socialLinks?.twitter || "",
+          linkedin: data.socialLinks?.linkedin || "",
+        },
+        profilePictureId: data.profilepicture?.id ? String(data.profilepicture?.id) : "",
+      }));
     }
-  }, [data, tutorDetails]);
-
+  }, [data]);
+  
   useEffect(() => {
     if (tutorDetails && tutorDetails.data.length > 0) {
       const tutor = tutorDetails.data[0].attributes;
-
-      setBiography(tutor?.Biography || "dummy");
-      setRole(tutor?.role || "dummy");
-      setQualifications(tutor?.Qualifications || "dummy");
-
-      const socialData = tutor.socialLinks || data?.socialLinks;
-      setSocialLinks({
-        email: socialData?.email || "",
-        facebook: socialData?.facebook || "",
-        twitter: socialData?.twitter || "",
-        linkedin: socialData?.linkedin || "",
-      });
-
-      const profilePicUrl =
-        tutor.profilepicture?.data?.attributes?.url ||
-        data?.profilepicture?.url;
-      if (profilePicUrl) {
-        setUploadImage(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`
-        );
-      } else {
-        setUploadImage("/Ellipse 445.webp");
-      }
+  
+      setBiography(tutor.Biography || "");
+      setRole(tutor.role || "");
+      setQualifications(tutor.Qualifications || "");
+  
+      setInitialData((prev) => ({
+        ...prev,
+        role: tutor.role || "",
+        Biography: tutor.Biography || "",
+        Qualifications: tutor.Qualifications || "",
+      }));
     }
-  }, [data?.profilepicture?.url, data?.socialLinks, tutorDetails]);
+  }, [tutorDetails]);
+  
 
   const handleSuccess = () => {
     message.success("Profile saved successfully!");
@@ -289,6 +300,21 @@ const ProfilePage: React.FC = () => {
     },
   });
 
+  const hasChanges = () => {
+    return (
+      firstName !== initialData.firstName ||
+      lastName !== initialData.lastName ||
+      role !== initialData.role ||
+      Biography !== initialData.Biography ||
+      Qualifications !== initialData.Qualifications ||
+      socialLinks.email !== initialData.socialLinks.email ||
+      socialLinks.facebook !== initialData.socialLinks.facebook ||
+      socialLinks.twitter !== initialData.socialLinks.twitter ||
+      socialLinks.linkedin !== initialData.socialLinks.linkedin ||
+      (image !== null && !initialData.profilePictureId) 
+    );
+  };
+  
   const handleSaveChanges = async () => {
     const updatedSocialLinks = {
       email: socialLinks.email,
@@ -301,8 +327,13 @@ const ProfilePage: React.FC = () => {
       message.error("Cannot update user details.");
       return;
     }
+    
+    if (!hasChanges()) {
+      message.warning("No changes detected.");
+      return;
+    }
 
-    let profilePictureId: string = "";
+    let profilePictureId = null;
     if (image) {
       try {
         profilePictureId = await uploadMedia(image);
@@ -311,7 +342,7 @@ const ProfilePage: React.FC = () => {
         return;
       }
     } else {
-      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : "";
+      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : null;
     }
 
     try {
@@ -361,21 +392,6 @@ const ProfilePage: React.FC = () => {
     } catch (error) {
       message.error("Failed to save profile data. Please try again.");
     }
-
-    setImage(null);
-    setUploadImage("/Ellipse 445.webp");
-    setToggle(false);
-    setBiography("");
-    setSocialLinks({
-      email: "",
-      facebook: "",
-      twitter: "",
-      linkedin: "",
-    });
-    setFirstName("");
-    setLastName("");
-    setRole("");
-    setQualifications("");
   };
 
   return (
@@ -388,14 +404,24 @@ const ProfilePage: React.FC = () => {
 
       <div className="h-[200px] border border-gray-200 rounded-lg mb-5 mt-5 items-center">
         <div className="flex items-center justify-center my-3">
-          <Image
-            src={uploadImage}
-            alt={image ? "userimage" : "no image selected"}
-            width={120}
-            height={120}
-            className="rounded-full object-cover"
-          />
-
+          {isImageLoading && !uploadImage ? (
+            <DotPulseWrapper size="30" speed="1.5" color="black" />
+          ) : (
+            <Image
+              src={uploadImage || "/Ellipse 445.webp"}
+              alt="userimage"
+              width={120}
+              height={120}
+              className="rounded-full object-cover"
+              onLoad={() => {
+                setIsImageLoading(false);
+              }}
+              onError={() => {
+                setIsImageLoading(false);
+                setUploadImage("/Ellipse 445.webp");
+              }}
+            />
+          )}
           <div className="flex flex-col gap-5 ml-9">
             <input
               type="file"
@@ -603,7 +629,7 @@ const ProfilePage: React.FC = () => {
           onClick={handleSaveChanges}
           className="mt-5 bg-black text-white py-2 px-6 rounded-md"
         >
-          Save Changes
+          {isSaving ? "Please wait..." : "Save Changes"}
         </button>
       </div>
     </div>

@@ -29,6 +29,10 @@ const MainPage = () => {
 const tutorCourses = coursedata?.filter(
   (course: any) => course.attributes.tutor?.data?.attributes?.tutorname === user?.studentname
 );
+
+const isTutor = data?.data?.some(
+  (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
+);
   if (isLoading) {
     return (
       <div>
