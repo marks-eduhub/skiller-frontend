@@ -4,13 +4,19 @@ import {NavLinks} from "@/components/Student/dashboadLayout/nav-links";
 import SkillerLogo from "@/components/ui/logo";
 import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { logout } from "@/lib/helpers";
+import { useRouter } from "next/navigation";
 
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 interface SmallScreenProps {
   onNavigate?: (path: string) => void;
 }
 const SmallScreenSideNav:React.FC<SmallScreenProps> = ({onNavigate}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -20,6 +26,15 @@ const SmallScreenSideNav:React.FC<SmallScreenProps> = ({onNavigate}) => {
       onNavigate(href);
     }
   };
+  const handleSignOut = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+  
+      logout();
+  
+      setLoading(false);
+      router.push("/auth");
+    };
   return (
     <div className="pt-6 px-5 relative">
       <div className="flex  items-center justify-between w-full">
@@ -65,15 +80,24 @@ const SmallScreenSideNav:React.FC<SmallScreenProps> = ({onNavigate}) => {
           }} />
         </div>
 
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-          }}
-        >
-          <button className="w-full bg-gray-800 p-3 mt-4 text-sm font-medium hover:bg-gray-600">
-            Sign Out
-          </button>
-        </form>
+        <form onSubmit={handleSignOut}>
+            <button
+              type="submit"
+              className="flex h-[48px] w-full grow items-center bg-black p-3 text-sm font-medium hover:bg-gray-900 justify-start hover:text-blue-600"
+              disabled={loading} 
+            >
+              {loading ? (
+                <DotPulseWrapper
+                  type="metronome"
+                  size="40"
+                  speed="1.75"
+                  color="white"
+                />
+              ) : (
+                <div className="p-4">Sign Out</div>
+              )}
+            </button>
+          </form>
       </div>
 
     </div>

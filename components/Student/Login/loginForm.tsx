@@ -156,7 +156,6 @@ export default function LogIn() {
           disabled={isPendingGoogle}
           className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
         >
-          {" "}
           <Image
             src={data.loginForm.googlelogo}
             alt={"google"}
@@ -164,7 +163,6 @@ export default function LogIn() {
             height={50}
           />
           <p className="text-[16px]">
-            {" "}
             {isPendingGoogle ? "Loading..." : "Sign In with Google"}
           </p>
         </button>

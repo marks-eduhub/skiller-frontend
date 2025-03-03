@@ -4,7 +4,7 @@ import TutorNav from "./tutor-nav";
 import Image from "next/image";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useFetchCourses} from "@/hooks/useCourses";
+import { useFetchTutorCourses} from "@/hooks/useCourses";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import api from "@/lib/axios";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -17,7 +17,7 @@ const MainPage = () => {
   const { user } = useAuthContext();
   const router = useRouter();
   const username = user?.username;
-  const { data, isLoading, error } = useFetchCourses();
+  const { data, isLoading, error } = useFetchTutorCourses ();
   const coursedata = data?.data;
   const [loadingCourseId, setLoadingCourseId] = useState<number | null>(null);
 
@@ -26,13 +26,10 @@ const MainPage = () => {
     router.push(`/tutor/dashboard/courseoverview/${courseId}`);
   };
 
-const tutorCourses = coursedata?.filter(
-  (course: any) => course.attributes.tutor?.data?.attributes?.tutorname === user?.studentname
-);
+  const tutorCourses = coursedata?.filter(
+  (course: any) => course.attributes.tutor?.data?.attributes?.user?.data?.id === user?.id
+   );
 
-const isTutor = data?.data?.some(
-  (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
-);
   if (isLoading) {
     return (
       <div>
@@ -117,7 +114,7 @@ const isTutor = data?.data?.some(
                           <p>{courseAttributes.averageRating || "No rating"}</p>
                         </div>
                       </div>
-                      <p
+                      {/* <p
                         className={`rounded-md px-3 py-1 mt-2 ${
                           courseAttributes.status === "Draft"
                             ? "bg-[#FAECA6] w-[90px]"
@@ -129,7 +126,7 @@ const isTutor = data?.data?.some(
                         }`}
                       >
                         {courseAttributes.status}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>

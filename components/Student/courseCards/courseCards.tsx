@@ -185,7 +185,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
             src={imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/fallback.webp"}
-            alt={card?.data?.attributes?.alternativeText || "Cake"}
+            alt={card?.data?.attributes?.alternativeText || "Fallback Image"}
             fill
             className="object-cover object-center p-1"
           />

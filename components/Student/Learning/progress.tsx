@@ -32,7 +32,7 @@ const Progress = () => {
 
   if (!coursesData?.data || coursesData.data.length === 0) {
     return (
-      <p className="font-semibold flex items-center justify-center p-20 text-[20px]">
+      <p className="font-semibold flex items-center justify-center p-20 sm:text-[20px]">
         Start watching topic videos to track your course progress.
       </p>
     );

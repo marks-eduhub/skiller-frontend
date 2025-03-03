@@ -292,7 +292,7 @@ const ProfilePage: React.FC = () => {
     },
 
     onSuccess: () => {
-      message.success("Tutor linked successfully");
+      // message.success("Tutor linked successfully");
     },
 
     onError: () => {
@@ -344,6 +344,7 @@ const ProfilePage: React.FC = () => {
     } else {
       profilePictureId = exisitingprofileId ? String(exisitingprofileId) : null;
     }
+    setIsSaving(true)
 
     try {
       if (toggle) {
@@ -358,6 +359,9 @@ const ProfilePage: React.FC = () => {
             Biography,
             Qualifications,
             socialLinks: updatedSocialLinks,
+          }, {
+            onSettled: () => setIsSaving(false),
+
           });
         } else {
           const newTutorId = await postTutorProfile({
@@ -386,11 +390,16 @@ const ProfilePage: React.FC = () => {
           firstName,
           userId,
           socialLinks: updatedSocialLinks,
+        }, {
+          onSettled: () => setIsSaving(false),
+
         });
         message.success("Student profile created successfully!");
       }
     } catch (error) {
       message.error("Failed to save profile data. Please try again.");
+      setIsSaving(false);
+
     }
   };
 
@@ -629,7 +638,8 @@ const ProfilePage: React.FC = () => {
           onClick={handleSaveChanges}
           className="mt-5 bg-black text-white py-2 px-6 rounded-md"
         >
-          {isSaving ? "Please wait..." : "Save Changes"}
+          {isSaving ? <DotPulseWrapper type="tailChase" size="40" speed="1.75" color="white" />
+          : "Save Changes"}
         </button>
       </div>
     </div>
