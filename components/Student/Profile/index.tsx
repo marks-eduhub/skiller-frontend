@@ -333,7 +333,7 @@ const ProfilePage: React.FC = () => {
       return;
     }
 
-    let profilePictureId: string = "";
+    let profilePictureId = null;
     if (image) {
       try {
         profilePictureId = await uploadMedia(image);
@@ -342,7 +342,7 @@ const ProfilePage: React.FC = () => {
         return;
       }
     } else {
-      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : "";
+      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : null;
     }
 
     try {
