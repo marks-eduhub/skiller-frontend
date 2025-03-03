@@ -6,6 +6,7 @@ import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import Greeting from "@/lib/greeting";
 import SkillerLogo from "@/components/ui/logo";
 import SearchBar from "./searchbar";
+import { useFetchTutors } from "@/hooks/useCourses";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
@@ -14,7 +15,10 @@ interface NavBarProps {
 const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
   const { user } = useAuthContext();
   const username = user?.username || "Guest";
-
+  const {data} =  useFetchTutors()
+  const isTutor = data?.data?.some(
+    (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
+  );
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -55,12 +59,11 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                         <Link href="/auth">
                           <p className="text-white p-2">Sign Out</p>
                         </Link>
-                        <Link
-                          href="/tutor/dashboard"
-                          className="text-white p-2"
-                        >
-                          <p>Switch to tutor profile</p>
-                        </Link>
+                        {isTutor && (
+                          <Link href="/tutor/dashboard">
+                            <p>Switch to tutor dashboard</p>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   )}
@@ -104,12 +107,12 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                         <Link href="/auth">
                           <p className="text-white p-2">Sign Out</p>
                         </Link>
-                        <Link
-                          href="/tutor/dashboard"
-                          className="text-white p-2"
-                        >
-                          <p>Switch to tutor dashboard</p>
-                        </Link>
+                        {isTutor && (
+                          <Link href="/tutor/dashboard">
+                            <p>Switch to tutor dashboard</p>
+                          </Link>
+                        )}
+                        
                       </div>
                     </div>
                   )}

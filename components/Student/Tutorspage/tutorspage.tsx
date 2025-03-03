@@ -3,18 +3,19 @@ import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useFetchTutors } from "@/hooks/useCourses";
+import { useFetchTutors, useFetchTutorsPictures } from "@/hooks/useCourses";
 import api from "@/lib/axios";
 import Skeleton from "react-loading-skeleton";
 import { message } from "antd";
 import "react-loading-skeleton/dist/skeleton.css";
 
+
 const Tutorspage = () => {
   const { data, isLoading, error } = useFetchTutors();
   const tutors = useMemo(() => data?.data || [], [data]);
-
   const [favorites, setFavorites] = useState<boolean[]>([]);
   const [hovered, setHovered] = useState<number | null>(null);
+ const {data : tutorPicture} = useFetchTutorsPictures()
 
   useEffect(() => {
     if (tutors.length > 0) {
@@ -61,10 +62,15 @@ const Tutorspage = () => {
 
   return (
     <div className="sm:pl-10 py-5 sm:w-full">
-      <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">
-        {tutors?.map((tutor: any, index: number) => {
-          const relativeUrl =
-            tutor.attributes.profilepicture?.data?.attributes?.url;
+      {tutors.length === 0 ? (
+        <div className="text-center flex min-h-screen justify-center text-gray-700 font-semibold mt-10">
+          No tutors available at the moment.
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">
+          {tutors?.map((tutor: any, index: number) => {
+            const relativeUrl =
+              tutor.attributes.profilepicture?.data?.attributes?.url;
 
 
           const profilePictureUrl = relativeUrl
@@ -119,6 +125,7 @@ const Tutorspage = () => {
           );
         })}
       </div>
+      )}
     </div>
   );
 };

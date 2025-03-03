@@ -10,9 +10,7 @@ import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { useCourseContext } from "@/Context/CourseContext";
 import CourseFields from "./coursefileds";
-
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
-import Loader from "@/components/Student/loader";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -304,7 +302,7 @@ const UploadCourse = () => {
             disabled={isUploading}
           >
             {isUploading ? (
-              <Loader/>
+              <DotPulseWrapper size="30" speed="1.5" color="white" />
             ) : currentStep === 1 || currentStep === 2 ? (
               <span>Continue</span>
             ) : null}

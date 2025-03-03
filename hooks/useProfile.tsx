@@ -195,3 +195,25 @@ export const useFetchTutorId = (userId:number) => {
   });
 };
 
+
+
+export const deleteProfilePicture = async (userId: number, profilepictureId: string) => {
+  try {
+    const response = await api.get(`/api/users/${userId}?populate=profilepicture`);
+    const userData = response.data?.data;
+
+    if (!userData|| !userData.attributes?.profilepicture) {
+      throw new Error("No picture found on your profile");
+    }
+
+    await api.delete(`/api/upload/files/${profilepictureId}`);
+
+    await api.put(`/api/users/${profilepictureId}`, {
+      data: { profilepicture: null },
+    });
+
+    return { message: "profile picture deleted successfully" };
+  } catch (error) {
+    throw new Error("Failed to delete the image. Please try again.");
+  }
+};

@@ -5,13 +5,21 @@ import SkillerLogo from "@/components/ui/logo";
 import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 
-const SmallScreenSideNav = () => {
+
+interface SmallScreenProps {
+  onNavigate?: (path: string) => void;
+}
+const SmallScreenSideNav:React.FC<SmallScreenProps> = ({onNavigate}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
+  const handleNavigation = (href: string) => {
+    if (onNavigate) {
+      onNavigate(href);
+    }
+  };
   return (
     <div className="pt-6 px-5 relative">
       <div className="flex  items-center justify-between w-full">
@@ -35,7 +43,7 @@ const SmallScreenSideNav = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 h-full bg-black text-white z-40 transition-transform transform ${
+        className={`fixed top-0 left-0 h-full bg-black text-white z-50 transition-transform transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } w-64 duration-300 ease-in-out`}
       >
@@ -51,7 +59,10 @@ const SmallScreenSideNav = () => {
         </div>
 
         <div className="p-4">
-          <NavLinks minimized={false} />
+        <NavLinks minimized={false} onNavigate={(href) => {
+            toggleSidebar(); 
+            handleNavigation(href); 
+          }} />
         </div>
 
         <form
@@ -65,12 +76,6 @@ const SmallScreenSideNav = () => {
         </form>
       </div>
 
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black opacity-50"
-          onClick={toggleSidebar}
-        />
-      )}
     </div>
   );
 };

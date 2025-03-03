@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import {NavLinks} from "@/components/Student/dashboadLayout/nav-links";
+import { NavLinks } from "@/components/Student/dashboadLayout/nav-links";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import SmallScreenSideNav from "./smallscreens";
 import { useMediaQuery } from "@mui/material";
@@ -10,7 +10,7 @@ import { logout } from "@/lib/helpers";
 interface SideNavProps {
   sidebarMinimized: boolean;
   toggleSidebar: () => void;
-  onNavigate: (path: string) => void; 
+  onNavigate: (path: string) => void;
 }
 
 const SideNav: React.FC<SideNavProps> = ({
@@ -21,16 +21,16 @@ const SideNav: React.FC<SideNavProps> = ({
   const router = useRouter();
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
- const handleNavigation = (href: string) => {
-   if (onNavigate) {
-     onNavigate(href); 
-   }
+  const handleNavigation = (href: string) => {
+    if (onNavigate) {
+      onNavigate(href);
+    }
   };
 
   return (
     <>
       {isSmallScreen ? (
-        <SmallScreenSideNav />
+        <SmallScreenSideNav onNavigate={handleNavigation} />
       ) : (
         <div
           className={`${

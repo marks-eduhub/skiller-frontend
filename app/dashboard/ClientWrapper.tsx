@@ -7,32 +7,35 @@ import Footer from "@/components/Student/footer";
 import Loader from "@/components/Student/loader";
 
 const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const router = useRouter()
+  const router = useRouter();
   const [sidebarMinimized, setSidebarMinimized] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
 
   const toggleSidebar = () => {
     setSidebarMinimized(!sidebarMinimized);
   };
 
-  const excludeNavbar = ["/dashboard/quizreview", "/dashboard/community", "/dashboard/profile"];
+  const excludeNavbar = [
+    "/dashboard/quizreview",
+    "/dashboard/community",
+    "/dashboard/profile",
+  ];
   const showNavbar = !excludeNavbar.includes(pathname);
-  
+
   const handleNavigation = (path: string) => {
     setIsLoading(true);
     setTimeout(() => {
       router.push(path);
-      setIsLoading(false); 
-    }, 2000); 
+      setIsLoading(false);
+    }, 2000);
   };
-  
 
   return (
     <div className="relative flex h-screen flex-col md:flex-row md:overflow-hidden">
       {isLoading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
-          <Loader/>
+          <Loader />
         </div>
       )}
 
@@ -49,8 +52,10 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
         }`}
       >
         {showNavbar && <Navbar sidebarMinimized={sidebarMinimized} />}
-        {children}
-        <Footer />
+        <div className="flex flex-col min-h-[calc(100vh-5rem)]">
+          <div className="flex-grow">{children}</div>
+          <Footer />
+        </div>
       </div>
     </div>
   );
