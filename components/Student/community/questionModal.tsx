@@ -85,7 +85,7 @@ const QuestionModal = () => {
         disabled={isAddingQuestion}
       >
         {isAddingQuestion ?          
-         <DotPulseWrapper size="30" speed="1.5" color="white" />
+         <DotPulseWrapper size="20" speed="1.5" color="white" />
          : "Add New Question"}
       </button>
 
@@ -107,7 +107,7 @@ const QuestionModal = () => {
                 onClick={handleQuestion}
               >
                 {isSubmittingQuestion ? 
-                 <DotPulseWrapper type="metronome" size="40" speed="1.75" color="white" />
+                 <DotPulseWrapper type="metronome" size="30" speed="1.75" color="white" />
 
                  : "Post your Question"}
               </button>

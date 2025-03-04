@@ -115,7 +115,7 @@ export function NavLinks({
               <p className="hover:bg-gray-900">Tutors</p>
             </div>
             {data?.data.slice(0, 5).map((subscription) => {
-              const slug = subscription.attributes.slug;
+              const slug = subscription.id;
               const name = subscription.attributes.tutorname;
               return (
                 <div

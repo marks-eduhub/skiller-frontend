@@ -5,12 +5,13 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import {
   addTutor,
-  addStudent,
+  updateStudent,
   useFetchUserDetails,
   useFetchTutorDetails,
   updateTutor,
   useFetchTutorId,
   linkTutorToUser,
+  deleteProfilePicture,
 } from "@/hooks/useProfile";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
@@ -36,6 +37,7 @@ const ProfilePage: React.FC = () => {
   const [uploadImage, setUploadImage] = useState("");
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [socialLinks, setSocialLinks] = useState({
     email: "",
     facebook: "",
@@ -63,16 +65,16 @@ const ProfilePage: React.FC = () => {
     if (data) {
       setFirstName(data.firstName || "");
       setLastName(data.lastName || "");
-  
+
       setSocialLinks({
         email: data.socialLinks?.email || "",
         facebook: data.socialLinks?.facebook || "",
         twitter: data.socialLinks?.twitter || "",
         linkedin: data.socialLinks?.linkedin || "",
       });
-  
+
       const profilePicUrl = data.profilepicture?.url;
-  
+
       if (profilePicUrl) {
         const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`;
         setUploadImage(fullUrl);
@@ -81,7 +83,7 @@ const ProfilePage: React.FC = () => {
         setUploadImage("/Ellipse 445.webp");
         setIsImageLoading(false);
       }
-  
+
       setInitialData((prev) => ({
         ...prev,
         firstName: data.firstName || "",
@@ -92,19 +94,21 @@ const ProfilePage: React.FC = () => {
           twitter: data.socialLinks?.twitter || "",
           linkedin: data.socialLinks?.linkedin || "",
         },
-        profilePictureId: data.profilepicture?.id ? String(data.profilepicture?.id) : "",
+        profilePictureId: data.profilepicture?.id
+          ? String(data.profilepicture?.id)
+          : "",
       }));
     }
   }, [data]);
-  
+
   useEffect(() => {
     if (tutorDetails && tutorDetails.data.length > 0) {
       const tutor = tutorDetails.data[0].attributes;
-  
+
       setBiography(tutor.Biography || "");
       setRole(tutor.role || "");
       setQualifications(tutor.Qualifications || "");
-  
+
       setInitialData((prev) => ({
         ...prev,
         role: tutor.role || "",
@@ -113,7 +117,6 @@ const ProfilePage: React.FC = () => {
       }));
     }
   }, [tutorDetails]);
-  
 
   const handleSuccess = () => {
     message.success("Profile saved successfully!");
@@ -129,18 +132,32 @@ const ProfilePage: React.FC = () => {
     const file = e.target.files?.[0];
 
     if (file) {
+      setIsUploading(true);
       setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setUploadImage(reader.result as string);
+        setIsUploading(false);
       };
       reader.readAsDataURL(file);
     } else {
       message.error("No profile picture selected.");
     }
   };
-  const handleRemoveImage = () => {
-    setImage(null);
+
+  const handleRemoveImage = async () => {
+    if (!exisitingprofileId || !userId) {
+      message.warning("no image to remove");
+    } else {
+      try {
+        await deleteProfilePicture(userId, String(exisitingprofileId));
+        setUploadImage("/Ellipse 445.webp");
+        setImage(null);
+        message.success("Profile picture removed successfully.");
+      } catch (error) {
+        message.error("");
+      }
+    }
   };
 
   const handleToggleChange = () => {
@@ -150,37 +167,26 @@ const ProfilePage: React.FC = () => {
   const { mutateAsync: postTutorProfile } = useMutation({
     mutationFn: async ({
       tutorname,
-      profilepicture,
       role,
       lastName,
       firstName,
       Biography,
       Qualifications,
-      socialLinks,
     }: {
       tutorname: string;
-      profilepicture: string;
       role: string;
       lastName: string;
       firstName: string;
       Biography: string;
       Qualifications: string;
-      socialLinks: {
-        email: string;
-        facebook: string;
-        twitter: string;
-        linkedin: string;
-      };
     }) => {
       const response = await addTutor(
         tutorname,
-        profilepicture,
         role,
         lastName,
         firstName,
         Biography,
-        Qualifications,
-        socialLinks
+        Qualifications
       );
 
       const tutorId =
@@ -218,7 +224,7 @@ const ProfilePage: React.FC = () => {
         linkedin: string;
       };
     }) => {
-      return await addStudent(
+      return await updateStudent(
         studentname,
         profilepicture,
         lastName,
@@ -235,39 +241,28 @@ const ProfilePage: React.FC = () => {
     mutationFn: async ({
       tutorId,
       tutorname,
-      profilepicture,
       role,
       lastName,
       firstName,
       Biography,
       Qualifications,
-      socialLinks,
     }: {
       tutorId: number;
       tutorname: string;
-      profilepicture: string;
       role: string;
       lastName: string;
       firstName: string;
       Biography: string;
       Qualifications: string;
-      socialLinks: {
-        email: string;
-        facebook: string;
-        twitter: string;
-        linkedin: string;
-      };
     }) => {
       return await updateTutor(
         tutorId,
         tutorname,
-        profilepicture,
         role,
         lastName,
         firstName,
         Biography,
-        Qualifications,
-        socialLinks
+        Qualifications
       );
     },
 
@@ -311,10 +306,10 @@ const ProfilePage: React.FC = () => {
       socialLinks.facebook !== initialData.socialLinks.facebook ||
       socialLinks.twitter !== initialData.socialLinks.twitter ||
       socialLinks.linkedin !== initialData.socialLinks.linkedin ||
-      (image !== null && !initialData.profilePictureId) 
+      image !== null
     );
   };
-  
+
   const handleSaveChanges = async () => {
     const updatedSocialLinks = {
       email: socialLinks.email,
@@ -327,14 +322,18 @@ const ProfilePage: React.FC = () => {
       message.error("Cannot update user details.");
       return;
     }
-    
+
     if (!hasChanges()) {
       message.warning("No changes detected.");
       return;
     }
 
     let profilePictureId = null;
+
     if (image) {
+      if (exisitingprofileId) {
+        await deleteProfilePicture(userId, String(exisitingprofileId));
+      }
       try {
         profilePictureId = await uploadMedia(image);
       } catch (error) {
@@ -344,62 +343,61 @@ const ProfilePage: React.FC = () => {
     } else {
       profilePictureId = exisitingprofileId ? String(exisitingprofileId) : null;
     }
-    setIsSaving(true)
+    setIsSaving(true);
 
     try {
       if (toggle) {
         if (tutorId) {
-          updateTutorProfile({
-            tutorId,
-            tutorname: `${firstName} ${lastName}`,
-            profilepicture: profilePictureId,
-            role,
-            lastName,
-            firstName,
-            Biography,
-            Qualifications,
-            socialLinks: updatedSocialLinks,
-          }, {
-            onSettled: () => setIsSaving(false),
-
-          });
+          updateTutorProfile(
+            {
+              tutorId,
+              tutorname: `${firstName} ${lastName}`,
+              role,
+              lastName,
+              firstName,
+              Biography,
+              Qualifications,
+            },
+            {
+              onSettled: () => setIsSaving(false),
+            }
+          );
         } else {
           const newTutorId = await postTutorProfile({
             tutorname: `${firstName} ${lastName}`,
-            profilepicture: profilePictureId,
             role,
             lastName,
             firstName,
             Biography,
             Qualifications,
-            socialLinks: updatedSocialLinks,
           });
 
           if (newTutorId) {
             linkTutor({ userId, tutorId: newTutorId });
-            message.success("Tutor profile created and linked successfully!");
+            // message.success("Tutor profile created and linked successfully!");
           } else {
             throw new Error("Tutor ID is not available after creation");
           }
         }
       } else {
-        postStudentProfile({
-          studentname: `${firstName} ${lastName}`,
-          profilepicture: profilePictureId,
-          lastName,
-          firstName,
-          userId,
-          socialLinks: updatedSocialLinks,
-        }, {
-          onSettled: () => setIsSaving(false),
-
-        });
-        message.success("Student profile created successfully!");
+        postStudentProfile(
+          {
+            studentname: `${firstName} ${lastName}`,
+            profilepicture: profilePictureId,
+            lastName,
+            firstName,
+            userId,
+            socialLinks: updatedSocialLinks,
+          },
+          {
+            onSettled: () => setIsSaving(false),
+          }
+        );
+        // message.success("Student profile created successfully!");
       }
     } catch (error) {
       message.error("Failed to save profile data. Please try again.");
       setIsSaving(false);
-
     }
   };
 
@@ -416,21 +414,24 @@ const ProfilePage: React.FC = () => {
           {isImageLoading && !uploadImage ? (
             <DotPulseWrapper size="30" speed="1.5" color="black" />
           ) : (
-            <Image
-              src={uploadImage || "/Ellipse 445.webp"}
-              alt="userimage"
-              width={120}
-              height={120}
-              className="rounded-full object-cover"
-              onLoad={() => {
-                setIsImageLoading(false);
-              }}
-              onError={() => {
-                setIsImageLoading(false);
-                setUploadImage("/Ellipse 445.webp");
-              }}
-            />
+            <div className="w-32 h-32 overflow-hidden rounded-full">
+              <Image
+                src={uploadImage || "/Ellipse 445.webp"}
+                alt="userimage"
+                width={120}
+                height={120}
+                className="w-full h-full object-cover rounded-full"
+                onLoad={() => {
+                  setIsImageLoading(false);
+                }}
+                onError={() => {
+                  setIsImageLoading(false);
+                  setUploadImage("/Ellipse 445.webp");
+                }}
+              />
+            </div>
           )}
+
           <div className="flex flex-col gap-5 ml-9">
             <input
               type="file"
@@ -439,20 +440,27 @@ const ProfilePage: React.FC = () => {
               className="hidden"
               onChange={handleImageChange}
             />
+
             <label
               htmlFor="file-upload"
-              className="bg-black text-white rounded-md px-4 py-1 cursor-pointer text-center"
+              className="bg-black text-white rounded-md px-4 py-1 cursor-pointer text-center flex items-center justify-center"
             >
-              Change Photo
+              {isUploading ? (
+                 <DotPulseWrapper type="ring" size="30" speed="1.75" color="white" />
+                ) : null}
+              {isUploading ? "Uploading..." : "Upload Photo"}
             </label>
+
             <button
               onClick={handleRemoveImage}
               className="bg-white text-black border border-black rounded-md px-4 py-1"
+              disabled={isUploading} 
             >
               Remove Photo
             </button>
           </div>
         </div>
+
         <p className="ml-4 italic mt-2 text-[14px]">
           Maximum size: 1MB. Supported formats: JPG, GIF or PNG
         </p>
@@ -638,8 +646,16 @@ const ProfilePage: React.FC = () => {
           onClick={handleSaveChanges}
           className="mt-5 bg-black text-white py-2 px-6 rounded-md"
         >
-          {isSaving ? <DotPulseWrapper type="tailChase" size="40" speed="1.75" color="white" />
-          : "Save Changes"}
+          {isSaving ? (
+            <DotPulseWrapper
+              type="tailChase"
+              size="30"
+              speed="1.75"
+              color="white"
+            />
+          ) : (
+            "Save Changes"
+          )}
         </button>
       </div>
     </div>
