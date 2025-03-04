@@ -6,18 +6,11 @@ import TurndownService from "turndown";
 
 export const addTutor = async (
   tutorname: string,
-  profilepicture: string,
   role: string,
   lastName: string,
   firstName: string,
   Biography: string,
-  Qualifications: string,
-  socialLinks: {
-    email: string;
-    facebook: string;
-    twitter: string;
-    linkedin: string;
-  }
+  Qualifications: string
 ) => {
   const turndownService = new TurndownService();
   const markdownBio = turndownService.turndown(Biography);
@@ -25,13 +18,11 @@ export const addTutor = async (
     const response = await api.post("/api/tutors", {
       data: {
         tutorname,
-        profilepicture,
         role,
         lastName,
         firstName,
         Biography: markdownBio,
         Qualifications,
-        socialLinks,
       },
     });
     return response.data; 
@@ -40,7 +31,7 @@ export const addTutor = async (
   }
 };
 
-export const addStudent = async (
+export const updateStudent = async (
   studentname: string,
   profilepicture: string,
   lastName: string,
@@ -71,7 +62,6 @@ export const addStudent = async (
     throw error;
   }
 };
-
 
 export const linkTutorToUser = async (userId: number, tutorId: number) => {
   try {
@@ -139,20 +129,13 @@ export const useFetchTutorDetails = (userId: number) => {
 };
 
 export const updateTutor = async (
-  tutorId: number, 
+  tutorId: number,
   tutorname: string,
-  profilepicture: string,
   role: string,
   lastName: string,
   firstName: string,
   Biography: string,
-  Qualifications: string,
-  socialLinks: {
-    email: string;
-    facebook: string;
-    twitter: string;
-    linkedin: string;
-  }
+  Qualifications: string
 ) => {
   const turndownService = new TurndownService();
   const markdownBio = turndownService.turndown(Biography);
@@ -161,13 +144,11 @@ export const updateTutor = async (
       data: {
         tutorId,
         tutorname,
-        profilepicture,
         role,
         lastName,
         firstName,
         Biography: markdownBio,
         Qualifications,
-        socialLinks,
       },
     });
     return response.data;
@@ -176,16 +157,14 @@ export const updateTutor = async (
   }
 };
 
-
-
-const fetchTutorId = async (userId:number) => {
+const fetchTutorId = async (userId: number) => {
   const response = await api.get(`/api/tutors?filters[user][id]=${userId}`);
 
   return response.data;
 };
 
-export const useFetchTutorId = (userId:number) => {
-  return useQuery<{ data:any}, Error>({
+export const useFetchTutorId = (userId: number) => {
+  return useQuery<{ data: any }, Error>({
     queryFn: () => fetchTutorId(userId),
 
     queryKey: ["profile_tutorId,", userId],
@@ -195,24 +174,22 @@ export const useFetchTutorId = (userId:number) => {
   });
 };
 
-
-
-export const deleteProfilePicture = async (userId: number, profilepictureId: string) => {
+export const deleteProfilePicture = async (
+  userId: number,
+  profilepictureId: string
+) => {
   try {
-    const response = await api.get(`/api/users/${userId}?populate=profilepicture`);
-    const userData = response.data?.data;
-
-    if (!userData|| !userData.attributes?.profilepicture) {
-      throw new Error("No picture found on your profile");
+    if (!profilepictureId) {
+      throw new Error("No profile picture found to delete.");
     }
 
     await api.delete(`/api/upload/files/${profilepictureId}`);
 
-    await api.put(`/api/users/${profilepictureId}`, {
-      data: { profilepicture: null },
+    await api.put(`/api/users/${userId}`, {
+      profilepicture: null, 
     });
 
-    return { message: "profile picture deleted successfully" };
+    return { message: "Profile picture deleted successfully." };
   } catch (error) {
     throw new Error("Failed to delete the image. Please try again.");
   }

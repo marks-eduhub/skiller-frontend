@@ -89,7 +89,7 @@ const SmallScreenSideNav:React.FC<SmallScreenProps> = ({onNavigate}) => {
               {loading ? (
                 <DotPulseWrapper
                   type="metronome"
-                  size="40"
+                  size="30"
                   speed="1.75"
                   color="white"
                 />

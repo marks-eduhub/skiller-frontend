@@ -20,8 +20,10 @@ import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import VideoModal from "./videoModal";
 import ResourceModal from "./resourceModal";
 import { useCourseContext } from "@/Context/CourseContext";
+import { useFetchTutors } from "@/hooks/useCourses";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 interface Topic {
   id: number | null;
@@ -82,26 +84,22 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   setVideoId,
   onRemoveResource,
   resourceIds,
-  setResourceIds,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
-  const tutorId = Number(user?.id);
   const pathname = usePathname();
   const { slug } = useParams();
   const searchParams = useSearchParams();
   const courseIdParam = searchParams.get("courseId");
   const { courseId: contextCourseId } = useCourseContext();
   const isUploadingCourse = pathname === "/tutor/dashboard/uploadCourse";
-
+  const {data} =  useFetchTutors()
   let courseId: number = 0; 
   if (isUploadingCourse) {
   courseId = contextCourseId ?? 0; 
   } else {
   courseId = slug ? Number(slug) : courseIdParam ? Number(courseIdParam) : 0;
    }
-  
- 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
@@ -109,6 +107,12 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
   const [resourceIndex, setResourceIndex] = useState<number | null>(null);
+  const [ isUploading, setIsUploading] = useState(false);
+  const IdTutor = data?.data
+  ?.find((tutor: any) => tutor.attributes?.user?.data?.id === user?.id)
+  ?.id;
+
+  const tutorId = Number(IdTutor)
 
   const handleTextChange = (text: string) => {};
 
@@ -291,6 +295,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   });
 
   const handleSaveChanges = async () => {
+    setIsUploading(true); 
+
     try {
       const existingVideoIds =
         topic.topicVideo && topic.topicVideo !== null ? [topic.topicVideo] : [];
@@ -330,8 +336,11 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       }
     } catch (error) {
       message.error("Error saving changes");
-    }
-  };
+    }finally {
+      setIsUploading(false);
+       }
+   };
+
 
   const { mutate: deleteTopics } = useMutation({
     mutationFn: async (topicId: number) => {
@@ -454,7 +463,14 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   };
 
   return (
-    <div className="p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words">
+       <div className={`p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words ${isUploading ? "pointer-events-none opacity-50" : ""}`}>
+        {isUploading && (
+         <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+         <DotPulseWrapper type="metronome" size="30" speed="1.75" color="black" />
+         </div>
+
+         )}
+
       <div className="flex flex-col sm:flex-row gap-5">
         <div className="mt-5 flex flex-col sm:flex-row sm:items-center w-full gap-3">
           <div className="flex flex-col sm:flex-row sm:items-center w-full">
@@ -662,16 +678,23 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         >
           Delete Topic
         </button>
-        <button
-          onClick={handleSaveChanges}
-          className={`border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px] 
-          ${pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload" ? 'w-[100px] flex justify-center' : 'w-[180px]'}`}
-          >
-         {pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload"
-           ? "Upload"  
-          : "Save changes"}
-        </button>
+    
         
+        <button
+      onClick={handleSaveChanges}
+      disabled={isUploading} 
+      className={`border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px] 
+        ${pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload" 
+          ? "w-[100px] flex justify-center" 
+          : "w-[180px]"
+        } ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`} 
+    >
+      {isUploading ? (
+        <DotPulseWrapper type="metronome" size="30" speed="1.75" color="black" />
+       ) : pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload" 
+        ? "Upload" 
+        : "Save changes"}
+    </button>
       </div>
 
       <CustomModal

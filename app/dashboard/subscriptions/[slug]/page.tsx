@@ -8,16 +8,19 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import ProductContainer from "@/components/Student/courseCards/cardContainer";
 import api from "@/lib/axios";
+import { useFetchUserDetails } from "@/hooks/useProfile";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const TutorPage = ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
-
+const { slug } = params;
+const {user} = useAuthContext()
+const userId = user?.id
   const {
     data: tutorData,
     isLoading: tutorLoading,
     error: tutorError,
   } = useFetchTutorSlug(slug);
-
+  const {data: userDetails} =  useFetchUserDetails (Number(userId))
   const { data, isLoading, error } = useFetchCourses();
 
   if (tutorLoading) {
@@ -76,7 +79,7 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
 
   const tutor = tutorData?.data[0]?.attributes;
 
-  const tutorImage = tutor?.profilepicture?.data?.attributes.url || "/Ellipse 445.webp";
+  const tutorImage = userDetails?.profilepicture?.url || "/Ellipse 445.webp";
   const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
 
   const tutorName = tutor.tutorname;

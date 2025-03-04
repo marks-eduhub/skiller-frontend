@@ -132,7 +132,7 @@ const MainPage = () => {
                 </div>
               );
             })}
-            <div className="w-full sm:mt-0 mt-10 sm:h-[300px] h-[250px] rounded-lg  bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer">
+            <div className="w-full sm:mt-0 mt-10 sm:h-[250px] h-[250px] rounded-lg  bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer">
               <Link href="/tutor/dashboard/uploadCourse">
                 <div className="rounded-3xl bg-gray-300 flex px-8 py-5 items-center justify-center">
                   <Image src="/Vector.png" alt="plus" width={30} height={30} />

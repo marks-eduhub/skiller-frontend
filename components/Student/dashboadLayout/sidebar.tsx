@@ -81,7 +81,7 @@ const SideNav: React.FC<SideNavProps> = ({
               {loading ? (
                 <DotPulseWrapper
                   type="metronome"
-                  size="40"
+                  size="30"
                   speed="1.75"
                   color="white"
                 />
