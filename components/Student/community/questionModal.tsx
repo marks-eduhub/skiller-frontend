@@ -5,7 +5,9 @@ import "react-quill/dist/quill.snow.css";
 import { postQuestion } from "@/hooks/useCommunity";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { message } from "antd";
-import Loader from "@/components/Student/loader";
+import dynamic from "next/dynamic";
+
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 const QuestionModal = () => {
   const { user } = useAuthContext();
@@ -44,7 +46,7 @@ const QuestionModal = () => {
 
       return { previousData };
     },
-    onError: (error, variables, context: any) => {
+    onError: ( context: any) => {
       queryClient.setQueryData(["communityDetails"], context.previousData);
       message.error("Failed to post question.");
     },
@@ -64,7 +66,7 @@ const QuestionModal = () => {
     }
 
     const nameofquestioner = user?.username || "Anonymous";
-
+    setIsSubmittingQuestion(true);
     postQuestionMutation({ Question: questionContent, nameofquestioner });
 
     setQuestionContent("");
@@ -74,11 +76,17 @@ const QuestionModal = () => {
   return (
     <div className="relative">
       <button
-        className="mb-4 px-4 py-2 bg-gray-600 text-white rounded "
-        onClick={() => setIsModalOpen(true)}
+        className="mb-4 px-4 py-2 bg-gray-600 text-white rounded"
+        onClick={() => {
+          setIsAddingQuestion(true);
+          setIsModalOpen(true);
+          setTimeout(() => setIsAddingQuestion(false), 500);
+        }}
         disabled={isAddingQuestion}
       >
-        {isAddingQuestion ? <Loader /> : "Add New Question"}
+        {isAddingQuestion ?          
+         <DotPulseWrapper size="30" speed="1.5" color="white" />
+         : "Add New Question"}
       </button>
 
       {isModalOpen && (
@@ -98,7 +106,10 @@ const QuestionModal = () => {
                 className=" sm:w-auto px-4 py-2 bg-gray-600 text-white rounded "
                 onClick={handleQuestion}
               >
-                {isSubmittingQuestion ? <Loader /> : "Post your Question"}
+                {isSubmittingQuestion ? 
+                 <DotPulseWrapper type="metronome" size="40" speed="1.75" color="white" />
+
+                 : "Post your Question"}
               </button>
               <button
                 className="sm:w-auto px-4 py-2 bg-red-600 text-white rounded"

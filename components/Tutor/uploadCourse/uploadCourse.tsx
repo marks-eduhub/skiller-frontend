@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useCourseContext } from "@/Context/CourseContext";
 import CourseFields from "./coursefileds";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+import { useFetchTutors } from "@/hooks/useCourses";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -34,6 +35,7 @@ interface Topic {
 const UploadCourse = () => {
   const { setCourseId, courseId } = useCourseContext();
   const { user } = useAuthContext();
+  const {data} =  useFetchTutors()
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
   const [courseRequirements, setCourseRequirements] = useState("");
@@ -49,7 +51,10 @@ const UploadCourse = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [isOpen, setModalOpen] = useState(false);
   const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
-  const tutorId = user?.id;
+
+  const tutorId = data?.data
+  ?.find((tutor: any) => tutor.attributes?.user?.data?.id === user?.id)
+  ?.id;
 
   const handleNextStep = () => {
     if (currentStep < 3) {
@@ -128,7 +133,7 @@ const UploadCourse = () => {
       );
     },
     onSuccess: () => {
-      message.success("course submitted!");
+      // message.success("course submitted!");
     },
     onError: (err) => {
       message.error("Error submitting course:");
@@ -225,12 +230,7 @@ const UploadCourse = () => {
 
         await handleSubmit();
 
-        if (!courseId) {
-          message.error("Course upload failed. Please try again.");
-          return;
-        }
-
-        handleNextStep();
+       handleNextStep();
       } finally {
         setIsUploading(false);
       }

@@ -24,6 +24,8 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 const Discussion = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
+  const [isPosting, setIsPosting] = useState(false)
+  const [isSubmittingReply , setIsSubmittingReply] = useState(false)
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const userId = user?.id;
@@ -122,34 +124,7 @@ const Discussion = () => {
     setShowModalForComment(null);
     setReplyContent("");
   };
-
-  const handleComment = () => {
-    if (topicComment.trim()) {
-      addToComments();
-    } else {
-      message.error("Comment cannot be empty.");
-    }
-  };
-
-  const handleReply = () => {
-    if (replyContent.trim()) {
-      setTotalRepliesCount((prev) => ({
-        ...prev,
-        [commentId]: (prev[commentId] || 0) + 1,
-      }));
-
-      addToReplies({
-        commentId,
-        userId: userId!,
-        replyComment: replyContent,
-      });
-      setShowModalForComment(null);
-    } else {
-      message.error("Please enter a reply.");
-    }
-  };
-
-  const { mutate: addToComments } = useMutation({
+ const { mutate: addToComments } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
       return await addComment(Number(topicId), userId, topicComment);
@@ -313,6 +288,43 @@ const Discussion = () => {
     setTotalCounts(updatedTotalCounts);
   };
 
+  const handleComment = async () => {
+    if (topicComment.trim()) {
+      setIsPosting(true); 
+  
+      try {
+        addToComments(); 
+        setIsPosting(false); 
+      } catch (error) {
+        message.error("There was an error posting the comment.");
+        setIsPosting(false); 
+      }
+    } else {
+      message.error("Comment cannot be empty.");
+    }
+  };
+
+  const handleReply = () => {
+    if (replyContent.trim()) {
+      setIsSubmittingReply(true);
+      setTotalRepliesCount((prev) => ({
+        ...prev,
+        [commentId]: (prev[commentId] || 0) + 1,
+      }));
+      setIsSubmittingReply(true)
+      addToReplies({
+        commentId,
+        userId: userId!,
+        replyComment: replyContent,
+      });
+      setIsSubmittingReply(false);
+      setShowModalForComment(null);
+    } else {
+      message.error("Please enter a reply.");
+    }
+  };
+  
+
   if (replyLoading || likesLoading) {
     <Loader />;
   }
@@ -371,12 +383,15 @@ const Discussion = () => {
       </div>
       <button
         onClick={handleComment}
-        className="bg-gray-900 my-6 text-white px-4 py-2 rounded"
+        className="bg-gray-900 sm:mb-0 sm:my-2 my-6 text-white px-4 py-2 rounded"
       >
-        Post Comment
+        {isPosting ? "Posting..." : "Post Comment "}
       </button>
 
       <div className="bg-gray-100 max-h-[650px] overflow-auto sm:p-6  sm:pr-0 pr-5 sm:mb-10">
+        <div className="flex items-center justify-center font-semibold mb-5 text-center ">
+        <h2 >To reply to a comment click the comment icon of the comment</h2>
+        </div>
         <div className="flex flex-col space-y-4 sm:w-1/2 h-auto">
           {data?.data?.length > 0 ? (
             data?.data?.map((comment: any) => {
@@ -444,7 +459,7 @@ const Discussion = () => {
                           onClick={handleReply}
                           className="bg-gray-600 text-white px-4 py-2 rounded mt-2"
                         >
-                          Submit Reply
+                          {isSubmittingReply ? "Submitting..." : "Submit Reply"}
                         </button>
                         <button
                           onClick={handleCancel}

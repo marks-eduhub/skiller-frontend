@@ -27,6 +27,7 @@ const SetQuiz = () => {
   const [quizData, setQuizData] = useState([
     { question: "", options: ["", ""], answers: "" },
   ]);
+  const [isUploading, setIsUploading] = useState(false)
 
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
@@ -119,6 +120,7 @@ const SetQuiz = () => {
       message.error("Please select the correct answer for the questions .");
       return;
     }
+    setIsUploading(true)
 
     testdata(
       {
@@ -141,6 +143,7 @@ const SetQuiz = () => {
         onError: (err) => {
           message.error("Failed to submit quiz.");
         },
+        onSettled: () => setIsUploading(false),
       }
     );
   };
@@ -240,7 +243,7 @@ const SetQuiz = () => {
               className="bg-black py-2 px-4 flex items-center justify-center sm:ml-0 ml-20 rounded w-[150px] text-white"
               onClick={handleSubmitQuiz}
             >
-              Upload Quiz
+              {isUploading ? "Uploading..." : "Upload Quiz "}
             </button>
           </>
         ) : currentStep === 2 ? (

@@ -63,6 +63,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   const courseId = Number(slug);
   const { data, isLoading, error } = useFetchCategory();
   const [fileName, setFileName] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false)
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
@@ -125,26 +126,39 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   });
   
   const handleSaveChanges = async () => {
-    const mediaId = selectedImage
-      ? await uploadMedia(selectedImage)
-      : existingMediaId;
-    if (!mediaId) {
-      throw new Error("Course image upload failed.");
-    }
-
-    try {
-      courseEdit({
-        courseId,
-        courseName,
-        courseLearning,
-        courseDescription,
-        courseRequirements,
-        mediaId, 
-        category,
-        duration,
-      });
+    setIsSaving(true); 
+   try {
+      const mediaId = selectedImage
+        ? await uploadMedia(selectedImage)
+        : existingMediaId;
+  
+      if (!mediaId) {
+        message.error("Course image upload failed.");
+        setIsSaving(false);
+        return;
+      }
+  
+      courseEdit(
+        {
+          courseId,
+          courseName,
+          courseLearning,
+          courseDescription,
+          courseRequirements,
+          mediaId,
+          category,
+          duration,
+        },
+        {
+         
+          onSettled: () => {
+            setIsSaving(false); 
+          },
+        }
+      );
     } catch (error) {
       message.error("Error editing course.");
+      setIsSaving(false);
     }
   };
   
@@ -290,8 +304,9 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
             <button
               className="bg-black text-white px-4 py-2 rounded-md"
               onClick={handleSaveChanges}
+              disabled={isSaving} 
             >
-              Submit changes
+              {isSaving ? "Submitting ..." : "Submit changes"}
             </button>
           )}
         </div>

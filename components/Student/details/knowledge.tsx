@@ -20,6 +20,10 @@ import Skeleton from "react-loading-skeleton";
 import { useFetchTopicResult } from "@/hooks/useQuestions";
 import { useMutation } from "@tanstack/react-query";
 import RatingModal from "./ratingmodal";
+import dynamic from "next/dynamic";
+
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
+
 
 const Knowledge = () => {
   const searchParams = useSearchParams();
@@ -29,6 +33,7 @@ const Knowledge = () => {
   const { slug } = useParams();
   const courseId = Number(slug);
   const [selectedTab, setselectedTab] = useState("Tests");
+  const [isAttempting, setIsAttempting] = useState(false)
   const [isCourseCompleted, setIsCourseCompleted] = useState(false);
   const handleselectedClick = (tabName: string) => {
     setselectedTab(tabName);
@@ -265,7 +270,8 @@ const Knowledge = () => {
   const handleAttemptTest = (testId: number) => {
     setSelectedTestId(testId);
     setShowModal(true);
-    const timesAttempted = attemptsByTest[testId] || 0;
+    setIsAttempting(true);
+   const timesAttempted = attemptsByTest[testId] || 0;
     const attemptsRemaining = totalAttempts - timesAttempted;
 
     if (attemptsRemaining <= 0) {
@@ -287,16 +293,16 @@ const Knowledge = () => {
         );
       }
     }
+    setIsAttempting(false);
   };
 
   const handleStartTest = () => {
     setIsFirstAttempt(false);
     setIsLastAttempt(false);
-
     router.push(
       `/dashboard/quizreview?topicId=${topicId}&testId=${selectedTestId}`
     );
-
+    setIsAttempting(false);
     setShowModal(false);
   };
 
@@ -395,8 +401,11 @@ const Knowledge = () => {
                           onClick={() => handleAttemptTest(test.id)}
                           className="bg-gray-600 text-white font-bold text-[15px] p-4 sm:p-6 rounded-md"
                         >
-                          Attempt Test
-                        </button>
+                        <span>Attempt test</span>
+                        {isAttempting && (
+                         <DotPulseWrapper size="20" speed="1.5" color="white" />
+                         )}
+                         </button>
                       </div>
                     ) : (
                       <>

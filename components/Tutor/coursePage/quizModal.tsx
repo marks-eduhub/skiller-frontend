@@ -25,7 +25,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
   selectedTest,
 }) => {
   const { topicId } = selectedTest;
-
+  const [isSaving, setIsSaving] = useState(false)
   const { data: testData, isLoading } = useFetchCourseTests(topicId);
 
   const [testname, setTestname] = useState("");
@@ -145,6 +145,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
       message.error("Please enter the test passmark.");
       return;
     }
+    setIsSaving(true)
 
     try {
       editTestMutation({
@@ -173,7 +174,8 @@ const QuizModal: React.FC<QuizModalProps> = ({
     } catch (error) {
       message.error("Failed to edit quiz.");
     }
-  };
+    setIsSaving(false)
+   };
 
   return (
     <div
@@ -251,7 +253,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
                   onClick={handleSubmitQuiz}
                   className="bg-black text-white px-4 py-2 rounded"
                 >
-                  Save Changes
+                  {isSaving ? "Saving ..." : "Save changes" }
                 </button>
               )}
             </div>

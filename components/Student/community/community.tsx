@@ -24,6 +24,10 @@ import Loader from "@/components/Student/loader";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import QuestionModal from "./questionModal";
 import { useDebounce } from "use-debounce";
+import dynamic from "next/dynamic";
+
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
+
 
 const Community = () => {
   const { user } = useAuthContext();
@@ -519,16 +523,16 @@ const Community = () => {
                       (showAllResponsesMap[questionId]
                         ? responses
                         : responses.slice(0, DEFAULT_RESPONSES_LIMIT)
-                      ).map((response: any, resIndex: number) => {
-                        const isLiked = likedResponsesMap[response.id] || false;
+                      ).map((response: any) => {
                         const responseId = response.id;
+                        const isLiked = likedResponsesMap[response.id] || false;
                         const likeCount =
                           (likeCounts ? likeCounts[responseId] : 0) || 0;
 
                         return (
                           <>
                             <div
-                              key={resIndex}
+                              key={responseId}
                               className="flex-col items-start mb-3 p-2 "
                             >
                               <div className="flex items-center gap-2 mb-5">
@@ -547,9 +551,9 @@ const Community = () => {
                                 </p>
                               </div>
                               <div className="ml-2">
-                                <p className="text-gray-600 text-sm">
-                                {response?.responseText.replace(/(\*\*|\_)/g, "")}
-                                </p>
+                                <p className="text-gray-600 text-sm break-words overflow-hidden">
+                                {response?.responseText.replace(/(\*\*|\_)/g, "").replace(/===/g, "")}
+                                 </p>
                                 <div className="flex gap-1 mt-2">
                                   <button
                                     onClick={() =>
@@ -611,7 +615,9 @@ const Community = () => {
                       className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg transition"
                       onClick={() => handleSubmitResponse(questionId)}
                     >
-                      {isSubmittingResponse ? <Loader /> : "Submit Response"}
+                      {isSubmittingResponse ?       
+                      <DotPulseWrapper size="30" speed="1.5" color="white" />
+                     : "Submit Response"}
                     </button>
                   </div>
                 </div>

@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/axios";
-import { Category, Course, Tutor } from "@/lib/types";
+import { Tutor } from "@/lib/types";
 
 const fetchCourses = async () => {
-  const response = await api.get("/api/courses?populate=*");
-
-  return response.data;
+const response = await api.get("/api/courses?populate=*");
+return response.data;
 };
 
 export const useFetchCourses = () => {
@@ -14,6 +13,23 @@ export const useFetchCourses = () => {
     queryKey: ["courses"],
     meta: {
       errorMessage: "Failed to fetch courses",
+    },
+  });
+};
+
+const fetchTutorCourses = async () => {
+  const response = await api.get(
+    "/api/courses?populate[tutor][populate]=user&populate[card]=*&populate[category]=*&populate[ratings]=*"
+  );
+    return response.data;
+};
+
+export const useFetchTutorCourses = () => {
+  return useQuery<{ data:any}, Error>({
+    queryFn: fetchTutorCourses,
+    queryKey: ["tutor_courses"],
+    meta: {
+      errorMessage: "Failed to fetch your courses",
     },
   });
 };

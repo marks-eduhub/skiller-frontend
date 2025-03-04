@@ -251,7 +251,6 @@ const SignupForm = () => {
             disabled={isPendingGoogle}
             className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
           >
-            {" "}
             <Image
               src={data.registerForm.action.googlelogo}
               alt={"google"}
@@ -259,7 +258,6 @@ const SignupForm = () => {
               height={50}
             />
             <p className="text-[16px]">
-              {" "}
               {isPendingGoogle ? "Loading..." : "Sign In with Google"}
             </p>
           </button>
