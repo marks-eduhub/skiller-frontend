@@ -70,7 +70,7 @@ const MainPage = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-6 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-3  gap-6 relative">
             {tutorCourses?.map((course: any) => {
               const courseAttributes = course?.attributes;
               const image =

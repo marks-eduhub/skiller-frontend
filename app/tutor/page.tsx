@@ -1,5 +1,4 @@
 import React from "react";
-import SideBar from "../../components/Tutor/dashboard/sidebar";
 import TutorNav from "@/components/Tutor/dashboard/tutor-nav";
 import Link from "next/link";
 
