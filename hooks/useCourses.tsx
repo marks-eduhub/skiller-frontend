@@ -134,3 +134,13 @@ export const useFetchTutorSlug = (slug:string) => {
     },
   });
 };
+
+
+export const courseDelete = async (courseId: number) => {
+  try {
+    const response = await api.delete(`/api/courses/${courseId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to delete course. Please try again.");
+  }
+};

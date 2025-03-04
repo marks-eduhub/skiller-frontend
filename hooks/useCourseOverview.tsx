@@ -1,4 +1,3 @@
-import courses from "@/app/tutor/dashboard/courseoverview/[slug]/page";
 import api from "@/lib/axios";
 import { Course } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
