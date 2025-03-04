@@ -14,14 +14,13 @@ const Overview = () => {
   const { data: topicData } = useFetchCourseTopics(courseId);
   const duration = data?.data?.attributes?.duration || "N/A";
   const enrolledLearners = data?.data?.attributes?.users?.data || [];
-  const learners =
-    enrolledLearners.length > 0 ? enrolledLearners.length : "No learners yet";
+  const learners = enrolledLearners.length > 0 ? enrolledLearners.length : "No learners yet";
   const likes = data?.data?.attributes?.liked_courses?.data || [];
   const numberOfLiked = likes.length > 0 ? likes.length : "No likes yet";
   const [isModal, setModalOpen] = useState(false);
   const [openModal, setOpenModalOpen] = useState(false);
 
-  const handleModalOpen = (topic: any) => {
+  const handleModalOpen = () => {
     setModalOpen(true);
   };
 
