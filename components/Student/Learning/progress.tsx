@@ -14,7 +14,7 @@ const Progress = () => {
 
   if (isLoading) {
     return (
-      <div>
+      <div className="ml-5">
         <Skeleton
           height={300}
           count={3}

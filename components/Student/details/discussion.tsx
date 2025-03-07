@@ -337,25 +337,7 @@ const Discussion = () => {
   }
   if (isLoading) {
     return (
-      <div>
-        <h2 className="text-lg font-300 my-4 ">
-          <Skeleton
-            width={200}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
-        <div>
-          <Skeleton
-            height={300}
-            count={1}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-        </div>
-      </div>
+     <Loader/>
     );
   }
 
@@ -389,9 +371,12 @@ const Discussion = () => {
       </button>
 
       <div className="bg-gray-100 max-h-[650px] overflow-auto sm:p-6  sm:pr-0 pr-5 sm:mb-10">
-        <div className="flex items-center justify-center font-semibold mb-5 text-center ">
-        <h2 >To reply to a comment click the comment icon of the comment</h2>
-        </div>
+        {data?.data.length > 0 && (
+          <div className="flex items-center justify-center font-semibold mb-5 text-center ">
+           <h2 >To reply to a comment click the comment icon of the comment</h2>
+           </div>
+        )}
+       
         <div className="flex flex-col space-y-4 sm:w-1/2 h-auto">
           {data?.data?.length > 0 ? (
             data?.data?.map((comment: any) => {

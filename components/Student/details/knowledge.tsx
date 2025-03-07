@@ -15,12 +15,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import AttemptTestModal from "@/components/Student/details/warning";
-import "react-loading-skeleton/dist/skeleton.css";
-import Skeleton from "react-loading-skeleton";
 import { useFetchTopicResult } from "@/hooks/useQuestions";
 import { useMutation } from "@tanstack/react-query";
 import RatingModal from "./ratingmodal";
 import dynamic from "next/dynamic";
+import Loader from "../loader";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -312,24 +311,7 @@ const Knowledge = () => {
 
   if (isLoading || isTests) {
     return (
-      <div>
-        <Skeleton
-          width={200}
-          height={24}
-          baseColor="#e0e0e0"
-          highlightColor="#f0f0f0"
-        />
-
-        <div>
-          <Skeleton
-            height={300}
-            count={3}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-        </div>
-      </div>
+      <Loader/>
     );
   }
   if (error || isError) {

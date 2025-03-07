@@ -23,7 +23,7 @@ const Enroll = () => {
   }
   if (isLoading || loadingreviews) {
     return (
-      <div>
+      <div className="ml-5">
         <h2 className="text-lg font-300 my-4 ">
           <Skeleton
             width={200}

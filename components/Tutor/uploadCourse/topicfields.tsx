@@ -341,7 +341,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
        }
    };
 
-
   const { mutate: deleteTopics } = useMutation({
     mutationFn: async (topicId: number) => {
       return await topicDelete(topicId);
@@ -419,7 +418,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   });
 
   const handleDeleteClick = (topicId: number) => {
-    if (topicId === null) {
+    if (topicId === null || topicId === 0 || topicId === undefined) {
       message.warning("You can't delete an unsaved topic.");
       return;
     }
@@ -463,13 +462,13 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   };
 
   return (
-       <div className={`p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words ${isUploading ? "pointer-events-none opacity-50" : ""}`}>
-        {isUploading && (
-         <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-         <DotPulseWrapper type="metronome" size="30" speed="1.75" color="black" />
-         </div>
+       <div className={`p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words ${isUploading ? "pointer-events-none opacity-50 cursor-not-allowed" : ""}`}>
+       {isUploading && (
+          <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 cursor-not-allowed">
+           <DotPulseWrapper type="metronome" size="40" speed="1.75" color="black" />
+          </div>
+        )}
 
-         )}
 
       <div className="flex flex-col sm:flex-row gap-5">
         <div className="mt-5 flex flex-col sm:flex-row sm:items-center w-full gap-3">
