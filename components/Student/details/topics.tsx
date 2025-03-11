@@ -29,8 +29,7 @@ const TopicsCard: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const {
     data: allTestResults,
-    isLoading: resultsLoading,
-    error: resultsError,
+  
   } = useFetchAllResults(Number(userId));
 
   const { mutate: topicCompleted } = useMutation({

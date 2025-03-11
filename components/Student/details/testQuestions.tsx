@@ -29,6 +29,11 @@ const TestQuestions= () => {
   const [timesAttempted, setTimesAttempted] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [testResultId, setTestResultId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 1;
+  const indexOfLastQuestion = currentPage * questionsPerPage;
+  const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const [userQuestionResultsMap, setUserQuestionResultsMap] = useState<
     Record<number, number>
   >({});
@@ -38,6 +43,7 @@ const TestQuestions= () => {
     Number(userId)
   );
   const questionId = data?.data?.[0]?.attributes?.questions?.data?.[0]?.id;
+  const displayQuestions = data?.data
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -48,9 +54,12 @@ const TestQuestions= () => {
   };
 
   const confirmSubmit = async (testId: number) => {
+    setIsSubmitting(true); 
     await handleSubmitQuiz(testId);
+    setIsSubmitting(false); 
     closeModal();
   };
+  
 
   useEffect(() => {
     const fetchAndSetTimesAttempted = () => {
@@ -234,23 +243,31 @@ const TestQuestions= () => {
       },
       {}
     );
-
+  
+    const totalQuestions = correctAnswers.length;
+    const answeredQuestions = Object.keys(userAnswers).length;
+  
+    if (answeredQuestions < totalQuestions) {
+      message.error(`You must answer all questions before submitting.`);
+      return;
+    }
+  
     let passedCount = 0;
-    const totalQuestions = Object.keys(userAnswers).length;
+    // const totalQuestions = Object.keys(userAnswers).length;
 
     for (const questionId in userAnswers) {
       const userAnswer = userAnswers[questionId];
       const correctAnswer = correctAnswerMap[Number(questionId)];
-
+  
       const passed = Array.isArray(correctAnswer)
         ? correctAnswer.includes(userAnswer)
         : userAnswer.trim().toLowerCase() ===
           correctAnswer.trim().toLowerCase();
-
+  
       if (passed) {
         passedCount++;
       }
-
+  
       const userQuestionResultId = userQuestionResultsMap[Number(questionId)];
       if (userQuestionResultId) {
         updating({ userQuestionResultId, userAnswer, passed });
@@ -263,20 +280,25 @@ const TestQuestions= () => {
         });
       }
     }
-
+  
     const scorePercentage = (passedCount / totalQuestions) * 100;
     const roundedScore = Math.round(scorePercentage);
-
+  
     await updateTestResultScore(testResultId, roundedScore);
-
+  
     message.success(`Quiz submitted successfully!`);
     setUserAnswers({});
     router.back();
   };
+  
+  const currentQuestions = displayQuestions?.slice(
+    indexOfFirstQuestion,
+    indexOfLastQuestion
+  );
 
   if (isLoading) {
     return (
-      <div>
+      <div className="ml-5">
         <h2 className="text-lg font-300 my-4 ">
           <Skeleton
             width={200}
@@ -323,8 +345,8 @@ const TestQuestions= () => {
       </div>
 
       <div className="bg-gray-100 border mt-10 rounded-lg p-4 border-gray-100 w-full h-auto">
-        {data &&
-          data?.data?.map((questionItem: any, index: number) => {
+        {currentQuestions &&
+          currentQuestions?.map((questionItem: any, index: number) => {
             const questionText = questionItem?.attributes?.questions;
             const options = questionItem?.attributes?.options || [];
 
@@ -378,10 +400,43 @@ const TestQuestions= () => {
           if (testId) {
             confirmSubmit(Number(testId));
           } else {
-            message.error("Try again later.");
+            message.error("Submission failed. Try again in a few seconds");
           }
         }}
+        isSubmitting={isSubmitting} 
       />
+      <div className="flex justify-center items-center mt-4 gap-4">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg text-white font-medium ${
+            currentPage === 1
+              ? "bg-gray-400 cursor-not-allowed" 
+              : "bg-gray-600 hover:bg-gray-700"
+              }`}
+        >
+          Previous
+        </button>
+
+        <p className="text-gray-700 font-medium ">
+          Page {currentPage} of
+          <span className="ml-1">
+            {Math.ceil(displayQuestions.length / questionsPerPage)}
+          </span>
+        </p>
+
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage * questionsPerPage >= displayQuestions.length}
+          className={`px-4 py-2 rounded-lg text-white font-medium ${
+            currentPage * questionsPerPage >= displayQuestions.length
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-zinc-500 hover:bg-zinc-700"
+          }`}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

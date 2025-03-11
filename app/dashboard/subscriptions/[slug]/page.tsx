@@ -25,7 +25,7 @@ const userId = user?.id
 
   if (tutorLoading) {
     return (
-      <div>
+      <div className="ml-5">
         <h2 className="text-lg font-300 my-4 ">
           <Skeleton
             width={2000}

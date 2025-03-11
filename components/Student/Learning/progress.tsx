@@ -1,27 +1,22 @@
 import React from "react";
-import { useFetchCourses } from "@/hooks/useCourses";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import Image from "next/image";
 import { ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import api from "@/lib/axios";
-import { useFetchTopics } from "@/hooks/useCourseTopics";
+import { useFetchUserCourses } from "@/hooks/useSubmit";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const Progress = () => {
-  const { data: coursesData, isLoading, error } = useFetchCourses();
-  const { data: topicsData } = useFetchTopics();
+  const { user } = useAuthContext();
+  const userId = Number(user?.id);
+  const { data: courseProgress, isLoading, error } = useFetchUserCourses(userId);
 
   if (isLoading) {
     return (
-      <div>
-        <Skeleton
-          height={300}
-          count={3}
-          baseColor="#e0e0e0"
-          highlightColor="#f5f5f5"
-          enableAnimation={true}
-        />
+      <div className="ml-5">
+        <Skeleton height={300} count={3} baseColor="#e0e0e0" highlightColor="#f5f5f5" enableAnimation={true} />
       </div>
     );
   }
@@ -30,55 +25,41 @@ const Progress = () => {
     message.error("Error fetching course progress. Please try again later.");
   }
 
-  if (!coursesData?.data || coursesData.data.length === 0) {
+  if (!courseProgress || courseProgress.length === 0) {
     return (
       <p className="font-semibold flex items-center justify-center p-20 sm:text-[20px]">
-        Start watching topic videos to track your course progress.
+        Start enrolling in courses to track your progress.
       </p>
     );
   }
-  const courses = coursesData?.data;
-  const topics = topicsData?.data;
 
   return (
-    <div className="grid sm:grid-cols-3  grid-cols-1 gap-6 mt-10">
-      {courses?.map((course: any) => {
-        const courseId = course.id;
+    <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 mt-10">
+      {courseProgress.map((tracker: any) => {
+        const course = tracker.attributes?.course?.data;
+        if (!course) return null;
 
-        const courseTopics = topics?.filter(
-          (topic: any) => topic?.attributes?.course.data.id === courseId
-        );
+        const { id, attributes } = course;
+        const imageUrl = attributes?.card?.data?.attributes?.url;
+        const tutorname = attributes?.tutor?.data?.attributes?.tutorname;
+        const coursename = attributes?.coursename;
 
-        const totalTopics = courseTopics?.length;
-        const completedTopics = courseTopics?.filter(
-          (topic: any) => topic?.attributes.isCompleted
-        ).length;
-
-        const progress = totalTopics
-          ? Math.round((completedTopics / totalTopics) * 100)
-          : 0;
-
-        const imageUrl = course?.attributes?.card?.data?.attributes?.url;
-        const tutorname =
-          course?.attributes?.tutor?.data?.attributes?.tutorname;
+        const progressData = tracker.attributes?.topic_progress_trackers?.data || [];
+        const totalTopics = attributes?.topicname?.data?.length || 0;
+        const completedTopics = progressData.length;
+        const progressPercentage = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
 
         return (
-          <div key={courseId} className="border border-gray-400">
+          <div key={id} className="border border-gray-400">
             <div className="rounded-lg flex relative overflow-hidden h-[180px]">
               <Image
-                src={
-                  imageUrl
-                    ? `${api.defaults.baseURL}${imageUrl}`
-                    : "/fallback.webp"
-                }
-                alt={course?.attributes?.alternativeText || "Course Image"}
+                src={imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/fallback.webp"}
+                alt={coursename || "Course Image"}
                 fill
                 className="object-cover object-center p-1"
               />
               <div className="flex items-center absolute justify-between p-2 w-full">
-                <p className="text-black bg-white px-4 py-0 rounded-full">
-                  Free
-                </p>
+                <p className="text-black bg-white px-4 py-0 rounded-full">Free</p>
               </div>
             </div>
 
@@ -90,11 +71,11 @@ const Progress = () => {
 
               <div className="w-full bg-gray-300 rounded-full h-[20px] border border-black relative mt-4">
                 <div
-                  className="bg-gray-700 h-[18px] rounded-full"
-                  style={{ width: `${progress}%` }}
-                ></div>
+                  className="bg-gray-700 h-[18px]  rounded-full"
+                  style={{ width: `${progressPercentage}%` }}
+                  />
                 <div className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold">
-                  {`${progress}%`}
+                  {`${progressPercentage}%` || 0}
                 </div>
               </div>
               <div className="flex justify-between mt-3 gap-2 text-[0.8rem]">
@@ -114,5 +95,7 @@ const Progress = () => {
     </div>
   );
 };
+
+
 
 export default Progress;

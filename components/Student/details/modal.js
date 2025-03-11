@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomModal = ({ isOpen, onClose, onConfirm}) => {
+const CustomModal = ({ isOpen, onClose, onConfirm , isSubmitting}) => {
   if (!isOpen) return null;
 
   return (
@@ -19,7 +19,7 @@ const CustomModal = ({ isOpen, onClose, onConfirm}) => {
             onClick={onConfirm}
             className="px-4 py-2 bg-red-900 text-white rounded hover:bg-red-900"
           >
-            Confirm
+            {isSubmitting ? "Submitting..." : "Confirm"}
           </button>
         </div>
       </div>

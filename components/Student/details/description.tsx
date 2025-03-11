@@ -3,8 +3,8 @@ import { message } from "antd";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { BsBookmarkCheck, BsFillShareFill } from "react-icons/bs";
-import "react-loading-skeleton/dist/skeleton.css";
-import Skeleton from "react-loading-skeleton";
+import Loader from "../loader";
+
 
 const Description = () => {
   const searchParams = useSearchParams();
@@ -12,26 +12,7 @@ const Description = () => {
   const { data, isLoading, error } = useFetchTopicDetails(Number(topicId));
   if (isLoading) {
     return (
-      <div>
-        <h2 className="text-lg font-300 my-4 ">
-          <Skeleton
-            width={200}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
-
-        <div>
-          <Skeleton
-            height={300}
-            count={1}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
-        </div>
-      </div>
+    <Loader/>
     );
   }
 

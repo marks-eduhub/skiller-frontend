@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+
+const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 interface QuizPreviewProps {
   handlePreviousStep: () => void;
@@ -6,14 +10,25 @@ interface QuizPreviewProps {
     question: string;
     options: string[];
   }[];
-  handleSubmitQuiz: () => void
+  handleSubmitQuiz: () => void;
 }
 
 const QuizPreview: React.FC<QuizPreviewProps> = ({
   handlePreviousStep,
   quizData,
-  handleSubmitQuiz
+  handleSubmitQuiz,
 }) => {
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleSubmission =  () => {
+    setIsUploading(true);
+    try {
+      handleSubmitQuiz(); 
+    } finally {
+      setIsUploading(false); 
+    }
+  };
+  
   return (
     <div className="sm:p-6 p-4 mb-5 sm:mt-0 mt-20 w-full">
       <div className="flex mt-6 justify-between w-full sm:items-center">
@@ -26,9 +41,17 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
         <h1 className="text-xl hidden md:flex">Quiz Preview</h1>
         <button
           className="bg-black text-white rounded-md px-4 sm:px-6 w-[150px] sm:py-2"
-          onClick={handleSubmitQuiz}
+          onClick={handleSubmission}
         >
-          Upload Quiz
+          {isUploading ? (
+            <DotPulseWrapper
+              size="30"
+              speed="1.75"
+              color="white"
+            />
+          ) : (
+            "UploadQuiz"
+          )}
         </button>
       </div>
 
@@ -45,7 +68,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
                     type="radio"
                     name={`question-${index}`}
                     value={option}
-                    disabled 
+                    disabled
                     className="mr-2"
                   />
                   {option}

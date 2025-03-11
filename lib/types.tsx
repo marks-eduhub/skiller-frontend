@@ -84,6 +84,7 @@ export interface TestResult {
 export interface Test {
   id: number;
   attributes: {
+    test_results:[];
     quizname: string;
     testdescription: string;
     passmark: string;

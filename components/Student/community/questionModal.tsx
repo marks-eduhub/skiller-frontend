@@ -15,7 +15,6 @@ const QuestionModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [questionContent, setQuestionContent] = useState("");
   const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
-  const [isAddingQuestion, setIsAddingQuestion] = useState(false);
 
   const { mutate: postQuestionMutation } = useMutation({
     mutationFn: async ({
@@ -78,15 +77,9 @@ const QuestionModal = () => {
       <button
         className="mb-4 px-4 py-2 bg-gray-600 text-white rounded"
         onClick={() => {
-          setIsAddingQuestion(true);
           setIsModalOpen(true);
-          setTimeout(() => setIsAddingQuestion(false), 500);
-        }}
-        disabled={isAddingQuestion}
-      >
-        {isAddingQuestion ?          
-         <DotPulseWrapper size="20" speed="1.5" color="white" />
-         : "Add New Question"}
+        }}  >
+         Add New Question
       </button>
 
       {isModalOpen && (
@@ -105,6 +98,7 @@ const QuestionModal = () => {
               <button
                 className=" sm:w-auto px-4 py-2 bg-gray-600 text-white rounded "
                 onClick={handleQuestion}
+                disabled={isSubmittingQuestion}
               >
                 {isSubmittingQuestion ? 
                  <DotPulseWrapper type="metronome" size="30" speed="1.75" color="white" />
