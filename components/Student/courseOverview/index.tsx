@@ -10,16 +10,28 @@ import CourseReview from "./courseReviews";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
+import { courseTracker, useFetchCourseTracker } from "@/hooks/useSubmit";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 const Enroll = () => {
+  const { user } = useAuthContext();
+  const userId = Number(user?.id);
   const router = useRouter();
-  const [isEnroll, setIsEnroll] = useState(false)
   const [tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
+  const courseId = Number(slug);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { data: coursetrackerdata } = useFetchCourseTracker(userId, courseId);
+  const isEnrolled = coursetrackerdata?.data?.length > 0;
+
   const { data, isLoading, error } = useFetchOverview(Number(slug));
-  const { data: reviews, isLoading: loadingreviews, error: reviewError} = useFetchReviews(Number(slug));
+  const {
+    data: reviews,
+    isLoading: loadingreviews,
+    error: reviewError,
+  } = useFetchReviews(Number(slug));
   if (!slug) {
-    return 
+    return;
   }
   if (isLoading || loadingreviews) {
     return (
@@ -64,9 +76,12 @@ const Enroll = () => {
   const card = courseAttributes.card?.data?.attributes?.url || "";
   const tutorName = courseAttributes.tutor?.data?.attributes?.tutorname || "DS";
   const duration = courseAttributes.duration || "2 hours and 40 minutes";
-  const introduction = courseAttributes?.coursedescription || "No introduction available";
-  const requirements = courseAttributes?.requirements|| "No requirements available";
-  const expectations = courseAttributes?.expectations || "No expectations available";
+  const introduction =
+    courseAttributes?.coursedescription || "No introduction available";
+  const requirements =
+    courseAttributes?.requirements || "No requirements available";
+  const expectations =
+    courseAttributes?.expectations || "No expectations available";
   const enrolled = courseAttributes.users?.data || [];
   const studentsenrolled = enrolled.length;
   const topics = courseAttributes?.topicname?.data || [];
@@ -74,7 +89,7 @@ const Enroll = () => {
   const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
 
   const Reviews = reviewData.map((review: any) => {
-  const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
+    const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
 
     return {
       name: review.attributes.name,
@@ -88,16 +103,23 @@ const Enroll = () => {
 
   const handleTab = (tabName: string) => setTab(tabName);
 
-  const handleEnrollClick = () => {
-    if (firstTopicId) {
-      setIsEnroll(true);
-      router.push(`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`);
-    }else{
-      if(!firstTopicId) { 
-        message.warning("No topics available yet for you to enroll")
+  const handleEnrollClick = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+  
+    try {
+      if (!isEnrolled) {
+        await courseTracker(userId, courseId);
+        message.success("Enrolled successfully");
       }
+        router.push(`/dashboard/overview/${slug}/topics?topicId=${firstTopicId}`);
+    } catch (error) {
+      message.error("Error enrolling");
+    } finally {
+      setIsProcessing(false);
     }
   };
+  
 
   return (
     <div>
@@ -115,10 +137,18 @@ const Enroll = () => {
             <p className="font-semibold sm:mt-0">By {tutorName}</p>
           </div>
           <div className="p-4 self-end ">
-          <button className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black" onClick={handleEnrollClick}>
-          {isEnroll ? "Please wait..." : "Enroll today!"}
-          </button>
-        </div>
+            <button
+              className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black"
+              onClick={handleEnrollClick}
+              disabled={isProcessing} 
+            >
+              {isProcessing
+                ? "Please wait..."
+                : isEnrolled
+                ? "Go to Course"
+                : "Enroll today!"}
+            </button>
+          </div>
         </div>
       </div>
       <div className="flex flex-col mt-5 mb-3">
@@ -134,9 +164,17 @@ const Enroll = () => {
           <span className="font-bold text-[18px]">{studentsenrolled}</span>
         </h1>
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
-          <button className="text-white px-6 py-2" onClick={handleEnrollClick}>
-          {isEnroll ? "Please wait..." : "Enroll today!"}
-          </button>
+        <button
+              className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black"
+              onClick={handleEnrollClick}
+              disabled={isProcessing} 
+            >
+              {isProcessing
+                ? "Please wait..."
+                : isEnrolled
+                ? "Go to Course"
+                : "Enroll today!"}
+            </button>
         </div>
       </div>
       <div className="flex w-full justify-around items-center mt-10 ">
@@ -177,7 +215,7 @@ const Enroll = () => {
         <CourseReview reviews={Reviews} />
       )}
 
-      <SimilarCourses/>
+      <SimilarCourses />
     </div>
   );
 };

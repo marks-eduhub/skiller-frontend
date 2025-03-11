@@ -1,18 +1,20 @@
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import {
   useFetchTests,
-  createCourseProgress,
   useFetchAllCourseTests,
   courseRating,
   useFetchCourseCompletion,
   useFetchCourseRating,
   updateCourseRating,
   useFetchSpecificCourseRate,
+  topicProgress,
+  useFetchCourseTracker,
+  useCompletedTopics
 } from "@/hooks/useSubmit";
 import { message } from "antd";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState , useRef} from "react";
 import Image from "next/image";
 import AttemptTestModal from "@/components/Student/details/warning";
 import { useFetchTopicResult } from "@/hooks/useQuestions";
@@ -22,18 +24,17 @@ import dynamic from "next/dynamic";
 import Loader from "../loader";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
-
-
 const Knowledge = () => {
   const searchParams = useSearchParams();
-  const topicId = searchParams.get("topicId");
+  const idTopic = searchParams.get("topicId");
+  const topicId = Number(idTopic)
   const { user } = useAuthContext();
   const userId = Number(user?.id);
   const { slug } = useParams();
   const courseId = Number(slug);
   const [selectedTab, setselectedTab] = useState("Tests");
   const [isAttempting, setIsAttempting] = useState(false)
-  const [isCourseCompleted, setIsCourseCompleted] = useState(false);
+  const { data: completedTopics} = useCompletedTopics(userId, courseId);
   const handleselectedClick = (tabName: string) => {
     setselectedTab(tabName);
   };
@@ -53,7 +54,10 @@ const Knowledge = () => {
   const router = useRouter();
   const totalAttempts = 3;
   const [showRatingModal, setShowRatingModal] = useState(false);
-  const { data: allCourseTests } = useFetchAllCourseTests(courseId, userId);
+  const { data: allCourseTests } = useFetchAllCourseTests(topicId, userId);
+  const all = allCourseTests?.data
+  const {data:coursetrackerdata} = useFetchCourseTracker(userId, courseId)
+  const coursetrackerId = coursetrackerdata?.data?.[0]?.id;  
   const { data: courseStatus } = useFetchCourseCompletion(courseId, userId);
   const { data: courseratings } = useFetchCourseRating(courseId, userId);
   const hasRated = courseratings?.data?.length > 0;
@@ -61,7 +65,6 @@ const Knowledge = () => {
   const shouldShowRatingModal = !hasRated && courseprogress;
   const { data: specificCourseRate } = useFetchSpecificCourseRate(courseId);
   const ratings = specificCourseRate?.data || [];
-  const totalRatings = ratings.length;
   const { data, isLoading, error } = useFetchTopicResult(
     Number(userId),
     Number(topicId)
@@ -74,28 +77,15 @@ const Knowledge = () => {
     error: isError,
   } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
   const hasTests = tests?.data?.length > 0;
+  
+  useEffect(() => {
+    if (!isLoading && completedTopics) {
+    }
+  }, [completedTopics, isLoading]);
 
-  const { mutate: createProgress } = useMutation({
-    mutationFn: async ({
-      userId,
-      courseId,
-      progressStatus,
-    }: {
-      userId: number;
-      courseId: number;
-      progressStatus: boolean;
-    }) => {
-      return await createCourseProgress(userId, courseId, progressStatus);
-    },
-    onSuccess: () => {
-      setIsCourseCompleted(true);
-      setShowRatingModal(true);
-    },
-    onError: (err) => {
-      message.error("Error updating course progress");
-    },
-  });
+  const isTopicCompleted = completedTopics?.some((topic: { id: number; }) => topic.id === topicId);
 
+ 
   const { mutate: updateRate } = useMutation({
     mutationFn: async ({
       courseId,
@@ -105,9 +95,6 @@ const Knowledge = () => {
       averageRating: number;
     }) => {
       return await updateCourseRating(courseId, averageRating);
-    },
-    onSuccess: () => {
-      // message.success("Rating sent to backend");
     },
     onError: (err) => {
       message.error("Error updating rating");
@@ -142,60 +129,65 @@ const Knowledge = () => {
     },
     onSuccess: (_, { score }) => {
       handleRatingUpdate(score);
-      // message.success("Course rating updated");
     },
     onError: () => {
       message.error("Error attaching a rating to course");
     },
   });
 
-  const checkCourseCompletion = useCallback(
-    (testresultdata: any[], allCourseTests: any) => {
-    
-      if (!testresultdata || !Array.isArray(testresultdata) || testresultdata.length === 0) {
-        return;
-      }
-  
-      const courseTests = Array.isArray(allCourseTests.data) ? allCourseTests.data : [allCourseTests.data];
-  
-      const courseTestIds = courseTests.map((test: { id: any; }) => test.id);
-  
-      const attemptedTestIds = testresultdata.map(result => result.attributes.test?.data?.id);
-  
-      const allTestsAttempted = courseTestIds.every((testId: any) => attemptedTestIds.includes(testId));
-  
-      let allTestsPassed = true;
-  
-      testresultdata.forEach((testResult) => {
-        const userScore = Number(testResult.attributes.score) || 0;
-        const passmark = Number(testResult.attributes.test?.data?.attributes?.passmark) || 0;
-  
-        if (userScore < passmark) {
-          allTestsPassed = false;
-        } 
-      });
-  
-  
-      if (allTestsAttempted && allTestsPassed) {
-        createProgress({ userId, courseId, progressStatus: true });
-      } 
-    },
-    [userId, courseId, createProgress]
-  );
-  
-  useEffect(() => {
-    if (shouldShowRatingModal) {
-      setShowRatingModal(true);
-    }
-  }, [shouldShowRatingModal]);
-  
+const hasUserPassedAllTests = useCallback(() => {
+  return all?.every((test: { attributes: { test_results: { data: any[] }; passmark: any } }) => {
+    const testResults = test?.attributes?.test_results?.data ?? [];
 
-  useEffect(() => {
-    if (Array.isArray(allCourseTests?.data) && allCourseTests.data.length > 0 && testresultdata) {
-      checkCourseCompletion(testresultdata, allCourseTests);
+    if (testResults.length === 0) {
+      return false;
     }
-  }, [allCourseTests, testresultdata, checkCourseCompletion]);
-  
+
+    const scores = testResults
+      .map((result) => result?.attributes?.score ?? 0)
+      .filter((score) => typeof score === "number");
+
+    const maxScore = scores.length ? Math.max(...scores) : 0;
+
+    return maxScore >= Number(test?.attributes?.passmark ?? 0);
+  });
+}, [all]);
+
+const hasUpdatedProgress = useRef(false);
+
+const handleTopicCompletion = useCallback(async () => {
+  if (!hasUserPassedAllTests()) {
+    return;
+  }
+
+  if (isTopicCompleted) {  
+    return;
+  }
+
+  if (hasUpdatedProgress.current) {
+    return;
+  }
+
+  hasUpdatedProgress.current = true; 
+
+  try {
+    await topicProgress(userId, topicId, coursetrackerId, true);
+    message.success("Success");
+  } catch (error) {
+    message.error("Error updating topic progress");
+  }
+}, [hasUserPassedAllTests, userId, topicId, coursetrackerId, isTopicCompleted]);
+
+
+useEffect(() => {
+  if (isTopicCompleted) {
+    return;
+  }
+
+  if (hasUserPassedAllTests()) {
+    handleTopicCompletion();
+  }
+}, [hasUserPassedAllTests, handleTopicCompletion, isTopicCompleted]);
 
   const submitRating = async (rating: number) => {
     if (!courseStatus || courseStatus.length === 0) {
