@@ -12,9 +12,6 @@ const Resources = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
   const { data, isLoading, error } = useFetchTopicResources(Number(topicId));
-
- 
-
   const resources = data?.data?.attributes?.topicResources?.data || [];
   const instructions = data?.data?.attributes?.resourceInstructions || "No instructions available.";
 
@@ -58,7 +55,7 @@ const Resources = () => {
               className="h-20 mt-10 bg-gray-700 text-white flex items-center justify-between px-4"
             >
               <Link
-                href={`${api.defaults.baseURL}${resource.attributes.url}`}
+                href={`${resource.attributes.url}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between w-full"

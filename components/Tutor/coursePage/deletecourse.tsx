@@ -3,7 +3,7 @@ import queryClient from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 
 interface DeletecourseModalProps {
   isOpen: boolean;

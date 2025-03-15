@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import ProductCard from "./courseCards";
 import { Course } from "@/lib/types";
 import Loader from "../loader";
+import { usePathname } from "next/navigation";
 interface ProductContainerProps {
   courses: Course[];
 }
@@ -10,12 +11,14 @@ interface ProductContainerProps {
 const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const pathname = usePathname();
   const handleCourseClick = (path: string) => {
     setIsLoading(true);
     router.push(path);
   };
+  const isOnDashboardHome = pathname === "/dashboard";
 
+  const displayedCourses =  isOnDashboardHome ? courses.slice(0, 3) : courses;
   return (
     <>
       <div className="relative pl-0 container mx-auto max-md:hidden">
@@ -26,10 +29,10 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
             </div>
           </div>
         )}
-        <div className="grid sm:grid-cols-3 w-full my-4 gap-6">
+        <div className="grid sm:grid-cols-3 w-full my-6 gap-6">
           {courses &&
             courses.length > 0 &&
-            courses.slice(0, 3).map((course) =>
+            displayedCourses.map((course) =>
               course ? (
                 <div
                   key={course.id}

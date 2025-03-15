@@ -17,49 +17,111 @@ const Step3 = ({
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
 
-  const currentQuestions = quizData.slice(indexOfFirstQuestion, indexOfLastQuestion);
+  const currentQuestions = quizData.slice(
+    indexOfFirstQuestion,
+    indexOfLastQuestion
+  );
 
   const handleQuestionChange = (index: number, value: string) => {
+    if (index < 0 || index >= quizData.length) {
+     
+      return;
+    }
+
     const updatedQuizData = [...quizData];
     updatedQuizData[index].question = value;
+
     setQuizData(updatedQuizData);
   };
 
-  const handleOptionChange = (qIndex: number, oIndex: number, value: string) => {
+  const handleOptionChange = (
+    qIndex: number,
+    oIndex: number,
+    value: string
+  ) => {
+    if (
+      qIndex < 0 ||
+      qIndex >= quizData.length ||
+      oIndex < 0 ||
+      oIndex >= quizData[qIndex].options.length
+    ) {
+      return;
+    }
+
     const updatedQuizData = [...quizData];
     updatedQuizData[qIndex].options[oIndex] = value;
+
     setQuizData(updatedQuizData);
   };
+  const handleCorrectAnswerChange = (id: number, value: string) => {
+  
+    const updatedQuizData = quizData.map((q) =>
+      q.questionId
+        ? q.questionId === id
+          ? { ...q, answers: value }
+          : q
+        : quizData.indexOf(q) === id
+        ? { ...q, answers: value }
+        : q
+    );
 
-  const handleCorrectAnswerChange = (index: number, value: string) => {
-    const updatedQuizData = [...quizData];
-    updatedQuizData[index].answers = value;
     setQuizData(updatedQuizData);
   };
 
   const addOption = (qIndex: number) => {
+    const realIndex = indexOfFirstQuestion + qIndex;
+
+    if (realIndex < 0 || realIndex >= quizData.length) {
+      return;
+    }
+
     const updatedQuizData = [...quizData];
-    updatedQuizData[qIndex].options.push("");
+
+    if (!updatedQuizData[realIndex].options) {
+      updatedQuizData[realIndex].options = [];
+    }
+
+    updatedQuizData[realIndex].options.push("");
+
     setQuizData(updatedQuizData);
   };
 
   const removeOption = (qIndex: number, oIndex: number) => {
-    const updatedQuizData = [...quizData];
-    updatedQuizData[qIndex].options.splice(oIndex, 1);
-    setQuizData(updatedQuizData);
+    const realIndex = indexOfFirstQuestion + qIndex;
 
-    if (updatedQuizData[qIndex].answers === updatedQuizData[qIndex].options[oIndex]) {
-      updatedQuizData[qIndex].answers = "";
+    if (realIndex < 0 || realIndex >= quizData.length) {
+      return;
     }
+
+    const updatedQuizData = [...quizData];
+
+    if (
+      !updatedQuizData[realIndex].options ||
+      updatedQuizData[realIndex].options.length === 0
+    ) {
+      return;
+    }
+
+    const removedOption = updatedQuizData[realIndex].options[oIndex];
+
+    updatedQuizData[realIndex].options.splice(oIndex, 1);
+
+    if (updatedQuizData[realIndex].answers === removedOption) {
+      updatedQuizData[realIndex].answers = "";
+    }
+
     setQuizData(updatedQuizData);
   };
 
   const addQuestion = () => {
-    setQuizData([...quizData, { question: "", options: ["", ""], answers: "" }]);
+    setQuizData([
+      ...(quizData || []),
+      { id: Date.now(), question: "", options: ["", ""], answers: "" },
+    ]);
   };
 
-  const removeQuestion = (index: number) => {
-    setQuizData(quizData.filter((_, qIndex) => qIndex !== index));
+  const removeQuestion = (id: number) => {
+    setQuizData(quizData.filter((q) => q.id !== id));
   };
 
   return (
@@ -81,12 +143,12 @@ const Step3 = ({
             </button>
           </div>
 
-          <div className="sm:mb-16 mb-20 mt-2">
+          <div className="sm:mb-4 mt-2">
             <ReactQuill
               placeholder="Type your question here.."
               value={q.question}
               onChange={(value) => handleQuestionChange(qIndex, value)}
-              className="bg-white h-40 sm:w-1/2"
+              className="bg-white h-auto sm:w-1/2"
             />
           </div>
 
@@ -97,7 +159,9 @@ const Step3 = ({
                 className="sm:w-1/2 w-full outline-none p-2 border border-gray-300 rounded-md"
                 placeholder={`Option ${oIndex + 1}`}
                 value={option}
-                onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+                onChange={(e) =>
+                  handleOptionChange(qIndex, oIndex, e.target.value)
+                }
               />
               <button
                 onClick={() => removeOption(qIndex, oIndex)}
@@ -117,10 +181,21 @@ const Step3 = ({
 
           <div className="flex sm:flex-row flex-col gap-3 mt-6">
             <h3 className="mt-1">Select the Right Answer:</h3>
+
             <select
               className="text-gray-900 block sm:w-40 w-full bg-white rounded-md px-3 py-2 border border-gray-300 outline-none"
-              value={q.answers}
-              onChange={(e) => handleCorrectAnswerChange(qIndex, e.target.value)}
+              value={
+                q.questionId
+                  ? quizData.find((qItem) => qItem.questionId === q.questionId)
+                      ?.answers || ""
+                  : q.answers
+              }
+              onChange={(e) =>
+                handleCorrectAnswerChange(
+                  q.questionId ? q.questionId : indexOfFirstQuestion + qIndex,
+                  e.target.value
+                )
+              }
             >
               <option value="" disabled>
                 Select Answer

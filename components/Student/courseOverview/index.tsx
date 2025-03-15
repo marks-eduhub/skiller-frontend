@@ -93,9 +93,7 @@ const Enroll = () => {
 
     return {
       name: review.attributes.name,
-      image: imageUrl
-        ? `${api.defaults.baseURL}${imageUrl}`
-        : "/Ellipse 445.webp",
+      image: imageUrl || "/Ellipse 445.webp",
       comment: review.attributes.comment,
       rating: review.attributes.rating,
     };
@@ -125,7 +123,7 @@ const Enroll = () => {
     <div>
       <div className="w-full relative sm:h-[500px] h-[300px]">
         <Image
-          src={card ? `${api.defaults.baseURL}${card}` : "/fallback.webp"}
+          src={card || "/fallback.webp"}
           alt="Course Image"
           fill
           className="object-cover bg-no-repeat rounded-2xl"

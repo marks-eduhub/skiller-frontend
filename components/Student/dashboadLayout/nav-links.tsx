@@ -112,7 +112,7 @@ export function NavLinks({
                   pathname === "/dashboard/tutorspage",
               })}
             >
-              <p className="hover:bg-gray-900">Tutors</p>
+              <p>Tutors</p>
             </div>
             {data?.data.slice(0, 5).map((subscription) => {
               const slug = subscription.id;

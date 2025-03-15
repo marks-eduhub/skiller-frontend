@@ -54,11 +54,9 @@ const FeaturedProduct: React.FC = () => {
               <div key={course.id} className="relative">
                 <div className="h-[256px] w-[800px]">
                 <Image
-                  src={
-                    imageUrl
-                      ? `${api.defaults.baseURL}${imageUrl}`
-                      : "/fallback.webp"
-                  }
+                  
+                  src={imageUrl ||"/fallback.webp"}
+
                   alt={
                     course?.attributes.Image?.data[0]?.attributes
                       .alternativeText || "course image"

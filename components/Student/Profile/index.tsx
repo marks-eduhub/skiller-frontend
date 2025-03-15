@@ -17,6 +17,8 @@ import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -24,6 +26,7 @@ const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 const ProfilePage: React.FC = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
+  const router = useRouter()
   const { data } = useFetchUserDetails(Number(userId));
   const { data: tutorDetails } = useFetchTutorDetails(Number(userId));
   const { data: tutor } = useFetchTutorId(Number(userId));
@@ -76,8 +79,7 @@ const ProfilePage: React.FC = () => {
       const profilePicUrl = data.profilepicture?.url;
 
       if (profilePicUrl) {
-        const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${profilePicUrl}`;
-        setUploadImage(fullUrl);
+        setUploadImage(profilePicUrl);
         setIsImageLoading(true);
       } else {
         setUploadImage("/Ellipse 445.webp");
@@ -400,10 +402,18 @@ const ProfilePage: React.FC = () => {
       setIsSaving(false);
     }
   };
+ 
+  const handleBack = () => {
+    router.back();
+  };
 
   return (
     <div className="max-md:p-0 max-md:pr-4 sm:pl-10 items-center sm:w-1/2">
-      <h2 className="font-bold text-[30px] mb-3 max-md:mt-0">Profile</h2>
+      <div className = "flex sm:gap-10 gap-6 sm:mt-4 mt-0">
+      <IoMdArrowRoundBack className="text-[30px] sm:mt-2 mt-2 cursor-pointer"  onClick={handleBack}/>
+      <h2 className="font-bold text-[30px] mb-3 max-md:mt-0 ">Profile</h2>
+
+      </div>
       <p>
         Add your personal details as you would like them to appear on your
         profile

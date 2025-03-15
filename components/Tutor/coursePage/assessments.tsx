@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFetchCourseTopics } from "@/hooks/useCourses";
 import { useParams } from "next/navigation";
-import QuizModal from "./quizModal";
+import QuizModal from "./testModal";
 
 const Assessments = () => {
   const { slug } = useParams();
@@ -40,7 +40,7 @@ const Assessments = () => {
         {topicData?.data
           ?.filter(
             (topic: any) => topic.attributes?.topic_tests?.data?.length > 0
-          ) 
+          )
           .map((topic: any, index: number) => (
             <div key={index} className="mb-6">
               <div className="h-[90px] bg-gray-700">
@@ -64,22 +64,25 @@ const Assessments = () => {
               </div>
 
               {isDown[topic.id] && (
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-6">
                   {topic.attributes?.topic_tests?.data.map(
                     (test: any, index: number) => (
                       <div
                         key={index}
-                        className="bg-[#1a1b1ab0] p-4 flex justify-between items-center"
+                        className="bg-[#1a1b1ab0]  p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0 rounded-lg"
                       >
-                        <span className="text-white">
-                          {test.attributes?.testname}
-                        </span>
-                        <span className="text-white">
-                          {test.attributes?.testdescription}
-                        </span>
-                        <div className="flex items-center space-x-2">
+                        <div className="text-white flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+                          <span className="sm:mb-0 mb-2">
+                            {test.attributes?.testname}
+                          </span>
+                          <span className="sm:text-sm text-white">
+                            {test.attributes?.testdescription}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-end sm:justify-start">
                           <div
-                            className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer"
+                            className="bg-white text-gray-800 px-3 py-1 rounded flex items-center cursor-pointer hover:bg-gray-200 transition"
                             onClick={() => handleModalOpen(test.id, topic.id)}
                           >
                             <Image
