@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import api from "@/lib/axios";
 import { message } from "antd";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import {
@@ -180,11 +179,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   };
 
   return (
-    <div className="mr-4 pb-10 sm:pb-0 h-full">
+    <div className="mr-4 pb-10 sm:pb-0 h-full ">
       <div className="border border-gray-400" onClick={handleCourseRecent}>
         <div className="rounded-lg flex relative overflow-hidden h-[180px]">
           <Image
-            src={imageUrl ? `${api.defaults.baseURL}${imageUrl}` : "/fallback.webp"}
+            src={imageUrl ||"/fallback.webp"}
             alt={card?.data?.attributes?.alternativeText || "Fallback Image"}
             fill
             className="object-cover object-center p-1"

@@ -4,23 +4,6 @@ import TopicFields from "../uploadCourse/topicfields";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
 
-interface Topic {
-  id: number;
-  topicname: string;
-  topicdescription: string;
-  resourceInstructions: string;
-  topicExpectations: string;
-  duration: string;
-  topicResources: any;
-  topicVideo: any;
-  topicresource: string;
-  topicexpectation: string;
-  topicduration: string;
-  instructions: string;
-  videoFile: File | null;
-  resourceFile: File | null;
-}
-
 const defaultTopic = {
   id: 0,
   topicname: "",
@@ -64,7 +47,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
       const videoData = currentTopic.attributes.topicVideo.data;
       const firstTopicVideoUrl =
         videoData && videoData.length > 0
-          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}${videoData[0].attributes.url}`
+          ? `${videoData[0].attributes.url}`
           : "";
       const videoId =
         videoData && videoData.length > 0 ? videoData[0].id : null;
@@ -76,7 +59,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
       const resourceUrls = resourceData?.data
         ? resourceData.data.map(
             (res: { attributes: { url: any } }) =>
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}${res.attributes.url}`
+              `${res.attributes.url}`
           )
         : [];
   

@@ -119,7 +119,7 @@ const SearchBar: React.FC = () => {
         setShowDropdown(false); 
 
         if (resultToNavigate.type === "tutor") {
-          window.location.href = `/dashboard/subscriptions/${resultToNavigate.attributes.slug}`;
+          window.location.href = `/dashboard/subscriptions/${resultToNavigate.id}`;
         } else {
           window.location.href = `/dashboard/overview/${resultToNavigate.id}`;
         }
@@ -178,7 +178,7 @@ const SearchBar: React.FC = () => {
 
                     if (result.type === "tutor") {
                       router.push(
-                        `/dashboard/subscriptions/${result.attributes.slug}`
+                        `/dashboard/subscriptions/${result.id}`
                       );
                     } else {
                       router.push(`/dashboard/overview/${result.id}`);

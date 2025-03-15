@@ -35,7 +35,7 @@ export const useFetchTutorCourses = () => {
 };
 
 const fetchTutors = async () => {
-  const response = await api.get("/api/tutors?populate=profilepicture,courses, user");
+  const response = await api.get("/api/tutors?populate=courses, user");
 
   return response.data;
 };
@@ -50,26 +50,22 @@ export const useFetchTutors = () => {
   });
 };
 
-const fetchTutorPicture = async () => {
-  const response = await api.get("/api/tutors?populate[user][profilepicture]");
-
-  const tutors = response.data.data.map((tutor: any) => ({
-    ...tutor.attributes,
-    profilePictureUrl: tutor.attributes.user?.data?.attributes?.profilepicture?.data?.attributes?.url || '/default-profile.png',
-  }));
-
-  return tutors;
+const fetchTutorPopulate= async () => {
+  const response = await api.get("/api/tutors?populate[user][populate]=*&populate[profilepicture]=*");
+  return response.data
+ 
 };
 
-export const useFetchTutorsPictures = () => {
+export const useFetchTutorsPopulate = () => {
   return useQuery<{ data: any }, Error>({
-    queryFn: fetchTutorPicture,
+    queryFn: fetchTutorPopulate,
     queryKey: ["tutor_pictures"],
     meta: {
       errorMessage: "Failed to load tutor profile pictures",
     },
   });
 };
+
 
 
 const fetchSearchTutors = async (searchTerm: string) => {
@@ -121,12 +117,13 @@ export const useFetchCourseTopics = (courseId: number) => {
 };
 
 const fetchTutorSlug = async (id:string) => {
-  const response = await api.get(`api/tutors?filters[id][$eq]=${id}&populate=profilepicture`);
+  const response = await api.get(`api/tutors?filters[id][$eq]=${id}&populate[user][populate]=*&populate[profilepicture]=*`);
+
   return response.data;
 };
 
 export const useFetchTutorSlug = (id:string) => {
-  return useQuery<{ data: Tutor[] }, Error>({
+  return useQuery<{ data: any }, Error>({
     queryFn: () => fetchTutorSlug(id), 
     queryKey: ["tutor_slug", id],
     meta: {

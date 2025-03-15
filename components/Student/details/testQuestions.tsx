@@ -30,7 +30,7 @@ const TestQuestions= () => {
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [testResultId, setTestResultId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 1;
+  const questionsPerPage = 5;
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
   const [isSubmitting, setIsSubmitting] = useState(false); 

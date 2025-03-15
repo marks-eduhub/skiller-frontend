@@ -41,8 +41,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
 
       const cardImage = data.data.attributes.card?.data?.attributes?.url;
       if (cardImage) {
-        const imageURL = `${process.env.NEXT_PUBLIC_API_BASE_URL}${cardImage}`;
-        setUploadImage((prev) => prev || imageURL);
+        setUploadImage((prev) => prev || cardImage);
       }
       const mediaId = data.data.attributes.card?.data?.id; 
       setExistingMediaId(mediaId);

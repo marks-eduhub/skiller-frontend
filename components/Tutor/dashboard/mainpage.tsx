@@ -6,7 +6,6 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useFetchTutorCourses} from "@/hooks/useCourses";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
-import api from "@/lib/axios";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
@@ -70,13 +69,12 @@ const MainPage = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-3  gap-6 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-4  gap-6 relative">
             {tutorCourses?.map((course: any) => {
               const courseAttributes = course?.attributes;
               const image =
                 courseAttributes?.card?.data?.attributes?.url ||
                 "/placeholder.png";
-              const imageurl = `${api.defaults.baseURL}${image}`;
 
               return (
                 <div
@@ -92,7 +90,7 @@ const MainPage = () => {
                   <div className="border border-gray-400 rounded-lg overflow-hidden">
                     <div className="h-[180px] relative">
                       <Image
-                        src={imageurl}
+                        src={image}
                         alt={courseAttributes.coursename}
                         fill
                         className="object-cover object-center p-1"

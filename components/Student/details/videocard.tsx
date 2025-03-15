@@ -34,7 +34,6 @@ const VideoCard: React.FC = () => {
 
   const topicdata = data?.data?.attributes || [];
   const videoFilePath = topicdata?.topicVideo?.data?.[0]?.attributes?.url;
-  const videoUrl = videoFilePath ? `${api.defaults.baseURL}${videoFilePath}` : null; 
   const tutorName = topicdata?.course?.data?.attributes?.tutor?.data?.attributes?.tutorname || "DS";
   const tutorRole = topicdata?.course?.data?.attributes?.tutor?.data?.attributes?.role || "DS";
   const topicname = topicdata?.topicname;
@@ -43,9 +42,9 @@ const VideoCard: React.FC = () => {
   return (
     <>
       <div className=" max-md:hidden relative w-full rounded-lg">
-        {videoUrl ? (
+        {videoFilePath? (
           <video controls className="w-full rounded-lg">
-            <source src={videoUrl} type="video/mp4" />
+            <source src={videoFilePath} type="video/mp4" />
           </video>
         ) : (
           <div className="flex items-center justify-center font-bold p-10 w-[1000px] h-[500px]">
@@ -67,9 +66,9 @@ const VideoCard: React.FC = () => {
             {topicname}
           </h2>
         </div>
-        {videoUrl ? (
+        {videoFilePath ? (
           <video controls className="w-full rounded-lg">
-            <source src={videoUrl} type="video/mp4" />
+            <source src={videoFilePath} type="video/mp4" />
           </video>
         ) : (
           <div className="flex items-center justify-center font-bold p-10 w-[1000px] h-[500px]">

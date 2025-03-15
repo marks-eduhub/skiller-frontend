@@ -1,27 +1,19 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useFetchCourses, useFetchTutorSlug } from "@/hooks/useCourses";
+import { useFetchCourses, useFetchTutorSlug} from "@/hooks/useCourses";
 import { Course } from "@/lib/types";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import ProductContainer from "@/components/Student/courseCards/cardContainer";
-import api from "@/lib/axios";
-import { useFetchUserDetails } from "@/hooks/useProfile";
-import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+
 
 const TutorPage = ({ params }: { params: { slug: string } }) => {
-const { slug } = params;
-const {user} = useAuthContext()
-const userId = user?.id
-  const {
-    data: tutorData,
-    isLoading: tutorLoading,
-    error: tutorError,
-  } = useFetchTutorSlug(slug);
-  const {data: userDetails} =  useFetchUserDetails (Number(userId))
+  const { slug } = params;
+  const { data: tutorData, isLoading: tutorLoading, error: tutorError } = useFetchTutorSlug(slug);
   const { data, isLoading, error } = useFetchCourses();
+ 
 
   if (tutorLoading) {
     return (
@@ -79,9 +71,7 @@ const userId = user?.id
 
   const tutor = tutorData?.data[0]?.attributes;
 
-  const tutorImage = userDetails?.profilepicture?.url || "/Ellipse 445.webp";
-  const ImageUrl = tutorImage ? `${api.defaults.baseURL}${tutorImage}` : "/Ellipse 445.webp";
-
+  const tutorImage = tutor?.user?.data?.attributes?.profilepicture?.data?.attributes?.url || "/Ellipse 445.webp";
   const tutorName = tutor.tutorname;
   const tutorQualifications = tutor.Qualifications;
   const tutorBiography = tutor.Biography;
@@ -107,7 +97,7 @@ const userId = user?.id
       <div className="flex mb-5 flex-col sm:w-full w-[345px] rounded-lg sm:px-4 p-2 sm:py-6 border border-black  h-auto relative">
         <div className="flex flex-col sm:flex-row items-start sm:gap-7 gap-3 mt-5">
           <Image
-            src={ImageUrl}
+            src={tutorImage}
             alt={tutorName}
             width={150}
             height={150}

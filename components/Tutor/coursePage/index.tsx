@@ -9,7 +9,6 @@ import TutorNav from "../dashboard/tutor-nav";
 import Topics from "./topics";
 import { useParams } from "next/navigation";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
-import api from "@/lib/axios";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
 
@@ -29,9 +28,8 @@ const CourseOverview = () => {
   const coursename = data?.data?.attributes?.coursename;
   const description = data?.data?.attributes?.coursedescription;
   const courseImage = data?.data?.attributes?.card?.data?.attributes?.url;
-  const ImageUrl = courseImage ? `${api.defaults.baseURL}${courseImage}` : null;
 
-  if(isLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center  min-h-screen justify-center p-20">
         <Loader />
@@ -39,8 +37,8 @@ const CourseOverview = () => {
     );
   }
 
-  if(error) {
-    message.error("Error displaying course information")
+  if (error) {
+    message.error("Error displaying course information");
   }
 
   return (
@@ -71,17 +69,18 @@ const CourseOverview = () => {
 
       <div
         className="w-full sm:h-[450px] h-[300px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url(${ImageUrl})` }}
+        style={{ backgroundImage: `url("${courseImage}")` }}
       >
+        
         <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl"></div>
 
         <div className="p-6 z-20 w-full relative sm:block ">
-          <h1 className="text-white font-bold sm:text-[40px] sm:w-1/4 mb-10 text-[20px] sm:mx-0 mx-2">
+          <h1 className="text-white font-bold sm:text-[40px] sm:w-2/3 mb-10 text-[30px] sm:mx-0 mx-2">
             {coursename}
           </h1>
           <p className="text-white mt-6 sm:w-2/3 ">{description}</p>
         </div>
-        </div>
+      </div>
 
       <div className="flex sm:justify-evenly  sm:gap-0 gap-10 mb-10 sm:overflow-hidden items-center hide-scrollbar overflow-x-scroll">
         <div
@@ -124,8 +123,6 @@ const CourseOverview = () => {
         >
           <h2>Analytics</h2>
         </div>
-        
-        
       </div>
       {Tab === "Topics" && <Topics />}
 

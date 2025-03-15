@@ -3,20 +3,18 @@ import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useFetchTutors, useFetchTutorsPictures } from "@/hooks/useCourses";
-import api from "@/lib/axios";
+import {  useFetchTutorsPopulate } from "@/hooks/useCourses";
 import Skeleton from "react-loading-skeleton";
 import { message } from "antd";
 import "react-loading-skeleton/dist/skeleton.css";
 
 
 const Tutorspage = () => {
-  const { data, isLoading, error } = useFetchTutors();
+  const {data, isLoading, error} = useFetchTutorsPopulate()
   const tutors = useMemo(() => data?.data || [], [data]);
   const [favorites, setFavorites] = useState<boolean[]>([]);
   const [hovered, setHovered] = useState<number | null>(null);
- const {data : tutorPicture} = useFetchTutorsPictures()
-
+ 
   useEffect(() => {
     if (tutors.length > 0) {
       setFavorites(new Array(tutors.length).fill(false));
@@ -69,15 +67,9 @@ const Tutorspage = () => {
       ) : (
         <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">
           {tutors?.map((tutor: any, index: number) => {
-            const relativeUrl =
-              tutor.attributes.profilepicture?.data?.attributes?.url;
+           const relativeUrl = tutor?.attributes?.user?.data?.attributes?.profilepicture?.data?.attributes?.url
 
-
-          const profilePictureUrl = relativeUrl
-            ? `${api.defaults.baseURL}${relativeUrl}`
-            : null;
-
-
+             
           return (
             <div
               key={tutor.id}
@@ -85,10 +77,10 @@ const Tutorspage = () => {
               onMouseEnter={() => setHovered(index)}
               onMouseLeave={() => setHovered(null)}
             >
-              {profilePictureUrl ? (
+              {relativeUrl ? (
                 <div className="sm:w-[200px] w-[150px] h-[150px] sm:h-[200px] relative">
                   <Image
-                    src={profilePictureUrl}
+                    src={relativeUrl}
                     alt={tutor.attributes.tutorname}
                     fill
                     className="hover:scale-110 rounded-full object-cover transition duration-300 hover:brightness-75"
