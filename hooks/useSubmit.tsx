@@ -285,6 +285,20 @@ export const useFetchUserCourses = (userId: number) => {
   });
 };
 
+export const useFetchEnrolledCourses = (courseId: number) => {
+  return useQuery({
+    queryKey: ["enrolled-courses", courseId],
+    queryFn: async () => {
+      const response = await api.get(
+        `/api/course-trackers?filters[course][id][$eq]=${courseId}&populate[course][populate]=*&populate=topic_progress_trackers`
+
+      );
+      return response.data.data; 
+    },
+    enabled: !!courseId,
+  });
+};
+
 
 
 export const courseTracker = async (userId: number, courseId: number) => {

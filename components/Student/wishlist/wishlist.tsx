@@ -11,7 +11,7 @@ const Wishlist: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="ml-5">
+      <div className="ml-5 mt-5">
         <h2 className="text-lg font-300 my-4 ">
           <Skeleton
             width={200}

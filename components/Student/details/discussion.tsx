@@ -17,18 +17,19 @@ import Loader from "../loader";
 import { useSearchParams } from "next/navigation";
 import { RxAvatar } from "react-icons/rx";
 import "react-loading-skeleton/dist/skeleton.css";
-import Skeleton from "react-loading-skeleton";
 import { FaComment } from "react-icons/fa";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { useFetchUserDetails } from "@/hooks/useProfile";
+import Image from "next/image";
 
 const Discussion = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const [isPosting, setIsPosting] = useState(false)
-  const [isSubmittingReply , setIsSubmittingReply] = useState(false)
+  const [isPosting, setIsPosting] = useState(false);
+  const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
-  const userId = user?.id;
+  const userId = Number(user?.id);
   const [topicComment, setTopicComment] = useState("");
   const [replyContent, setReplyContent] = useState("");
   const [commentId, setCommentId] = useState<number>(0);
@@ -124,7 +125,7 @@ const Discussion = () => {
     setShowModalForComment(null);
     setReplyContent("");
   };
- const { mutate: addToComments } = useMutation({
+  const { mutate: addToComments } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
       return await addComment(Number(topicId), userId, topicComment);
@@ -132,7 +133,9 @@ const Discussion = () => {
     onMutate: async () => {
       if (!userId) return;
       await queryClient.cancelQueries({ queryKey: ["comments", topicId] });
+
       const previousComments = queryClient.getQueryData(["comments", topicId]);
+
       queryClient.setQueryData(["comments", topicId], (oldData: any) => {
         const newComment = {
           id: Date.now(),
@@ -144,13 +147,14 @@ const Discussion = () => {
         };
         return { ...oldData, data: [...(oldData?.data || []), newComment] };
       });
+
       return { previousComments };
     },
     onSuccess: () => {
       message.success("Comment posted successfully!");
       setTopicComment("");
     },
-    onError: (err, variables, context: any) => {
+    onError: (context: any) => {
       if (context?.previousComments) {
         queryClient.setQueryData(
           ["comments", topicId],
@@ -229,7 +233,7 @@ const Discussion = () => {
     }));
   };
 
-  const { mutate: addLikedCommentMutation } = useMutation({
+  const { mutate: addLikedCommentMutation, isPending } = useMutation({
     mutationFn: async (commentId: number) => {
       if (!userId) throw new Error("User not logged in");
       return await addLikedComment(commentId, userId);
@@ -237,7 +241,7 @@ const Discussion = () => {
     onMutate: async (commentId: number) => {
       setLikedComments((prev) => ({ ...prev, [commentId]: true }));
     },
-    onSuccess: (_, commentId) => {
+    onSuccess: () => {
       message.success("Comment liked.");
     },
     onError: (err, commentId) => {
@@ -250,31 +254,32 @@ const Discussion = () => {
     },
   });
 
-  const { mutate: removeLikedCommentMutation } = useMutation({
-    mutationFn: async (commentId: number) => {
-      if (!userId) throw new Error("User not logged in");
-      return await removeLikedComment(commentId, userId);
-    },
-    onMutate: async (commentId: number) => {
-      setLikedComments((prev) => ({ ...prev, [commentId]: false }));
-    },
-    onSuccess: (_, commentId) => {
-      message.success("Comment unliked.");
-    },
-    onError: (err, commentId) => {
-      setLikedComments((prev) => ({ ...prev, [commentId]: true }));
-      message.error("Failed to unlike comment.");
-    },
-    onSettled: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["comment_likes", userId]);
-    },
-  });
+  const { mutate: removeLikedCommentMutation, isPending: isUnLiking } =
+    useMutation({
+      mutationFn: async (commentId: number) => {
+        if (!userId) throw new Error("User not logged in");
+        return await removeLikedComment(commentId, userId);
+      },
+      onMutate: async (commentId: number) => {
+        setLikedComments((prev) => ({ ...prev, [commentId]: false }));
+      },
+      onSuccess: (_, commentId) => {
+        message.success("Comment unliked.");
+      },
+      onError: (err, commentId) => {
+        setLikedComments((prev) => ({ ...prev, [commentId]: true }));
+        message.error("Failed to unlike comment.");
+      },
+      onSettled: () => {
+        //@ts-ignore
+        queryClient.invalidateQueries(["comment_likes", userId]);
+      },
+    });
 
   const handleToggleWishlist = (commentId: number) => {
     const currentLiked = likedCommentsState[commentId];
     const updatedTotalCounts = { ...totalCounts };
-
+    if (isPending || isUnLiking) return;
     if (currentLiked) {
       updatedTotalCounts[commentId] = (updatedTotalCounts[commentId] || 0) - 1;
       removeLikedCommentMutation(commentId);
@@ -290,14 +295,14 @@ const Discussion = () => {
 
   const handleComment = async () => {
     if (topicComment.trim()) {
-      setIsPosting(true); 
-  
+      setIsPosting(true);
       try {
-        addToComments(); 
-        setIsPosting(false); 
+        addToComments(undefined, {
+          onSettled: () => setIsPosting(false),
+        });
       } catch (error) {
         message.error("There was an error posting the comment.");
-        setIsPosting(false); 
+        setIsPosting(false);
       }
     } else {
       message.error("Comment cannot be empty.");
@@ -311,7 +316,7 @@ const Discussion = () => {
         ...prev,
         [commentId]: (prev[commentId] || 0) + 1,
       }));
-      setIsSubmittingReply(true)
+      setIsSubmittingReply(true);
       addToReplies({
         commentId,
         userId: userId!,
@@ -323,10 +328,11 @@ const Discussion = () => {
       message.error("Please enter a reply.");
     }
   };
-  
 
   if (replyLoading || likesLoading) {
-    <Loader />;
+    <div className="flex items-center justify-center ">
+      <Loader />
+    </div>;
   }
 
   if (replyError) {
@@ -337,7 +343,9 @@ const Discussion = () => {
   }
   if (isLoading) {
     return (
-     <Loader/>
+      <div className="flex items-center justify-center">
+        <Loader />
+      </div>
     );
   }
 
@@ -365,32 +373,43 @@ const Discussion = () => {
       </div>
       <button
         onClick={handleComment}
-        className="bg-gray-900 sm:mb-0 sm:my-2 my-6 text-white px-4 py-2 rounded"
+        disabled={isPosting}
+        className={`bg-gray-900 sm:mb-0 sm:my-2 my-6 text-white px-4 py-2 rounded ${
+          isPosting ? "opacity-50 cursor-not-allowed" : ""
+        }`}
       >
-        {isPosting ? "Posting..." : "Post Comment "}
+        {isPosting ? "Posting..." : "Post Comment"}
       </button>
 
       <div className="bg-gray-100 max-h-[650px] overflow-auto sm:p-6  sm:pr-0 pr-5 sm:mb-10">
         {data?.data.length > 0 && (
           <div className="flex items-center justify-center font-semibold mb-5 text-center ">
-           <h2 >To reply to a comment click the comment icon of the comment</h2>
-           </div>
+            <h2>To reply to a comment click the comment icon of the comment</h2>
+          </div>
         )}
-       
+
         <div className="flex flex-col space-y-4 sm:w-1/2 h-auto">
           {data?.data?.length > 0 ? (
             data?.data?.map((comment: any) => {
               const commentId = comment.id;
               const likeCount = totalCounts[commentId] || 0;
               const replyCount = totalRepliesCount[commentId] || 0;
-
               return (
                 <div
                   key={comment.id}
-                  className="p-4 border-b border-gray-400 bg-white rounded-lg shadow-sm"
+                  className=" relative p-4 border-b border-gray-400 bg-white rounded-lg shadow-sm"
                 >
                   <div className="flex items-center mb-2">
-                    <RxAvatar className="mr-2 text-4xl" />
+                    <Image
+                      src={
+                        comment.attributes.user.data?.attributes?.profilepicture
+                          ?.data?.attributes?.url
+                      }
+                      alt={comment.attributes.user.data?.attributes?.username}
+                      width={50}
+                      height={50}
+                      className="w-10 h-10 rounded-full object-cover mr-4"
+                    />
                     <div>
                       <p className="text-sm font-semibold">
                         {comment.attributes.user.data?.attributes?.username ||
@@ -415,6 +434,7 @@ const Discussion = () => {
                       <div className="gap-1 flex ">
                         <button
                           onClick={() => handleToggleWishlist(comment.id)}
+                          disabled={isPending || isUnLiking}
                         >
                           {likedCommentsState[comment.id] ? (
                             <AiFillHeart size={20} className="text-red-500" />
@@ -471,7 +491,19 @@ const Discussion = () => {
                           commentReplies.data.map((reply: any) => (
                             <div key={reply.id} className="ml-6 mt-3">
                               <div className="flex">
-                                <RxAvatar className="mr-2 text-3xl" />
+                                <Image
+                                  src={
+                                    reply.attributes.user.data?.attributes
+                                      ?.profilepicture?.data?.attributes?.url
+                                  }
+                                  alt={
+                                    reply.attributes.user.data?.attributes
+                                      ?.username
+                                  }
+                                  width={50}
+                                  height={50}
+                                  className="w-10 h-10 rounded-full object-cover mr-4"
+                                />
                                 <div>
                                   <p className="font-semibold">
                                     {reply?.attributes?.user?.data?.attributes

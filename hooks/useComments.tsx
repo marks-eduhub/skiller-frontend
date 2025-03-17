@@ -3,7 +3,7 @@ import api from "@/lib/axios";
 import {useQuery} from "@tanstack/react-query";
 
 const fetchComments = async (topicId:number) => {
-  const response = await api.get(`/api/comments?filters[topic][id]=${topicId}&populate=user`);
+  const response = await api.get(`/api/comments?filters[topic][id]=${topicId}&populate[user][populate]=*`);
 
   return response.data;
 };
@@ -18,7 +18,7 @@ export const useFetchComments = (topicId:number) => {
   });
 };
 const fetchCommentReplies = async (commentId: number) => {
-  const response = await api.get(`/api/comment-replies?filters[comment][id]=${commentId}&populate=user,comment`);
+  const response = await api.get(`/api/comment-replies?filters[comment][id]=${commentId}&populate[user][populate]=*`);
   return response.data;
 };
 

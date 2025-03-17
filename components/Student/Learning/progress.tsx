@@ -15,7 +15,7 @@ const Progress = () => {
 
   if (isLoading) {
     return (
-      <div className="ml-5">
+      <div className="ml-5 mt-5">
         <Skeleton height={300} count={3} baseColor="#e0e0e0" highlightColor="#f5f5f5" enableAnimation={true} />
       </div>
     );

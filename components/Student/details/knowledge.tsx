@@ -329,25 +329,6 @@ useEffect(() => {
             Tests
           </h2>
         </div>
-
-        <div
-          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full ${
-            selectedTab === "Quizzes"
-              ? "text-black transition-all duration-100 ease-in-out border-b-2 border-black"
-              : "text-gray-400"
-          }`}
-          onClick={() => handleselectedClick("Quizzes")}
-        >
-          <h2
-            className={`${
-              selectedTab === "Quizzes"
-                ? "p-4 font-bold text-[20px]"
-                : "p-4 text-[20px]"
-            }`}
-          >
-            Quizzes
-          </h2>
-        </div>
       </div>
 
       {selectedTab === "Tests" && (

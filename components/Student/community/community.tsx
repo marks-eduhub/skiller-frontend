@@ -28,7 +28,6 @@ import dynamic from "next/dynamic";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
-
 const Community = () => {
   const { user } = useAuthContext();
   const userId = user?.id ?? 0;
@@ -61,7 +60,8 @@ const Community = () => {
   }>({});
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
   const [selectedResult, setSelectedResult] = useState("");
-  const { data: searchResults } = useFetchSearchCommuity(searchQuery);
+  const { data: searchResults, isLoading: searchLoading } =
+    useFetchSearchCommuity(searchQuery);
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const {
     data: responsesData,
@@ -75,8 +75,8 @@ const Community = () => {
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
   const [likeCounts, setLikeCounts] = useState<{ [key: string]: number }>({});
-
   const { data: likedCount } = useFetchLikeCount();
+
   useEffect(() => {
     if (likedCount) {
       const initialLikeCounts = likedCount?.data.reduce(
@@ -169,6 +169,7 @@ const Community = () => {
             responderName: response.attributes.responderName,
             responseText: response.attributes.responseText,
             createdAt,
+            profilePicture : response.attributes.user?.data?.attributes?.profilepicture?.data?.attributes?.url || '/pic.svg'
           });
           return map;
         },
@@ -198,14 +199,16 @@ const Community = () => {
       responseText,
       responderName,
       questionId,
+      userId,
     }: {
       responseText: string;
       responderName: string;
       questionId: number;
+      userId: number;
     }) => {
-      return await addResponse(responseText, responderName, questionId);
+      return await addResponse(responseText, responderName, questionId, userId);
     },
-    onMutate: async ({ responseText, responderName, questionId }) => {
+    onMutate: async ({ responseText, responderName, questionId}) => {
       const previousData = queryClient.getQueryData([
         "question_responses",
         questionId,
@@ -218,6 +221,7 @@ const Community = () => {
           responderName,
           questionId,
           createdAt: new Date().toISOString(),
+          
         },
       };
 
@@ -269,6 +273,7 @@ const Community = () => {
       responseText,
       responderName,
       questionId,
+      userId,
     });
 
     setResponsesContentMap((prev) => ({
@@ -471,22 +476,28 @@ const Community = () => {
           ref={dropdownRef}
           className="absolute bg-white top-[165px] shadow-lg rounded-lg mt-2 w-full z-50 max-h-60 overflow-y-auto"
         >
-          {searchResults?.data?.length > 0 ? (
-            <div className="gap-6">
-              {searchResults?.data?.map((item: any) => (
-                <div
-                  key={item.id}
-                  className="p-3 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleSearchResultClick(item)}
-                >
-                  {item.attributes.Question}
-                </div>
-              ))}
-            </div>
+          {searchLoading ? (
+            <div className="p-2">Loading...</div>
           ) : (
-            <div className="text-center p-4 text-gray-500">
-              No results found for {searchQuery}.
-            </div>
+            <>
+              {searchResults?.data?.length > 0 ? (
+                <div className="gap-6">
+                  {searchResults?.data?.map((item: any) => (
+                    <div
+                      key={item.id}
+                      className="p-3 cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSearchResultClick(item)}
+                    >
+                      {item.attributes.Question}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center p-4 text-gray-500">
+                  No results found for {searchQuery}
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
@@ -495,7 +506,7 @@ const Community = () => {
         <div className="w-full sm:w-[80%]">
           {currentQuestions && currentQuestions.length > 0 ? (
             currentQuestions.map((q: any, index: number) => {
-              const { Question, nameofquestioner, id } = q.attributes;
+              const { Question, nameofquestioner } = q.attributes;
               const questionId = q.id;
               const responses = responsesMap[questionId] || [];
               const plainQuestion = Question.replace(/(\*\*|\_)/g, "");
@@ -528,7 +539,6 @@ const Community = () => {
                         const isLiked = likedResponsesMap[response.id] || false;
                         const likeCount =
                           (likeCounts ? likeCounts[responseId] : 0) || 0;
-
                         return (
                           <>
                             <div
@@ -538,9 +548,7 @@ const Community = () => {
                               <div className="flex items-center gap-2 mb-5">
                                 <div className="h-[50px] w-[50px] relative ">
                                   <Image
-                                    src={
-                                      response?.profilepictureUrl || "/pic.svg"
-                                    }
+                                    src={response?.profilePicture}
                                     alt={response?.responderName}
                                     fill
                                     className="rounded-full object-cover"
@@ -552,8 +560,10 @@ const Community = () => {
                               </div>
                               <div className="ml-2">
                                 <p className="text-gray-600 text-sm break-words overflow-hidden">
-                                {response?.responseText.replace(/(\*\*|\_)/g, "").replace(/===/g, "")}
-                                 </p>
+                                  {response?.responseText
+                                    .replace(/(\*\*|\_)/g, "")
+                                    .replace(/===/g, "")}
+                                </p>
                                 <div className="flex gap-1 mt-2">
                                   <button
                                     onClick={() =>
@@ -615,9 +625,11 @@ const Community = () => {
                       className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg transition"
                       onClick={() => handleSubmitResponse(questionId)}
                     >
-                      {isSubmittingResponse ?       
-                      <DotPulseWrapper size="30" speed="1.5" color="white" />
-                     : "Submit Response"}
+                      {isSubmittingResponse ? (
+                        <DotPulseWrapper size="30" speed="1.5" color="white" />
+                      ) : (
+                        "Submit Response"
+                      )}
                     </button>
                   </div>
                 </div>

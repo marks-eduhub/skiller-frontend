@@ -5,14 +5,15 @@ import React from "react";
 import { BsBookmarkCheck, BsFillShareFill } from "react-icons/bs";
 import Loader from "../loader";
 
-
 const Description = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
   const { data, isLoading, error } = useFetchTopicDetails(Number(topicId));
   if (isLoading) {
     return (
-    <Loader/>
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
+        <Loader />
+      </div>
     );
   }
 
@@ -22,10 +23,9 @@ const Description = () => {
   const description = data?.data?.attributes?.topicdescription || [];
 
   return (
-    <div className="bg-[#F5F5F5] ">
-      <div className="flex flex-col md:flex-row gap-9 pt-9 sm:pr-0 pr-10">
-        <div className="mb-2 sm:ml-3 bg-[#FFF] sm:w-[800px] w-full sm:h-[600px] ml-5 ">
-          <div className="ml-5 mt-8 mr-3">
+    <div className="bg-[#F5F5F5]">
+      <div className="flex">
+        <div className="mb-2 sm:ml-3 mr-3 p-6  w-full  ml-5 ">
             {description?.length > 0 ? (
               <p>{description}</p>
             ) : (
@@ -35,10 +35,9 @@ const Description = () => {
                 </p>
               </div>
             )}
-          </div>
         </div>
 
-        <div className="flex flex-col mr-8 pb-10">
+        {/* <div className="flex flex-col mr-8 pb-10">
           <div className="flex items-center justify-between gap-8 sm:mt-0 mt-20 ">
             <button className="rounded-t-md  rounded-b-md border border-black bg-white px-8 py-2 ml-5 md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
               <BsBookmarkCheck className="text-lg" />
@@ -53,7 +52,7 @@ const Description = () => {
           <div className="bg-[#ffffff8e] flex flex-col justify-center md:w-[570px] h-[500px] items-center mt-7 max-md:w-[280px] max-md:ml-5 sm:pr-0 pr-2">
             <h2 className="font-bold">Screenshots go here</h2>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

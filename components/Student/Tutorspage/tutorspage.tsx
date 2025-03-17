@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import {  useFetchTutorsPopulate } from "@/hooks/useCourses";
+import {useFetchTutorsPopulate } from "@/hooks/useCourses";
 import Skeleton from "react-loading-skeleton";
 import { message } from "antd";
 import "react-loading-skeleton/dist/skeleton.css";
