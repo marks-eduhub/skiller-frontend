@@ -1,4 +1,3 @@
-import axios from "axios";
 import api from "@/lib/axios";
 import {useQuery} from "@tanstack/react-query";
 
