@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import CourseModal from "./courseModal";
 import DeletecourseModal from "./deletecourse";
+import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
 
 const Overview = () => {
   const { slug } = useParams();
@@ -13,13 +14,11 @@ const Overview = () => {
   const { data, isLoading, error } = useFetchOverview(courseId);
   const { data: topicData } = useFetchCourseTopics(courseId);
   const duration = data?.data?.attributes?.duration || "N/A";
-  const enrolledLearners = data?.data?.attributes?.users?.data || [];
-  const learners = enrolledLearners.length > 0 ? enrolledLearners.length : "No learners yet";
   const likes = data?.data?.attributes?.liked_courses?.data || [];
   const numberOfLiked = likes.length > 0 ? likes.length : "No likes yet";
   const [isModal, setModalOpen] = useState(false);
   const [openModal, setOpenModalOpen] = useState(false);
-
+  const {data: totalStudentsEnrolled} = useFetchEnrolledCourses(courseId)
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -42,10 +41,11 @@ const Overview = () => {
     0
   );
   const numberOfTests = totalTests > 0 ? totalTests : "No tests yet";
+  const studentsenrolled = totalStudentsEnrolled?.length || 0;
 
   const courses = [
-    { value: "Enrolled Students:", number: learners },
-    { value: "Active Students:", number: learners },
+    { value: "Enrolled Students:", number: studentsenrolled},
+    { value: "Active Students:", number: studentsenrolled},
     { value: "Likes:", number: numberOfLiked },
     { value: "Course Duration:", number: duration },
     { value: "Number of Tests:", number: numberOfTests },

@@ -32,7 +32,6 @@ const Step2: React.FC<Step2Props> = ({
   topics,
   addTopic,
   updateTopic,
-  setTopics,
 }) => {
   const [videoPreview, setVideoPreview] = useState<{
     [key: number]: string | null;
@@ -44,7 +43,6 @@ const Step2: React.FC<Step2Props> = ({
     null
   );
   const [videoId, setVideoId] = useState("");
-  const [resourcePreview, setResourcePreview] = useState<File[]>([]);
   const [topicId, setTopicId] = useState<number | null>(null);
   const [topicVideo, setTopicVideo] = useState<File | null>(null);
   const [resourceId, setResourceIds] = useState("")

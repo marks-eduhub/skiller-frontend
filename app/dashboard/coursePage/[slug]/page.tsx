@@ -4,7 +4,6 @@ import { useFetchCourses } from "@/hooks/useCourses";
 import { message } from "antd";
 import Loader from "@/components/Student/loader";
 import ProductContainer from "@/components/Student/courseCards/cardContainer";
-import ProductCard from "@/components/Student/courseCards/courseCards";
 
 const CoursecategoryPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;

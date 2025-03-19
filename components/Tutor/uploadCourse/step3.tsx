@@ -1,11 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import "react-quill/dist/quill.snow.css";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCourseContext } from "@/Context/CourseContext";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const Step3 = () => {
   const { courseId } = useCourseContext();

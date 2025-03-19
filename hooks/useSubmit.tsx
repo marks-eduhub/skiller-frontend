@@ -154,7 +154,8 @@ export const courseRating = async (
   userId: number,
   courseId: number,
   score: number,
-  progressId: number
+  progressId: number,
+  comment :string
 ) => {
   try {
     const response = await api.post(`/api/courseratings`, {
@@ -163,7 +164,9 @@ export const courseRating = async (
         course: courseId,
         score,
         user_course_progress: progressId,
+        comment
       },
+      
     });
     return response.data;
   } catch (error) {
@@ -282,6 +285,20 @@ export const useFetchUserCourses = (userId: number) => {
       return response.data.data; 
     },
     enabled: !!userId,
+  });
+};
+
+export const useFetchEnrolledCourses = (courseId: number) => {
+  return useQuery({
+    queryKey: ["enrolled-courses", courseId],
+    queryFn: async () => {
+      const response = await api.get(
+        `/api/course-trackers?filters[course][id][$eq]=${courseId}&populate[course][populate]=*&populate=topic_progress_trackers`
+
+      );
+      return response.data.data; 
+    },
+    enabled: !!courseId,
   });
 };
 

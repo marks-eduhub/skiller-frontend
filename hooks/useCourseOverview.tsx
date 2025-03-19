@@ -19,20 +19,37 @@ export const useFetchOverview = (id: number) => {
   });
 };
 
-const fetchReviews = async (id: number) => {
+const fetchReviews = async (courseId: number) => {
   const response = await api.get(
-    `/api/courses/${id}?populate[reviews][populate]=profilepicture`
-  );
+    `/api/courseratings?filters[course][id][$eq]=${courseId}&populate[user][populate]=*`);
   return response.data;
 };
 
-export const useFetchReviews = (id: number) => {
+export const useFetchReviews = (courseId: number) => {
   return useQuery({
-    queryKey: ["coursereviews", id],
-    queryFn: () => fetchReviews(id),
-    enabled: !!id,
+    queryKey: ["coursereviews", courseId],
+    queryFn: () => fetchReviews(courseId),
+    enabled: !!courseId,
     meta: {
       errorMessage: "Failed to fetch reviews",
     },
   });
 };
+
+export const postReview = async (
+  userId: number,
+  courseId: number,
+  comment: string,
+  rating: number
+) => {
+  const response = await api.post(`/api/courseratings`, {
+    data: {
+      user: userId,
+      course: courseId,
+      review: comment,
+      score:rating,
+    },
+  });
+  return response.data;
+};
+

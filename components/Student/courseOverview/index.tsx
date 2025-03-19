@@ -3,15 +3,15 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import SimilarCourses from "../details/similar";
 import Image from "next/image";
-import api from "@/lib/axios";
 import { useFetchOverview, useFetchReviews } from "@/hooks/useCourseOverview";
 import CourseOverview from "./courseOverview";
 import CourseReview from "./courseReviews";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
-import { courseTracker, useFetchCourseTracker } from "@/hooks/useSubmit";
+import { courseTracker, useFetchCourseTracker, useFetchEnrolledCourses } from "@/hooks/useSubmit";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+
 
 const Enroll = () => {
   const { user } = useAuthContext();
@@ -22,18 +22,15 @@ const Enroll = () => {
   const courseId = Number(slug);
   const [isProcessing, setIsProcessing] = useState(false);
   const { data: coursetrackerdata } = useFetchCourseTracker(userId, courseId);
+  const {data: totalStudentsEnrolled} = useFetchEnrolledCourses(courseId)
   const isEnrolled = coursetrackerdata?.data?.length > 0;
 
   const { data, isLoading, error } = useFetchOverview(Number(slug));
-  const {
-    data: reviews,
-    isLoading: loadingreviews,
-    error: reviewError,
-  } = useFetchReviews(Number(slug));
+
   if (!slug) {
     return;
   }
-  if (isLoading || loadingreviews) {
+  if (isLoading ) {
     return (
       <div className="ml-5">
         <h2 className="text-lg font-300 my-4 ">
@@ -58,7 +55,7 @@ const Enroll = () => {
     );
   }
 
-  if (error || reviewError) {
+  if (error ) {
     message.error("Error fetching details. Please try again later.");
   }
 
@@ -70,7 +67,6 @@ const Enroll = () => {
     );
 
   const courseAttributes = data?.data?.attributes || {};
-  const reviewData = reviews?.data?.attributes?.reviews?.data || [];
 
   const coursename = courseAttributes.coursename || "UI";
   const card = courseAttributes.card?.data?.attributes?.url || "";
@@ -82,22 +78,11 @@ const Enroll = () => {
     courseAttributes?.requirements || "No requirements available";
   const expectations =
     courseAttributes?.expectations || "No expectations available";
-  const enrolled = courseAttributes.users?.data || [];
-  const studentsenrolled = enrolled.length;
+  const studentsenrolled = totalStudentsEnrolled?.length || 0;
   const topics = courseAttributes?.topicname?.data || [];
 
   const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
 
-  const Reviews = reviewData.map((review: any) => {
-    const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
-
-    return {
-      name: review.attributes.name,
-      image: imageUrl || "/Ellipse 445.webp",
-      comment: review.attributes.comment,
-      rating: review.attributes.rating,
-    };
-  });
 
   const handleTab = (tabName: string) => setTab(tabName);
 
@@ -210,7 +195,7 @@ const Enroll = () => {
           topics={topics}
         />
       ) : (
-        <CourseReview reviews={Reviews} />
+        <CourseReview  />
       )}
 
       <SimilarCourses />

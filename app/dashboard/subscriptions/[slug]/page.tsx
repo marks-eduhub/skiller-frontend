@@ -1,19 +1,22 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useFetchCourses, useFetchTutorSlug} from "@/hooks/useCourses";
+import { useFetchCourses, useFetchTutorSlug } from "@/hooks/useCourses";
 import { Course } from "@/lib/types";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import ProductContainer from "@/components/Student/courseCards/cardContainer";
-
-
+import { FaFacebook, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa";
+import Link from "next/link";
 const TutorPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
-  const { data: tutorData, isLoading: tutorLoading, error: tutorError } = useFetchTutorSlug(slug);
+  const {
+    data: tutorData,
+    isLoading: tutorLoading,
+    error: tutorError,
+  } = useFetchTutorSlug(slug);
   const { data, isLoading, error } = useFetchCourses();
- 
 
   if (tutorLoading) {
     return (
@@ -71,26 +74,26 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
 
   const tutor = tutorData?.data[0]?.attributes;
 
-  const tutorImage = tutor?.user?.data?.attributes?.profilepicture?.data?.attributes?.url || "/Ellipse 445.webp";
+  const tutorImage =
+    tutor?.user?.data?.attributes?.profilepicture?.data?.attributes?.url ||
+    "/Ellipse 445.webp";
   const tutorName = tutor.tutorname;
   const tutorQualifications = tutor.Qualifications;
   const tutorBiography = tutor.Biography;
+  const socialLinks = tutor?.user?.data?.attributes?.socialLinks || {};
+  const email = socialLinks?.email;
+  const twitter = socialLinks?.twitter;
+  const linkedin = socialLinks?.linkedin;
+  const facebook = socialLinks?.facebook;
 
   const tutorCourses: Course[] = [];
-   data?.data.forEach((course: any) => {
+  data?.data.forEach((course: any) => {
     const courseTutor = course.attributes.tutor?.data?.attributes;
 
     if (courseTutor?.tutorname === tutorName) {
       tutorCourses.push(course);
     }
   });
-
-  const socialMediaLinks = [
-    { src: "/twitter.svg", alt: "Twitter" },
-    { src: "/linkedln.svg", alt: "LinkedIn" },
-    { src: "/facebook.svg", alt: "Facebook" },
-    { src: "/tweet.svg", alt: "Twitter" },
-  ];
 
   return (
     <div className="sm:p-0">
@@ -106,18 +109,49 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
           <div className="flex flex-col sm:mt-6 mt-3">
             <h1 className="font-semibold text-[20px] mb-3">{tutorName}</h1>
             <h2 className="text-gray-600 sm:mb-3 flex flex-wrap items-center space-x-2">
-              Connect with {tutorName}:
-              {socialMediaLinks.map((link, index) => (
-                <Image
-                  key={index}
-                  src={link.src}
-                  alt={link.alt}
-                  width={20}
-                  height={20}
-                  className="mx-1 sm:mx-3 sm:my-0 my-1"
-                />
-              ))}
+              {(email || facebook || linkedin || twitter) && (
+                <>
+                  <span>Connect with {tutorName}:</span>
+                  {facebook && (
+                    <Link
+                      href={`https://facebook.com/${facebook}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaFacebook className="text-xl text-blue-700 hover:text-blue-500 mx-2" />
+                    </Link>
+                  )}
+                  {linkedin && (
+                    <Link
+                      href={`https://linkedin.com/in/${linkedin}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaLinkedin className="text-xl text-blue-700 hover:text-blue-500 mx-2" />
+                    </Link>
+                  )}
+                  {twitter && (
+                    <Link
+                      href={`https://twitter.com/${twitter}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaTwitter className="text-xl text-blue-500 hover:text-blue-400 mx-2" />
+                    </Link>
+                  )}
+                  {email && (
+                    <Link
+                      href={`mailto:${email}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaEnvelope className="text-xl text-gray-700 hover:text-blue-500 mx-2" />
+                    </Link>
+                  )}
+                </>
+              )}
             </h2>
+
             <h2 className="mt-3 sm:mt-0">
               <span className="underline">Qualifications:</span>
               <span className="text-gray-600 sm:ml-2">

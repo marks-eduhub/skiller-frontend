@@ -9,7 +9,8 @@ import {
   useFetchSpecificCourseRate,
   topicProgress,
   useFetchCourseTracker,
-  useCompletedTopics
+  useCompletedTopics,
+  createCourseProgress
 } from "@/hooks/useSubmit";
 import { message } from "antd";
 import { useParams, useSearchParams } from "next/navigation";
@@ -32,13 +33,12 @@ const Knowledge = () => {
   const userId = Number(user?.id);
   const { slug } = useParams();
   const courseId = Number(slug);
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
   const [selectedTab, setselectedTab] = useState("Tests");
   const [isAttempting, setIsAttempting] = useState(false)
   const { data: completedTopics} = useCompletedTopics(userId, courseId);
-  const handleselectedClick = (tabName: string) => {
-    setselectedTab(tabName);
-  };
-  const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
+ const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
   const [highestScores, setHighestScores] = useState<{ [key: number]: number }>(
     {}
   );
@@ -119,13 +119,15 @@ const Knowledge = () => {
       courseId,
       score,
       progressId,
+      comment
     }: {
       userId: number;
       courseId: number;
       score: number;
       progressId: number;
+      comment:string
     }) => {
-      return await courseRating(userId, courseId, score, progressId);
+      return await courseRating(userId, courseId, score, progressId, comment);
     },
     onSuccess: (_, { score }) => {
       handleRatingUpdate(score);
@@ -176,7 +178,7 @@ const handleTopicCompletion = useCallback(async () => {
   } catch (error) {
     message.error("Error updating topic progress");
   }
-}, [hasUserPassedAllTests, userId, topicId, coursetrackerId, isTopicCompleted]);
+}, [hasUserPassedAllTests, userId,  topicId, coursetrackerId, isTopicCompleted]);
 
 
 useEffect(() => {
@@ -195,10 +197,15 @@ useEffect(() => {
       return;
     }
 
+    if(!comment) {
+      message.error("Please add a comment");
+      return;
+    }
+
     const progressId = courseStatus.data[0].id;
 
     try {
-      createCourseRating({ userId, courseId, score: rating, progressId });
+      createCourseRating({ userId, courseId, score: rating, progressId , comment});
 
       message.success("Thank you for your rating!");
       setShowRatingModal(false);
@@ -303,7 +310,10 @@ useEffect(() => {
 
   if (isLoading || isTests) {
     return (
+      <div className ="flex items-center justify-center">
       <Loader/>
+
+      </div>
     );
   }
   if (error || isError) {
@@ -327,25 +337,6 @@ useEffect(() => {
             }`}
           >
             Tests
-          </h2>
-        </div>
-
-        <div
-          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full ${
-            selectedTab === "Quizzes"
-              ? "text-black transition-all duration-100 ease-in-out border-b-2 border-black"
-              : "text-gray-400"
-          }`}
-          onClick={() => handleselectedClick("Quizzes")}
-        >
-          <h2
-            className={`${
-              selectedTab === "Quizzes"
-                ? "p-4 font-bold text-[20px]"
-                : "p-4 text-[20px]"
-            }`}
-          >
-            Quizzes
           </h2>
         </div>
       </div>
@@ -469,6 +460,9 @@ useEffect(() => {
           isOpen={showRatingModal}
           onClose={() => setShowRatingModal(false)}
           onSubmit={submitRating}
+          setComment={setComment}
+          setRating={setRating}
+          comment={comment}
         />
       )}
     </div>

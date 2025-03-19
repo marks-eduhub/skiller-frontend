@@ -44,7 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
     }
   }, [likedCourses, courseId]);
 
-  const { mutate: removeFromWishlist } = useMutation({
+  const { mutate: removeFromWishlist, isPending: isUnLiking } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
       const response = await removeLikedCourse(courseId, userId);
@@ -88,7 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
     },
   });
 
-  const { mutate: addToWishlist } = useMutation({
+  const { mutate: addToWishlist, isPending } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
       const response = await addLikedCourse(courseId, userId);
@@ -96,22 +96,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
     },
     onMutate: async () => {
       if (!userId) return;
-
+  
       setIsLiked(true);
+  
       await queryClient.cancelQueries({ queryKey: ["likedCourses", userId] });
-
+  
       const previousLikedCourses = queryClient.getQueryData([
-        "likedCourses",
-        userId,
+        "likedCourses", userId
       ]);
-
-      queryClient.setQueryData(["likedCourses", userId], (oldData: any) => {
-        return [...(oldData?.data || []), { id: courseId, attributes: {} }];
+        queryClient.setQueryData(["likedCourses", userId], (oldData: any) => {
+        const updatedData = oldData?.data.map((course: any) => {
+          if (course.id === courseId) {
+            return { ...course, isLiked: true }; 
+          }
+          return course; 
+        });
+        return { ...oldData, data: updatedData };
       });
-
-      return { previousLikedCourses };
+  
+      return { previousLikedCourses }; 
     },
-
     onSuccess: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: ["likedCourses", userId] });
@@ -128,6 +132,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
       message.error("Failed to add to wishlist");
     },
   });
+  
 
   const { mutate: addRecent } = useMutation({
     mutationFn: async () => {
@@ -171,6 +176,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   };
 
   const handleToggleWishlist = () => {
+    if(isPending || isUnLiking) return
     if (isLiked) {
       removeFromWishlist();
     } else {
@@ -195,6 +201,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
                 e.stopPropagation();
                 handleToggleWishlist();
               }}
+              disabled={isPending || isUnLiking}
+
             >
               {isLiked ? (
                 <AiFillHeart size={30} className="text-red-500" />

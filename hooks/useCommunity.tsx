@@ -38,7 +38,8 @@ export const useFetchLikeCount = () => {
 
 const fetchQuestionWithResponses = async (questionId: number) => {
   const response = await api.get(
-    `/api/community-responses?populate=community,responderpicture&sort[0]=createdAt:desc`
+  `/api/community-responses?populate[user][populate]=*&populate=community&sort[0]=createdAt:desc`
+  
   );
   return response.data;
 };
@@ -75,7 +76,8 @@ export const postQuestion = async (
 export const addResponse = async (
   responseText: string,
   responderName: string,
-  questionId: number
+  questionId: number,
+  userId:number
 ) => {
   try {
     const turndownService = new TurndownService();
@@ -85,6 +87,7 @@ export const addResponse = async (
         responseText: markdownResponse,
         responderName,
         community: questionId,
+        user:userId
       },
     });
     return response.data;
