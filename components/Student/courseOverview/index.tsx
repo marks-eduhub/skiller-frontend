@@ -26,15 +26,11 @@ const Enroll = () => {
   const isEnrolled = coursetrackerdata?.data?.length > 0;
 
   const { data, isLoading, error } = useFetchOverview(Number(slug));
-  const {
-    data: reviews,
-    isLoading: loadingreviews,
-    error: reviewError,
-  } = useFetchReviews(Number(slug));
+
   if (!slug) {
     return;
   }
-  if (isLoading || loadingreviews) {
+  if (isLoading ) {
     return (
       <div className="ml-5">
         <h2 className="text-lg font-300 my-4 ">
@@ -59,7 +55,7 @@ const Enroll = () => {
     );
   }
 
-  if (error || reviewError) {
+  if (error ) {
     message.error("Error fetching details. Please try again later.");
   }
 
@@ -71,7 +67,6 @@ const Enroll = () => {
     );
 
   const courseAttributes = data?.data?.attributes || {};
-  const reviewData = reviews?.data?.attributes?.reviews?.data || [];
 
   const coursename = courseAttributes.coursename || "UI";
   const card = courseAttributes.card?.data?.attributes?.url || "";
@@ -88,16 +83,6 @@ const Enroll = () => {
 
   const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
 
-  const Reviews = reviewData.map((review: any) => {
-    const imageUrl = review.attributes.profilepicture?.data?.attributes?.url;
-
-    return {
-      name: review.attributes.name,
-      image: imageUrl || "/Ellipse 445.webp",
-      comment: review.attributes.comment,
-      rating: review.attributes.rating,
-    };
-  });
 
   const handleTab = (tabName: string) => setTab(tabName);
 
@@ -210,7 +195,7 @@ const Enroll = () => {
           topics={topics}
         />
       ) : (
-        <CourseReview reviews={Reviews} />
+        <CourseReview  />
       )}
 
       <SimilarCourses />

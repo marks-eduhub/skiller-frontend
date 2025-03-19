@@ -154,7 +154,8 @@ export const courseRating = async (
   userId: number,
   courseId: number,
   score: number,
-  progressId: number
+  progressId: number,
+  comment :string
 ) => {
   try {
     const response = await api.post(`/api/courseratings`, {
@@ -163,7 +164,9 @@ export const courseRating = async (
         course: courseId,
         score,
         user_course_progress: progressId,
+        comment
       },
+      
     });
     return response.data;
   } catch (error) {

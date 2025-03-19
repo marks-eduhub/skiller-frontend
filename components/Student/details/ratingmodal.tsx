@@ -6,6 +6,9 @@ interface RatingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (rating: number) => void;
+  setComment: React.Dispatch<React.SetStateAction<string>>;
+  setRating: React.Dispatch<React.SetStateAction<number>>;
+  comment:string
  
 }
 
@@ -13,6 +16,8 @@ const RatingModal: React.FC<RatingModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  setComment,
+  comment
  
 }) => {
   
@@ -53,6 +58,15 @@ const RatingModal: React.FC<RatingModalProps> = ({
               </button>
             ))}
           </div>
+          <div className="mb-4">
+          <textarea
+            placeholder="Write your review here..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            rows={4}
+          />
+        </div>
           <div className="flex justify-end space-x-2">
             <button className="px-4 py-2 bg-gray-300 rounded" onClick={onClose}>
               Cancel
@@ -66,6 +80,7 @@ const RatingModal: React.FC<RatingModalProps> = ({
             </button>
           </div>
         </div>
+       
       </div>
     )
   );

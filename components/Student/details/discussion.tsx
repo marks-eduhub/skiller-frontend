@@ -19,7 +19,6 @@ import { RxAvatar } from "react-icons/rx";
 import "react-loading-skeleton/dist/skeleton.css";
 import { FaComment } from "react-icons/fa";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { useFetchUserDetails } from "@/hooks/useProfile";
 import Image from "next/image";
 
 const Discussion = () => {
@@ -164,8 +163,7 @@ const Discussion = () => {
       message.error("Failed to post comment.");
     },
     onSettled: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["comments", topicId]);
+      queryClient.invalidateQueries({ queryKey: ["comments", topicId] });
     },
   });
 
@@ -220,8 +218,7 @@ const Discussion = () => {
       message.error("Failed to post reply.");
     },
     onSettled: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["comment_replies", commentId]);
+      queryClient.invalidateQueries({ queryKey: ["comment_replies", commentId] });
     },
   });
 
@@ -249,8 +246,7 @@ const Discussion = () => {
       message.error("Failed to like comment.");
     },
     onSettled: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["comment_likes", userId]);
+      queryClient.invalidateQueries({ queryKey: ["comment_likes", userId] });
     },
   });
 
@@ -271,8 +267,7 @@ const Discussion = () => {
         message.error("Failed to unlike comment.");
       },
       onSettled: () => {
-        //@ts-ignore
-        queryClient.invalidateQueries(["comment_likes", userId]);
+        queryClient.invalidateQueries({ queryKey: ["comment_likes", userId] });
       },
     });
 
