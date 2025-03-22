@@ -10,6 +10,7 @@ import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useRouter } from "next/navigation";
+import Loader from "../loader";
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
@@ -129,12 +130,7 @@ const SearchBar: React.FC = () => {
     }
   };
 
-  const loadingContent = (
-    <div className="absolute bg-white shadow-md mt-2 rounded-md w-3/4 z-10">
-      <Skeleton height={24} count={1} />
-    </div>
-  );
-
+  
   if (error || errorTutors) {
     message.error("Error fetching courses. Please try again later.");
   }
@@ -154,7 +150,7 @@ const SearchBar: React.FC = () => {
         <Image src="/filter-variant.svg" alt="filter" width={20} height={20} />
       </div>
 
-      {isLoading || isLoadingTutors ? loadingContent : null}
+      {isLoading || isLoadingTutors }
 
       {showDropdown && (
         <div className="absolute bg-white border-t pt-2 cursor-pointer border-gray-200 shadow-2xl rounded-lg w-3/4 z-50">
@@ -167,7 +163,7 @@ const SearchBar: React.FC = () => {
                 <div
                   key={result.id}
                   className={`p-3 cursor-pointer border-b border-gray-200 ${
-                    index === highlightedIndex ? "bg-gray-200 rounded-md" : ""
+                    index === highlightedIndex ? "rounded-md" : ""
                   }`}
                   onMouseDown={(event) => {
                     event.stopPropagation();

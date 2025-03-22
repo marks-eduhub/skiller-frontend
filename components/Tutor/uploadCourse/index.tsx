@@ -12,6 +12,8 @@ import { useCourseContext } from "@/Context/CourseContext";
 import CourseFields from "./coursefileds";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useFetchTutors } from "@/hooks/useCourses";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -35,7 +37,7 @@ interface Topic {
 const UploadCourse = () => {
   const { setCourseId, courseId } = useCourseContext();
   const { user } = useAuthContext();
-  const {data} =  useFetchTutors()
+  const { data } = useFetchTutors();
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [courseDescription, setCourseDescription] = useState("");
   const [courseRequirements, setCourseRequirements] = useState("");
@@ -46,15 +48,19 @@ const UploadCourse = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [resourceFile, setResourceFile] = useState<File | null>(null);
   const [category, setCategory] = useState("");
+  const [level, setLevel] = useState("");
+  const [days, setDays] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [duration, setDuration] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
   const [isOpen, setModalOpen] = useState(false);
   const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
+  const [isTopicUploaded, setIsTopicUploaded] = useState(false);
+  const router = useRouter();
 
-  const tutorId = data?.data
-  ?.find((tutor: any) => tutor.attributes?.user?.data?.id === user?.id)
-  ?.id;
+  const tutorId = data?.data?.find(
+    (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
+  )?.id;
 
   const handleNextStep = () => {
     if (currentStep < 3) {
@@ -66,6 +72,10 @@ const UploadCourse = () => {
     if (currentStep > 1) {
       setCurrentStep((prevStep) => prevStep - 1);
     }
+  };
+
+  const handleBack = () => {
+    router.back();
   };
 
   const onClose = () => {
@@ -104,6 +114,8 @@ const UploadCourse = () => {
   const { mutate: uploadCourse } = useMutation({
     mutationFn: async ({
       courseName,
+      level,
+      days,
       courseLearning,
       courseDescription,
       courseRequirements,
@@ -113,6 +125,8 @@ const UploadCourse = () => {
       duration,
     }: {
       courseName: string;
+      level: string;
+      days: string;
       courseLearning: string;
       courseDescription: string;
       courseRequirements: string;
@@ -123,6 +137,8 @@ const UploadCourse = () => {
     }) => {
       return await courseUpload(
         courseName,
+        level,
+        days,
         courseLearning,
         courseDescription,
         courseRequirements,
@@ -144,68 +160,82 @@ const UploadCourse = () => {
     try {
       if (!selectedImage) {
         message.error("Please select a course image to upload.");
-        return;
+        return false;
       }
 
-      let videoId: string | null = null;
+      let videoId = null;
       if (videoFile) {
         videoId = await uploadMedia(videoFile);
         if (!videoId) {
-          throw new Error("Topic video upload failed.");
+          message.error("Topic video upload failed.");
+          return false;
         }
       }
 
-      let resourceId: string | null = null;
+      let resourceId = null;
       if (resourceFile) {
         resourceId = await uploadMedia(resourceFile);
         if (!resourceId) {
-          throw new Error("Resource upload failed.");
+          message.error("Resource upload failed.");
+          return false;
         }
       }
 
       if (
         !courseName ||
+        !level ||
+        !days ||
         !courseDescription ||
         !courseRequirements ||
         !courseLearning ||
         !category
       ) {
         message.error("Please fill out all required course details.");
-        return;
+        return false;
       }
 
       const mediaId = await uploadMedia(selectedImage);
       if (!mediaId) {
-        throw new Error("Course image upload failed.");
+        message.error("Course image upload failed.");
+        return false;
       }
 
-      uploadCourse(
-        {
-          courseName,
-          courseLearning,
-          courseDescription,
-          courseRequirements,
-          mediaId,
-          category,
-          tutorId,
-          duration,
-        },
-        {
-          onSuccess: (data) => {
-            const courseId = data?.data?.id;
-            setCourseId(courseId);
-            if (!courseId) {
-              throw new Error("An error has occurred. Try again later!");
-            }
-            message.success("Course uploaded successfully!");
+      return new Promise((resolve) => {
+        uploadCourse(
+          {
+            courseName,
+            level,
+            days,
+            courseLearning,
+            courseDescription,
+            courseRequirements,
+            mediaId,
+            category,
+            tutorId,
+            duration,
           },
-          onError: (err) => {
-            message.error("Failed to upload course details.");
-          },
-        }
-      );
+          {
+            onSuccess: (data) => {
+              const courseId = data?.data?.id;
+              setCourseId(courseId);
+              if (!courseId) {
+                message.error("An error has occurred. Try again later!");
+                resolve(false);
+              } else {
+                message.success("Course uploaded successfully!");
+                resolve(true);
+              }
+            },
+            onError: () => {
+              message.error("Failed to upload course details.");
+              resolve(false);
+            },
+          }
+        );
+      });
     } catch (error) {
       message.error("An unexpected error occurred.");
+      return false;
     }
   };
 
@@ -213,24 +243,10 @@ const UploadCourse = () => {
     if (currentStep === 1) {
       setIsUploading(true);
       try {
-        if (!selectedImage) {
-          message.error("Please select a course image to upload.");
-          return;
+        const success = await handleSubmit();
+        if (success) {
+          handleNextStep();
         }
-        if (
-          !courseName ||
-          !courseDescription ||
-          !courseRequirements ||
-          !courseLearning ||
-          !category
-        ) {
-          message.error("Please fill out all required course details.");
-          return;
-        }
-
-        await handleSubmit();
-
-       handleNextStep();
       } finally {
         setIsUploading(false);
       }
@@ -242,7 +258,13 @@ const UploadCourse = () => {
   return (
     <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
       {currentStep === 1 && (
-        <h1 className="text-[20px] mb-6 sm:mt-0 mt-5">Upload a Course</h1>
+        <div className="flex gap-4 sm:mt-4 my-2">
+          <IoMdArrowRoundBack
+            className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
+            onClick={handleBack}
+          />
+          <h1 className="text-[20px] mb-6 mt-2">Upload a Course</h1>
+        </div>
       )}
       {currentStep === 2 && (
         <h1 className="text-[20px] mb-6">Upload a topic</h1>
@@ -261,6 +283,10 @@ const UploadCourse = () => {
           setCategory={setCategory}
           setUploadImage={setUploadImage}
           setDuration={setDuration}
+          setLevel={setLevel}
+          setDays={setDays}
+          level={level}
+          days={days}
           courseName={courseName}
           courseDescription={courseDescription}
           courseRequirements={courseRequirements}
@@ -281,6 +307,7 @@ const UploadCourse = () => {
           setTopics={setTopics}
           addTopic={addTopic}
           updateTopic={updateTopic}
+          setIsTopicUploaded={setIsTopicUploaded}
         />
       )}
       {currentStep === 3 && <Step3 />}
@@ -297,9 +324,13 @@ const UploadCourse = () => {
 
         {currentStep !== 3 && (
           <button
-            className="bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white"
+            className={`bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white ${
+              isUploading || (currentStep === 2 && !isTopicUploaded)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
             onClick={handleClick}
-            disabled={isUploading}
+            disabled={isUploading || (currentStep === 2 && !isTopicUploaded)}
           >
             {isUploading ? (
               <DotPulseWrapper size="30" speed="1.5" color="white" />

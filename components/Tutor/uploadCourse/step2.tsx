@@ -26,12 +26,14 @@ interface Step2Props {
   setTopics: (topics: Topic[]) => void;
   addTopic: () => void;
   updateTopic: (index: number, updatedFields: Partial<Topic>) => void;
+  setIsTopicUploaded: (isTopicUploaded: boolean) => void;
 }
 
 const Step2: React.FC<Step2Props> = ({
   topics,
   addTopic,
   updateTopic,
+  setIsTopicUploaded,
 }) => {
   const [videoPreview, setVideoPreview] = useState<{
     [key: number]: string | null;
@@ -118,7 +120,7 @@ const Step2: React.FC<Step2Props> = ({
     <div className="sm:p-4">
       {topics?.map((topic, index) => (
         <div key={index} className="flex flex-col mt-5 mb-5 cursor-pointer">
-          <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
+          <h1 className="font-bold text-[20px] sm:mb-0 mb-5">{topic.topicname}</h1>
 
           <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300 bg-gray-100 sm:mt-3">
             <div
@@ -163,6 +165,7 @@ const Step2: React.FC<Step2Props> = ({
                 onRemoveResource={(resourceIndex) =>
                   removeResource(index, resourceIndex)
                 } 
+                setIsTopicUploaded={setIsTopicUploaded} 
                 resourcePreview={topic.topicResources} 
                 resourceIds={resourceId}
                 setResourceIds={setResourceIds}

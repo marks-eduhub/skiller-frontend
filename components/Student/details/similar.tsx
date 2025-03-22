@@ -7,7 +7,7 @@ import { message } from "antd";
 
 const SimilarCourses: React.FC = () => {
   const { data, isLoading, error } = useFetchCourses();
-  const courses = data?.data || []
+  const courses = data?.data || [];
 
   if (isLoading)
     return (
@@ -15,17 +15,22 @@ const SimilarCourses: React.FC = () => {
         <Loader />
       </div>
     );
+
   if (error) {
     message.error("Error fetching courses. Please try again later.");
   }
 
+  const recentCourses = [...courses]
+  .sort((a, b) =>  new Date(b.attributes.createdAt).getTime() - new Date(a.attributes.createdAt).getTime())
+  .slice(0, 3);
+
   return (
-    <div className=" bg-white ">
+    <div className="bg-white">
       <h2 className="text-lg font-semibold pt-10">
         <b>Similar Courses</b>
       </h2>
 
-      <ProductContainer courses={courses} />
+      <ProductContainer courses={recentCourses} />
     </div>
   );
 };

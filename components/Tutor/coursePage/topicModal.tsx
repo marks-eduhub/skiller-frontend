@@ -41,6 +41,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
   const [index, setIndex] = useState(0);
   const [videoId, setVideoId] = useState("");
   const [resourceId, setResourceIds] = useState("")
+  const [isTopicUploaded, setIsTopicUploaded] = useState(false);
 
   useEffect(() => {
     if (currentTopic && currentTopic.attributes) {
@@ -64,14 +65,24 @@ const TopicModal: React.FC<TopicModalProps> = ({
         : [];
   
       setVideoId(videoId);
-      setResourceIds(resourceIds); 
+      setResourceIds(resourceIds);
+  
+      const durationBackend = currentTopic.attributes.duration;
+      let hh = "00", mm = "00", ss = "00";
+      if (durationBackend) {
+        const [hours, minutes, secondsMs] = durationBackend.split(":");
+        const [seconds] = secondsMs.split(".");
+        hh = hours || "00";
+        mm = minutes || "00";
+        ss = seconds || "00";
+      }
   
       setTopic((prev) => ({
         ...prev,
         topicname: currentTopic.attributes.topicname || "",
-        topicdescription: currentTopic.attributes.topicdescription || "",
-        topicExpectations: currentTopic.attributes.topicExpectations || "",
-        duration: currentTopic.attributes.duration || "",
+        topicdescription: currentTopic.attributes.topicdescription|| "",
+        topicExpectations: currentTopic.attributes.topicExpectations.split('\n').join('<br/>')  || "",
+        duration: `${hh}:${mm}:${ss}`,
         resourceInstructions:
           currentTopic.attributes.resourceInstructions || "",
         topicVideo: videoId,
@@ -177,6 +188,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
                 prev.filter((_, i) => i!== resourceIndex)
               )
             }
+            setIsTopicUploaded={setIsTopicUploaded} 
+
           />
         </div>
       </div>

@@ -174,9 +174,9 @@ const handleTopicCompletion = useCallback(async () => {
 
   try {
     await topicProgress(userId, topicId, coursetrackerId, true);
-    message.success("Success");
+    // message.success("Success");
   } catch (error) {
-    message.error("Error updating topic progress");
+    // message.error("Error updating topic progress");
   }
 }, [hasUserPassedAllTests, userId,  topicId, coursetrackerId, isTopicCompleted]);
 

@@ -7,7 +7,6 @@ import { useFetchCarouselCourses } from "@/hooks/useCarouselCourses";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
-import api from "@/lib/axios";
 
 const FeaturedProduct: React.FC = () => {
   const { data, isLoading, error } = useFetchCarouselCourses();

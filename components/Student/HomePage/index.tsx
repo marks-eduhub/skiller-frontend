@@ -70,6 +70,12 @@ const HomePage: React.FC = () => {
       coursesByCategory[categorySlug].courses.push(course);
     });
   });
+
+  Object.keys(coursesByCategory).forEach((categorySlug) => {
+    coursesByCategory[categorySlug].courses.sort(
+      (a, b) => new Date(b.attributes.createdAt).getTime() - new Date(a.attributes.createdAt).getTime()
+    );
+  });
   return (
     <div className="flex flex-col sm:min-h-screen mx-auto sm:pb-9">
       <h2 className="text-lg font-300 my-4">

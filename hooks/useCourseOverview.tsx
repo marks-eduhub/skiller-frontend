@@ -36,6 +36,38 @@ export const useFetchReviews = (courseId: number) => {
   });
 };
 
+export const updateReview = async (
+  userId: number,
+  courseId: number,
+  comment: string,
+  rating: number
+) => {
+  try {
+    const reviewExists = await api.get(
+      `/api/courseratings?filters[course][id][$eq]=${courseId}&filters[user][id][$eq]=${userId}`
+    );
+
+    if (reviewExists.data.data.length > 0) {
+      const review = reviewExists.data.data[0];
+
+      const response = await api.put(`/api/courseratings/${review.id}`, {
+        data: {
+          review: comment,
+          score: rating,
+        },
+      });
+
+      return response.data;
+    } else {
+      throw new Error("Review not found. You must leave a review before updating.");
+    }
+  } catch (error) {
+    throw new Error( "Failed to update review");
+  }
+};
+
+
+
 export const postReview = async (
   userId: number,
   courseId: number,

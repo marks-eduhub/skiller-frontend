@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import TutorNav from "../dashboard/tutor-nav";
 import Step2 from "../uploadCourse/step2";
-
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRouter } from "next/navigation";
 interface Topic {
   id: number | null;
   topicname: string;
@@ -23,6 +24,8 @@ interface Topic {
 
 const TopicUpload = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
+  const router = useRouter();
+  const [isTopicUploaded, setIsTopicUploaded] = useState(false);
 
   const addTopic = () => {
     const newTopic: Topic = {
@@ -47,26 +50,41 @@ const TopicUpload = () => {
 
   const updateTopic = (index: number, updatedFields: Partial<Topic>) => {
     setTopics((prev) =>
-      prev.map((topic, i) => (i === index ? { ...topic, ...updatedFields } : topic))
+      prev.map((topic, i) =>
+        i === index ? { ...topic, ...updatedFields } : topic
+      )
     );
   };
-
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <div className="p-4">
       <div className="w-full sm:mt-2 flex items-center justify-between">
-        <h1 className="font-semibold text-[20px] sm:flex hidden">
-          Upload Course
-        </h1>
+        <div className="flex sm:gap-4 gap-6 sm:mt-4 mt-0 ">
+          <IoMdArrowRoundBack
+            className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
+            onClick={handleBack}
+          />
+
+          <h1 className="font-semibold mt-2 text-[20px] sm:flex hidden">
+            Upload Topic
+          </h1>
+        </div>
         <div className="justify-end">
           <TutorNav />
         </div>
       </div>
 
-      <div className="flex sm:mt-7 mt-20 mb-5 sm:justify-end justify-between">
-        <h1 className="font-semibold text-[20px] sm:hidden">Upload Course</h1>
+      <div className="flex sm:gap-10 gap-6 sm:mt-4 mt-12 mb-10 sm:hidden ">
+          <IoMdArrowRoundBack
+            className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
+            onClick={handleBack}
+          />
+        <h1 className="font-semibold mt-2 text-[20px] ">Upload Topic</h1>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col sm:ml-2 sm:mt-10">
         <h1 className="font-semibold">Topics</h1>
         <div className="flex gap-2 items-center">
           <Image src="/bulb.svg" alt="light" width={15} height={15} />
@@ -74,8 +92,14 @@ const TopicUpload = () => {
         </div>
       </div>
 
-      <Step2 topics={topics} setTopics={setTopics} addTopic={addTopic} updateTopic={updateTopic} />
+      <Step2
+        topics={topics}
+        setTopics={setTopics}
+        addTopic={addTopic}
+        updateTopic={updateTopic}
+        setIsTopicUploaded={setIsTopicUploaded} 
 
+      />
     </div>
   );
 };

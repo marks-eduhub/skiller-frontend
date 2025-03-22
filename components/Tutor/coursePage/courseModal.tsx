@@ -23,28 +23,47 @@ const CourseModal: React.FC<CourseModalProps> = ({
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [category, setCategory] = useState("");
   const [duration, setDuration] = useState("");
-  const [existingMediaId, setExistingMediaId] = useState<number | null>(null);  
-
+  const [level, setLevel] = useState("");
+  const [days, setDays] = useState("");
+  const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
 
   useEffect(() => {
     if (data?.data) {
-      setCourseName((prev) => prev || data.data.attributes.coursename);
-      setCourseDescription(
-        (prev) => prev || data.data.attributes.coursedescription
-      );
-      setCourseRequirements(
-        (prev) => prev || data.data.attributes.requirements
-      );
-      setCourseLearning((prev) => prev || data.data.attributes.expectations);
-      setCategory((prev) => prev || data.data.attributes.category);
-      setDuration((prev) => prev || data.data.attributes.duration);
+      setCourseName(data.data.attributes.coursename);
+      setCourseDescription(data.data.attributes.coursedescription);
+      setCourseRequirements(data.data.attributes.requirements.split('\n').join('<br/>'));
+      setLevel( data.data.attributes.level);
+      setDays( data.data.attributes.days);
+      setCourseLearning( data.data.attributes.expectations.split('\n').join('<br/>'));
 
       const cardImage = data.data.attributes.card?.data?.attributes?.url;
       if (cardImage) {
-        setUploadImage((prev) => prev || cardImage);
+        setUploadImage(cardImage);
       }
-      const mediaId = data.data.attributes.card?.data?.id; 
+      const mediaId = data.data.attributes.card?.data?.id;
       setExistingMediaId(mediaId);
+    }
+    const category = data?.data?.attributes?.categories?.data[0]?.attributes?.coursecategories;
+    if (category) {
+      setCategory(category);
+    }
+
+    if (data?.data) {
+      const durationBackend = data.data.attributes.duration;
+
+      if (durationBackend) {
+        const [hh, mm, ssMs] = durationBackend.split(":");
+        const [ss] = ssMs.split(".");
+
+        setHours(hh || "00");
+        setMinutes(mm || "00");
+        setSeconds(ss || "00");
+
+        setDuration(`${hh}:${mm}:${ss}`);
+      }
     }
   }, [data]);
 
@@ -98,6 +117,10 @@ const CourseModal: React.FC<CourseModalProps> = ({
             setSelectedImage={setSelectedImage}
             onClose={onClose}
             existingMediaId={existingMediaId}
+            setLevel={setLevel}
+            setDays={setDays}
+            level={level}
+            days={days}
           />
         </div>
       </div>

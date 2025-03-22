@@ -5,6 +5,8 @@ import TurndownService from "turndown";
 
 export const courseUpload = async (
   coursename: string,
+  level:string,
+  days:string,
   expectations: string,
   coursedescription: string,
   requirements: string,
@@ -21,18 +23,19 @@ export const courseUpload = async (
     const markdownDescription = turndownService.turndown(coursedescription);
     const markdownRequirements = turndownService.turndown(requirements);
 
-    const formattedDuration = duration.includes(":") ? `${duration}:00` : duration;
 
     const response = await api.post("/api/courses?populate[card][populate][categories]=*", {
       data: {
         coursename,
+        level,
+        days,
         expectations: markdownExpectations,
         coursedescription: markdownDescription,
         requirements: markdownRequirements,
         card: cardId,
         categories,
         tutor,
-        duration: formattedDuration,
+        duration,
       },
     });
 
@@ -47,12 +50,13 @@ export const courseUpload = async (
 export const courseEditing = async (
   courseId:number,
   coursename: string,
+  level:string,
+  days:string,
   expectations: string,
   coursedescription: string,
   requirements: string,
   cardId: number,
   categories:string,
-
   duration: string
 ) => {
   try {
@@ -62,17 +66,17 @@ export const courseEditing = async (
     const markdownDescription = turndownService.turndown(coursedescription);
     const markdownRequirements = turndownService.turndown(requirements);
 
-    const formattedDuration = duration.includes(":") ? `${duration}:00` : duration;
-
     const response = await api.put(`/api/courses/${courseId}?populate=*`, {
       data: {
         coursename,
+        level,
+        days,
         expectations: markdownExpectations,
         coursedescription: markdownDescription,
         requirements: markdownRequirements,
         card: cardId,
         categories,
-        duration: formattedDuration, 
+        duration, 
       },
     });
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
-import { postReview, useFetchReviews } from "@/hooks/useCourseOverview";
+import { postReview, updateReview, useFetchReviews } from "@/hooks/useCourseOverview";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useParams } from "next/navigation";
 import queryClient from "@/lib/queryClient";
@@ -78,37 +78,91 @@ const CourseReview = () => {
     },
   });
 
-  const handleModal = () => {
-    const reviewExists = reviewData?.data?.some(
-      (review:any) => review.attributes.user.data.id === userId
-    );  
-    if(reviewExists) {
-      message.warning("You have already posted a review for this course.");
-      } else {
-        setIsOpen(true);
+  const {mutate: reviewUpdate} = useMutation({
+    mutationFn: async() => {
+      return updateReview(userId, courseId, comment, rating)
+    },
+    onMutate: async () => {
+      if (!userId) return;
+
+      await queryClient.cancelQueries({
+        queryKey: ["coursereviews", courseId],
+      });
+
+      const previousReviews = queryClient.getQueryData([
+        "coursereviews",
+        courseId,
+      ]);
+
+      queryClient.setQueryData(["coursereviews", courseId], (oldData: any) => {
+        const newReview = {
+          id: "",
+          attributes: {
+            comment,
+            rating,
+            createdAt: new Date().toISOString(),
+            user: { id: userId, username: "Current User" },
+          },
+        };
+        return { ...oldData, data: [...(oldData?.data || []), newReview] };
+      });
+
+      return { previousReviews };
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousReviews) {
+        queryClient.setQueryData(
+          ["coursereviews", courseId],
+          context.previousReviews
+        );
       }
-    
+      message.error("Failed to post review. Please try again.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["coursereviews", courseId] });
+    },
+    onSuccess: () => {
+      message.success("Review updated successfully!");
+      setComment("");
+      setRating(0);
+      setIsOpen(false);
+    }
+
+  })
+  
+  const handleModal = () => {
+    setIsOpen(true)
   };
 
   const handleModalClose = () => {
     setIsOpen(false);
   };
 
-  const handleReview = async () => {
-    if (comment.trim()) {
-      setIsPosting(true);
-      setIsOpen(false);
+  const handleReview = () => {
+    if(rating === 0) {
+      message.error("Rating has to be greater than 0")
+      return
+    }
+    if(comment.trim()) {
+      setIsPosting(true)
+      setIsOpen(false)
       try {
-        reviewPosting();
+        if(reviews.length > 0) {
+          reviewUpdate()
+        } else {
+          reviewPosting()
+        }
       } catch (error) {
         message.error("There was an error posting the review.");
       } finally {
-        setIsPosting(false);
+        setIsPosting(false)
       }
+
     } else {
-      message.error("Review cannot be empty.");
+      message.error("Review cannot be empty")
     }
-  };
+  }
+
 
   if(loadingreviews) {
     return <div className="flex items-center justify-center">

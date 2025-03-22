@@ -11,20 +11,21 @@ import { useParams } from "next/navigation";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
+import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
 
 const CourseOverview = () => {
   const [Tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
+  const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(Number(slug));
 
   const handleClicks = (tabName: string) => {
     setTab(tabName);
   };
 
   const rating = data?.data?.attributes?.averageRating || "No rating";
-  const days = data?.data?.attributes?.days;
-  const enrolledLearners = data?.data?.attributes?.users?.data || [];
-  const learners = enrolledLearners.length;
+  const days = data?.data?.attributes?.days || 0;
+  const learners = totalStudentsEnrolled?.length || 0;
   const coursename = data?.data?.attributes?.coursename;
   const description = data?.data?.attributes?.coursedescription;
   const courseImage = data?.data?.attributes?.card?.data?.attributes?.url;
@@ -54,11 +55,12 @@ const CourseOverview = () => {
           </div>
           <div className="flex sm:pl-5 pl-3 gap-1">
             <Image src="/clock.svg" alt="clock" width={15} height={15} />
-            {days}
+            {days}days
           </div>
           <div className="flex sm:pl-5 pl-3 gap-1">
-            {learners}
             <Image src="/learners.svg" alt="learners" width={20} height={20} />
+            {learners}
+
             <h1>Learner(s)</h1>
           </div>
         </div>
@@ -71,8 +73,7 @@ const CourseOverview = () => {
         className="w-full sm:h-[450px] h-[300px] relative rounded-2xl mt-10 mb-10 bg-no-repeat bg-center bg-cover"
         style={{ backgroundImage: `url("${courseImage}")` }}
       >
-        
-        <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-60 z-10 rounded-2xl" />
 
         <div className="p-6 z-20 w-full relative sm:block ">
           <h1 className="text-white font-bold sm:text-[40px] sm:w-2/3 mb-10 text-[30px] sm:mx-0 mx-2">
