@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GrCloudUpload } from "react-icons/gr";
 import Image from "next/image";
 import Loader from "@/components/Student/loader";
@@ -11,8 +11,6 @@ import {
 import { message } from "antd";
 import { useParams, usePathname } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import TimePicker from "react-time-picker";
-import "react-time-picker/dist/TimePicker.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -31,7 +29,11 @@ interface CourseFieldsProps {
   uploadImage: string | null;
   setUploadImage: React.Dispatch<React.SetStateAction<string | null>>;
   duration: string;
+  setLevel: React.Dispatch<React.SetStateAction<string>>;
+  setDays: React.Dispatch<React.SetStateAction<string>>;
   setDuration: React.Dispatch<React.SetStateAction<string>>;
+  level: string;
+  days: string;
   setSelectedImage: React.Dispatch<React.SetStateAction<File | null>>;
   onClose: () => void;
   existingMediaId: number | null;
@@ -54,8 +56,11 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   setDuration,
   setSelectedImage,
   onClose,
-  existingMediaId
-
+  existingMediaId,
+  setLevel,
+  setDays,
+  level,
+  days,
 }) => {
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -63,11 +68,25 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   const courseId = Number(slug);
   const { data, isLoading, error } = useFetchCategory();
   const [fileName, setFileName] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSaving, setIsSaving] = useState(false);
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
+
+  useEffect(() => {
+    if (duration) {
+      const [hours, minutes, seconds] = duration.split(":");
+      const [ss] = seconds.split(".");
+      setHours(hours || "02");
+      setMinutes(minutes || "05");
+      setSeconds(ss || "07");
+    }
+  }, [duration]);
 
   const handleCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
   };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -87,6 +106,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
     mutationFn: async ({
       courseId,
       courseName,
+      level,
+      days,
       courseLearning,
       courseDescription,
       courseRequirements,
@@ -96,6 +117,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
     }: {
       courseId: number;
       courseName: string;
+      level: string;
+      days: string;
       courseLearning: string;
       courseDescription: string;
       courseRequirements: string;
@@ -106,6 +129,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       return await courseEditing(
         courseId,
         courseName,
+        level,
+        days,
         courseLearning,
         courseDescription,
         courseRequirements,
@@ -142,6 +167,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
         {
           courseId,
           courseName,
+          level,
+          days,
           courseLearning,
           courseDescription,
           courseRequirements,
@@ -161,40 +188,100 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       setIsSaving(false);
     }
   };
-  
+
+  const handleDurationChange = () => {
+    const formattedDuration = `${(hours || "00").padStart(2, "0")}:${(
+      minutes || "00"
+    ).padStart(2, "0")}:${(seconds || "00").padStart(2, "0")}.000`;
+    setDuration(formattedDuration);
+  };
 
   return (
     <div>
-      <div className="flex gap-5">
-        <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
-          <label className="sm:flex-shrink-0 my-2 sm:my-0">Course name:</label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">Course Name:</label>
           <input
             type="text"
             value={courseName}
-            onChange={(e) => {
-              setCourseName(e.target.value);
-            }}
-            className="border rounded-md sm:ml-5 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+            onChange={(e) => setCourseName(e.target.value)}
+            className="border rounded-md border-black w-full sm:max-w-[300px] bg-[#F9F9F9] px-3 py-2 outline-none"
           />
         </div>
-        <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full">
-          <label className="sm:flex-shrink-0 my-2 sm:my-0">
-            Course duration:
-          </label>
+
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">Course Duration:</label>
+          <div className="flex gap-2">
+            <input
+              type="number"
+              min="0"
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+              onBlur={() => {
+                setHours((hours || "00").padStart(2, "0"));
+                handleDurationChange();
+              }}
+              placeholder="HH"
+              className="border rounded-md border-black w-16 text-center bg-[#F9F9F9] px-3 py-2 outline-none"
+            />
+            <span>:</span>
+            <input
+              type="number"
+              min="0"
+              max="59"
+              value={minutes}
+              onChange={(e) => setMinutes(e.target.value)}
+              onBlur={() => {
+                setMinutes((minutes || "00").padStart(2, "0"));
+                handleDurationChange();
+              }}
+              placeholder="MM"
+              className="border rounded-md border-black w-16 text-center bg-[#F9F9F9] px-3 py-2 outline-none"
+            />
+            <span>:</span>
+            <input
+              type="number"
+              min="0"
+              max="59"
+              value={seconds}
+              onChange={(e) => setSeconds(e.target.value)}
+              onBlur={() => {
+                setSeconds((seconds || "00").padStart(2, "0"));
+                handleDurationChange();
+              }}
+              placeholder="SS"
+              className="border rounded-md border-black w-16 text-center bg-[#F9F9F9] px-3 py-2 outline-none"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">Course Level:</label>
+          <select
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+            className="border rounded-md border-black w-full sm:max-w-[300px] bg-[#F9F9F9] px-3 py-2 outline-none"
+          >
+            <option value="">Select Level</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col">
+          <label className="mb-1 text-sm font-medium">Days:</label>
           <input
-            type="time"
-            value={duration}
-            onChange={(e) => {
-              setDuration(e.target.value);
-            }}
-            step="60"
-            className="border rounded-md sm:ml-2 border-black w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+            type="text"
+            value={days}
+            onChange={(e) => setDays(e.target.value)}
+            className="border rounded-md border-black w-full sm:max-w-[300px] bg-[#F9F9F9] px-3 py-2 outline-none"
           />
-        
         </div>
       </div>
-      <div className="mb-10 mt-4">
-        <label className="block text-sm font-medium mb-4 mt-6">
+
+      <div className="mb-10  mt-4">
+        <label className="block text-sm font-medium mb-4 mt-8">
           Enter a brief description about the course
         </label>
         <ReactQuill
@@ -203,11 +290,12 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
           onChange={(value) => {
             setCourseDescription(value);
           }}
-          className="bg-white h-40"
+          className="bg-white h-auto"
         />
       </div>
-      <div className="mb-6 mt-10">
-        <label className="block text-sm font-medium mb-4 mt-20">
+
+      <div className="mb-6 ">
+        <label className="block text-sm font-medium mb-4 ">
           What will the student learn?
         </label>
         <ReactQuill
@@ -215,11 +303,12 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
           onChange={(value) => {
             setCourseLearning(value);
           }}
-          className="h-40"
+          className="h-auto"
         />
       </div>
+
       <div className="mb-6 mt-6">
-        <label className="block text-sm font-medium mb-4 mt-20">
+        <label className="block text-sm font-medium mb-4 ">
           Course Requirements
         </label>
         <ReactQuill
@@ -227,19 +316,21 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
           onChange={(value) => {
             setCourseRequirements(value);
           }}
-          className="h-40"
+          className="h-auto"
         />
       </div>
 
       <div>
         <label
           htmlFor="category"
-          className="block text-sm font-medium mb-4 mt-20"
+          className="block text-sm font-medium mb-4 "
         >
           Course Category
         </label>
         {isLoading ? (
-          <Loader />
+          <div className="flex items-center justify-center">
+            <Loader />
+          </div>
         ) : error ? (
           <p className="text-red-500">Failed to load categories</p>
         ) : (
@@ -249,9 +340,11 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
             onChange={handleCategory}
             className="px-4 py-2 rounded-lg w-full sm:w-[300px] border border-gray-300 outline-none text-black bg-white shadow-md transition-all"
           >
-            <option value="" className="text-gray-500">
-              Select a category for your course
-            </option>
+            {!category && (
+              <option value="" className="text-gray-500">
+                Select a category for your course
+              </option>
+            )}
             {data?.data?.map(
               (CategoryData: {
                 id: string;
@@ -260,7 +353,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
                 <option
                   key={CategoryData.id}
                   value={CategoryData.id}
-                  className="text-black bg-white  hover:bg-gray-100"
+                  className="text-black bg-white hover:bg-gray-100"
                 >
                   {CategoryData.attributes.coursecategories}
                 </option>

@@ -22,7 +22,7 @@ const ProductDescriptionBar: React.FC<ProductDetailsProps> = ({
     <>
       <div className="relative bg-black px-4 pt-2 pb-8 text-white max-md:hidden ">
         <div className="relative ">
-          <h3 className="absolute bottom-0 right-0   text-white">{days}</h3>
+          <h3 className="absolute bottom-0 right-0   text-white">{days}days</h3>
 
           <h3 className="absolute top-0 right-0   text-white">{description}</h3>
 

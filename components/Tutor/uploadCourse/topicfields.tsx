@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
@@ -66,6 +66,7 @@ interface TopicFieldsProps {
   onRemoveResource: (resourceIndex: number) => void;
   resourceIds: string;
   setResourceIds: (prev: string) => void;
+  setIsTopicUploaded: (isTopicUploaded: boolean) => void;
 }
 
 const TopicFields: React.FC<TopicFieldsProps> = ({
@@ -84,6 +85,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   setVideoId,
   onRemoveResource,
   resourceIds,
+  setIsTopicUploaded,
 }) => {
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
@@ -93,13 +95,13 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const courseIdParam = searchParams.get("courseId");
   const { courseId: contextCourseId } = useCourseContext();
   const isUploadingCourse = pathname === "/tutor/dashboard/uploadCourse";
-  const {data} =  useFetchTutors()
-  let courseId: number = 0; 
+  const { data } = useFetchTutors();
+  let courseId: number = 0;
   if (isUploadingCourse) {
-  courseId = contextCourseId ?? 0; 
+    courseId = contextCourseId ?? 0;
   } else {
-  courseId = slug ? Number(slug) : courseIdParam ? Number(courseIdParam) : 0;
-   }
+    courseId = slug ? Number(slug) : courseIdParam ? Number(courseIdParam) : 0;
+  }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
@@ -107,12 +109,22 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
   const [resourceIndex, setResourceIndex] = useState<number | null>(null);
-  const [ isUploading, setIsUploading] = useState(false);
-  const IdTutor = data?.data
-  ?.find((tutor: any) => tutor.attributes?.user?.data?.id === user?.id)
-  ?.id;
-
-  const tutorId = Number(IdTutor)
+  const IdTutor = data?.data?.find(
+    (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
+  )?.id;
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
+  const tutorId = Number(IdTutor);
+  useEffect(() => {
+    if (topic.duration) {
+      const [hh, mm, ssMm] = topic.duration.split(":");
+      const [ss] = ssMm.split(".");
+      setHours(hh || "00");
+      setMinutes(mm || "00");
+      setSeconds(ss || "00");
+    }
+  }, [topic.duration]);
 
   const handleTextChange = (text: string) => {};
 
@@ -157,7 +169,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     [imageHandler]
   );
 
-  const { mutate: createTopic } = useMutation({
+  const { mutate: createTopic, isPending } = useMutation({
     mutationFn: async ({
       courseId,
       topicname,
@@ -217,7 +229,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
   });
 
-  const { mutate: editTopic } = useMutation({
+  const { mutate: editTopic, isPending: editLoading } = useMutation({
     mutationFn: async ({
       topicId,
       courseId,
@@ -295,8 +307,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   });
 
   const handleSaveChanges = async () => {
-    setIsUploading(true); 
-
     try {
       const existingVideoIds =
         topic.topicVideo && topic.topicVideo !== null ? [topic.topicVideo] : [];
@@ -334,12 +344,12 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           duration: topic.duration,
         });
       }
+      setIsTopicUploaded(true);
     } catch (error) {
       message.error("Error saving changes");
-    }finally {
-      setIsUploading(false);
-       }
-   };
+    } finally {
+    }
+  };
 
   const { mutate: deleteTopics } = useMutation({
     mutationFn: async (topicId: number) => {
@@ -461,38 +471,93 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setResourceModalOpen(false);
   };
 
-  return (
-       <div className={`p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words ${isUploading ? "pointer-events-none opacity-50 cursor-not-allowed" : ""}`}>
-       {isUploading && (
-          <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 cursor-not-allowed">
-           <DotPulseWrapper type="metronome" size="40" speed="1.75" color="black" />
-          </div>
-        )}
+  const handleDurationChange = () => {
+    const formattedDuration = `${(hours || "00").padStart(2, "0")}:${(
+      minutes || "00"
+    ).padStart(2, "0")}:${(seconds || "00").padStart(2, "0")}.000`;
+    onFieldChange("duration", formattedDuration);
+  };
 
+  return (
+    <div
+      className={`p-4 w-full h-auto bg-gray-100 rounded-md overflow-hidden break-words ${
+        isPending || editLoading
+          ? "pointer-events-none opacity-50 cursor-not-allowed"
+          : ""
+      }`}
+    >
+      {isPending ||
+        (editLoading && (
+          <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 cursor-not-allowed">
+            <DotPulseWrapper
+              type="metronome"
+              size="40"
+              speed="1.75"
+              color="black"
+            />
+          </div>
+        ))}
 
       <div className="flex flex-col sm:flex-row gap-5">
-        <div className="mt-5 flex flex-col sm:flex-row sm:items-center w-full gap-3">
-          <div className="flex flex-col sm:flex-row sm:items-center w-full">
-            <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
-            <input
-              type="text"
-              value={topic?.topicname}
-              onChange={(e) => onFieldChange("topicname", e.target.value)}
-              className="border rounded-md sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
-            />
-          </div>
+        <div className="flex flex-col sm:flex-row gap-5">
+          <div className="sm:mt-5 flex flex-col sm:flex-row sm:items-center w-full gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center w-full">
+              <label className="flex-shrink-0 sm:mb-0 mb-2">Topic name</label>
+              <input
+                type="text"
+                value={topic?.topicname}
+                onChange={(e) => onFieldChange("topicname", e.target.value)}
+                className="border rounded-md sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
+              />
+            </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center w-full">
-            <label className="flex-shrink-0 sm:mb-0 mb-2 sm:ml-5">
-              Topic duration
-            </label>
-            <input
-              type="time"
-              value={topic?.duration}
-              onChange={(e) => onFieldChange("duration", e.target.value)}
-              step="60"
-              className="border rounded-md sm:ml-5 border-black sm:w-2/3 w-full bg-[#F9F9F9] px-3 py-2 outline-none"
-            />
+            <div className="mt-5 flex sm:flex-row flex-col sm:items-center w-full sm:mt-2">
+              <label className="sm:flex-shrink-0 my-2 sm:my-0">
+                Topic duration:
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  value={hours}
+                  onChange={(e) => setHours(e.target.value)}
+                  onBlur={() => {
+                    setHours((hours || "00").padStart(2, "0"));
+                    handleDurationChange();
+                  }}
+                  placeholder="HH"
+                  className="border rounded-md sm:ml-5 border-black w-16 text-center bg-[#F9F9F9] px-3 py-2 outline-none"
+                />
+                <span>:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="59"
+                  value={minutes}
+                  onChange={(e) => setMinutes(e.target.value)}
+                  onBlur={() => {
+                    setMinutes((minutes || "00").padStart(2, "0"));
+                    handleDurationChange();
+                  }}
+                  placeholder="MM"
+                  className="border rounded-md border-black w-16 text-center bg-[#F9F9F9] px-3 py-2 outline-none"
+                />
+                <span>:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="59"
+                  value={seconds}
+                  onChange={(e) => setSeconds(e.target.value)}
+                  onBlur={() => {
+                    setSeconds((seconds || "00").padStart(2, "0"));
+                    handleDurationChange();
+                  }}
+                  placeholder="SS"
+                  className="border rounded-md border-black w-16 text-center bg-[#F9F9F9] px-3 py-2 outline-none"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -506,7 +571,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             placeholder="Write content here"
             value={topic?.topicdescription}
             onChange={(value) => onFieldChange("topicdescription", value)}
-            className="bg-white h-[200px]"
+            className="bg-white h-auto"
           />
         </div>
       </div>
@@ -520,7 +585,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             placeholder="Write content here"
             value={topic?.topicExpectations}
             onChange={(value) => onFieldChange("topicExpectations", value)}
-            className="bg-white h-[200px]"
+            className="bg-white h-auto"
           />
         </div>
       </div>
@@ -547,7 +612,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               "link",
               "image",
             ]}
-            className="bg-white h-[210px]"
+            className="bg-white h-auto"
             placeholder="Write content here..."
             value={topic?.resourceInstructions}
             onChange={(value) => onFieldChange("resourceInstructions", value)}
@@ -677,23 +742,32 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         >
           Delete Topic
         </button>
-    
-        
+
         <button
-      onClick={handleSaveChanges}
-      disabled={isUploading} 
-      className={`border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px] 
-        ${pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload" 
-          ? "w-[100px] flex justify-center" 
-          : "w-[180px]"
-        } ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`} 
-    >
-      {isUploading ? (
-        <DotPulseWrapper type="metronome" size="30" speed="1.75" color="black" />
-       ) : pathname === "/tutor/dashboard/uploadCourse" || pathname === "/tutor/dashboard/topicUpload" 
-        ? "Upload" 
-        : "Save changes"}
-    </button>
+          onClick={handleSaveChanges}
+          disabled={isPending || editLoading}
+          className={`border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px] 
+        ${
+          pathname === "/tutor/dashboard/uploadCourse" ||
+          pathname === "/tutor/dashboard/topicUpload"
+            ? "w-[100px] flex justify-center"
+            : "w-[180px]"
+        } ${isPending || editLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+        >
+          {isPending || editLoading ? (
+            <DotPulseWrapper
+              type="metronome"
+              size="25"
+              speed="1.75"
+              color="black"
+            />
+          ) : pathname === "/tutor/dashboard/uploadCourse" ||
+            pathname === "/tutor/dashboard/topicUpload" ? (
+            "Upload"
+          ) : (
+            "Save changes"
+          )}
+        </button>
       </div>
 
       <CustomModal
