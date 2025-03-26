@@ -148,7 +148,7 @@ const Enroll = () => {
         </h1>
         <div className="bg-black rounded-md w-full mt-4 flex items-center justify-center sm:hidden ">
         <button
-              className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black"
+              className="sm:rounded-md  sm:px-7 py-2 sm:bg-white sm:text-black text-white"
               onClick={handleEnrollClick}
               disabled={isProcessing} 
             >
@@ -158,6 +158,7 @@ const Enroll = () => {
                 ? "Go to Course"
                 : "Enroll today!"}
             </button>
+        
         </div>
       </div>
       <div className="flex w-full justify-around items-center mt-10 ">

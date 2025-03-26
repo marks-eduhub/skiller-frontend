@@ -1,4 +1,4 @@
-import { PersonIcon, ClockIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import { ClockIcon} from "@radix-ui/react-icons";
 import Image from "next/image";
 
 interface ProductDetailsProps {
@@ -6,7 +6,7 @@ interface ProductDetailsProps {
   description: string;
   duration: string;
   level: string;
-  averageRating: number;
+  averageRating: string | number;
   tutorName: string;
 }
 
@@ -50,7 +50,7 @@ const ProductDescriptionBar: React.FC<ProductDetailsProps> = ({
       <div className=" text-white sm:hidden relative bg-black px-4  py-3 h-full  ">
         <div className="relative flex flex-col ">
           <h3 className="  text-white">{description}</h3>
-          <h3 className="  text-white mt-2 ">{days}</h3>
+          <h3 className="  text-white mt-2 ">{days} days</h3>
           <div className="flex items-center mt-4 mb-2 gap-2 ">
             <div className="w-6 h-6 relative">
               <Image src="/person.svg" alt="person" fill />

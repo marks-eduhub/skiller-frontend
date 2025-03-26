@@ -2,9 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../lib/axios";
 import { CarouselCourses } from "@/lib/types";
 
-
 const fetchCarouselCourses = async () => {
-  const response = await api.get("/api/courses?populate=*&filters[featured]=true")
+  const response = await api.get("/api/admin-categories?populate[courses][populate]=*")
   return response.data;
 };
 
@@ -12,7 +11,7 @@ const fetchCarouselCourses = async () => {
 export const useFetchCarouselCourses = () => {
   return useQuery<{ data: CarouselCourses[] }, Error>({
     queryFn: fetchCarouselCourses,
-    queryKey: ["carousel"],
+    queryKey: ["admin_categories"],
     meta: {
       errorMessage: "Failed to display",
     },

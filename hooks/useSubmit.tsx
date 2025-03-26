@@ -405,6 +405,24 @@ export const useFetchSpecificCourseRate = (courseId: number) => {
   });
 };
 
+const fetchCourseRate = async () => {
+  const response = await api.get(
+    `/api/courseratings?populate=*`
+  );
+  return response.data;
+};
+
+
+export const useFetchCourseRate = () => {
+  return useQuery({
+    queryKey: ["course-rating"],
+    queryFn: () => fetchCourseRate(),
+    meta: {
+      errorMessage: "Failed to fetch rating"
+    },
+  });
+};
+
 export const updateCourseRating = async (
   courseId: number,
   averageRating: number

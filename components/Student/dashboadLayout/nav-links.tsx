@@ -6,6 +6,9 @@ import Image from "next/image";
 import { useFetchTutors } from "@/hooks/useCourses";
 import { message } from "antd";
 import Loader from "../loader";
+import { BsPersonFill } from "react-icons/bs";
+import { PiUserSwitchBold } from "react-icons/pi";
+import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
 export function NavLinks({
   minimized,
@@ -15,7 +18,11 @@ export function NavLinks({
   onNavigate?: (path: string) => void;
 }) {
   const pathname = usePathname();
+  const { user } = useAuthContext();
   const { data, isLoading, error } = useFetchTutors();
+  const isTutor = data?.data?.some(
+    (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
+  );
 
   if (isLoading) {
     return (
@@ -112,7 +119,7 @@ export function NavLinks({
                   pathname === "/dashboard/tutorspage",
               })}
             >
-              <p>Tutors</p>
+              <p className="sm:mb-0 mb-2">Tutors</p>
             </div>
             {data?.data.slice(0, 5).map((subscription) => {
               const slug = subscription.id;
@@ -124,7 +131,7 @@ export function NavLinks({
                     handleNavigation(`/dashboard/subscriptions/${slug}`)
                   }
                   className={clsx(
-                    "flex items-center justify-between bg-black sm:pl-4 pb-4 sm:p-3 cursor-pointer",
+                    "flex items-center justify-between sm:mb-0 mb-4 bg-black sm:pl-4 pb-4 sm:p-3 cursor-pointer",
                     {
                       "bg-gray-700 text-white rounded ":
                         pathname === `/dashboard/subscriptions/${slug}`,
@@ -158,6 +165,38 @@ export function NavLinks({
           >
             <AiOutlineTeam className="w-10 h-7 mr-2 text-white" />
             <p className="md:block">{communityLink.name}</p>
+          </div>
+
+          {isTutor && (
+            <div
+              onClick={() => handleNavigation("/tutor/dashboard")}
+              className={clsx(
+                "flex h-[48px] grow mt-4 items-end p-3 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
+                {
+                  "bg-gray-700 text-white rounded ":
+                    pathname === "/tutor/dashboard",
+                }
+              )}
+            >
+              <PiUserSwitchBold className="w-10 h-7 mr-2 text-white" />
+
+              <p className="md:block text-[15px]">Switch to tutor</p>
+            </div>
+          )}
+
+          <div
+            onClick={() => handleNavigation("/dashboard/profile")}
+            className={clsx(
+              "flex h-[48px] grow mt-4 items-end p-3 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
+              {
+                "bg-gray-700 text-white rounded ":
+                  pathname === "/dashboard/profile",
+              }
+            )}
+          >
+            <BsPersonFill className="w-10 h-7 mr-2 text-white" />
+
+            <p className="md:block text-[15px]">Profile</p>
           </div>
         </>
       )}

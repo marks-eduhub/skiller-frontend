@@ -124,6 +124,7 @@ const Discussion = () => {
     setShowModalForComment(null);
     setReplyContent("");
   };
+ 
   const { mutate: addToComments } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
@@ -132,9 +133,7 @@ const Discussion = () => {
     onMutate: async () => {
       if (!userId) return;
       await queryClient.cancelQueries({ queryKey: ["comments", topicId] });
-
       const previousComments = queryClient.getQueryData(["comments", topicId]);
-
       queryClient.setQueryData(["comments", topicId], (oldData: any) => {
         const newComment = {
           id: Date.now(),
@@ -146,14 +145,13 @@ const Discussion = () => {
         };
         return { ...oldData, data: [...(oldData?.data || []), newComment] };
       });
-
       return { previousComments };
     },
     onSuccess: () => {
       message.success("Comment posted successfully!");
       setTopicComment("");
     },
-    onError: (context: any) => {
+    onError: (err, variables, context: any) => {
       if (context?.previousComments) {
         queryClient.setQueryData(
           ["comments", topicId],
@@ -163,7 +161,8 @@ const Discussion = () => {
       message.error("Failed to post comment.");
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", topicId] });
+      //@ts-ignore
+      queryClient.invalidateQueries(["comments", topicId]);
     },
   });
 
@@ -207,6 +206,7 @@ const Discussion = () => {
     },
     onSuccess: () => {
       message.success("Reply posted successfully!");
+      setReplyContent("");
     },
     onError: (err, variables, context: any) => {
       if (context?.previousReplies) {
@@ -295,6 +295,7 @@ const Discussion = () => {
         addToComments(undefined, {
           onSettled: () => setIsPosting(false),
         });
+       
       } catch (error) {
         message.error("There was an error posting the comment.");
         setIsPosting(false);

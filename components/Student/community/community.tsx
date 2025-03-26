@@ -19,12 +19,12 @@ import { message } from "antd";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useFetchCategory } from "@/hooks/useCourseUpload";
 import Loader from "@/components/Student/loader";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import QuestionModal from "./questionModal";
 import { useDebounce } from "use-debounce";
 import dynamic from "next/dynamic";
+import { FaComment } from "react-icons/fa";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -34,13 +34,7 @@ const Community = () => {
   const { data, isLoading, error } = useFetchCommunityDetails();
   const questions = data?.data;
   const queryClient = useQueryClient();
-  const {
-    data: category,
-    isLoading: categoryLoading,
-    error: categoryError,
-  } = useFetchCategory();
-  const categoryData = category?.data;
-  const dropdownRef = useRef<HTMLDivElement>(null);
+ const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [questionId, setQuestionId] = useState("");
   const [responsesMap, setResponsesMap] = useState<{ [key: string]: any[] }>(
@@ -54,7 +48,6 @@ const Community = () => {
   }>({});
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const DEFAULT_RESPONSES_LIMIT = 3;
   const [likedResponsesMap, setLikedResponsesMap] = useState<{
     [responseId: number]: boolean;
   }>({});
@@ -76,6 +69,9 @@ const Community = () => {
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
   const [likeCounts, setLikeCounts] = useState<{ [key: string]: number }>({});
   const { data: likedCount } = useFetchLikeCount();
+  const [showModalForQuestion, setShowModalForQuestion] = useState<
+    string | boolean
+  >(false);
 
   useEffect(() => {
     if (likedCount) {
@@ -237,20 +233,23 @@ const Community = () => {
     },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData(
-        ["question_responses", variables.questionId],
+        ["question_responses", questionId],
         context.previousData
       );
       message.error("Failed to post response.");
     },
     onSuccess: () => {
       message.success("Response posted successfully!");
+      setShowModalForQuestion("");
+      setShowAllResponsesMap((prev) => ({
+        ...prev,
+        [questionId]: true,
+      }));
     },
     onSettled: (variables) => {
-      //@ts-ignore
-      queryClient.invalidateQueries([
-        "question_responses",
-        variables.questionId,
-      ]);
+      queryClient.invalidateQueries({
+        queryKey: ["question_responses", questionId],
+      });
     },
   });
 
@@ -367,6 +366,11 @@ const Community = () => {
     },
   });
 
+  const handleCancel = () => {
+    setShowModalForQuestion("");
+    setResponsesContentMap({});
+  };
+
   const handleToggleLike = (
     responseId: number,
     isLiked: boolean,
@@ -388,6 +392,11 @@ const Community = () => {
     }
   };
 
+  const openReplyModal = (questionId: string) => {
+    setShowModalForQuestion(questionId);
+    setQuestionId(questionId);
+  };
+
   const displayedQuestions = selectedResult
     ? [selectedResult]
     : filteredData.length > 0
@@ -399,7 +408,12 @@ const Community = () => {
     indexOfLastQuestion
   );
 
-  if (isLoading || categoryLoading) {
+  const totalPages = Math?.max(
+    Math?.ceil(displayedQuestions?.length / questionsPerPage),
+    1
+  );
+
+  if (isLoading) {
     return (
       <div className="ml-5">
         <h2 className="text-lg font-300 my-4 ">
@@ -424,7 +438,7 @@ const Community = () => {
     );
   }
 
-  if (error || categoryError) {
+  if (error) {
     message.error("Error fetching community data. Please try again later.");
   }
   if (responsesLoading) {
@@ -438,7 +452,7 @@ const Community = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full p-4 relative">
+    <div className="flex flex-col gap-6 w-full sm:p-4  p-1 relative">
       <div>
         <h1 className="text-2xl font-bold mb-5">Community Discussions</h1>
         <p className="text-gray-600 ">
@@ -446,7 +460,7 @@ const Community = () => {
         </p>
       </div>
 
-      <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
+      <div className="relative flex  flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
         <div className="flex items-center relative rounded-lg shadow bg-white p-3 w-full sm:w-1/2">
           <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2 max-md:hidden" />
           <input
@@ -506,131 +520,165 @@ const Community = () => {
         <div className="w-full sm:w-[80%]">
           {currentQuestions && currentQuestions.length > 0 ? (
             currentQuestions.map((q: any, index: number) => {
-              const { Question, nameofquestioner } = q.attributes;
+              const { Question } = q.attributes;
               const questionId = q.id;
               const responses = responsesMap[questionId] || [];
               const plainQuestion = Question.replace(/(\*\*|\_)/g, "");
+              const nameofquestioner =
+                q.attributes?.user?.data?.attributes?.username;
               return (
                 <div
                   key={index}
-                  className="flex flex-col border mb-5 rounded-lg py-6 border-black"
+                  className="flex relative flex-col shadow-md  bg-white mb-10 px-4 sm:gap-2 border-b border-gray-100 pb-2  rounded-lg py-6"
                 >
-                  <div className="flex flex-col px-4 border-b pb-2 border-gray-400">
-                    <h1 className="font-semibold">
-                      Question:
-                      <span className="font-normal">{plainQuestion}</span>
-                    </h1>
-                    <p className="text-gray-500">
-                      Asked by: {nameofquestioner}
-                    </p>
-                  </div>
+                  <div key={index}>
+                    <div className="flex items-center">
+                      <div className="mr-4">
+                        <Image
+                          src={
+                            q.attributes.user?.data?.attributes?.profilepicture
+                              ?.data?.attributes?.url
+                          }
+                          alt={q.attributes?.user?.data?.attributes?.username}
+                          width={70}
+                          height={70}
+                          className="rounded-full object-cover"
+                        />
+                      </div>
 
-                  <div className="px-4 mt-4">
+                      <div className="flex flex-col">
+                        <h1 className="font-semibold">
+                          <span className="font-normal">{plainQuestion}</span>
+                        </h1>
+
+                        <p className="text-gray-400">
+                          Asked by: {nameofquestioner}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => openReplyModal(questionId)}
+                      className="absolute flex gap-2 items-center top-3 right-3 text-gray-700 rounded-full p-2 transition"
+                    >
+                      <FaComment size={18} />
+                      <span className="text-gray-500">{`${responses?.length}`}</span>
+                    </button>
+                  </div>
+                  {showModalForQuestion === q.id && (
+                    <div className="mt-4">
+                      <h1 className="text-gray-700 ml-2">Add a response</h1>
+                      <div className="">
+                        <ReactQuill
+                          value={responsesContentMap[questionId] || ""}
+                          placeholder="Write your response here..."
+                          onChange={(value) =>
+                            handleResponseChange(questionId, value)
+                          }
+                          className="mb-4 mt-2"
+                          theme="snow"
+                        />
+                        <button
+                          className="bg-gray-600 text-white px-3 py-2 mt-3 rounded-lg transition"
+                          onClick={() => handleSubmitResponse(questionId)}
+                        >
+                          {isSubmittingResponse ? (
+                            <DotPulseWrapper
+                              size="30"
+                              speed="1.5"
+                              color="white"
+                            />
+                          ) : (
+                            "Submit Response"
+                          )}
+                        </button>
+                        <button
+                          onClick={handleCancel}
+                          className="bg-red-900 text-white px-4 py-2 rounded mt-2 ml-4"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="px-4 mt-4 max-h-[300px] overflow-auto custom-scrollbar">
                     {responses.length === 0 ? (
                       <p className="text-gray-700 mt-4 text-center">
-                        No responses yet for this question.
+                        Be the first to respond!
                       </p>
                     ) : (
-                      (showAllResponsesMap[questionId]
-                        ? responses
-                        : responses.slice(0, DEFAULT_RESPONSES_LIMIT)
-                      ).map((response: any) => {
-                        const responseId = response.id;
-                        const isLiked = likedResponsesMap[response.id] || false;
-                        const likeCount =
-                          (likeCounts ? likeCounts[responseId] : 0) || 0;
-                        return (
-                          <>
-                            <div
-                              key={responseId}
-                              className="flex-col items-start mb-3 p-2 "
-                            >
-                              <div className="flex items-center gap-2 mb-5">
-                                <div className="h-[50px] w-[50px] relative ">
-                                  <Image
-                                    src={response?.profilePicture}
-                                    alt={response?.responderName}
-                                    fill
-                                    className="rounded-full object-cover"
-                                  />
+                      <>
+                        <button
+                          onClick={() => handleLoadMoreResponses(questionId)}
+                          className="text-blue-600 mt-3"
+                        >
+                          {showAllResponsesMap[questionId]
+                            ? "Hide Responses"
+                            : `Show Responses`}
+                        </button>
+                        {showAllResponsesMap[questionId] &&
+                          responses.map((response: any) => {
+                            const responseId = response.id;
+                            const isLiked =
+                              likedResponsesMap[response.id] || false;
+                            const likeCount =
+                              (likeCounts ? likeCounts[responseId] : 0) || 0;
+                            return (
+                              <div
+                                key={responseId}
+                                className="flex-col items-start mb-3 p-2 mt-2 max-h-[350px] custom-scrollbar overflow-auto"
+                              >
+                                <div className="flex items-center gap-2 mb-5">
+                                  <div className="h-[50px] w-[50px] relative">
+                                    <Image
+                                      src={response?.profilePicture}
+                                      alt={response?.responderName}
+                                      fill
+                                      className="rounded-full object-cover"
+                                    />
+                                  </div>
+                                  <p className="font-medium text-sm mb-1">
+                                    {response?.responderName}
+                                  </p>
                                 </div>
-                                <p className="font-medium text-sm mb-1">
-                                  {response?.responderName}
-                                </p>
-                              </div>
-                              <div className="ml-2">
-                                <p className="text-gray-600 text-sm break-words overflow-hidden">
-                                  {response?.responseText
-                                    .replace(/(\*\*|\_)/g, "")
-                                    .replace(/===/g, "")}
-                                </p>
-                                <div className="flex gap-1 mt-2">
-                                  <button
-                                    onClick={() =>
-                                      handleToggleLike(
-                                        responseId,
-                                        isLiked,
-                                        userId
-                                      )
-                                    }
-                                  >
-                                    {isLiked ? (
-                                      <AiFillHeart
-                                        size={20}
-                                        className="text-red-500"
-                                      />
-                                    ) : (
-                                      <AiOutlineHeart
-                                        size={20}
-                                        className="text-gray-500"
-                                      />
-                                    )}
-                                  </button>
-                                  <span className="text-gray-500">
-                                    {likeCount}
-                                  </span>
+                                <div className="ml-2">
+                                  <p className="text-gray-600 text-sm break-words overflow-hidden">
+                                    {response?.responseText
+                                      .replace(/(\*\*|\_)/g, "")
+                                      .replace(/===/g, "")}
+                                  </p>
+                                  <div className="flex gap-1 mt-2">
+                                    <button
+                                      onClick={() =>
+                                        handleToggleLike(
+                                          responseId,
+                                          isLiked,
+                                          userId
+                                        )
+                                      }
+                                    >
+                                      {isLiked ? (
+                                        <AiFillHeart
+                                          size={20}
+                                          className="text-red-500"
+                                        />
+                                      ) : (
+                                        <AiOutlineHeart
+                                          size={20}
+                                          className="text-gray-500"
+                                        />
+                                      )}
+                                    </button>
+                                    <span className="text-gray-500">
+                                      {likeCount}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </>
-                        );
-                      })
+                            );
+                          })}
+                      </>
                     )}
-                    {responses.length > DEFAULT_RESPONSES_LIMIT && (
-                      <button
-                        onClick={() => handleLoadMoreResponses(questionId)}
-                        className="text-blue-600 mt-3"
-                      >
-                        {showAllResponsesMap[questionId]
-                          ? "Hide Responses"
-                          : `See ${
-                              responses.length - DEFAULT_RESPONSES_LIMIT
-                            } more response(s)`}
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="mt-5 pt-5 px-4">
-                    <h2>Add a Response:</h2>
-                    <ReactQuill
-                      value={responsesContentMap[questionId] || ""}
-                      placeholder="Write your response here..."
-                      onChange={(value) =>
-                        handleResponseChange(questionId, value)
-                      }
-                      className="mb-4 mt-2"
-                      theme="snow"
-                    />
-                    <button
-                      className="bg-gray-600 text-white px-4 py-2 mt-3 rounded-lg transition"
-                      onClick={() => handleSubmitResponse(questionId)}
-                    >
-                      {isSubmittingResponse ? (
-                        <DotPulseWrapper size="30" speed="1.5" color="white" />
-                      ) : (
-                        "Submit Response"
-                      )}
-                    </button>
                   </div>
                 </div>
               );
@@ -644,22 +692,8 @@ const Community = () => {
             </div>
           )}
         </div>
-
-        <div className="sm:w-[20%] border border-black max-h-[350px] overflow-y-auto">
-          <div className="flex flex-col">
-            <h1 className="bg-gray-300 p-3">Course Categories</h1>
-            <div className="p-2">
-              {categoryData?.map((category: any, index: number) => {
-                return (
-                  <div key={index} className="flex items-center mb-2">
-                    <h2>{category.attributes.coursecategories}</h2>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
       </div>
+
       <div className="flex justify-center items-center mt-4 gap-4">
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -675,9 +709,7 @@ const Community = () => {
 
         <p className="text-gray-700 font-medium ">
           Page {currentPage} of
-          <span className="ml-1">
-            {Math.ceil(displayedQuestions.length / questionsPerPage)}
-          </span>
+          <span className="ml-1">{totalPages}</span>
         </p>
 
         <button

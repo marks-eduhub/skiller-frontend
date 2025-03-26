@@ -10,6 +10,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import { useRecentCourses } from "@/hooks/useRecentCourses";
+import { useFetchCarouselCourses } from "@/hooks/useCarouselCourses";
 
 const HomePage: React.FC = () => {
   const {
@@ -23,12 +24,25 @@ const HomePage: React.FC = () => {
     router.push(`/dashboard/coursePage/${category}`);
   };
 
+  const {
+    data: weeksData,
+    isLoading: weeksLoading,
+    error: isError,
+  } = useFetchCarouselCourses();
+
+  const courseData = weeksData?.data?.filter(
+    (course: any) => course?.attributes.categoryName === "Week's Picks"
+  );
+  const weeksCourses =
+    courseData?.map((course: any) => course.attributes.courses.data).flat() ||
+    [];
+
   const { data, isLoading, error } = useFetchCourses();
 
-  if (isLoading || loadingRecent) {
+  if (isLoading || loadingRecent || weeksLoading) {
     return (
-      <div className="ml-5">
-        <h2 className="text-lg font-300 my-4 ">
+      <div className="sm:ml-5">
+        <h2 className="max-md:hidden text-lg font-300 my-4 ">
           <Skeleton
             width={200}
             height={24}
@@ -50,11 +64,13 @@ const HomePage: React.FC = () => {
     );
   }
 
-  if (error || recentError) {
+  if (error || recentError || isError) {
     message.error("Error fetching courses. Please try again later.");
   }
 
-  const coursesByCategory: {[key: string]: { title: string; courses: any[] }} = {};
+  const coursesByCategory: {
+    [key: string]: { title: string; courses: any[] };
+  } = {};
 
   data?.data.forEach((course: any) => {
     const categories = course.attributes.categories.data;
@@ -73,9 +89,12 @@ const HomePage: React.FC = () => {
 
   Object.keys(coursesByCategory).forEach((categorySlug) => {
     coursesByCategory[categorySlug].courses.sort(
-      (a, b) => new Date(b.attributes.createdAt).getTime() - new Date(a.attributes.createdAt).getTime()
+      (a, b) =>
+        new Date(b.attributes.createdAt).getTime() -
+        new Date(a.attributes.createdAt).getTime()
     );
   });
+
   return (
     <div className="flex flex-col sm:min-h-screen mx-auto sm:pb-9">
       <h2 className="text-lg font-300 my-4">
@@ -83,6 +102,11 @@ const HomePage: React.FC = () => {
       </h2>
       <FeaturedProduct />
 
+      <div className="mt-8">
+        <h1 className="mb-6 text-lg font-bold">Week&apos;s Picks</h1>
+
+        <ProductContainer courses={weeksCourses} />
+      </div>
       <div>
         {Object.entries(coursesByCategory).map(
           ([categorySlug, categoryData], index) => (
@@ -105,10 +129,8 @@ const HomePage: React.FC = () => {
               <ProductContainer courses={categoryData.courses} />
 
               <div
-
                 className="max-md:hidden absolute right-4 top-1/2 transform -translate-y-1/2 rounded-full p-2 cursor-pointer ml-4"
                 onClick={() => handleNavigation(categorySlug)}
-
               >
                 <FontAwesomeIcon
                   icon={faChevronRight}
@@ -122,13 +144,13 @@ const HomePage: React.FC = () => {
 
       <div className="mt-8">
         <h1 className="mb-6 text-lg font-bold">Recently Accessed Courses</h1>
-
         {Array.isArray(recentlyAccessedCourses?.data) &&
         recentlyAccessedCourses?.data.length > 0 ? (
           <ProductContainer
-              courses={recentlyAccessedCourses.data
-                .map((item: any) => item.attributes.course.data)
-                .slice(0, 3)}  />
+            courses={recentlyAccessedCourses.data
+              .map((item: any) => item.attributes.course.data)
+              .slice(0, 3)}
+          />
         ) : (
           <p className="font-semibold flex justify-center my-10 items-center text-[20px]">
             No recently accessed courses available.
