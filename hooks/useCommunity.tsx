@@ -97,7 +97,7 @@ export const addResponse = async (
 };
 
 const fetchSearchCommunity = async (searchTerm: string) => {
-  const response = await api.get(`/api/communities?_q=${searchTerm}`);
+  const response = await api.get(`/api/communities?_q=${searchTerm}&populate[user][populate]=*&populate=*`);
 
   return response.data;
 };

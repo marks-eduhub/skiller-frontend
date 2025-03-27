@@ -697,23 +697,19 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           )}
         </div>
 
-        <div className="flex flex-col mt-5 items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded">
+        <div className="flex flex-col mt-5 items-center justify-center border sm:w-1/2 border-black relative h-[200px] rounded">
           {videoPreview ? (
-            <div className="flex flex-col items-center">
-              <video width="300" controls>
-                <source src={videoPreview} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
+            <video className="w-full h-full object-cover rounded-md" controls>
+              <source src={videoPreview} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           ) : (
             <>
               <p className="text-gray-500 mb-5">Attach a video to your topic</p>
-
               <GrCloudUpload className="text-blue-800 w-10 h-10" />
               <span className="text-gray-500">
                 Drag & drop files or
                 <span className="text-blue-500 ml-1 cursor-pointer">
-                  {" "}
                   Browse
                 </span>
               </span>

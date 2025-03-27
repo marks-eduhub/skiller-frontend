@@ -441,6 +441,7 @@ const Community = () => {
   if (error) {
     message.error("Error fetching community data. Please try again later.");
   }
+
   if (responsesLoading) {
     <div className="flex items-center justify-center">
       <Loader />
@@ -502,7 +503,7 @@ const Community = () => {
                       className="p-3 cursor-pointer hover:bg-gray-100"
                       onClick={() => handleSearchResultClick(item)}
                     >
-                      {item.attributes.Question}
+                      {item.attributes.Question.replace(/(\*\*|\_)/g, "")}
                     </div>
                   ))}
                 </div>
