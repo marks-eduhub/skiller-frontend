@@ -161,8 +161,7 @@ const Discussion = () => {
       message.error("Failed to post comment.");
     },
     onSettled: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["comments", topicId]);
+      queryClient.invalidateQueries({ queryKey: ["comments", topicId]});
     },
   });
 

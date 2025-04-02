@@ -162,10 +162,12 @@ const Community = () => {
           }
           map[questionId].push({
             id: response.id,
-            responderName: response.attributes.responderName,
+            responderName: response.attributes?.responderName,
             responseText: response.attributes.responseText,
             createdAt,
-            profilePicture : response.attributes.user?.data?.attributes?.profilepicture?.data?.attributes?.url || '/pic.svg'
+            profilePicture:
+              response.attributes.user?.data?.attributes?.profilepicture?.data
+                ?.attributes?.url || "/pic.svg",
           });
           return map;
         },
@@ -191,52 +193,32 @@ const Community = () => {
   };
 
   const { mutate: postResponseMutation } = useMutation({
-    mutationFn: async ({
-      responseText,
-      responderName,
-      questionId,
-      userId,
-    }: {
-      responseText: string;
-      responderName: string;
-      questionId: number;
-      userId: number;
-    }) => {
+    mutationFn: async ({ responseText, responderName, questionId, userId }: { responseText: string; responderName: string; questionId: number; userId: number }) => {
+      if (!userId) throw new Error("User not logged in");
       return await addResponse(responseText, responderName, questionId, userId);
     },
-    onMutate: async ({ responseText, responderName, questionId}) => {
-      const previousData = queryClient.getQueryData([
-        "question_responses",
-        questionId,
-      ]);
-
+    onMutate: async ({ responseText, responderName, questionId }) => {
+      if (!userId) return;
+      await queryClient.cancelQueries({ queryKey: ["question_responses", questionId] });
+  
+      const previousData = queryClient.getQueryData(["question_responses", questionId]);
+  
       const optimisticResponse = {
-        id: new Date().toISOString(),
+        id: Date.now(),
         attributes: {
           responseText,
           responderName,
           questionId,
           createdAt: new Date().toISOString(),
-          
         },
       };
-
-      queryClient.setQueryData(
-        ["question_responses", questionId],
-        (oldData: any) => ({
-          ...oldData,
-          data: [optimisticResponse, ...(oldData?.data || [])],
-        })
-      );
-
+  
+      queryClient.setQueryData(["question_responses", questionId], (oldData: any) => ({
+        ...oldData,
+        data: [...(oldData?.data || []), optimisticResponse],
+      }));
+  
       return { previousData };
-    },
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(
-        ["question_responses", questionId],
-        context.previousData
-      );
-      message.error("Failed to post response.");
     },
     onSuccess: () => {
       message.success("Response posted successfully!");
@@ -245,13 +227,22 @@ const Community = () => {
         ...prev,
         [questionId]: true,
       }));
+      setResponsesContentMap((prev) => ({
+        ...prev,
+        [questionId]: "",
+      }));
     },
-    onSettled: (variables) => {
-      queryClient.invalidateQueries({
-        queryKey: ["question_responses", questionId],
-      });
+    onError: (error, variables, context: any) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(["question_responses", questionId], context.previousData);
+      }
+      message.error("Failed to post response.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["question_responses", questionId] });
     },
   });
+  
 
   const handleSubmitResponse = (questionId: number) => {
     const responseText = responsesContentMap[questionId] || "";
@@ -301,7 +292,7 @@ const Community = () => {
     onMutate: async ({ responseId }) => {
       await queryClient.cancelQueries({ queryKey: ["likedResponses", userId] });
 
-      const previousLiked =
+      const previousUnLiked =
         queryClient.getQueryData(["likedResponses", userId]) || [];
 
       queryClient.setQueryData(["likedResponses", userId], (old: any) => {
@@ -311,7 +302,7 @@ const Community = () => {
         );
       });
 
-      return { previousLiked };
+      return { previousUnLiked };
     },
 
     onSuccess: () => {
@@ -321,7 +312,7 @@ const Community = () => {
     onError: (err, variables, context) => {
       queryClient.setQueryData(
         ["likedResponses", userId],
-        context?.previousLiked
+        context?.previousUnLiked
       );
       message.error("Failed to unlike response.");
     },
@@ -365,11 +356,6 @@ const Community = () => {
       message.error("Failed to like response.");
     },
   });
-
-  const handleCancel = () => {
-    setShowModalForQuestion("");
-    setResponsesContentMap({});
-  };
 
   const handleToggleLike = (
     responseId: number,
@@ -518,7 +504,7 @@ const Community = () => {
       )}
 
       <div className="flex flex-col sm:flex-row gap-6 w-full h-auto mt-5">
-        <div className="w-full sm:w-[80%]">
+        <div className="w-full sm:w-[60%]">
           {currentQuestions && currentQuestions.length > 0 ? (
             currentQuestions.map((q: any, index: number) => {
               const { Question } = q.attributes;
@@ -530,7 +516,7 @@ const Community = () => {
               return (
                 <div
                   key={index}
-                  className="flex relative flex-col shadow-md  bg-white mb-10 px-4 sm:gap-2 border-b border-gray-100 pb-2  rounded-lg py-6"
+                  className="flex relative flex-col shadow-lg  bg-white mb-10 px-4 sm:gap-6 border-b border-gray-100 pb-2  rounded-lg py-6"
                 >
                   <div key={index}>
                     <div className="flex items-center">
@@ -565,7 +551,7 @@ const Community = () => {
                       <span className="text-gray-500">{`${responses?.length}`}</span>
                     </button>
                   </div>
-                  {showModalForQuestion === q.id && (
+                  {responses.length === 0 && (
                     <div className="mt-4">
                       <h1 className="text-gray-700 ml-2">Add a response</h1>
                       <div className="">
@@ -592,31 +578,28 @@ const Community = () => {
                             "Submit Response"
                           )}
                         </button>
-                        <button
-                          onClick={handleCancel}
-                          className="bg-red-900 text-white px-4 py-2 rounded mt-2 ml-4"
-                        >
-                          Cancel
-                        </button>
                       </div>
                     </div>
                   )}
 
-                  <div className="px-4 mt-4 max-h-[300px] overflow-auto custom-scrollbar">
+                  <div className="px-4 mt-4 max-h-[600px] pb-4  flex flex-col">
+                    <div className ="overflow-auto custom-scrollbar">
                     {responses.length === 0 ? (
                       <p className="text-gray-700 mt-4 text-center">
                         Be the first to respond!
                       </p>
                     ) : (
                       <>
-                        <button
-                          onClick={() => handleLoadMoreResponses(questionId)}
-                          className="text-blue-600 mt-3"
-                        >
-                          {showAllResponsesMap[questionId]
-                            ? "Hide Responses"
-                            : `Show Responses`}
-                        </button>
+                        <div className="flex justify-start mt-3">
+                          <button
+                            onClick={() => handleLoadMoreResponses(questionId)}
+                            className="text-blue-600"
+                          >
+                            {showAllResponsesMap[questionId]
+                              ? "Hide Responses"
+                              : `Show Responses`}
+                          </button>
+                        </div>
                         {showAllResponsesMap[questionId] &&
                           responses.map((response: any) => {
                             const responseId = response.id;
@@ -627,7 +610,7 @@ const Community = () => {
                             return (
                               <div
                                 key={responseId}
-                                className="flex-col items-start mb-3 p-2 mt-2 max-h-[350px] custom-scrollbar overflow-auto"
+                                className="flex-col items-start mb-3 p-2 mt-5"
                               >
                                 <div className="flex items-center gap-2 mb-5">
                                   <div className="h-[50px] w-[50px] relative">
@@ -678,9 +661,44 @@ const Community = () => {
                               </div>
                             );
                           })}
+                          
                       </>
+                     
                     )}
+                     </div>
+                    {showAllResponsesMap[questionId] &&
+                      responses.length > 0 && (
+                        <div className="sticky bottom-0 bg-white flex max-md:flex-col sm:items-center sm:justify-between">
+                          <ReactQuill
+                            value={responsesContentMap[questionId] || ""}
+                            placeholder="Write your response here..."
+                            onChange={(value) =>
+                              handleResponseChange(questionId, value)
+                            }
+                            
+                            className="mb-4 mt-2 w-full sm:w-[85%]"
+                            theme="snow"
+                          />
+                          <div className="max-md:justify-start">
+                          <button
+                            className="bg-gray-600 text-white px-4 py-2 rounded-lg transition "
+                            onClick={() => handleSubmitResponse(questionId)}
+                          >
+                            {isSubmittingResponse ? (
+                              <DotPulseWrapper
+                                size="20"
+                                speed="1.5"
+                                color="white"
+                              />
+                            ) : (
+                              "Submit"
+                            )}
+                          </button>
+                          </div>
+                        </div>
+                      )}
                   </div>
+                  
                 </div>
               );
             })
