@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShadowInnerIcon, TriangleDownIcon } from "@radix-ui/react-icons";
+import { TriangleDownIcon } from "@radix-ui/react-icons";
 import SmallScreen from "./smallscreen";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 

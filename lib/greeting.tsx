@@ -25,7 +25,7 @@ const Greeting = ({ username }: GreetingProps) => {
   }, []);
 
   return (
-    <p className="text-black font-semibold text-[20px]">
+    <p className="text-black font-semibold sm:text-[20px] text-[18px]">
       {greeting} {username}
     </p>
   );

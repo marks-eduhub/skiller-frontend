@@ -5,7 +5,7 @@ import TurndownService from "turndown";
 
 const fetchCommunitydetails = async () => {
   const response = await api.get(
-    "/api/communities?sort=createdAt:desc&populate=*"
+    "/api/communities?populate[user][populate]=*&sort=createdAt:desc&populate=*"
   );
 
   return response.data;
@@ -56,7 +56,7 @@ export const useFetchQuestionResponses = (questionId: number) => {
 
 export const postQuestion = async (
   Question: string,
-  nameofquestioner: string
+  userId: string
 ) => {
   try {
     const turndownService = new TurndownService();
@@ -64,7 +64,7 @@ export const postQuestion = async (
     const response = await api.post("/api/communities", {
       data: {
         Question: markdownQuestion,
-        nameofquestioner,
+        user: userId,
       },
     });
     return response.data;
@@ -97,7 +97,7 @@ export const addResponse = async (
 };
 
 const fetchSearchCommunity = async (searchTerm: string) => {
-  const response = await api.get(`/api/communities?_q=${searchTerm}`);
+  const response = await api.get(`/api/communities?_q=${searchTerm}&populate[user][populate]=*&populate=*`);
 
   return response.data;
 };

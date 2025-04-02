@@ -11,6 +11,7 @@ const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 const QuestionModal = () => {
   const { user } = useAuthContext();
+  const userId = String(user?.id);
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [questionContent, setQuestionContent] = useState("");
@@ -19,21 +20,21 @@ const QuestionModal = () => {
   const { mutate: postQuestionMutation } = useMutation({
     mutationFn: async ({
       Question,
-      nameofquestioner,
+      userId,
     }: {
       Question: string;
-      nameofquestioner: string;
+      userId: string;
     }) => {
-      return await postQuestion(Question, nameofquestioner);
+      return await postQuestion(Question, userId);
     },
-    onMutate: async ({ Question, nameofquestioner }) => {
+    onMutate: async ({ Question, userId }) => {
       const previousData = queryClient.getQueryData(["communityDetails"]);
 
       const optimisticQuestion = {
         id: new Date().toISOString(),
         attributes: {
           Question,
-          nameofquestioner,
+          userId,
           createdAt: new Date().toISOString(),
         },
       };
@@ -45,7 +46,7 @@ const QuestionModal = () => {
 
       return { previousData };
     },
-    onError: ( context: any) => {
+    onError: ( err, variables, context: any) => {
       queryClient.setQueryData(["communityDetails"], context.previousData);
       message.error("Failed to post question.");
     },
@@ -53,8 +54,7 @@ const QuestionModal = () => {
       message.success("Question posted successfully!");
     },
     onSettled: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["communityDetails"]);
+      queryClient.invalidateQueries({ queryKey: ["communityDetails"] });
     },
   });
 
@@ -64,9 +64,8 @@ const QuestionModal = () => {
       return;
     }
 
-    const nameofquestioner = user?.username || "Anonymous";
     setIsSubmittingQuestion(true);
-    postQuestionMutation({ Question: questionContent, nameofquestioner });
+    postQuestionMutation({ Question: questionContent, userId });
 
     setQuestionContent("");
     setIsModalOpen(false);
@@ -75,7 +74,7 @@ const QuestionModal = () => {
   return (
     <div className="relative">
       <button
-        className="mb-4 px-4 py-2 bg-gray-600 text-white rounded"
+        className="sm:mb-4 px-4 py-2 bg-gray-600 text-white rounded"
         onClick={() => {
           setIsModalOpen(true);
         }}  >
@@ -84,7 +83,7 @@ const QuestionModal = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 ">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-md">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-[350px] sm:max-w-md ">
             <h2 className="text-lg font-semibold mb-4">Add Your Question</h2>
 
             <ReactQuill

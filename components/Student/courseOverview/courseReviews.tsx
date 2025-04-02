@@ -18,14 +18,15 @@ const CourseReview = () => {
   const [comment, setComment] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
   const {
     data: reviewData,
     isLoading: loadingreviews,
     error: reviewError,
   } = useFetchReviews(courseId);
   const reviews = reviewData?.data || [];
-
+  const totalStars = reviews.reduce((sum: any, review: { attributes: { score: any; }; }) => sum + (review.attributes.score || 0), 0);
+  const averageRating = reviews.length > 0 ? totalStars / reviews.length : 0;
+  
   const { mutate: reviewPosting } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
@@ -173,18 +174,29 @@ const CourseReview = () => {
   if(reviewError) {
   message.error("Failed to fetch course reviews. Try again later!")
   }
+
   return (
     <div className="w-full">
-      <div className="flex items-center justify-end sm:my-5">
+      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between sm:my-5">
+        <div className="flex items-center gap-2 sm:mt-0 mt-6">
+          <span className="">Total number of stars({averageRating.toFixed(1)})</span>
+          {[...Array(5)].map((_, index) => (
+            <span key={index} className={index < Math.round(averageRating) ? "text-yellow-500 text-[20px]" : "text-gray-300 text-[20px]"}>
+              ★
+              </span>
+             ))}
+        </div>
+        <div className="flex justify-end">
         <button
           onClick={handleModal}
           className="bg-gray-900 sm:mb-0 sm:my-2 my-6 text-white px-4 py-2 rounded"
         >
           Leave review
         </button>
+        </div>
       </div>
 
-      <div className="mt-5 space-y-6">
+      <div className="sm:mt-5 space-y-6">
         {reviews.length === 0 ? (
           <div className="text-center">
             No reviews available for this course.
@@ -216,21 +228,13 @@ const CourseReview = () => {
                       className="rounded-full"
                     />
                     <div className="ml-3">
-                      <h2 className="font-semibold">{name}</h2>
+                      <h2 className="font-semibold sm:mb-2">{name}</h2>
                       <div className="flex items-center">
-                        {Array.from({ length: 5 }, (_, index) => (
-                          <svg
-                            key={index}
-                            className={`w-5 h-5 ${
-                              index < Math.floor(reviewRating)
-                                ? "text-yellow-300"
-                                : "text-gray-300"
-                            }`}
-                            fill="currentColor"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.184 3.63a1 1 0 00.95.69h3.813c.969 0 1.371 1.24.588 1.81l-3.088 2.25a1 1 0 00-.364 1.118l1.184 3.63c.3.921-.755 1.688-1.538 1.118l-3.088-2.25a1 1 0 00-1.175 0l-3.088 2.25c-.783.57-1.838-.197-1.538-1.118l1.184-3.63a1 1 0 00-.364-1.118l-3.088-2.25c-.783-.57-.381-1.81.588-1.81h3.813a1 1 0 00.95-.69l1.184-3.63z" />
-                          </svg>
-                        ))}
+                      {[...Array(5)].map((_, index) => (
+                        <span key={index} className={index < Math.round(reviewRating) ? "text-yellow-500 text-[20px]" : "text-gray-300 text-[20px]"}>
+                           ★
+                           </span>
+                           ))}
                       </div>
                     </div>
                   </div>

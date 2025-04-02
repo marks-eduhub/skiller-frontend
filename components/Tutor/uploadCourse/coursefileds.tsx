@@ -321,10 +321,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       </div>
 
       <div>
-        <label
-          htmlFor="category"
-          className="block text-sm font-medium mb-4 "
-        >
+        <label htmlFor="category" className="block text-sm font-medium mb-4 ">
           Course Category
         </label>
         {isLoading ? (
@@ -366,16 +363,16 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       <div className="mt-10">
         <h1>Upload Course Image</h1>
 
-        <div className="flex flex-col items-center justify-center border border-dashed border-black p-3 relative h-[200px] rounded sm:mt-2">
+        <div className="flex items-center justify-center sm:mt-4 border  border-black relative h-[200px] sm:w-1/2  rounded ">
           {uploadImage ? (
             <Image
               src={uploadImage}
               alt="Course Image"
               fill
-              className="object-contain rounded-md p-4"
+              className="object-cover rounded-md"
             />
           ) : (
-            <>
+            <div className="flex flex-col items-center justify-center">
               <GrCloudUpload className="text-blue-800 w-10 h-10" />
               <span className="text-gray-500">
                 Drag & drop files or
@@ -383,7 +380,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
                   Browse
                 </span>
               </span>
-            </>
+            </div>
           )}
           <input
             type="file"
@@ -391,13 +388,12 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
             onChange={handleImageChange}
           />
         </div>
-
         <div className="flex items-center justify-center my-5">
           {pathname === `/tutor/dashboard/courseoverview/${courseId}` && (
             <button
               className="bg-black text-white px-4 py-2 rounded-md"
               onClick={handleSaveChanges}
-              disabled={isSaving} 
+              disabled={isSaving}
             >
               {isSaving ? "Submitting ..." : "Submit changes"}
             </button>

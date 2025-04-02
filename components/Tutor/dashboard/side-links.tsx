@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import Loader from "@/components/Student/loader";
 import dynamic from "next/dynamic";
+import { PiUserSwitchBold } from "react-icons/pi";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 const SideLinks = () => {
@@ -80,14 +79,14 @@ const SideLinks = () => {
         </div>
       )}
       {links.map((link, index) => (
-        <div key={index} className="ml-5 mt-6">
+        <div key={index} className="mt-6">
           {link.path ? (
             <button
               onClick={() => handleNavigation(link.path)}
               className={clsx(
                 pathname.startsWith(link.path)
-                  ? "bg-gray-700 rounded px-10 py-2"
-                  : "text-white",
+                  ? "bg-gray-700 rounded px-6 py-2 ml-4 "
+                  : "text-white ml-8",
                 "flex flex-row cursor-pointer"
               )}
             >
@@ -112,6 +111,19 @@ const SideLinks = () => {
             ))}
         </div>
       ))}
+
+      <div
+        onClick={() => handleNavigation("/dashboard")}
+        className={clsx(
+          "flex h-[48px] grow mt-4 items-end p-3 ml-2 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
+          {
+            "bg-gray-700 text-white rounded ": pathname === "/dashboard",
+          }
+        )}
+      >
+        <PiUserSwitchBold className="w-10 h-7 mr-2 text-gray-300" />
+        <p className="md:block text-[15px]">Switch to student</p>
+      </div>
     </div>
   );
 };

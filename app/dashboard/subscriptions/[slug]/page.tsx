@@ -21,14 +21,6 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
   if (tutorLoading) {
     return (
       <div className="ml-5">
-        <h2 className="text-lg font-300 my-4 ">
-          <Skeleton
-            width={2000}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
         <div>
           <Skeleton
             height={300}
