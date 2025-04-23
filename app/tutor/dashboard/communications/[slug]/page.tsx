@@ -98,7 +98,7 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
 
   return (
     <div className="pt-5 max-md:pl-6">
-      <TutorNav />
+      <TutorNav sidebarMinimized={false} />
       <h1 className="text-3xl font-bold sm:mt-6 sm:pt-0 pt-20 sm:ml-8 sm:mb-5">
         {slug}
       </h1>
