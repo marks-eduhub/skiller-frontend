@@ -8,13 +8,13 @@ import Tabs from "./tabs";
 
 const DetailsPage: React.FC = () => {
   return (
-    <div className="flex-1 overflow-y-auto ">
-      <div className="flex sm:flex-row max-md: flex-col gap-3 cursor-pointer sm:bg-gray-100 py-4 sm:px-3 ">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden"> 
+      <div className="flex sm:flex-row flex-col gap-3 cursor-pointer sm:bg-gray-100 py-4 sm:px-3 max-w-full"> 
         <VideoCard />
         <TopicsCard />
       </div>
       <Tabs />
-      <SimilarCourses  />
+      <SimilarCourses />
     </div>
   );
 };

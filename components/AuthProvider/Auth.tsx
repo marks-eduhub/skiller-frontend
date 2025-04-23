@@ -1,6 +1,7 @@
 import React, { ComponentType } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "./AuthContext";
+import Loader from "../Student/loader";
 
 const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
   const WithAuth: React.FC<P> = (props) => {
@@ -8,7 +9,9 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
     const router = useRouter();
 
     if (isLoading) {
-      return null;
+      <div className="flex items-center justify-center h-screen">
+        <Loader/>
+      </div>
     }
 
     if (!user) {

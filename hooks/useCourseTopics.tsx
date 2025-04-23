@@ -1,6 +1,5 @@
 import api from "@/lib/axios";
 import {useQuery } from "@tanstack/react-query";
-import TurndownService from "turndown";
 const fetchTopicDetails = async (topicId: number) => {
 
   const response = await api.get(`/api/topics/${topicId}?populate[course][populate]=tutor&populate=topicVideo`);
@@ -40,26 +39,23 @@ export const topicUpload = async (
   topicdescription: string,
   resourceIds: string[],
   videoIds: string | null,
-  instructions:string,
+  resourceInstructions:string,
   duration : string,
   tutor:number | undefined
 
 ) => {
   try {
-    const turndownService = new TurndownService();
-    const markdownInstructions = turndownService.turndown(instructions);
-    const markdownExpectations = turndownService.turndown(topicExpectations);
-    const markdownDescription = turndownService.turndown(topicdescription);
+  
    
     const response = await api.post("/api/topics?populate=*", {
       data: {
         course:courseId,
         topicname,
-        topicExpectations: markdownExpectations,
-        topicdescription: markdownDescription,
+        topicExpectations,
+        topicdescription,
         topicResources: resourceIds,
         topicVideo: videoIds, 
-        resourceInstructions: markdownInstructions,
+        resourceInstructions,
         duration,
         tutor
 
@@ -82,24 +78,19 @@ export const topicEditing = async (
   topicdescription: string,
   resourceIds: string[],
   videoIds: string | null, 
-  instructions: string,
+  resourceInstructions: string,
   duration: string
 ) => {
   try {
-    const turndownService = new TurndownService();
-    const markdownInstructions = turndownService.turndown(instructions);
-    const markdownExpectations = turndownService.turndown(topicExpectations);
-    const markdownDescription = turndownService.turndown(topicdescription);
-    
     const response = await api.put(
       `/api/topics/${topicId}`, {
     
         data: {
           course: courseId,
           topicname,
-          topicExpectations: markdownExpectations,
-          topicdescription: markdownDescription,
-          resourceInstructions: markdownInstructions,
+          topicExpectations,
+          topicdescription,
+          resourceInstructions,
           duration,
           topicResources: resourceIds,
           topicVideo: videoIds 

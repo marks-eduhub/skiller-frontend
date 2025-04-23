@@ -1,13 +1,17 @@
 "use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TriangleDownIcon } from "@radix-ui/react-icons";
 import SmallScreen from "./smallscreen";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
+import SkillerLogo from "@/components/ui/logo";
+import clsx from "clsx";
 
-const TutorNav = () => {
+interface TutorNavProps {
+  sidebarMinimized: boolean;
+}
+const TutorNav: React.FC<TutorNavProps> = ({ sidebarMinimized }) => {
   const { user } = useAuthContext();
   const username = user?.username;
   const [showDropdown, setShowDropdown] = useState(false);
@@ -18,7 +22,18 @@ const TutorNav = () => {
 
   return (
     <>
-      <div className="sm:flex hidden justify-end">
+      <div
+        className={clsx(
+          "flex items-center w-full max-md:hidden",
+          sidebarMinimized ? "justify-between mb-10 mt-4" : "justify-end"
+        )}
+      >
+        {sidebarMinimized && (
+          <div className="w-32 h-10 ">
+            <SkillerLogo />
+          </div>
+        )}
+
         <div className="flex flex-row gap-4 items-center">
           <div className="flex flex-row gap-4 max-md:mt-5 items-center">
             <h2 className="font-bold text-[16px]">Tutor</h2>
@@ -50,7 +65,12 @@ const TutorNav = () => {
         </div>
 
         {showDropdown && (
-          <div className="absolute top-[60px] z-50 mt-2 rounded-xl bg-gray-800 shadow-lg w-40 p-2">
+          <div
+            className={clsx(
+              "absolute z-50 mt-2 rounded-xl bg-gray-800 shadow-lg w-40 p-2",
+              sidebarMinimized ? "right-[260px] top-[80px] " : "top-[60px]"
+            )}
+          >
             <div className="flex flex-col">
               <Link href="/auth" className="text-white p-2">
                 Sign Out

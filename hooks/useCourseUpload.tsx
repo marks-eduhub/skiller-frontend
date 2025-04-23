@@ -1,7 +1,6 @@
 import api from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import { message } from "antd";
-import TurndownService from "turndown";
 
 export const courseUpload = async (
   coursename: string,
@@ -17,21 +16,15 @@ export const courseUpload = async (
   duration: string
 ) => {
   try {
-    const turndownService = new TurndownService();
 
-    const markdownExpectations = turndownService.turndown(expectations);
-    const markdownDescription = turndownService.turndown(coursedescription);
-    const markdownRequirements = turndownService.turndown(requirements);
-
-
-    const response = await api.post("/api/courses?populate[card][populate][categories]=*", {
+ const response = await api.post("/api/courses?populate[card][populate][categories]=*", {
       data: {
         coursename,
         level,
         days,
-        expectations: markdownExpectations,
-        coursedescription: markdownDescription,
-        requirements: markdownRequirements,
+        expectations,
+        coursedescription,
+        requirements,
         card: cardId,
         categories,
         tutor,
@@ -60,20 +53,16 @@ export const courseEditing = async (
   duration: string
 ) => {
   try {
-    const turndownService = new TurndownService();
-
-    const markdownExpectations = turndownService.turndown(expectations);
-    const markdownDescription = turndownService.turndown(coursedescription);
-    const markdownRequirements = turndownService.turndown(requirements);
+  
 
     const response = await api.put(`/api/courses/${courseId}?populate=*`, {
       data: {
         coursename,
         level,
         days,
-        expectations: markdownExpectations,
-        coursedescription: markdownDescription,
-        requirements: markdownRequirements,
+        expectations,
+        coursedescription,
+        requirements,
         card: cardId,
         categories,
         duration, 

@@ -55,7 +55,7 @@ const CourseOverview = () => {
           </div>
           <div className="flex sm:pl-5 pl-3 gap-1">
             <Image src="/clock.svg" alt="clock" width={15} height={15} />
-            {days}days
+            {days}day(s)
           </div>
           <div className="flex sm:pl-5 pl-3 gap-1">
             <Image src="/learners.svg" alt="learners" width={20} height={20} />
@@ -65,7 +65,7 @@ const CourseOverview = () => {
           </div>
         </div>
         <div className="justify-end">
-          <TutorNav />
+          <TutorNav sidebarMinimized={false} />
         </div>
       </div>
 

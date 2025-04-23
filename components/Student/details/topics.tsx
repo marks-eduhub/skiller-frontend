@@ -72,18 +72,18 @@ const TopicsCard: React.FC = () => {
     if (currentTopicIndex === 0) {
       return true;
     }
-
+  
     const previousTopic = topics[currentTopicIndex - 1];
-
+  
     const previousTests =
       testsData?.data?.filter(
         (test: any) => test.attributes.topic.data.id === previousTopic.id
       ) || [];
-
+  
     if (previousTests.length === 0) {
-      return true;
+      return canAccessTopic(topics, testResults, currentTopicIndex - 1);
     }
-
+  
     const allPassed = previousTests.every((test: any) => {
       return testResults?.data?.some(
         (result: any) =>
@@ -91,7 +91,7 @@ const TopicsCard: React.FC = () => {
           result.attributes.score >= test.attributes.passmark
       );
     });
-
+  
     return allPassed;
   };
 

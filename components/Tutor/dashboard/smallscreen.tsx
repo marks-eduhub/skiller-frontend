@@ -48,7 +48,7 @@ const SmallScreen = () => {
               />
             </div>
             <div className="h-auto w-full grow">
-              <SideLinks />
+              <SideLinks sidebarMinimized={false} />
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import ClientWrap from './clientwrap';
+import ClientWrap from './Appwrap';
 
 const inter = Inter({ subsets: ["latin"] });
 
