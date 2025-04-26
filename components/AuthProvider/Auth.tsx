@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "./AuthContext";
 import Loader from "../Student/loader";
@@ -8,15 +8,22 @@ const withAuth = <P extends object>(WrappedComponent: ComponentType<P>) => {
     const { user, isLoading } = useAuthContext();
     const router = useRouter();
 
+    useEffect(() => {
+      if (!isLoading && !user) {
+        router.push("/auth");
+      }
+    }, [user, isLoading, router]);
+
     if (isLoading) {
-      <div className="flex items-center justify-center h-screen">
-        <Loader/>
-      </div>
+      return (
+        <div className="flex items-center justify-center h-screen">
+          <Loader />
+        </div>
+      );
     }
 
     if (!user) {
-      router.push("/auth");
-      return null;
+      return null; 
     }
 
     return <WrappedComponent {...(props as P)} />;
