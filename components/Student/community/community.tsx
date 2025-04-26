@@ -246,35 +246,42 @@ const Community = () => {
 
   const handleSubmitResponse = (questionId: number) => {
     const responseText = responsesContentMap[questionId] || "";
-
+  
     if (!responseText.trim()) {
       message.error("Please enter a response to submit!");
       return;
     }
-
+  
     if (!questionId) {
       message.error("Something went wrong. Please try again later.");
       return;
     }
-
+  
     const responderName = user?.username || "Anonymous";
-
+  
+    const newResponse = {
+      id: Date.now(), 
+      responderName,
+      responseText,
+      createdAt: new Date().toISOString(),
+      profilePicture: "/pic.svg", 
+    };
+   setResponsesMap((prev) => ({
+      ...prev,
+      [questionId]: [...(prev[questionId] || []), newResponse],
+    }));
+  
+    setResponsesContentMap((prev) => ({
+      ...prev,
+      [questionId]: "",
+    }));
+  
     postResponseMutation({
       responseText,
       responderName,
       questionId,
       userId,
     });
-
-    setResponsesContentMap((prev) => ({
-      ...prev,
-      [questionId]: "",
-    }));
-
-    setShowAllResponsesMap((prev) => ({
-      ...prev,
-      [questionId]: true,
-    }));
   };
 
   const { mutate: removeFromLiked } = useMutation({

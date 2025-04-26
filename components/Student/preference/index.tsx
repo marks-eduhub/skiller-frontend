@@ -68,7 +68,7 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
 
   const handleSubmitBio = async () => {
     if (!userId) {
-      console.error("User ID is missing!");
+      // console.error("User ID is missing!");
       return;
     }
     try {
@@ -77,23 +77,23 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
         {
           onSuccess: () => {
             message.success("Bio submitted successfully!");
-            console.log("Bio submitted successfully!");
+            // console.log("Bio submitted successfully!");
           },
           onError: (error: any) => {
             message.error("Error submitting bio:", error);
-            console.error("Error submitting bio:", error);
+            // console.error("Error submitting bio:", error);
           },
         }
       );
     } catch (e) {
-      console.error("Error submitting bio:", e);
+      // console.error("Error submitting bio:", e);
       message.error("Error submitting bio");
     }
   };
 
   const handleSubmitPreferences = async () => {
     if (!userId) {
-      console.error("User ID is missing!");
+      // console.error("User ID is missing!");
       return;
     }
     try {
@@ -102,17 +102,17 @@ const Preference: React.FC<PreferenceProps> = ({ errorMessage }) => {
         {
           onSuccess: () => {
             message.success("Preferences submitted successfully!");
-            console.log("Preference submitted successfully!");
+            // console.log("Preference submitted successfully!");
             router.push("/splash"); // Redirect after successful submission
           },
           onError: (error: any) => {
             message.error("Error submitting preferences:", error);
-            console.error("Error submitting preferences:", error);
+            // console.error("Error submitting preferences:", error);
           },
         }
       );
     } catch (e) {
-      console.error("Error submitting preferences:", e);
+      // console.error("Error submitting preferences:", e);
       message.error("Error submitting preferences");
     }
   };
