@@ -1,9 +1,40 @@
-import React from "react";
+"use client";
+import React , {useState} from "react";
 import data from "./data.json";
 import Link from "@/node_modules/next/link";
 import { MdArrowBackIosNew } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
+import { requestPasswordReset } from "@/hooks/Authhooks/useResetpassword";
+import { message } from "antd";
 
 export default function ForgotPassword() {
+  const [email, setEmail] = useState("");
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const { mutate: requestPassword, isPending } = useMutation({
+    mutationFn: async () => {
+      return await requestPasswordReset(email);
+    },
+    onSuccess: (data) => {
+      message.success("Check your email for the link",);
+      setEmail("")
+    },
+    onError: (error) => {
+      message.error("Error requesting password reset");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    if (!email || !email.includes("@")) {
+      message.warning("Please enter a valid email address.");
+      return;
+    }
+    e.preventDefault();
+    requestPassword();
+  };
   return (
     <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
       <div className="flex flex-col items-center max-w-md w-full">
@@ -32,16 +63,20 @@ export default function ForgotPassword() {
             <input
               placeholder="black@gmail.com"
               type="text"
+              onChange={handleEmailChange}
+              value={email}
               className="rounded-md border border-gray-400 bg-inherit px-3 py-[1.3rem] w-full sm:w-[25rem]"
             />
           </div>
         </div>
 
-        <button
+      
+        <button 
           type="button"
-          className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mt-[50px] mx-auto w-[300px]"
+          disabled={isPending}
+          className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mt-[50px] mx-auto w-[300px]" onClick={handleSubmit}
         >
-          Continue
+          {isPending ? "Submitting ..." : "Submit"}
         </button>
 
         <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left ">
