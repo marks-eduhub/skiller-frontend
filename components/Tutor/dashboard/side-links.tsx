@@ -7,7 +7,12 @@ import dynamic from "next/dynamic";
 import { PiUserSwitchBold } from "react-icons/pi";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
-const SideLinks = () => {
+
+interface SideLinksProps {
+  sidebarMinimized: boolean;
+}
+
+const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
@@ -75,40 +80,36 @@ const SideLinks = () => {
     <div className="relative">
       {loading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
-         <DotPulseWrapper type="metronome" size="40" speed="1.75" color="white" />
+          <DotPulseWrapper
+            type="metronome"
+            size="40"
+            speed="1.75"
+            color="white"
+          />
         </div>
       )}
       {links.map((link, index) => (
         <div key={index} className="mt-6">
-          {link.path ? (
-            <button
-              onClick={() => handleNavigation(link.path)}
-              className={clsx(
-                pathname.startsWith(link.path)
-                  ? "bg-gray-700 rounded px-6 py-2 ml-4 "
-                  : "text-white ml-8",
-                "flex flex-row cursor-pointer"
-              )}
-            >
-              <Image src={link.src} alt={link.alt} width={20} height={20} />
-              <h2 className="ml-6">{link.name}</h2>
-            </button>
-          ) : (
-            <div className="flex flex-row cursor-pointer" onClick={() => handleClick(link.name)}>
-              <Image src={link.src} alt={link.alt} width={20} height={20} />
-              <h2 className="ml-6">{link.name}</h2>
-            </div>
-          )}
-          {openSubOptions === link.name &&
-            (subOptions[link.name as keyof typeof subOptions] || []).map((option, subIndex) => (
-              <div
-                key={subIndex}
-                className="ml-12 mt-2 cursor-pointer text-white"
-                onClick={() => handleOptions(option)}
-              >
-                {option}
-              </div>
-            ))}
+          <button
+            onClick={() => handleNavigation(link.path)}
+            className={clsx(
+              pathname.startsWith(link.path) && !sidebarMinimized
+                ? "bg-gray-700 rounded px-6 py-2 ml-4"
+                : "text-white",
+              sidebarMinimized ? "ml-8 mb-10" : "ml-4",
+              "flex items-center cursor-pointer relative group"
+            )}
+          >
+            <Image src={link.src} alt={link.alt} width={25} height={25} className="ml-2" />
+
+            {!sidebarMinimized && <h2 className="ml-6">{link.name}</h2>}
+
+            {sidebarMinimized && (
+              <span className="absolute left-12 bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                {link.name}
+              </span>
+            )}
+          </button>
         </div>
       ))}
 
@@ -122,7 +123,9 @@ const SideLinks = () => {
         )}
       >
         <PiUserSwitchBold className="w-10 h-7 mr-2 text-gray-300" />
-        <p className="md:block text-[15px]">Switch to student</p>
+        {!sidebarMinimized && (
+          <p className="md:block text-[15px]">Switch to student</p>
+        )}
       </div>
     </div>
   );

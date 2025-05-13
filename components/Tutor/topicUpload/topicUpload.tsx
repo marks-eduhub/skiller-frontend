@@ -72,7 +72,7 @@ const TopicUpload = () => {
           </h1>
         </div>
         <div className="justify-end">
-          <TutorNav />
+          <TutorNav  sidebarMinimized={false}/>
         </div>
       </div>
 

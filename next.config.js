@@ -18,7 +18,7 @@ const nextConfig = {
         return defaultRedirects;
       },
       images: {
-        domains: ['img-c.udemycdn.com', 'kinsta.com', 'localhost', 'skiller-app.s3.ap-southeast-2.amazonaws.com'],
+        domains: ['img-c.udemycdn.com', 'kinsta.com', 'localhost', '192.168.223.98', 'skiller-app.s3.ap-southeast-2.amazonaws.com'],
       },
 }
 

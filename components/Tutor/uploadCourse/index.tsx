@@ -9,7 +9,7 @@ import { courseUpload, uploadMedia } from "@/hooks/useCourseUpload";
 import { message } from "antd";
 import { useMutation } from "@tanstack/react-query";
 import { useCourseContext } from "@/Context/CourseContext";
-import CourseFields from "./coursefileds";
+import CourseFields from "./coursefields";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useFetchTutors } from "@/hooks/useCourses";
 import { IoMdArrowRoundBack } from "react-icons/io";

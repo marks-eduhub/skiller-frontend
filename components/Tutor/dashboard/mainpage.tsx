@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import TutorNav from "./tutor-nav";
 import Image from "next/image";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
@@ -47,8 +46,7 @@ const MainPage = () => {
   }
   return (
     <div className="p-6 w-full">
-      <TutorNav />
-      <h1 className="font-semibold sm:text-[25px]  sm:mt-0 mt-20">
+      <h1 className="font-semibold sm:text-[22px]  sm:mt-0 mt-12">
         Courses by Tutor {username}
       </h1>
 
@@ -130,7 +128,7 @@ const MainPage = () => {
                 </div>
               );
             })}
-            <div className="w-full sm:mt-0 mt-10 sm:h-[250px] h-[250px] rounded-lg  bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer">
+            <div className="w-full sm:mt-0 mt-5 sm:h-[250px] h-[250px] rounded-lg  bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer">
               <Link href="/tutor/dashboard/uploadCourse">
                 <div className="rounded-3xl bg-gray-300 flex px-8 py-5 items-center justify-center">
                   <Image src="/Vector.png" alt="plus" width={30} height={30} />

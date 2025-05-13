@@ -1,10 +1,27 @@
 "use client";
+import { confirmPasswordReset } from "@/hooks/Authhooks/useResetPassword";
+import { useMutation } from "@tanstack/react-query";
+import { message } from "antd";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function NewPasswordForm() {
+  const searchParams = useSearchParams();
+  const code = searchParams.get("code");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+  const handlePasswordConfirmationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirmation(e.target.value);
+  };
 
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
@@ -12,6 +29,31 @@ export default function NewPasswordForm() {
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+  const { mutate: resetPassword, isPending } = useMutation({
+    mutationFn: async () => {
+      return await confirmPasswordReset(password, passwordConfirmation, code);
+    },
+    onSuccess: (data) => {
+      message.success("Password reset successful:", data);
+    },
+    onError: (error) => {
+      message.error("Error resetting password");
+    },
+  });
+  const handleSubmit = (e: React.FormEvent) => {
+    if (!password || password.length < 8) {
+      message.warning("Password must be at least 8 characters long.");
+      return;
+    }
+    if (password !== passwordConfirmation) {
+      message.warning("Passwords do not match.");
+      return;
+    }
+
+    e.preventDefault();
+    resetPassword();
+  };
+
   return (
     <div className="bg-[#E9E9E9] w-full h-screen">
       <button className="rounded-[7px] border-4 border-solid border-black text-black text-[20px] w-[145px] h-[60px] mt-[2rem] absolute top-0 right-[2rem]">
@@ -28,6 +70,8 @@ export default function NewPasswordForm() {
             <input
               placeholder="************"
               type={passwordVisible ? "text" : "password"}
+              onChange={handlePasswordChange}
+              value={password}
               className="bg-inherit border border-gray-400 rounded-md px-3 py-[1.3rem] w-full pr-10"
             />
             <span
@@ -44,7 +88,9 @@ export default function NewPasswordForm() {
           <div className="relative">
             <input
               placeholder="***********"
-              type={confirmPasswordVisible? "text" : "password"}
+              onChange={handlePasswordConfirmationChange}
+              value={passwordConfirmation}
+              type={confirmPasswordVisible ? "text" : "password"}
               className="bg-inherit border border-gray-400 rounded-md px-3 py-[1.3rem] w-full pr-10"
             />
             <span
@@ -58,9 +104,22 @@ export default function NewPasswordForm() {
       </div>
 
       <div className="flex justify-center">
-        <button className="bg-[#000] rounded-[7px] text-[25px] text-white px-4 py-1 w-[470px]">
-          Finish
+        <button
+          disabled={isPending}
+          onClick={handleSubmit}
+          type="button"
+          className="bg-[#000] rounded-[7px] text-[25px] text-white px-4 py-1 w-[470px]"
+        >
+          {isPending ? "Submitting ..." : "Finish"}
         </button>
+      </div>
+
+      <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left  flex  justify-center">
+        Back To 
+        <Link href={"/auth"} className="text-blue-600">
+          Login 
+        </Link>
+        ?
       </div>
     </div>
   );
