@@ -1,9 +1,4 @@
 "use client";
-import { confirmPasswordReset } from "@/hooks/Authhooks/useResetPassword";
-import { useMutation } from "@tanstack/react-query";
-import { message } from "antd";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { confirmPasswordReset } from "@/hooks/Authhooks/useResetpassword";
@@ -14,23 +9,11 @@ import { useSearchParams } from "next/navigation";
 
 export default function NewPasswordForm() {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
+  const token = searchParams.get("token")
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-  const handlePasswordConfirmationChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPasswordConfirmation(e.target.value);
-  };
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };

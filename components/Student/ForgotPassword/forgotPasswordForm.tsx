@@ -6,7 +6,7 @@ import Link from "@/node_modules/next/link";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 
-import { requestPasswordReset } from "@/hooks/Authhooks/useResetPassword";
+import { requestPasswordReset } from "@/hooks/Authhooks/useResetpassword";
 import { message } from "antd";
 
 
@@ -69,8 +69,7 @@ export default function ForgotPassword() {
               value={email}
               placeholder="black@gmail.com"
               type="text"
-              onChange={handleEmailChange}
-              value={email}
+             
               className="rounded-md border border-gray-400 bg-inherit px-3 py-[1.3rem] w-full sm:w-[25rem]"
             />
           </div>
