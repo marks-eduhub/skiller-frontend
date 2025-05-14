@@ -1,10 +1,12 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React , {useState} from "react";
+
 import data from "./data.json";
 import Link from "@/node_modules/next/link";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
-import { requestPasswordReset } from "@/hooks/Authhooks/useResetPassword";
+
+import { requestPasswordReset } from "@/hooks/Authhooks/useResetpassword";
 import { message } from "antd";
 
 
@@ -20,7 +22,8 @@ export default function ForgotPassword() {
       return await requestPasswordReset(email);
     },
     onSuccess: (data) => {
-      message.success("Check your email for the link:", data);
+      message.success("Check your email for the link",);
+
       setEmail("")
     },
     onError: (error) => {
@@ -66,6 +69,7 @@ export default function ForgotPassword() {
               value={email}
               placeholder="black@gmail.com"
               type="text"
+             
               className="rounded-md border border-gray-400 bg-inherit px-3 py-[1.3rem] w-full sm:w-[25rem]"
             />
           </div>

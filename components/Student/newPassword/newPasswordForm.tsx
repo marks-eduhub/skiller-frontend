@@ -1,15 +1,15 @@
 "use client";
-import { confirmPasswordReset } from "@/hooks/Authhooks/useResetPassword";
+import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { confirmPasswordReset } from "@/hooks/Authhooks/useResetpassword";
 import { useMutation } from "@tanstack/react-query";
 import { message } from "antd";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function NewPasswordForm() {
   const searchParams = useSearchParams();
-  const code = searchParams.get("code");
+  const token = searchParams.get("token")
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
@@ -26,20 +26,26 @@ export default function NewPasswordForm() {
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
   const { mutate: resetPassword, isPending } = useMutation({
     mutationFn: async () => {
-      return await confirmPasswordReset(password, passwordConfirmation, code);
+      return await confirmPasswordReset(password, passwordConfirmation, token);
     },
     onSuccess: (data) => {
-      message.success("Password reset successful:", data);
+      message.success("Password reset successful. You can log in now.");
+      setPassword("");
+      setPasswordConfirmation("");
+
     },
     onError: (error) => {
       message.error("Error resetting password");
     },
   });
+
   const handleSubmit = (e: React.FormEvent) => {
     if (!password || password.length < 8) {
       message.warning("Password must be at least 8 characters long.");
@@ -104,6 +110,7 @@ export default function NewPasswordForm() {
       </div>
 
       <div className="flex justify-center">
+
         <button
           disabled={isPending}
           onClick={handleSubmit}
