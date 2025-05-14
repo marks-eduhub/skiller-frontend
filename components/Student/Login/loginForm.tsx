@@ -79,9 +79,9 @@ export default function LogIn() {
         <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
           {data.loginForm.title}
         </h2>
-        {isError && (
+        {/* {isError && (
           <p className="text-red-500 mt-4">{error.message || "Login failed"}</p>
-        )}
+        )} */}
 
         <form
           className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"

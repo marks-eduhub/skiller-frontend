@@ -34,7 +34,7 @@ const Community = () => {
   const { data, isLoading, error } = useFetchCommunityDetails();
   const questions = data?.data;
   const queryClient = useQueryClient();
- const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [questionId, setQuestionId] = useState("");
   const [responsesMap, setResponsesMap] = useState<{ [key: string]: any[] }>(
@@ -246,35 +246,42 @@ const Community = () => {
 
   const handleSubmitResponse = (questionId: number) => {
     const responseText = responsesContentMap[questionId] || "";
-
+  
     if (!responseText.trim()) {
       message.error("Please enter a response to submit!");
       return;
     }
-
+  
     if (!questionId) {
       message.error("Something went wrong. Please try again later.");
       return;
     }
-
+  
     const responderName = user?.username || "Anonymous";
-
+  
+    const newResponse = {
+      id: Date.now(), 
+      responderName,
+      responseText,
+      createdAt: new Date().toISOString(),
+      profilePicture: "/pic.svg", 
+    };
+   setResponsesMap((prev) => ({
+      ...prev,
+      [questionId]: [...(prev[questionId] || []), newResponse],
+    }));
+  
+    setResponsesContentMap((prev) => ({
+      ...prev,
+      [questionId]: "",
+    }));
+  
     postResponseMutation({
       responseText,
       responderName,
       questionId,
       userId,
     });
-
-    setResponsesContentMap((prev) => ({
-      ...prev,
-      [questionId]: "",
-    }));
-
-    setShowAllResponsesMap((prev) => ({
-      ...prev,
-      [questionId]: true,
-    }));
   };
 
   const { mutate: removeFromLiked } = useMutation({
@@ -583,89 +590,90 @@ const Community = () => {
                   )}
 
                   <div className="px-4 mt-4 max-h-[600px] pb-4  flex flex-col">
-                    <div className ="overflow-auto custom-scrollbar">
-                    {responses.length === 0 ? (
-                      <p className="text-gray-700 mt-4 text-center">
-                        Be the first to respond!
-                      </p>
-                    ) : (
-                      <>
-                        <div className="flex justify-start mt-3">
-                          <button
-                            onClick={() => handleLoadMoreResponses(questionId)}
-                            className="text-blue-600"
-                          >
-                            {showAllResponsesMap[questionId]
-                              ? "Hide Responses"
-                              : `Show Responses`}
-                          </button>
-                        </div>
-                        {showAllResponsesMap[questionId] &&
-                          responses.map((response: any) => {
-                            const responseId = response.id;
-                            const isLiked =
-                              likedResponsesMap[response.id] || false;
-                            const likeCount =
-                              (likeCounts ? likeCounts[responseId] : 0) || 0;
-                            return (
-                              <div
-                                key={responseId}
-                                className="flex-col items-start mb-3 p-2 mt-5"
-                              >
-                                <div className="flex items-center gap-2 mb-5">
-                                  <div className="h-[50px] w-[50px] relative">
-                                    <Image
-                                      src={response?.profilePicture}
-                                      alt={response?.responderName}
-                                      fill
-                                      className="rounded-full object-cover"
+                    <div className="overflow-auto custom-scrollbar">
+                      {responses.length === 0 ? (
+                        <p className="text-gray-700 mt-4 text-center">
+                          Be the first to respond!
+                        </p>
+                      ) : (
+                        <>
+                          <div className="flex justify-start mt-3">
+                            <button
+                              onClick={() =>
+                                handleLoadMoreResponses(questionId)
+                              }
+                              className="text-blue-600"
+                            >
+                              {showAllResponsesMap[questionId]
+                                ? "Hide Responses"
+                                : `Show Responses`}
+                            </button>
+                          </div>
+                          {showAllResponsesMap[questionId] &&
+                            responses.map((response: any) => {
+                              const responseId = response.id;
+                              const isLiked =
+                                likedResponsesMap[response.id] || false;
+                              const likeCount =
+                                (likeCounts ? likeCounts[responseId] : 0) || 0;
+                              return (
+                                <div
+                                  key={responseId}
+                                  className="flex-col items-start mb-3 p-2 mt-5"
+                                >
+                                  <div className="flex items-center gap-2 mb-5">
+                                    <div className="h-[50px] w-[50px] relative">
+                                      <Image
+                                        src={response?.profilePicture}
+                                        alt={response?.responderName}
+                                        fill
+                                        className="rounded-full object-cover"
+                                      />
+                                    </div>
+                                    <p className="font-medium text-sm mb-1">
+                                      {response?.responderName}
+                                    </p>
+                                  </div>
+                                  <div className="ml-2">
+                                    <div
+                                      className="text-gray-600 text-sm break-words overflow-hidden"
+                                      dangerouslySetInnerHTML={{
+                                        __html: response?.responseText,
+                                      }}
                                     />
-                                  </div>
-                                  <p className="font-medium text-sm mb-1">
-                                    {response?.responderName}
-                                  </p>
-                                </div>
-                                <div className="ml-2">
-                                  <p className="text-gray-600 text-sm break-words overflow-hidden">
-                                    {response?.responseText
-                                      .replace(/(\*\*|\_)/g, "")
-                                      .replace(/===/g, "")}
-                                  </p>
-                                  <div className="flex gap-1 mt-2">
-                                    <button
-                                      onClick={() =>
-                                        handleToggleLike(
-                                          responseId,
-                                          isLiked,
-                                          userId
-                                        )
-                                      }
-                                    >
-                                      {isLiked ? (
-                                        <AiFillHeart
-                                          size={20}
-                                          className="text-red-500"
-                                        />
-                                      ) : (
-                                        <AiOutlineHeart
-                                          size={20}
-                                          className="text-gray-500"
-                                        />
-                                      )}
-                                    </button>
-                                    <span className="text-gray-500">
-                                      {likeCount}
-                                    </span>
+                                    <div className="flex gap-1 mt-2">
+                                      <button
+                                        onClick={() =>
+                                          handleToggleLike(
+                                            responseId,
+                                            isLiked,
+                                            userId
+                                          )
+                                        }
+                                      >
+                                        {isLiked ? (
+                                          <AiFillHeart
+                                            size={20}
+                                            className="text-red-500"
+                                          />
+                                        ) : (
+                                          <AiOutlineHeart
+                                            size={20}
+                                            className="text-gray-500"
+                                          />
+                                        )}
+                                      </button>
+                                      <span className="text-gray-500">
+                                        {likeCount}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
-                          
-                      </>
-                     
-                    )}
-                     </div>
+                              );
+                            })}
+                        </>
+                      )}
+                    </div>
                     {showAllResponsesMap[questionId] &&
                       responses.length > 0 && (
                         <div className="sticky bottom-0 bg-white flex max-md:flex-col sm:items-center sm:justify-between">
@@ -675,30 +683,28 @@ const Community = () => {
                             onChange={(value) =>
                               handleResponseChange(questionId, value)
                             }
-                            
                             className="mb-4 mt-2 w-full sm:w-[85%]"
                             theme="snow"
                           />
                           <div className="max-md:justify-start">
-                          <button
-                            className="bg-gray-600 text-white px-4 py-2 rounded-lg transition "
-                            onClick={() => handleSubmitResponse(questionId)}
-                          >
-                            {isSubmittingResponse ? (
-                              <DotPulseWrapper
-                                size="20"
-                                speed="1.5"
-                                color="white"
-                              />
-                            ) : (
-                              "Submit"
-                            )}
-                          </button>
+                            <button
+                              className="bg-gray-600 text-white px-4 py-2 rounded-lg transition "
+                              onClick={() => handleSubmitResponse(questionId)}
+                            >
+                              {isSubmittingResponse ? (
+                                <DotPulseWrapper
+                                  size="20"
+                                  speed="1.5"
+                                  color="white"
+                                />
+                              ) : (
+                                "Submit"
+                              )}
+                            </button>
                           </div>
                         </div>
                       )}
                   </div>
-                  
                 </div>
               );
             })

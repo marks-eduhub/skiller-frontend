@@ -1,7 +1,6 @@
 import api from "@/lib/axios";
 
 import { useQuery } from "@tanstack/react-query";
-import TurndownService from "turndown";
 
 const fetchCommunitydetails = async () => {
   const response = await api.get(
@@ -59,11 +58,10 @@ export const postQuestion = async (
   userId: string
 ) => {
   try {
-    const turndownService = new TurndownService();
-    const markdownQuestion = turndownService.turndown(Question);
+   
     const response = await api.post("/api/communities", {
       data: {
-        Question: markdownQuestion,
+        Question,
         user: userId,
       },
     });
@@ -80,11 +78,9 @@ export const addResponse = async (
   userId:number
 ) => {
   try {
-    const turndownService = new TurndownService();
-    const markdownResponse = turndownService.turndown(responseText);
     const response = await api.post("/api/community-responses", {
       data: {
-        responseText: markdownResponse,
+        responseText,
         responderName,
         community: questionId,
         user:userId

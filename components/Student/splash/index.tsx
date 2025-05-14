@@ -21,10 +21,9 @@ const Splash: React.FC = () => {
   };
 
   return (
-    <div
-      className="flex justify-center items-center h-screen bg-cover bg-no-repeat"
-      style={{ backgroundImage: "url('/backgroundImage.svg')" }}
-    >
+   
+      <div className="flex justify-center items-center h-screen bg-no-repeat bg-cover bg-[url('/backgroundImage.svg')]">
+
       <div className="absolute top-1/4 transform -translate-y-1/2 text-center z-10">
         <p className="text-2xl font-bold text-black">
           Ready to Start?, Hello {user?.username}.
@@ -38,14 +37,14 @@ const Splash: React.FC = () => {
           {data.buttonText}
         </button>
       </div>
+     
       <Image
-        layout="intrinsic"
-        width={375.99}
+        width={376}
         height={618}
         src="/image.svg"
         alt="bulb"
-        className=" z-0"
-        style={{ maxWidth: "50%", maxHeight: "40%" }}
+        className="z-0 max-w-[50%] max-h-[40%]"
+        priority
       />
     </div>
   );

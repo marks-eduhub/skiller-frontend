@@ -10,7 +10,6 @@ import {
   useFetchTutorDetails,
   updateTutor,
   useFetchTutorId,
-  linkTutorToUser,
   deleteProfilePicture,
 } from "@/hooks/useProfile";
 import { useMutation } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import { uploadMedia } from "@/hooks/useCourseUpload";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import queryClient from "@/lib/queryClient";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -26,7 +26,7 @@ const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 const ProfilePage: React.FC = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
-  const router = useRouter()
+  const router = useRouter();
   const { data } = useFetchUserDetails(Number(userId));
   const { data: tutorDetails } = useFetchTutorDetails(Number(userId));
   const { data: tutor } = useFetchTutorId(Number(userId));
@@ -110,6 +110,7 @@ const ProfilePage: React.FC = () => {
       setBiography(tutor.Biography || "");
       setRole(tutor.role || "");
       setQualifications(tutor.Qualifications || "");
+      setToggle(true);
 
       setInitialData((prev) => ({
         ...prev,
@@ -117,6 +118,8 @@ const ProfilePage: React.FC = () => {
         Biography: tutor.Biography || "",
         Qualifications: tutor.Qualifications || "",
       }));
+    } else {
+      setToggle(false);
     }
   }, [tutorDetails]);
 
@@ -168,6 +171,7 @@ const ProfilePage: React.FC = () => {
 
   const { mutateAsync: postTutorProfile } = useMutation({
     mutationFn: async ({
+      userId,
       tutorname,
       role,
       lastName,
@@ -175,6 +179,7 @@ const ProfilePage: React.FC = () => {
       Biography,
       Qualifications,
     }: {
+      userId: number;
       tutorname: string;
       role: string;
       lastName: string;
@@ -183,6 +188,7 @@ const ProfilePage: React.FC = () => {
       Qualifications: string;
     }) => {
       const response = await addTutor(
+        userId,
         tutorname,
         role,
         lastName,
@@ -190,21 +196,25 @@ const ProfilePage: React.FC = () => {
         Biography,
         Qualifications
       );
-
+  
       const tutorId =
         response?.id || response?.data?.id || response?.data?.data?.id || null;
-
+  
       if (!tutorId) {
         throw new Error("Failed to retrieve tutor ID from the response");
       }
-
+  
       return tutorId;
     },
     onError: () => {
       message.error("Error creating tutor");
     },
+    onSuccess: (tutorId) => {
+      message.success("Tutor created successfully");
+      queryClient.invalidateQueries({queryKey:["profile_tutorId", tutorId]}); 
+    },
   });
-
+  
   const { mutate: postStudentProfile } = useMutation({
     mutationFn: async ({
       studentname,
@@ -277,25 +287,6 @@ const ProfilePage: React.FC = () => {
     },
   });
 
-  const { mutate: linkTutor } = useMutation({
-    mutationFn: async ({
-      userId,
-      tutorId,
-    }: {
-      userId: number;
-      tutorId: number;
-    }) => {
-      return await linkTutorToUser(userId, tutorId);
-    },
-
-    onSuccess: () => {
-      // message.success("Tutor linked successfully");
-    },
-
-    onError: () => {
-      message.error("Error in linking tutor to user");
-    },
-  });
 
   const hasChanges = () => {
     return (
@@ -366,6 +357,7 @@ const ProfilePage: React.FC = () => {
           );
         } else {
           const newTutorId = await postTutorProfile({
+            userId,
             tutorname: `${firstName} ${lastName}`,
             role,
             lastName,
@@ -374,12 +366,7 @@ const ProfilePage: React.FC = () => {
             Qualifications,
           });
 
-          if (newTutorId) {
-            linkTutor({ userId, tutorId: newTutorId });
-            // message.success("Tutor profile created and linked successfully!");
-          } else {
-            throw new Error("Tutor ID is not available after creation");
-          }
+       
         }
       } else {
         postStudentProfile(
@@ -402,17 +389,19 @@ const ProfilePage: React.FC = () => {
       setIsSaving(false);
     }
   };
- 
+
   const handleBack = () => {
     router.back();
   };
 
   return (
     <div className="max-md:p-0 max-md:pr-4 sm:pl-10 items-center sm:w-1/2">
-      <div className = "flex sm:gap-10 gap-6 sm:mt-4 mt-0">
-      <IoMdArrowRoundBack className="text-[30px] sm:mt-2 mt-2 cursor-pointer"  onClick={handleBack}/>
-      <h2 className="font-bold text-[30px] mb-3 max-md:mt-0 ">Profile</h2>
-
+      <div className="flex sm:gap-10 gap-6 sm:mt-4 mt-0">
+        <IoMdArrowRoundBack
+          className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
+          onClick={handleBack}
+        />
+        <h2 className="font-bold text-[30px] mb-3 max-md:mt-0 ">Profile</h2>
       </div>
       <p>
         Add your personal details as you would like them to appear on your
@@ -456,15 +445,20 @@ const ProfilePage: React.FC = () => {
               className="bg-black text-white rounded-md px-4 py-1 cursor-pointer text-center flex items-center justify-center"
             >
               {isUploading ? (
-                 <DotPulseWrapper type="ring" size="30" speed="1.75" color="white" />
-                ) : null}
+                <DotPulseWrapper
+                  type="ring"
+                  size="30"
+                  speed="1.75"
+                  color="white"
+                />
+              ) : null}
               {isUploading ? "Uploading..." : "Upload Photo"}
             </label>
 
             <button
               onClick={handleRemoveImage}
               className="bg-white text-black border border-black rounded-md px-4 py-1"
-              disabled={isUploading} 
+              disabled={isUploading}
             >
               Remove Photo
             </button>
@@ -654,12 +648,15 @@ const ProfilePage: React.FC = () => {
         <button
           type="button"
           onClick={handleSaveChanges}
-          className="mt-5 bg-black text-white py-2 px-6 rounded-md"
+          disabled={isSaving}
+          className={`mt-5 bg-black text-white py-2 px-6 rounded-md transition-opacity ${
+            isSaving ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
+          }`}
         >
           {isSaving ? (
             <DotPulseWrapper
               type="tailChase"
-              size="30"
+              size="25"
               speed="1.75"
               color="white"
             />

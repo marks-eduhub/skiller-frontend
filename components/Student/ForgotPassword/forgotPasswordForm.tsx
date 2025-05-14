@@ -1,11 +1,14 @@
 "use client";
 import React , {useState} from "react";
+
 import data from "./data.json";
 import Link from "@/node_modules/next/link";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
-import { requestPasswordReset } from "@/hooks/Authhooks/useResetpassword";
+
+import { requestPasswordReset } from "@/hooks/Authhooks/useResetPassword";
 import { message } from "antd";
+
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -20,6 +23,7 @@ export default function ForgotPassword() {
     },
     onSuccess: (data) => {
       message.success("Check your email for the link",);
+
       setEmail("")
     },
     onError: (error) => {
@@ -61,6 +65,8 @@ export default function ForgotPassword() {
               Enter Registered Email Address
             </div>
             <input
+              onChange={handleEmailChange}
+              value={email}
               placeholder="black@gmail.com"
               type="text"
               onChange={handleEmailChange}
@@ -70,7 +76,6 @@ export default function ForgotPassword() {
           </div>
         </div>
 
-      
         <button 
           type="button"
           disabled={isPending}
@@ -80,9 +85,9 @@ export default function ForgotPassword() {
         </button>
 
         <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left ">
-          Back To{" "}
+          Back To
           <Link href={"/auth"} className="text-blue-600">
-            Login{" "}
+            Login
           </Link>
           ?
         </div>

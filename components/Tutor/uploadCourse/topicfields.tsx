@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
@@ -88,6 +88,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   setIsTopicUploaded,
 }) => {
   const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuthContext();
   const pathname = usePathname();
   const { slug } = useParams();
@@ -697,38 +698,46 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           )}
         </div>
 
-        <div className="flex flex-col mt-5 items-center justify-center border sm:w-1/2 border-black relative h-[200px] rounded">
-          {videoPreview ? (
-            <video className="w-full h-full object-cover rounded-md" controls>
-              <source src={videoPreview} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <>
-              <p className="text-gray-500 mb-5">Attach a video to your topic</p>
-              <GrCloudUpload className="text-blue-800 w-10 h-10" />
-              <span className="text-gray-500">
-                Drag & drop files or
-                <span className="text-blue-500 ml-1 cursor-pointer">
-                  Browse
-                </span>
+        {videoPreview ? (
+          <div className="flex flex-col mt-5 items-center justify-center border sm:w-full border-black relative h-[200px] rounded">
+            <iframe
+              src={videoPreview}
+              width="100%"
+              height="500"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              className="rounded-lg"
+            />
+          </div>
+        ) : (
+          <div className="flex flex-col mt-5 items-center justify-center border sm:w-full border-black relative h-[200px] rounded">
+            <p className="text-gray-500 mb-5">Attach a video to your topic</p>
+            <GrCloudUpload className="text-blue-800 w-10 h-10" />
+            <span className="text-gray-500">
+              Drag & drop files or{" "}
+              <span
+                className="text-blue-500 ml-1 cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Browse
               </span>
-            </>
-          )}
+            </span>
 
-          <input
-            type="file"
-            className="absolute inset-0 opacity-0 cursor-pointer"
-            onChange={(e) => {
-              if (topic.id !== null) {
-                onVideoChange(topic.id, e);
-              } else {
-                onVideoChange(index, e);
-              }
-            }}
-            accept="video/*"
-          />
-        </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                if (topic.id !== null) {
+                  onVideoChange(topic.id, e);
+                } else {
+                  onVideoChange(index, e);
+                }
+              }}
+              accept="video/*"
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex justify-between items-center my-4">

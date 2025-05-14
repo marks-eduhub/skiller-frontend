@@ -1,10 +1,9 @@
 import api from "@/lib/axios";
 import { ProfilePicture } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
-import TurndownService from "turndown";
-
 
 export const addTutor = async (
+  userId: number,
   tutorname: string,
   role: string,
   lastName: string,
@@ -12,16 +11,16 @@ export const addTutor = async (
   Biography: string,
   Qualifications: string
 ) => {
-  const turndownService = new TurndownService();
-  const markdownBio = turndownService.turndown(Biography);
+  
   try {
     const response = await api.post("/api/tutors", {
       data: {
+        user: userId,
         tutorname,
         role,
         lastName,
         firstName,
-        Biography: markdownBio,
+        Biography,
         Qualifications,
       },
     });
@@ -63,21 +62,7 @@ export const updateStudent = async (
   }
 };
 
-export const linkTutorToUser = async (userId: number, tutorId: number) => {
-  try {
-    if (!userId || !tutorId) {
-      throw new Error("Both User ID and Tutor ID are required.");
-    }
 
-    const response = await api.put(`/api/users/${userId}`, {
-      tutor: tutorId, 
-    });
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
 
 const fetchUserDetails = async (userId: number) => {
   const response = await api.get(`/api/users/${userId}?populate=*`);
@@ -137,8 +122,7 @@ export const updateTutor = async (
   Biography: string,
   Qualifications: string
 ) => {
-  const turndownService = new TurndownService();
-  const markdownBio = turndownService.turndown(Biography);
+
   try {
     const response = await api.put(`/api/tutors/${tutorId}`, {
       data: {
@@ -147,7 +131,7 @@ export const updateTutor = async (
         role,
         lastName,
         firstName,
-        Biography: markdownBio,
+        Biography,
         Qualifications,
       },
     });

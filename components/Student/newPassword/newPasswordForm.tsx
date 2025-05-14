@@ -1,4 +1,9 @@
 "use client";
+import { confirmPasswordReset } from "@/hooks/Authhooks/useResetPassword";
+import { useMutation } from "@tanstack/react-query";
+import { message } from "antd";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { confirmPasswordReset } from "@/hooks/Authhooks/useResetpassword";
@@ -12,8 +17,19 @@ export default function NewPasswordForm() {
   const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+  const handlePasswordConfirmationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirmation(e.target.value);
+  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -40,6 +56,7 @@ export default function NewPasswordForm() {
       message.success("Password reset successful. You can log in now.");
       setPassword("");
       setPasswordConfirmation("");
+
     },
     onError: (error) => {
       message.error("Error resetting password");
@@ -110,7 +127,8 @@ export default function NewPasswordForm() {
       </div>
 
       <div className="flex justify-center">
-      <button
+
+        <button
           disabled={isPending}
           onClick={handleSubmit}
           type="button"
@@ -119,6 +137,7 @@ export default function NewPasswordForm() {
           {isPending ? "Submitting ..." : "Finish"}
         </button>
       </div>
+
       <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left  flex  justify-center">
         Back To 
         <Link href={"/auth"} className="text-blue-600">

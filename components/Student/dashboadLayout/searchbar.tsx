@@ -12,6 +12,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useRouter } from "next/navigation";
 import Loader from "../loader";
 
+
 const SearchBar: React.FC = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -118,11 +119,10 @@ const SearchBar: React.FC = () => {
       if (resultToNavigate) {
 
         setShowDropdown(false); 
-
         if (resultToNavigate.type === "tutor") {
-          window.location.href = `/dashboard/subscriptions/${resultToNavigate.id}`;
+          router.push(`/dashboard/subscriptions/${resultToNavigate.id}`);
         } else {
-          window.location.href = `/dashboard/overview/${resultToNavigate.id}`;
+          router.push(`/dashboard/overview/${resultToNavigate.id}`);
         }
 
         setSearchTerm(""); 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CourseFields from "../uploadCourse/coursefileds";
+import CourseFields from "../uploadCourse/coursefields";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
@@ -34,10 +34,14 @@ const CourseModal: React.FC<CourseModalProps> = ({
     if (data?.data) {
       setCourseName(data.data.attributes.coursename);
       setCourseDescription(data.data.attributes.coursedescription);
-      setCourseRequirements(data.data.attributes.requirements.split('\n').join('<br/>'));
-      setLevel( data.data.attributes.level);
-      setDays( data.data.attributes.days);
-      setCourseLearning( data.data.attributes.expectations.split('\n').join('<br/>'));
+      setCourseRequirements(
+        data.data.attributes.requirements.split("\n").join("<br/>")
+      );
+      setLevel(data.data.attributes.level);
+      setDays(data.data.attributes.days);
+      setCourseLearning(
+        data.data.attributes.expectations.split("\n").join("<br/>")
+      );
 
       const cardImage = data.data.attributes.card?.data?.attributes?.url;
       if (cardImage) {
@@ -46,7 +50,8 @@ const CourseModal: React.FC<CourseModalProps> = ({
       const mediaId = data.data.attributes.card?.data?.id;
       setExistingMediaId(mediaId);
     }
-    const category = data?.data?.attributes?.categories?.data[0]?.attributes?.coursecategories;
+    const category =
+      data?.data?.attributes?.categories?.data[0]?.attributes?.coursecategories;
     if (category) {
       setCategory(category);
     }
@@ -67,17 +72,15 @@ const CourseModal: React.FC<CourseModalProps> = ({
     }
   }, [data]);
 
-  if(isLoading) {
-      <div className="flex items-center  min-h-screen justify-center p-20">
-        <Loader />
-      </div>
-    
+  if (isLoading) {
+    <div className="flex items-center  min-h-screen justify-center p-20">
+      <Loader />
+    </div>;
   }
 
-  if(error) {
-    message.error("Error displaying course information")
+  if (error) {
+    message.error("Error displaying course information");
   }
-
 
   return (
     <div
