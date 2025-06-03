@@ -21,7 +21,7 @@ const HomePage = () => {
   return (
     <>
       <div className="w-ful h-full pt-10 px-4 pb-3 container cursor-pointer">
-        <TutorNav sidebarMinimized={false}  />
+        <TutorNav  />
         <div className="flex flex-col sm:flex-row justify-between w-full items-center sm:mt-6 mt-10 space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="bg-black rounded-lg items-center p-4 sm:w-1/5 w-full flex gap-4">
           <Link href="/tutor/dashboard/uploadCourse" className="flex gap-2 items-center">
