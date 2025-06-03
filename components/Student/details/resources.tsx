@@ -7,6 +7,7 @@ import api from '@/lib/axios';
 import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import "react-loading-skeleton/dist/skeleton.css";
+import { stripHtmlTags } from '@/lib/utility';
 
 const Resources = () => {
   const searchParams = useSearchParams();
@@ -47,7 +48,7 @@ const Resources = () => {
   return (
     <div className="sm:ml-6 sm:mr-6">
       <div className="overflow-x-auto">
-        <h1>{instructions}</h1>
+        <h1>{stripHtmlTags(instructions)}</h1>
         {resources?.length > 0 ? (
           resources?.map((resource: any) => (
             <div

@@ -7,13 +7,13 @@ import SmallScreen from "./smallscreen";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import SkillerLogo from "@/components/ui/logo";
 import clsx from "clsx";
+import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 
-interface TutorNavProps {
-  sidebarMinimized: boolean;
-}
-const TutorNav: React.FC<TutorNavProps> = ({ sidebarMinimized }) => {
+const TutorNav = () => {
   const { user } = useAuthContext();
   const username = user?.username;
+    const { sidebarMinimized} = useSidebar();
+  
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleDropdownToggle = () => {

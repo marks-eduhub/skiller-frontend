@@ -1,5 +1,7 @@
 import React from "react";
 import {Topic } from "@/lib/types";
+import { stripHtmlTags } from "@/lib/utility";
+
 
 interface CourseOverviewProps {
   introduction: string;
@@ -29,13 +31,13 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({introduction,requirement
     <div>
       <div className="flex flex-col gap-2">
         <h1 className="text-xl mt-10 font-semibold">Brief Introduction</h1>
-        <p>{introduction}</p>
+        <p>{stripHtmlTags(introduction)}</p>
       </div>
       <h1 className="text-xl mt-10 font-semibold">What you&apos;ll learn</h1>
       {parsedExpectations.length > 0 ? (
         parsedExpectations.map((expectation, index) => (
           <div key={index} className="flex my-2">
-            <p className="ml-2">{expectation.text}</p>
+            <p className="ml-2">{ stripHtmlTags(expectation.text)}</p>
           </div>
         ))
       ) : (
@@ -44,7 +46,7 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({introduction,requirement
       <h1 className="text-xl mt-10 font-semibold">Requirements</h1>
       {parsedRequirements.length > 0 ? (
         parsedRequirements.map((requirement, index) => (
-          <p className="p-2" key={index}>{requirement.text}</p>
+          <p className="p-2" key={index}>{ stripHtmlTags(requirement.text)}</p>
         ))
       ) : (
         <p>No requirements available.</p>

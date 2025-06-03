@@ -151,8 +151,8 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   });
   
   const handleSaveChanges = async () => {
-    setIsSaving(true); 
-   try {
+    setIsSaving(true);
+    try {
       const mediaId = selectedImage
         ? await uploadMedia(selectedImage)
         : existingMediaId;
@@ -163,26 +163,37 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
         return;
       }
   
-      courseEdit(
-        {
-          courseId,
-          courseName,
-          level,
-          days,
-          courseLearning,
-          courseDescription,
-          courseRequirements,
-          mediaId,
-          category,
-          duration,
+      const categoryId =
+        category || data?.data?.attributes?.categories?.data[0]?.id;
+  
+      if (!categoryId) {
+        message.error("Category ID is required.");
+        setIsSaving(false);
+        return;
+      }
+  
+      const payload = {
+        courseId,
+        courseName: courseName || data?.data?.attributes?.coursename,
+        level: level || data?.data?.attributes?.level,
+        days: days || data?.data?.attributes?.days,
+        courseLearning: courseLearning || data?.data?.attributes?.expectations,
+        courseDescription:
+          courseDescription || data?.data?.attributes?.coursedescription,
+        courseRequirements:
+          courseRequirements || data?.data?.attributes?.requirements,
+        mediaId,
+        category: categoryId, 
+        duration: duration || data?.data?.attributes?.duration,
+      };
+  
+      console.log("Payload:", payload);
+  
+      courseEdit(payload, {
+        onSettled: () => {
+          setIsSaving(false);
         },
-        {
-         
-          onSettled: () => {
-            setIsSaving(false); 
-          },
-        }
-      );
+      });
     } catch (error) {
       message.error("Error editing course.");
       setIsSaving(false);
@@ -337,6 +348,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
             onChange={handleCategory}
             className="px-4 py-2 rounded-lg w-full sm:w-[300px] border border-gray-300 outline-none text-black bg-white shadow-md transition-all"
           >
+            
             {!category && (
               <option value="" className="text-gray-500">
                 Select a category for your course
@@ -346,16 +358,20 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
               (CategoryData: {
                 id: string;
                 attributes: { coursecategories: string };
-              }) => (
-                <option
-                  key={CategoryData.id}
-                  value={CategoryData.id}
-                  className="text-black bg-white hover:bg-gray-100"
-                >
-                  {CategoryData.attributes.coursecategories}
-                </option>
-              )
+              }) => {
+                console.log("Category in CourseFields:", category);
+                return (
+                  <option
+                    key={CategoryData.id}
+                    value={CategoryData.id}
+                    className="text-black bg-white hover:bg-gray-100"
+                  >
+                    {CategoryData.attributes.coursecategories}
+                  </option>
+                );
+              }
             )}
+            
           </select>
         )}
       </div>

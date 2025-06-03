@@ -4,7 +4,7 @@ import TutorNav from "./tutor-nav";
 const Resources = () => {
   return (
     <div className=" pl-9 sm:pt-10 pt-20 ">
-      <TutorNav sidebarMinimized={false}  />
+      <TutorNav />
 
       <div className="sm:flex w-full justify-between sm:pt-20 p-10 ">
         <div className="sm:w-1/4 h-[200px] border-2 border-black rounded-2xl p-8 mb-10">

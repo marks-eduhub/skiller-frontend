@@ -11,6 +11,7 @@ import { message } from "antd";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useSearchParams } from "next/navigation";
+import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 
 const SetQuiz = () => {
   const router = useRouter();
@@ -28,6 +29,7 @@ const SetQuiz = () => {
     { question: "", options: ["", ""], answers: "" },
   ]);
   const [isUploading, setIsUploading] = useState(false)
+  const {sidebarMinimized} = useSidebar()
 
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
@@ -192,7 +194,7 @@ const SetQuiz = () => {
         )}
       </div>
 
-      <h1 className="text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center">
+      <h1 className={`text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center ${sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"}`}>
         New Assignment
       </h1>
 

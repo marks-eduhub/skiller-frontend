@@ -50,11 +50,6 @@ const CourseModal: React.FC<CourseModalProps> = ({
       const mediaId = data.data.attributes.card?.data?.id;
       setExistingMediaId(mediaId);
     }
-    const category =
-      data?.data?.attributes?.categories?.data[0]?.attributes?.coursecategories;
-    if (category) {
-      setCategory(category);
-    }
 
     if (data?.data) {
       const durationBackend = data.data.attributes.duration;
@@ -69,6 +64,12 @@ const CourseModal: React.FC<CourseModalProps> = ({
 
         setDuration(`${hh}:${mm}:${ss}`);
       }
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data?.data?.attributes?.categories?.data[0]?.id) {
+      setCategory(data.data.attributes.categories.data[0].id); 
     }
   }, [data]);
 

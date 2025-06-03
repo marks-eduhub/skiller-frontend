@@ -5,7 +5,7 @@ import Link from "next/link";
 const page = () => {
   return (
     <div className="p-5 sm:pt-5">
-      <TutorNav sidebarMinimized={false} />
+      <TutorNav  />
 
         <div className="flex flex-col items-center text-center justify-center sm:pr-8 sm:pt-20">
           <h3 className="font-bold sm:text-[150px] text-[50px] sm:pt-20 pt-40 text-transparent outline mb-20 ">

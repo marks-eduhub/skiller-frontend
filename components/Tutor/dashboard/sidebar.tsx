@@ -4,15 +4,13 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import SideLinks from "./side-links";
 import { useMediaQuery } from "@mui/material";
 import SmallScreen from "./smallscreen";
+import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 
-interface SideBarProps {
-  sidebarMinimized: boolean;
-  toggleSidebar: () => void;
 
-}
-
-const SideBar: React.FC<SideBarProps> = ({ sidebarMinimized , toggleSidebar}) => {
+const SideBar = () => {
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
+  const { sidebarMinimized, toggleSidebar } = useSidebar();
+
 
   return (
     <>

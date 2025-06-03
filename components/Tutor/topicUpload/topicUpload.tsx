@@ -5,6 +5,7 @@ import TutorNav from "../dashboard/tutor-nav";
 import Step2 from "../uploadCourse/step2";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 interface Topic {
   id: number | null;
   topicname: string;
@@ -26,6 +27,7 @@ const TopicUpload = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const router = useRouter();
   const [isTopicUploaded, setIsTopicUploaded] = useState(false);
+  const {sidebarMinimized} = useSidebar()
 
   const addTopic = () => {
     const newTopic: Topic = {
@@ -61,7 +63,7 @@ const TopicUpload = () => {
   return (
     <div className="p-4">
       <div className="w-full sm:mt-2 flex items-center justify-between">
-        <div className="flex sm:gap-4 gap-6 sm:mt-4 mt-0 ">
+        <div className={`flex sm:gap-4 gap-6 sm:mt-4 mt-0 ${sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"}`}>
           <IoMdArrowRoundBack
             className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
             onClick={handleBack}
@@ -72,7 +74,6 @@ const TopicUpload = () => {
           </h1>
         </div>
         <div className="justify-end">
-          <TutorNav  sidebarMinimized={false}/>
         </div>
       </div>
 
