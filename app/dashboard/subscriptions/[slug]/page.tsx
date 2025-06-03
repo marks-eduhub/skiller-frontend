@@ -9,6 +9,7 @@ import { message } from "antd";
 import ProductContainer from "@/components/Student/courseCards/cardContainer";
 import { FaFacebook, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa";
 import Link from "next/link";
+import { stripHtmlTags } from "@/lib/utility";
 const TutorPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
   const {
@@ -153,7 +154,7 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
           </div>
         </div>
         <div className="mt-5 sm:mt-10">
-          <p className="mb-5">{tutorBiography || "No biography available."}</p>
+          <p className="mb-5">{stripHtmlTags(tutorBiography || "No biography available.")}</p>
         </div>
       </div>
 

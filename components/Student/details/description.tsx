@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import { BsBookmarkCheck, BsFillShareFill } from "react-icons/bs";
 import Loader from "../loader";
+import { stripHtmlTags } from "@/lib/utility";
 
 const Description = () => {
   const searchParams = useSearchParams();
@@ -27,7 +28,7 @@ const Description = () => {
       <div className="flex">
         <div className="mb-2 sm:ml-3 mr-3 p-6  w-full  ml-5 ">
             {description?.length > 0 ? (
-              <p>{description}</p>
+              <p>{ stripHtmlTags(description)}</p>
             ) : (
               <div className="flex items-center justify-center font-bold sm:p-10">
                 <p className="text-[18px]">

@@ -25,6 +25,7 @@ import QuestionModal from "./questionModal";
 import { useDebounce } from "use-debounce";
 import dynamic from "next/dynamic";
 import { FaComment } from "react-icons/fa";
+import { stripHtmlTags } from "../../../lib/utility";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -523,7 +524,7 @@ const Community = () => {
               return (
                 <div
                   key={index}
-                  className="flex relative flex-col shadow-lg  bg-white mb-10 px-4 sm:gap-6 border-b border-gray-100 pb-2  rounded-lg py-6"
+                  className="flex relative  flex-col shadow-lg  bg-white mb-10 px-4 sm:gap-6 border-b border-gray-100 pb-2  rounded-lg py-6"
                 >
                   <div key={index}>
                     <div className="flex items-center">
@@ -531,7 +532,7 @@ const Community = () => {
                         <Image
                           src={
                             q.attributes.user?.data?.attributes?.profilepicture
-                              ?.data?.attributes?.url
+                              ?.data?.attributes?.url || "/Ellipse 445.webp"
                           }
                           alt={q.attributes?.user?.data?.attributes?.username}
                           width={70}
@@ -542,7 +543,7 @@ const Community = () => {
 
                       <div className="flex flex-col">
                         <h1 className="font-semibold">
-                          <span className="font-normal">{plainQuestion}</span>
+                          <span className="font-normal">{stripHtmlTags(plainQuestion)}</span>
                         </h1>
 
                         <p className="text-gray-400">
@@ -593,7 +594,7 @@ const Community = () => {
                     <div className="overflow-auto custom-scrollbar">
                       {responses.length === 0 ? (
                         <p className="text-gray-700 mt-4 text-center">
-                          Be the first to respond!
+                          Be the first to respond.
                         </p>
                       ) : (
                         <>
@@ -635,12 +636,10 @@ const Community = () => {
                                     </p>
                                   </div>
                                   <div className="ml-2">
-                                    <div
-                                      className="text-gray-600 text-sm break-words overflow-hidden"
-                                      dangerouslySetInnerHTML={{
-                                        __html: response?.responseText,
-                                      }}
-                                    />
+                                    <div className="text-gray-600 text-sm break-words overflow-hidden">
+                                      {stripHtmlTags(plainQuestion)}
+                                    </div>
+                                      
                                     <div className="flex gap-1 mt-2">
                                       <button
                                         onClick={() =>
@@ -709,12 +708,10 @@ const Community = () => {
               );
             })
           ) : (
-            <div className="text-center py-10 text-gray-600">
-              <h2 className="text-xl font-semibold">No questions yet!</h2>
-              <p className="mt-4">
-                Start the conversation by asking a question.
-              </p>
-            </div>
+            <div className="flex flex-col items-center justify-center  my-10">
+            <h2 className="text-xl font-semibold">No questions yet!</h2>
+            <p className="mt-4">Start the conversation by asking a question.</p>
+          </div>
           )}
         </div>
       </div>

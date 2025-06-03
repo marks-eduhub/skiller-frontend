@@ -14,6 +14,7 @@ import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { useFetchTutors } from "@/hooks/useCourses";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -57,6 +58,8 @@ const UploadCourse = () => {
   const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
   const [isTopicUploaded, setIsTopicUploaded] = useState(false);
   const router = useRouter();
+  const { sidebarMinimized, toggleSidebar } = useSidebar();
+  
 
   const tutorId = data?.data?.find(
     (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
@@ -256,9 +259,10 @@ const UploadCourse = () => {
   };
 
   return (
-    <div className="p-6 w-full flex flex-col sm:mt-0 mt-12">
+    <div className={`p-6 w-full flex flex-col sm:mt-0 mt-12 ${sidebarMinimized ? "p" : "sm:mt-0 mt-0"}`}>
       {currentStep === 1 && (
-        <div className="flex gap-4 sm:mt-4 my-2">
+        <div className={`flex gap-4 my-2 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px] "}`}>
+         
           <IoMdArrowRoundBack
             className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
             onClick={handleBack}
@@ -267,10 +271,10 @@ const UploadCourse = () => {
         </div>
       )}
       {currentStep === 2 && (
-        <h1 className="text-[20px] mb-6">Upload a topic</h1>
+        <h1 className={`text-[20px] mb-6 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px]"}`}>Upload a topic</h1>
       )}
       {currentStep === 3 && (
-        <h1 className="text-[20px] mb-6 sm:mt-0 mt-5">Add resources</h1>
+        <h1 className={`text-[20px] mb-6 sm:mt-0 mt-5 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px]"}`}>Add resources</h1>
       )}
       <StepTracker currentStep={currentStep} />
 

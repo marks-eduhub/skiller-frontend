@@ -12,12 +12,15 @@ import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
 import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
+import { useSidebar } from "@/components/AuthProvider/sidebarContext";
+import { stripHtmlTags } from "@/lib/utility";
 
 const CourseOverview = () => {
   const [Tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
   const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(Number(slug));
+  const {sidebarMinimized} = useSidebar()
 
   const handleClicks = (tabName: string) => {
     setTab(tabName);
@@ -45,7 +48,7 @@ const CourseOverview = () => {
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
-        <div className="flex sm: items-center">
+        <div className={`flex sm: items-center ${sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"}`}>
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
@@ -64,9 +67,7 @@ const CourseOverview = () => {
             <h1>Learner(s)</h1>
           </div>
         </div>
-        <div className="justify-end">
-          <TutorNav sidebarMinimized={false} />
-        </div>
+        
       </div>
 
       <div
@@ -79,7 +80,7 @@ const CourseOverview = () => {
           <h1 className="text-white font-bold sm:text-[40px] sm:w-2/3 mb-10 text-[30px] sm:mx-0 mx-2">
             {coursename}
           </h1>
-          <p className="text-white mt-6 sm:w-2/3 ">{description}</p>
+          <p className="text-white mt-6 sm:w-2/3 ">{stripHtmlTags(description)}</p>
         </div>
       </div>
 

@@ -699,18 +699,18 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         </div>
 
         {videoPreview ? (
-          <div className="flex flex-col mt-5 items-center justify-center border sm:w-full border-black relative h-[200px] rounded">
+          <div className="flex flex-col mt-5 items-center justify-center border sm:w-[40%] border-black relative h-[200px] rounded">
             <iframe
               src={videoPreview}
               width="100%"
-              height="500"
+              height="600"
               allow="autoplay; fullscreen"
               allowFullScreen
               className="rounded-lg"
             />
           </div>
         ) : (
-          <div className="flex flex-col mt-5 items-center justify-center border sm:w-full border-black relative h-[200px] rounded">
+          <div className="flex flex-col mt-5 items-center justify-center border sm:w-[50%] border-black relative h-[200px] rounded">
             <p className="text-gray-500 mb-5">Attach a video to your topic</p>
             <GrCloudUpload className="text-blue-800 w-10 h-10" />
             <span className="text-gray-500">
