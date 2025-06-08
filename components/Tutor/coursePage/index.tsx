@@ -11,6 +11,7 @@ import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
 import { useFetchCourseRate, useFetchEnrolledCourses } from "@/hooks/useSubmit";
+import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
 import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 import { stripHtmlTags } from "@/lib/utility";
 
@@ -21,6 +22,7 @@ const CourseOverview = () => {
   const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(Number(slug));
   const { sidebarMinimized } = useSidebar();
   const { data: rateCourse } = useFetchCourseRate();
+  const {sidebarMinimized} = useSidebar()
 
   const handleClicks = (tabName: string) => {
     setTab(tabName);
@@ -66,6 +68,7 @@ const averageRating =
             sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"
           }`}
         >
+
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
@@ -83,6 +86,7 @@ const averageRating =
             <h1>Learner(s)</h1>
           </div>
         </div>
+
       </div>
 
       <div
@@ -95,9 +99,8 @@ const averageRating =
           <h1 className="text-white font-bold sm:text-[40px] sm:w-2/3 mb-10 text-[30px] sm:mx-0 mx-2">
             {coursename}
           </h1>
-          <p className="text-white mt-6 sm:w-2/3 ">
-            {stripHtmlTags(description)}
-          </p>
+
+          <p className="text-white mt-6 sm:w-2/3 ">{stripHtmlTags(description)}</p>
         </div>
       </div>
 

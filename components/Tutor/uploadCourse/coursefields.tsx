@@ -359,6 +359,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
                 id: string;
                 attributes: { coursecategories: string };
               }) => {
+
                 return (
                   <option
                     key={CategoryData.id}

@@ -31,6 +31,7 @@ const SetQuiz = () => {
   const [isUploading, setIsUploading] = useState(false);
   const { sidebarMinimized } = useSidebar();
 
+
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
       courseId,
@@ -197,6 +198,7 @@ const SetQuiz = () => {
           sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"
         }`}
       >
+
         New Assignment
       </h1>
 
