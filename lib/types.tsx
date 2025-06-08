@@ -87,7 +87,7 @@ export interface Test {
     test_results:[];
     quizname: string;
     testdescription: string;
-    passmark: string;
+    passmark: number;
     testduration: string;
     testname: string;
     questions: {

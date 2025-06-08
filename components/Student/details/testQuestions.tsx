@@ -9,6 +9,7 @@ import {
   createTestResult,
   updateTestResultScore,
   UseUpdateQuestionResult,
+  useFetchTests
 } from "@/hooks/useSubmit";
 import { CorrectAnswer} from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
@@ -18,6 +19,8 @@ import React, { useEffect, useState } from "react";
 import CustomModal from "./modal";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
+import { stripHtmlTags } from "@/lib/utility";
+
 const TestQuestions= () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -38,6 +41,7 @@ const TestQuestions= () => {
     Record<number, number>
   >({});
   const { data, isLoading, error } = useFetchQuizQuestions(Number(testId));
+  const {data: test} = useFetchTests(Number(topicId), Number(userId));
   const { data: Resultdata } = UsefetchTestResult(
     Number(testId),
     Number(userId)
@@ -296,6 +300,8 @@ const TestQuestions= () => {
     indexOfLastQuestion
   );
 
+  const testname = test?.data[0]?.attributes?.testname || 'Test'
+
   if (isLoading) {
     return (
       <div className="ml-5">
@@ -334,7 +340,7 @@ const TestQuestions= () => {
           Back
         </button>
         <h1 className="font-semibold text-lg">
-          Quiz one - Typescript fundamentals
+          {testname}
         </h1>
         <button
           className="bg-white text-black border border-gray-600 py-2 px-8 rounded-md w-[100px] flex justify-start"
@@ -355,7 +361,7 @@ const TestQuestions= () => {
                 <h1 className="underline">Question {index + 1}:</h1>
                 <div className="sm:ml-5 mt-4 bg-white p-6">
                   <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between">
-                    <h1 className="font-semibold my-3">{questionText}</h1>
+                    <h1 className="font-semibold my-3">{stripHtmlTags(questionText)}</h1>
                     <button
                       className="sm:ml-4 border-2 border-black rounded-md bg-white sm:py-1 sm:px-4 sm:w-[150px] w-1/2 sm:mb-0 mb-4"
                       onClick={() => handleResetAnswer(questionItem.id)}

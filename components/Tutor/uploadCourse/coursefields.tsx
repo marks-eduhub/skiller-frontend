@@ -359,7 +359,6 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
                 id: string;
                 attributes: { coursecategories: string };
               }) => {
-                console.log("Category in CourseFields:", category);
                 return (
                   <option
                     key={CategoryData.id}

@@ -139,30 +139,33 @@ const CourseReview = () => {
     setIsOpen(false);
   };
 
-  const handleReview = () => {
-    if(rating === 0) {
-      message.error("Rating has to be greater than 0")
-      return
+const handleReview = () => {
+    if (rating === 0) {
+      message.error("Rating has to be greater than 0");
+      return;
     }
-    if(comment.trim()) {
-      setIsPosting(true)
-      setIsOpen(false)
+    if (comment.trim()) {
+      setIsPosting(true);
+      setIsOpen(false);
       try {
-        if(reviews.length > 0) {
-          reviewUpdate()
+        const userReview = reviews.find(
+          (review: any) =>
+            review?.attributes?.user?.data?.id === userId
+        );
+        if (userReview) {
+          reviewUpdate();
         } else {
-          reviewPosting()
+          reviewPosting();
         }
       } catch (error) {
         message.error("There was an error posting the review.");
       } finally {
-        setIsPosting(false)
+        setIsPosting(false);
       }
-
     } else {
-      message.error("Review cannot be empty")
+      message.error("Review cannot be empty");
     }
-  }
+  };
 
 
   if(loadingreviews) {
@@ -207,10 +210,10 @@ const CourseReview = () => {
             {reviews?.map((review: any) => {
               const name =
                 review?.attributes?.user?.data?.attributes?.username ||
-                "Anonymous User"; 
+                "User"; 
               const image =
                 review?.attributes?.user?.data?.attributes?.profilepicture?.data
-                  ?.attributes?.url || "/Ellipse 445.webp"; 
+                  ?.attributes?.url || "/profilepicture.webp"; 
               const reviewText = review?.attributes?.review;
               const reviewRating = review?.attributes?.score;
 

@@ -19,6 +19,7 @@ import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import queryClient from "@/lib/queryClient";
+import QualificationsDropdown from "../../../lib/Qualifications";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -82,7 +83,7 @@ const ProfilePage: React.FC = () => {
         setUploadImage(profilePicUrl);
         setIsImageLoading(true);
       } else {
-        setUploadImage("/Ellipse 445.webp");
+        setUploadImage("/profilepicture.webp");
         setIsImageLoading(false);
       }
 
@@ -156,7 +157,7 @@ const ProfilePage: React.FC = () => {
     } else {
       try {
         await deleteProfilePicture(userId, String(exisitingprofileId));
-        setUploadImage("/Ellipse 445.webp");
+        setUploadImage("/profilepicture.webp");
         setImage(null);
         message.success("Profile picture removed successfully.");
       } catch (error) {
@@ -196,14 +197,14 @@ const ProfilePage: React.FC = () => {
         Biography,
         Qualifications
       );
-  
+
       const tutorId =
         response?.id || response?.data?.id || response?.data?.data?.id || null;
-  
+
       if (!tutorId) {
         throw new Error("Failed to retrieve tutor ID from the response");
       }
-  
+
       return tutorId;
     },
     onError: () => {
@@ -211,10 +212,10 @@ const ProfilePage: React.FC = () => {
     },
     onSuccess: (tutorId) => {
       message.success("Tutor created successfully");
-      queryClient.invalidateQueries({queryKey:["profile_tutorId", tutorId]}); 
+      queryClient.invalidateQueries({ queryKey: ["profile_tutorId", tutorId] });
     },
   });
-  
+
   const { mutate: postStudentProfile } = useMutation({
     mutationFn: async ({
       studentname,
@@ -287,7 +288,6 @@ const ProfilePage: React.FC = () => {
     },
   });
 
-
   const hasChanges = () => {
     return (
       firstName !== initialData.firstName ||
@@ -341,32 +341,79 @@ const ProfilePage: React.FC = () => {
     try {
       if (toggle) {
         if (tutorId) {
-          updateTutorProfile(
-            {
-              tutorId,
-              tutorname: `${firstName} ${lastName}`,
-              role,
-              lastName,
-              firstName,
-              Biography,
-              Qualifications,
-            },
-            {
-              onSettled: () => setIsSaving(false),
-            }
-          );
-        } else {
-          const newTutorId = await postTutorProfile({
-            userId,
-            tutorname: `${firstName} ${lastName}`,
-            role,
-            lastName,
-            firstName,
-            Biography,
-            Qualifications,
+          await new Promise<void>((resolve, reject) => {
+            updateTutorProfile(
+              {
+                tutorId,
+                tutorname: `${firstName} ${lastName}`,
+                role,
+                lastName,
+                firstName,
+                Biography,
+                Qualifications,
+              },
+              {
+                onSuccess: () => resolve(),
+                onError: reject,
+                onSettled: () => setIsSaving(false),
+              }
+            );
           });
 
-       
+          await new Promise<void>((resolve, reject) => {
+            postStudentProfile(
+              {
+                studentname: `${firstName} ${lastName}`,
+                profilepicture: profilePictureId,
+                lastName,
+                firstName,
+                userId,
+                socialLinks: updatedSocialLinks,
+              },
+              {
+                onSuccess: () => resolve(),
+                onError: reject,
+                onSettled: () => setIsSaving(false),
+              }
+            );
+          });
+        } else {
+          await new Promise<void>((resolve, reject) => {
+            postTutorProfile(
+              {
+                userId,
+                tutorname: `${firstName} ${lastName}`,
+                role,
+                lastName,
+                firstName,
+                Biography,
+                Qualifications,
+              },
+              {
+                onSuccess: () => resolve(),
+                onError: reject,
+                onSettled: () => setIsSaving(false),
+              }
+            );
+          });
+
+          await new Promise<void>((resolve, reject) => {
+            postStudentProfile(
+              {
+                studentname: `${firstName} ${lastName}`,
+                profilepicture: profilePictureId,
+                lastName,
+                firstName,
+                userId,
+                socialLinks: updatedSocialLinks,
+              },
+              {
+                onSuccess: () => resolve(),
+                onError: reject,
+                onSettled: () => setIsSaving(false),
+              }
+            );
+          });
         }
       } else {
         postStudentProfile(
@@ -382,7 +429,6 @@ const ProfilePage: React.FC = () => {
             onSettled: () => setIsSaving(false),
           }
         );
-        // message.success("Student profile created successfully!");
       }
     } catch (error) {
       message.error("Failed to save profile data. Please try again.");
@@ -415,7 +461,7 @@ const ProfilePage: React.FC = () => {
           ) : (
             <div className="w-32 h-32 overflow-hidden rounded-full">
               <Image
-                src={uploadImage || "/Ellipse 445.webp"}
+                src={uploadImage || "/profilepicture.webp"}
                 alt="userimage"
                 width={120}
                 height={120}
@@ -425,7 +471,7 @@ const ProfilePage: React.FC = () => {
                 }}
                 onError={() => {
                   setIsImageLoading(false);
-                  setUploadImage("/Ellipse 445.webp");
+                  setUploadImage("/profilepicture.webp");
                 }}
               />
             </div>
@@ -539,32 +585,26 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col">
             <div className="sm:mb-10 mt-4 ">
               <div className="flex items-center  w-full mb-5">
-                <label className="block text-sm mb-1 mr-16">Tutor role</label>
+                <label className="block text-sm mb-1 mr-16">Tutor title</label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => {
                     setRole(e.target.value);
                   }}
-                  className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
+                  className="border border-black sm:w-[250px] rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
                 />
               </div>
 
-              <div className="flex items-center  w-full my-5">
-                <label className="block text-sm mb-1 mr-2">
-                  Tutor qualifications
-                </label>
-                <input
-                  type="text"
-                  value={Qualifications}
-                  onChange={(e) => {
-                    setQualifications(e.target.value);
-                  }}
-                  className="border border-black w-2/3 rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
-                />
-              </div>
+              <QualificationsDropdown
+                value={Qualifications}
+                onChange={setQualifications}
+                label="Tutor qualifications"
+                required
+                className="w-2/3"
+              />
 
-              <label className="block text-sm mb-4 ">
+              <label className="block text-sm mt-8 mb-3 font-semibold ">
                 Enter your biography
               </label>
 
@@ -578,7 +618,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
 
-              <div className="mt-20 ">
+              {/* <div className="mt-20 ">
                 <span>
                   This screenshot shows how you can switch between your student
                   and tutor profile
@@ -590,11 +630,11 @@ const ProfilePage: React.FC = () => {
                   height={200}
                   className="rounded-lg"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         )}
-        <div className="mb-4 grid grid-cols-2 gap-4">
+        <div className="mb-4  mt-2 grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm mb-1">Email</label>
             <input

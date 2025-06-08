@@ -1,23 +1,41 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { useFetchTutorCourses} from "@/hooks/useCourses";
+import { useFetchTutorCourses } from "@/hooks/useCourses";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
+import { useFetchCourseRate } from "@/hooks/useSubmit";
 
 const MainPage = () => {
   const { user } = useAuthContext();
   const router = useRouter();
   const username = user?.username;
-  const { data, isLoading, error } = useFetchTutorCourses ();
+  const { data, isLoading, error } = useFetchTutorCourses();
   const coursedata = data?.data;
   const [loadingCourseId, setLoadingCourseId] = useState<number | null>(null);
+
+  const { data: rateCourse, isLoading: isLoadingRatings } = useFetchCourseRate();
+  const courseRatings = rateCourse?.data || [];
+
+  const getAverageRating = (courseId: number) => {
+    const ratingsForCourse = courseRatings.filter(
+      (rating: any) => rating?.attributes?.course?.data?.id === courseId
+    );
+    const totalRatings = ratingsForCourse.length;
+    if (totalRatings === 0) return "No rating";
+    const avg =
+      ratingsForCourse.reduce(
+        (sum: number, rating: any) => sum + (rating?.attributes?.score || 0),
+        0
+      ) / totalRatings;
+    return avg.toFixed(1);
+  };
 
   const handleCourseClick = (courseId: number) => {
     setLoadingCourseId(courseId);
@@ -25,8 +43,9 @@ const MainPage = () => {
   };
 
   const tutorCourses = coursedata?.filter(
-  (course: any) => course.attributes.tutor?.data?.attributes?.user?.data?.id === user?.id
-   );
+    (course: any) =>
+      course.attributes.tutor?.data?.attributes?.user?.data?.id === user?.id
+  );
 
   if (isLoading) {
     return (
@@ -73,6 +92,7 @@ const MainPage = () => {
               const image =
                 courseAttributes?.card?.data?.attributes?.url ||
                 "/placeholder.png";
+              const averageRating = getAverageRating(course.id);
 
               return (
                 <div
@@ -106,8 +126,14 @@ const MainPage = () => {
                       <div className="flex justify-between mt-2">
                         <p className="italic">{courseAttributes.duration}</p>
                         <div className="flex items-center gap-1">
-                          <StarFilledIcon className="w-4 h-4 text-black" />
-                          <p>{courseAttributes.averageRating || "No rating"}</p>
+                           ⭐
+                          <p>
+                            {isLoadingRatings ? (
+                              <Skeleton width={30} />
+                            ) : (
+                              averageRating
+                            )}
+                          </p>
                         </div>
                       </div>
                       {/* <p
