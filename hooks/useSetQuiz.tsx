@@ -75,7 +75,7 @@ const fetchTopic = async (courseId:number, userId:number) => {
     testdescription: string,
     testduration: string,
     topicId: string,
-    passmark: string
+    passmark: number
   ) => {
 
   

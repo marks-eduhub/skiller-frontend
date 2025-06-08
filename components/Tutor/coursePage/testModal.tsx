@@ -28,7 +28,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
   const [testname, setTestname] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
-  const [passmark, setPassmark] = useState("");
+  const [passmark, setPassmark] = useState<number>(0);
   const [quizData, setQuizData] = useState<any[]>([]);
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -78,7 +78,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
       testdescription: string;
       testduration: string;
       topicId: string;
-      passmark: string;
+      passmark: number;
     }) => {
       return await EditTest(
         testId,

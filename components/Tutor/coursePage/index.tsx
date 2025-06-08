@@ -11,7 +11,6 @@ import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
 import { useFetchCourseRate, useFetchEnrolledCourses } from "@/hooks/useSubmit";
-import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
 import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 import { stripHtmlTags } from "@/lib/utility";
 
@@ -22,7 +21,6 @@ const CourseOverview = () => {
   const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(Number(slug));
   const { sidebarMinimized } = useSidebar();
   const { data: rateCourse } = useFetchCourseRate();
-  const {sidebarMinimized} = useSidebar()
 
   const handleClicks = (tabName: string) => {
     setTab(tabName);
