@@ -260,7 +260,7 @@ const ProfilePage: React.FC = () => {
       Biography,
       Qualifications,
     }: {
-      tutorId: number;
+      tutorId: string;
       tutorname: string;
       role: string;
       lastName: string;

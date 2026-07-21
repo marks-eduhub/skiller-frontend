@@ -18,8 +18,6 @@ export const addTutor = async (
         user: userId,
         tutorname,
         role,
-        lastName,
-        firstName,
         Biography,
         Qualifications,
       },
@@ -114,7 +112,7 @@ export const useFetchTutorDetails = (userId: number) => {
 };
 
 export const updateTutor = async (
-  tutorId: number,
+  tutorId: string,
   tutorname: string,
   role: string,
   lastName: string,
@@ -126,11 +124,8 @@ export const updateTutor = async (
   try {
     const response = await api.put(`/api/tutors/${tutorId}`, {
       data: {
-        tutorId,
         tutorname,
         role,
-        lastName,
-        firstName,
         Biography,
         Qualifications,
       },

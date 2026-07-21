@@ -148,7 +148,9 @@ const TutorPage = ({ params }: { params: { slug: string } }) => {
             <h2 className="mt-3 sm:mt-0">
               <span className="underline">Qualifications:</span>
               <span className="text-gray-600 sm:ml-2">
-                {tutorQualifications || "No qualifications available"}
+                {stripHtmlTags(
+                  tutorQualifications || "No qualifications available"
+                )}
               </span>
             </h2>
           </div>

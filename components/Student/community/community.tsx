@@ -500,7 +500,7 @@ const Community = () => {
                       className="p-3 cursor-pointer hover:bg-gray-100"
                       onClick={() => handleSearchResultClick(item)}
                     >
-                      {item.attributes.Question.replace(/(\*\*|\_)/g, "")}
+                      {stripHtmlTags(item.attributes.Question)}
                     </div>
                   ))}
                 </div>
@@ -521,7 +521,6 @@ const Community = () => {
               const { Question } = q.attributes;
               const questionId = q.id;
               const responses = responsesMap[questionId] || [];
-              const plainQuestion = Question.replace(/(\*\*|\_)/g, "");
               const nameofquestioner =
                 q.attributes?.user?.data?.attributes?.username;
               return (
@@ -547,7 +546,7 @@ const Community = () => {
 
                       <div className="flex flex-1 flex-col">
                         <h1 className="text-[15px] font-semibold leading-6 sm:text-[16px]">
-                          <span className="font-normal">{stripHtmlTags(plainQuestion)}</span>
+                          <span className="font-normal">{stripHtmlTags(Question)}</span>
                         </h1>
 
                         <p className="mt-1 text-xs text-gray-400 sm:text-sm">
