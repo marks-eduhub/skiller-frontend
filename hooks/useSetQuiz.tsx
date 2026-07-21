@@ -40,7 +40,7 @@ export const PostQuestion = async(questions:string, options:string[], answers:st
 
 const fetchTopic = async (courseId:number, userId:number) => {
 
-    const response = await api.get (`/api/topics?filters[course][id]=${courseId}&user=${userId}&populate=course,user`);
+    const response = await api.get (`/api/topics?filters[course][id]=${courseId}&user=${userId}&populate=course`);
 
     return response.data;
   };

@@ -19,9 +19,9 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ courses ,containerWidth }) => {
   return (
-    <div className="flex overflow-x-auto py-4">
+    <div className="flex overflow-x-auto py-3">
       {courses.map((course) => (
-        <div key={course.id} className="flex-none w-64 mx-4 mr-2">
+        <div key={course.id} className="mr-2 flex-none w-60 px-2">
           <ProductCard course={course}  />
         </div>
       ))}

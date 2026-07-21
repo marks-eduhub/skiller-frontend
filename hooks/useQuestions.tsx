@@ -2,7 +2,7 @@ import api from "@/lib/axios";
 import {  useQuery } from "@tanstack/react-query";
 
 const fetchQuestions = async (testId: number) => {
-    const response = await api.get(`/api/questions?filters[test]=${testId}&populate=questions`);
+    const response = await api.get(`/api/questions?filters[test]=${testId}`);
     return response.data; 
 };
 

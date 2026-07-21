@@ -104,15 +104,15 @@ const SignupForm = () => {
     } catch (error) {}
   };
   return (
-    <div className="bg-[#E9E9E9] h-screen w-[100%] flex flex-col p-[1.5rem] text-black items-center overflow-y-auto overflow-x-hidden relative ">
+    <div className="relative flex min-h-screen w-full flex-col items-center overflow-x-hidden bg-[#E9E9E9] px-4 py-8 text-black sm:px-6">
       <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
-      <h2 className="font-[400] sm:text-[50px] text-[38px]">
+      <h2 className="text-center text-[34px] font-[400] sm:text-[42px]">
         {data.registerForm.title}
       </h2>
-      <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[1.5rem] mt-[2rem]">
+      <div className="mt-8 flex w-full max-w-[960px] flex-col gap-6">
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="sm:text-[22px]">First Name</label>
+            <label className="text-[16px] font-medium sm:text-[18px]">First Name</label>
             <input
               type="text"
               name="firstName"
@@ -123,7 +123,7 @@ const SignupForm = () => {
             />
           </div>
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="sm:text-[22px]">Last Name</label>
+            <label className="text-[16px] font-medium sm:text-[18px]">Last Name</label>
             <input
               type="text"
               name="lastName"
@@ -137,7 +137,7 @@ const SignupForm = () => {
 
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="sm:text-[22px]">Email Address</label>
+            <label className="text-[16px] font-medium sm:text-[18px]">Email Address</label>
             <input
               type="text"
               name="email"
@@ -148,7 +148,7 @@ const SignupForm = () => {
             />
           </div>
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="sm:text-[22px]">Username</label>
+            <label className="text-[16px] font-medium sm:text-[18px]">Username</label>
             <input
               type="text"
               name="username"
@@ -162,7 +162,7 @@ const SignupForm = () => {
 
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start w-full">
-            <label className="  sm:text-[22px]">Password</label>
+            <label className="text-[16px] font-medium sm:text-[18px]">Password</label>
             <div className="relative  sm:w-[22rem] w-full">
               <input
                 type={passwordVisible ? "text" : "password"}
@@ -182,7 +182,7 @@ const SignupForm = () => {
             </div>
           </div>
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="  sm:text-[22px]">Confirm password</label>
+            <label className="text-[16px] font-medium sm:text-[18px]">Confirm password</label>
             <div className="relative sm:w-[22rem] w-full">
               <input
                 type={confirmPasswordVisible ? "text" : "password"}
@@ -221,10 +221,10 @@ const SignupForm = () => {
           <button
             onClick={handleSubmit}
             type="submit"
-            className="bg-black text-white rounded-lg py-3 text-xl flex justify-center w-full max-w-96 my-4"
+            className="my-2 flex min-h-[48px] w-full max-w-96 items-center justify-center rounded-lg bg-black px-4 text-base text-white transition disabled:cursor-not-allowed disabled:opacity-70"
             disabled={isPending}
           >
-            {isPending ? "Loading..." : "Sign Up"}
+            {isPending ? "Creating account..." : "Sign Up"}
           </button>
         </div>
 
@@ -238,16 +238,16 @@ const SignupForm = () => {
           <button
             onClick={handleGoogleSignUp}
             disabled={isPendingGoogle}
-            className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
+            className="my-2 flex min-h-[48px] w-full max-w-96 items-center justify-center gap-2 rounded-md border border-black px-4 text-base transition disabled:cursor-not-allowed disabled:opacity-70"
           >
             <Image
               src={data.registerForm.action.googlelogo}
               alt={"google"}
-              width={50}
-              height={50}
+              width={32}
+              height={32}
             />
             <p className="text-[16px]">
-              {isPendingGoogle ? "Loading..." : "Sign In with Google"}
+              {isPendingGoogle ? "Redirecting..." : "Sign In with Google"}
             </p>
           </button>
         </div>

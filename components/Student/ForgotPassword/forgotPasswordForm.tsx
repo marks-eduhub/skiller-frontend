@@ -40,28 +40,28 @@ export default function ForgotPassword() {
     requestPassword();
   };
   return (
-    <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
-      <div className="flex flex-col items-center max-w-md w-full">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-[#E9E9E9] px-4 py-10 sm:px-6">
+      <div className="flex w-full max-w-[460px] flex-col items-center">
         <Link
           href={"/auth"}
-          className="flex justify-center items-center rounded-[8px] border-[4px] md:rounded-[14px] md:border-[4px] border-black px-2 sm:py-3 font-[700] text-[18px] w-[60px]  md:w-[58px] h-[52px] mt-10 absolute top-0 left-10"
+          className="absolute left-4 top-4 flex h-[48px] w-[48px] items-center justify-center rounded-[12px] border-[3px] border-black text-[18px] font-[700] sm:left-8 sm:top-8"
         >
           <MdArrowBackIosNew width={60} height={30} fontWeight={100} />
         </Link>
 
         <div className="fixed -top-[17rem] -right-[4.5rem]  sm:-bottom-[9rem] sm:-right-[6.5rem] h-[20rem] w-[20rem]  bg-black opacity-[14%] transform rounded-full" />
 
-        <button className="rounded-[14px] border-4 border-solid border-black text-black text-[18px] w-[120px] h-[50px] mt-10 absolute top-0 right-10">
+        <button className="absolute right-4 top-4 h-[46px] w-[110px] rounded-[12px] border-[3px] border-solid border-black text-[16px] sm:right-8 sm:top-8">
           SKILLER
         </button>
 
-        <div className="flex flex-col items-center w-full  sm:gap-[1.5rem] gap-[2.2rem] mt-[2rem]">
-          <h2 className="font-[600] text-[30px] mt-[1rem] mb-2 text-center sm:text-left">
+        <div className="mt-16 flex w-full flex-col items-center gap-6">
+          <h2 className="mb-1 text-center text-[30px] font-[600] sm:text-[36px]">
             {data.forgotPassword.title}
           </h2>
 
-          <div className="flex flex-col items-start">
-            <div className="text-[18px] mx-auto mb-5 ">
+          <div className="flex w-full flex-col items-start">
+            <div className="mb-4 text-[16px] text-gray-700">
               Enter Registered Email Address
             </div>
             <input
@@ -70,7 +70,7 @@ export default function ForgotPassword() {
               placeholder="black@gmail.com"
               type="text"
              
-              className="rounded-md border border-gray-400 bg-inherit px-3 py-[1.3rem] w-full sm:w-[25rem]"
+              className="w-full rounded-md border border-gray-400 bg-inherit px-3 py-4"
             />
           </div>
         </div>
@@ -78,12 +78,12 @@ export default function ForgotPassword() {
         <button 
           type="button"
           disabled={isPending}
-          className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mt-[50px] mx-auto w-[300px]" onClick={handleSubmit}
+          className="mx-auto mt-8 flex min-h-[48px] w-full max-w-[320px] items-center justify-center rounded-md bg-black px-4 text-sm text-zinc-300 transition disabled:cursor-not-allowed disabled:opacity-70 sm:text-base" onClick={handleSubmit}
         >
-          {isPending ? "Submitting ..." : "Submit"}
+          {isPending ? "Sending reset link..." : "Submit"}
         </button>
 
-        <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left ">
+        <div className="mx-auto mt-8 text-center text-base font-bold text-gray-500">
           Back To
           <Link href={"/auth"} className="text-blue-600">
             Login

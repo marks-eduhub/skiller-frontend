@@ -61,24 +61,24 @@ export default function NewPasswordForm() {
   };
 
   return (
-    <div className="bg-[#E9E9E9] w-full h-screen">
-      <button className="rounded-[7px] border-4 border-solid border-black text-black text-[20px] w-[145px] h-[60px] mt-[2rem] absolute top-0 right-[2rem]">
+    <div className="min-h-screen w-full bg-[#E9E9E9] px-4 py-8 sm:px-6">
+      <button className="absolute right-4 top-4 h-[48px] w-[118px] rounded-[10px] border-[3px] border-solid border-black text-[16px] sm:right-8 sm:top-8">
         SKILLER
       </button>
-      <h2 className="font-[550] text-[35px] pt-[6rem] flex justify-center mb-2 p-6">
+      <h2 className="mb-2 flex justify-center px-6 pt-20 text-[32px] font-[550] sm:text-[38px]">
         New Password
       </h2>
 
       <div className="flex flex-col items-center">
-        <div className="mb-4 flex flex-col p-6 relative w-[32rem]">
-          <label className=" text-[20px] mb-4">Enter password</label>
+        <div className="relative mb-3 flex w-full max-w-[520px] flex-col p-4 sm:p-6">
+          <label className="mb-3 text-[16px] font-medium sm:text-[18px]">Enter password</label>
           <div className="relative">
             <input
               placeholder="************"
               type={passwordVisible ? "text" : "password"}
               onChange={handlePasswordChange}
               value={password}
-              className="bg-inherit border border-gray-400 rounded-md px-3 py-[1.3rem] w-full pr-10"
+              className="w-full rounded-md border border-gray-400 bg-inherit px-3 py-4 pr-10"
             />
             <span
               onClick={togglePasswordVisibility}
@@ -89,15 +89,15 @@ export default function NewPasswordForm() {
           </div>
         </div>
 
-        <div className="mb-8 flex flex-col p-6 relative w-[32rem]">
-          <label className=" text-[20px] mb-5">Repeat Password</label>
+        <div className="relative mb-6 flex w-full max-w-[520px] flex-col p-4 sm:p-6">
+          <label className="mb-3 text-[16px] font-medium sm:text-[18px]">Repeat Password</label>
           <div className="relative">
             <input
               placeholder="***********"
               onChange={handlePasswordConfirmationChange}
               value={passwordConfirmation}
               type={confirmPasswordVisible ? "text" : "password"}
-              className="bg-inherit border border-gray-400 rounded-md px-3 py-[1.3rem] w-full pr-10"
+              className="w-full rounded-md border border-gray-400 bg-inherit px-3 py-4 pr-10"
             />
             <span
               onClick={toggleConfirmPasswordVisibility}
@@ -115,13 +115,13 @@ export default function NewPasswordForm() {
           disabled={isPending}
           onClick={handleSubmit}
           type="button"
-          className="bg-[#000] rounded-[7px] text-[25px] text-white px-4 py-1 w-[470px]"
+          className="flex min-h-[48px] w-full max-w-[420px] items-center justify-center rounded-[8px] bg-[#000] px-4 py-2 text-[16px] text-white transition disabled:cursor-not-allowed disabled:opacity-70 sm:text-[18px]"
         >
-          {isPending ? "Submitting ..." : "Finish"}
+          {isPending ? "Updating password..." : "Finish"}
         </button>
       </div>
 
-      <div className="font-bold text-gray-500 text-lg mt-[50px] mx-auto text-center sm:text-left  flex  justify-center">
+      <div className="mx-auto mt-8 flex justify-center text-center text-base font-bold text-gray-500">
         Back To 
         <Link href={"/auth"} className="text-blue-600">
           Login 

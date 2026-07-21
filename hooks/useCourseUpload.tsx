@@ -17,7 +17,7 @@ export const courseUpload = async (
 ) => {
   try {
 
- const response = await api.post("/api/courses?populate[card][populate][categories]=*", {
+ const response = await api.post("/api/courses?populate[card]=true&populate[categories]=true", {
       data: {
         coursename,
         level,

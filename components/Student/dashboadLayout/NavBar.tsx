@@ -32,23 +32,23 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
           {!sidebarMinimized ? (
             <>
               <Greeting username={username} />
-              <div className="flex items-center gap-10 ml-auto">
+              <div className="ml-auto flex items-center gap-5">
                 {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p> */}
-                <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
+                <div className="relative flex min-w-[160px] items-center justify-between gap-1 rounded-full bg-black px-2 py-1.5 text-white shadow">
                   <Image
                     src="/Ellipse 1.svg"
                     alt="variant"
-                    width={20}
-                    height={20}
-                    className="ml-2"
+                    width={18}
+                    height={18}
+                    className="ml-1"
                   />
-                  <Link href="/dashboard/profile" className="text-white">
+                  <Link href="/dashboard/profile" className="truncate text-sm text-white">
                     {username}
                   </Link>
                   <TriangleDownIcon
-                    className={`w-6 h-6 text-white mr-2 transform transition-transform duration-300 ${
+                    className={`mr-1 h-5 w-5 text-white transform transition-transform duration-300 ${
                       showDropdown ? "rotate-180" : "rotate-0"
                     }`}
                     onClick={handleDropdownToggle}
@@ -71,8 +71,8 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
               </div>
             </>
           ) : (
-            <div className="w-full flex items-center justify-between mt-3 mb-10 relative">
-              <div className="w-36 h-10 mr-10">
+            <div className="relative mb-8 mt-2 flex w-full items-center justify-between gap-5">
+              <div className="mr-4 h-9 w-28">
                 <SkillerLogo />
               </div>
 
@@ -80,23 +80,23 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 <SearchBar />
               </div>
 
-              <div className="flex items-center gap-10">
+              <div className="flex items-center gap-5">
                 {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p> */}
-                <div className="p-2 flex items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
+                <div className="relative flex min-w-[160px] items-center justify-between rounded-full bg-black px-2 py-1.5 text-white shadow">
                   <Image
                     src="/Ellipse 1.svg"
                     alt="variant"
-                    width={20}
-                    height={20}
-                    className="ml-2"
+                    width={18}
+                    height={18}
+                    className="ml-1"
                   />
-                  <Link href="/dashboard/profile" className="text-white ml-2">
+                  <Link href="/dashboard/profile" className="ml-2 truncate text-sm text-white">
                     {username}
                   </Link>
                   <TriangleDownIcon
-                    className={`w-6 h-6 relative text-white mr-2 transform transition-transform duration-300 ${
+                    className={`relative mr-1 h-5 w-5 text-white transform transition-transform duration-300 ${
                       showDropdown ? "rotate-180" : "rotate-0"
                     }`}
                     onClick={handleDropdownToggle}

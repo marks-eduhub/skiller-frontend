@@ -185,17 +185,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   };
 
   return (
-    <div className="mr-4 pb-10 sm:pb-0 h-full ">
-      <div className="border border-gray-400" onClick={handleCourseRecent}>
-        <div className="rounded-lg flex relative overflow-hidden h-[180px]">
+    <div className="h-full pb-6 pr-3 sm:pb-0">
+      <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm transition hover:shadow-md" onClick={handleCourseRecent}>
+        <div className="relative flex h-[180px] overflow-hidden">
           <Image
             src={imageUrl ||"/fallback.webp"}
             alt={card?.data?.attributes?.alternativeText || "Fallback Image"}
             fill
-            className="object-cover object-center p-1"
+            className="object-cover object-center"
           />
 
-          <div className="flex items-center absolute justify-between p-2 w-full">
+          <div className="absolute flex w-full items-center justify-between p-3">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -205,27 +205,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
 
             >
               {isLiked ? (
-                <AiFillHeart size={30} className="text-red-500" />
+                <AiFillHeart size={24} className="text-red-500" />
               ) : (
-                <AiOutlineHeart size={30} className="text-gray-500" />
+                <AiOutlineHeart size={24} className="text-gray-500" />
               )}
             </button>
-            <p className="text-black bg-white px-4 py-0 rounded-full">Free</p>
+            <p className="rounded-full bg-white px-3 py-1 text-xs font-medium text-black">Free</p>
           </div>
         </div>
       </div>
 
-      <div className="p-2 bg-[#F3F4F3] cursor-pointer text-black" onClick={handleCourseRecent}>
+      <div className="cursor-pointer bg-[#F3F4F3] p-3 text-black" onClick={handleCourseRecent}>
       
-        <div className="mb-4 sm:h-[30px] h-[50px]">
+        <div className="mb-3 h-[48px] sm:h-[42px]">
           <h3 className="font-semibold line-clamp-2 text-ellipsis">
             {coursename || "Course name not available"}
           </h3>
         </div>
-        <div className="flex items-center mb-4">
-          <p>{tutorName}</p>
+        <div className="mb-3 flex items-center">
+          <p className="text-sm text-gray-700">{tutorName}</p>
         </div>
-        <div className="flex justify-between mt-3 gap-2 sm:text-[0.8rem] text-[15px]">
+        <div className="mt-2 flex justify-between gap-2 text-[13px] sm:text-[0.8rem]">
           <div className="flex gap-1">
             <p>
               {totalRatings > 0 ? `⭐ ${averageRating} ` : "No ratings yet."}

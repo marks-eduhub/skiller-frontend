@@ -2,7 +2,7 @@ import api from "@/lib/axios"
 import { useQuery } from "@tanstack/react-query"
 
 const fetchTopicResources = async (topicId: number) => {
-    const response = await api.get(`/api/topics/${topicId}?populate[course][populate]=tutors&populate=topicResources`)
+    const response = await api.get(`/api/topics/${topicId}?populate[course][populate]=tutor&populate[topicResources]=true`)
 return response.data
 }
 

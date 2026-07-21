@@ -106,11 +106,11 @@
 .loaderBody {
   border-radius: 12px;
   border: 4px solid #000;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   transform-origin: center center;
   transition: all ease;
-  animation: spin 5s infinite; /* Use 'infinite' to repeat the animation */
+  animation: spin 1.6s infinite;
 }
 .outline{
   -webkit-text-stroke: 2px black; 
@@ -209,4 +209,3 @@
     opacity: 0;
   }
 }
-

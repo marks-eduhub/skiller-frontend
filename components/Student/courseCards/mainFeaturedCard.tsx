@@ -38,7 +38,7 @@ const FeaturedProduct: React.FC = () => {
 
   return (
     <div className="py-2 relative">
-      <div className="shadow-lg sm:rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl max-md:rounded-lg overflow-hidden mx-2 relative">
+      <div className="relative mx-0 overflow-hidden rounded-2xl shadow-lg max-md:rounded-lg">
         <Carousel
           showThumbs={false}
           showArrows={false}
@@ -62,7 +62,7 @@ const FeaturedProduct: React.FC = () => {
 
             return (
               <div key={course.id} className="relative">
-                <div className="h-[230px] w-[400px] sm:h-[200px] sm:w-[600px] md:h-[256px] md:w-[800px]">
+                <div className="relative aspect-[16/8] min-h-[220px] w-full sm:aspect-[16/7] md:min-h-[280px]">
                   <Image
                     src={imageUrl || "/fallback.webp"}
                     alt={
@@ -70,9 +70,9 @@ const FeaturedProduct: React.FC = () => {
                         .alternativeText || "course image"
                     }
                     fill
-                    className="w-full object-cover h-64 sm:h-48 md:h-64 rounded-tl-2xl rounded-tr-2xl"
+                    className="object-cover"
                   />
-                  <p className="absolute top-6 right-8 bg-white px-6 rounded-lg">
+                  <p className="absolute right-4 top-4 rounded-lg bg-white px-4 py-1 text-sm font-medium sm:right-6 sm:top-6">
                     Free
                   </p>
                 </div>

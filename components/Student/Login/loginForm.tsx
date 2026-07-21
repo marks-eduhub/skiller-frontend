@@ -65,96 +65,88 @@ export default function LogIn() {
    };
 
   return (
-    <div className="bg-[#E9E9E9] h-screen w-full flex flex-col justify-center items-center relative">
-      <div className="flex flex-col items-center">
-        <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
+    <div className="bg-[#E9E9E9] min-h-screen w-full px-4 py-10 sm:px-6">
+      <div className="mx-auto flex w-full max-w-[440px] flex-col items-center justify-center">
+        <h2 className="mt-2 text-center text-[34px] font-[600] sm:text-[42px]">
           {data.loginForm.title}
         </h2>
         <form
-          className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"
+          className="mt-8 flex w-full flex-col gap-6"
           onSubmit={handleLogin}
         >
-          <div className="flex flex-row gap-[1.5rem] w-full">
-            <div className="flex flex-col items-start">
-              <label className=" my-2 sm:text-[22px]">Email</label>
+          <div className="flex w-full flex-row gap-[1.5rem]">
+            <div className="flex w-full flex-col items-start">
+              <label className="my-2 text-[16px] font-medium sm:text-[18px]">Email</label>
               <input
                 placeholder="black@gmail.com"
                 type="email"
                 required
                 name="email"
-                className=" bg-inherit rounded-md border border-gray-600 px-3 py-[1.3rem] w-[20rem] sm:w-[25rem]"
+                className="w-full rounded-md border border-gray-600 bg-inherit px-3 py-4 text-[15px]"
               />
             </div>
           </div>
 
-          <div className="flex flex-col items-start relative">
-            <label className=" my-2 sm:text-[22px]">Password</label>
+          <div className="relative flex flex-col items-start">
+            <label className="my-2 text-[16px] font-medium sm:text-[18px]">Password</label>
             <input
               placeholder="***************"
               type={showPassword ? "text" : "password"}
               required
               name="password"
-              className=" bg-inherit rounded-md border border-gray-600 px-3 py-[1.3rem]  w-[20rem]  sm:w-[25rem]"
+              className="w-full rounded-md border border-gray-600 bg-inherit px-3 py-4 pr-10 text-[15px]"
             />
             <span
               onClick={handlePassword}
-              className="absolute right-3 top-[70%] transform -translate-y-[50%] cursor-pointer"
+              className="absolute right-3 top-[70%] -translate-y-[50%] cursor-pointer"
             >
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
           <Link href="/auth/forgot-password">
-            <h1 className="text-blue-600 cursor-pointer">Forgot Password?</h1>
+            <h1 className="text-right text-[15px] text-blue-600">Forgot Password?</h1>
           </Link>
           <button
-            className="bg-black text-zinc-300 rounded-md p-2 text-sm sm:text-lg hover:cursor-pointer mx-auto w-[300px]"
+            className="mx-auto flex min-h-[48px] w-full max-w-[320px] items-center justify-center rounded-md bg-black px-4 text-sm text-zinc-300 transition disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
             type="submit"
             disabled={isPending}
           >
-            <span className="pr-4">Login</span>
-            {isPending && (
-              <DotPulseWrapper size="20" speed="1.5" color="white" />
-              // <l-dot-pulse size="20" speed="1.5" color="white"/>
+            {isPending ? (
+              <span className="flex items-center gap-3">
+                <DotPulseWrapper size="18" speed="1.5" color="white" />
+                Signing in...
+              </span>
+            ) : (
+              <span>Login</span>
             )}
           </button>
-          {/* <div className="font-bold text-gray-500 text-lg mx-auto">
-            Trouble logging in?
-          </div> */}
         </form>
       </div>
 
-      <div className="flex flex-row items-center gap-6 mt-[2rem] font-[700] w-[80%]">
+      <div className="mx-auto mt-8 flex w-full max-w-[440px] flex-row items-center gap-6 font-[700]">
         <hr className="border-[1px] border-black flex-grow" />
         OR
         <hr className="border-[1px] border-black flex-grow" />
       </div>
 
-      {/* <div className="relative w-[100%] flex justify-center mt-[2rem] cursor-pointer">
-        <Image
-          src="/logos/google.png"
-          alt={"google"}
-          width={130}
-          height={130}
-        />
-      </div> */}
-      <div className="flex justify-center">
+      <div className="mx-auto flex max-w-[440px] justify-center">
         <button
           onClick={handleGoogleSignUp}
           disabled={isPendingGoogle}
-          className=" rounded-md py-3 text-xl flex justify-center w-52 border border-black my-4"
+          className="my-4 flex min-h-[48px] w-full max-w-[320px] items-center justify-center gap-2 rounded-md border border-black px-4 text-base transition disabled:cursor-not-allowed disabled:opacity-70"
         >
           <Image
             src={data.loginForm.googlelogo}
             alt={"google"}
-            width={50}
-            height={50}
+            width={32}
+            height={32}
           />
-          <p className="text-[16px]">
-            {isPendingGoogle ? "Loading..." : "Sign In with Google"}
+          <p className="text-[15px] sm:text-[16px]">
+            {isPendingGoogle ? "Redirecting..." : "Sign In with Google"}
           </p>
         </button>
       </div>
-      <div className="flex sm:hidden items-center  justify-center w-full  mt-10">
+      <div className="mt-8 flex w-full items-center justify-center sm:hidden">
         <h1>
           Dont have an account?{" "}
           <Link href="/auth/register" className="text-blue-600">

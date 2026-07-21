@@ -64,29 +64,29 @@ const MainPage = () => {
     message.error("Error fetching courses. Please try again later.");
   }
   return (
-    <div className="p-6 w-full">
-      <h1 className="font-semibold sm:text-[22px]  sm:mt-0 mt-12">
+    <div className="w-full px-0 py-4">
+      <h1 className="mt-12 text-[20px] font-semibold sm:mt-0 sm:text-[22px]">
         Courses by Tutor {username}
       </h1>
 
-      <div className="mt-10">
+      <div className="mt-8">
         {tutorCourses?.length === 0 ? (
           <div className="flex flex-col">
-            <h1 className="font-medium text-[25px] mb-5">Welcome!</h1>
-            <p className="text-[20px] mb-5">
+            <h1 className="mb-4 text-[24px] font-medium">Welcome!</h1>
+            <p className="mb-5 text-[18px] text-gray-700">
               Educate others by creating a course
             </p>
-            <div className="sm:w-[30%] h-[350px] bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer">
+            <div className="relative flex h-[260px] w-full max-w-[320px] cursor-pointer flex-col items-center justify-center rounded-xl bg-gray-100">
               <Link href="/tutor/dashboard/uploadCourse">
-                <div className="rounded-3xl bg-gray-300 flex px-8 py-5 items-center justify-center">
-                  <Image src="/Vector.png" alt="plus" width={30} height={30} />
+                <div className="flex items-center justify-center rounded-3xl bg-gray-300 px-7 py-4">
+                  <Image src="/Vector.png" alt="plus" width={26} height={26} />
                 </div>
                 <p className="mt-5">Add a course</p>
               </Link>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-4  gap-6 relative">
+          <div className="relative grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {tutorCourses?.map((course: any) => {
               const courseAttributes = course?.attributes;
               const image =
@@ -97,33 +97,33 @@ const MainPage = () => {
               return (
                 <div
                   key={course.id}
-                  className="cursor-pointer relative"
+                  className="relative cursor-pointer"
                   onClick={() => handleCourseClick(course.id)}
                 >
                   {loadingCourseId === course.id && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
+                    <div className="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-white/70 backdrop-blur-sm">
                       <Loader />
                     </div>
                   )}
-                  <div className="border border-gray-400 rounded-lg overflow-hidden">
-                    <div className="h-[180px] relative">
+                  <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm">
+                    <div className="relative h-[180px]">
                       <Image
                         src={image}
                         alt={courseAttributes.coursename}
                         fill
-                        className="object-cover object-center p-1"
+                        className="object-cover object-center"
                       />
-                      <div className="flex items-center absolute justify-between p-2 w-full">
-                        <p className="text-black bg-white px-4 py-0 rounded-t rounded-b">
+                      <div className="absolute flex w-full items-center justify-between p-3">
+                        <p className="rounded-full bg-white px-3 py-1 text-xs font-medium text-black">
                           Free
                         </p>
                       </div>
                     </div>
-                    <div className="p-2 bg-[#F3F4F3] text-black">
-                      <h1 className="font-medium">
+                    <div className="bg-[#F3F4F3] p-3 text-black">
+                      <h1 className="line-clamp-2 min-h-[48px] font-medium">
                         {courseAttributes.coursename}
                       </h1>
-                      <div className="flex justify-between mt-2">
+                      <div className="mt-2 flex justify-between text-sm text-gray-700">
                         <p className="italic">{courseAttributes.duration}</p>
                         <div className="flex items-center gap-1">
                            ⭐
@@ -154,10 +154,10 @@ const MainPage = () => {
                 </div>
               );
             })}
-            <div className="w-full sm:mt-0 mt-5 sm:h-[250px] h-[250px] rounded-lg  bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer">
+            <div className="relative mt-5 flex h-[220px] w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-gray-100 sm:mt-0">
               <Link href="/tutor/dashboard/uploadCourse">
-                <div className="rounded-3xl bg-gray-300 flex px-8 py-5 items-center justify-center">
-                  <Image src="/Vector.png" alt="plus" width={30} height={30} />
+                <div className="flex items-center justify-center rounded-3xl bg-gray-300 px-7 py-4">
+                  <Image src="/Vector.png" alt="plus" width={26} height={26} />
                 </div>
                 <p className="mt-5">Add a course</p>
               </Link>

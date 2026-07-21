@@ -46,22 +46,22 @@ const SideNav: React.FC<SideNavProps> = ({
       ) : (
         <div
           className={`${
-            sidebarMinimized ? "w-[130px]" : "w-[250px]"
+            sidebarMinimized ? "w-[116px]" : "w-[224px]"
           } transition-width duration-300 ease rounded-br-[20px] rounded-tr-[20px] bg-black h-full flex flex-col text-white`}
         >
           <div
-            className={`flex items-center justify-start space-x-6 cursor-pointer bg-black p-4 ${
-              sidebarMinimized ? "pl-9" : ""
+            className={`flex items-center justify-start space-x-4 cursor-pointer bg-black px-4 py-3 ${
+              sidebarMinimized ? "pl-7" : ""
             }`}
           >
             <HamburgerMenuIcon
               className={`w-6 h-6 text-white ${
-                sidebarMinimized ? "rotate-90 mt-2 ml-4" : ""
+                sidebarMinimized ? "rotate-90 mt-1 ml-3" : ""
               }`}
               onClick={toggleSidebar}
             />
             {!sidebarMinimized && (
-              <div className="w-28 text-white">
+              <div className="w-24 text-white">
                 <SkillerLogo />
               </div>
             )}
@@ -75,7 +75,7 @@ const SideNav: React.FC<SideNavProps> = ({
           <form onSubmit={handleSignOut}>
             <button
               type="submit"
-              className="flex h-[48px] w-full grow items-center bg-black p-3 text-sm font-medium hover:bg-gray-900 justify-start hover:text-blue-600"
+              className="flex h-[44px] w-full grow items-center justify-start bg-black p-3 text-sm font-medium hover:bg-gray-900 hover:text-blue-600"
               disabled={loading} 
             >
               {loading ? (
@@ -86,7 +86,7 @@ const SideNav: React.FC<SideNavProps> = ({
                   color="white"
                 />
               ) : (
-                <div className="p-4">Sign Out</div>
+                <div className="px-3 py-2">Sign Out</div>
               )}
             </button>
           </form>

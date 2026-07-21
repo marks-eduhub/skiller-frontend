@@ -89,23 +89,23 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
         </div>
       )}
       {links.map((link, index) => (
-        <div key={index} className="mt-6">
+        <div key={index} className="mt-4">
           <button
             onClick={() => handleNavigation(link.path)}
             className={clsx(
               pathname.startsWith(link.path) && !sidebarMinimized
-                ? "bg-gray-700 rounded px-6 py-2 ml-4"
+                ? "bg-gray-700 rounded-lg px-4 py-2 ml-3"
                 : "text-white",
-              sidebarMinimized ? "ml-8 mb-10" : "ml-4",
+              sidebarMinimized ? "ml-6 mb-6" : "ml-3",
               "flex items-center cursor-pointer relative group"
             )}
           >
-            <Image src={link.src} alt={link.alt} width={25} height={25} className="ml-2" />
+            <Image src={link.src} alt={link.alt} width={22} height={22} className="ml-1" />
 
-            {!sidebarMinimized && <h2 className="ml-6">{link.name}</h2>}
+            {!sidebarMinimized && <h2 className="ml-4 text-[15px]">{link.name}</h2>}
 
             {sidebarMinimized && (
-              <span className="absolute left-12 bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="absolute left-10 bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                 {link.name}
               </span>
             )}
@@ -116,13 +116,13 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
       <div
         onClick={() => handleNavigation("/dashboard")}
         className={clsx(
-          "flex h-[48px] grow mt-4 items-end p-3 ml-2 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
+          "flex h-[44px] grow mt-3 items-center p-3 ml-2 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
           {
             "bg-gray-700 text-white rounded ": pathname === "/dashboard",
           }
         )}
       >
-        <PiUserSwitchBold className="w-10 h-7 mr-2 text-gray-300" />
+        <PiUserSwitchBold className="w-8 h-6 mr-2 text-gray-300" />
         {!sidebarMinimized && (
           <p className="md:block text-[15px]">Switch to student</p>
         )}

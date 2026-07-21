@@ -24,39 +24,39 @@ const TutorNav = () => {
     <>
       <div
         className={clsx(
-          "flex items-center w-full max-md:hidden",
-          sidebarMinimized ? "justify-between mb-10 mt-4" : "justify-end"
+          "hidden w-full items-center max-md:hidden",
+          sidebarMinimized ? "mb-8 mt-2 justify-between" : "justify-end"
         )}
       >
         {sidebarMinimized && (
-          <div className="w-32 h-10 ">
+          <div className="h-10 w-28">
             <SkillerLogo />
           </div>
         )}
 
-        <div className="flex flex-row gap-4 items-center">
-          <div className="flex flex-row gap-4 max-md:mt-5 items-center">
-            <h2 className="font-bold text-[16px]">Tutor</h2>
+        <div className="flex flex-row items-center gap-3">
+          <div className="flex flex-row items-center gap-3 max-md:mt-5">
+            <h2 className="text-[15px] font-semibold">Tutor</h2>
             <Image
               src="/Notification-Button.svg"
               alt="notification"
-              width={20}
-              height={20}
+              width={18}
+              height={18}
             />
           </div>
-          <div className="p-2 flex gap-1 items-center justify-between rounded-full shadow bg-black text-white cursor-pointer relative">
+          <div className="relative flex min-w-[160px] items-center justify-between gap-1 rounded-full bg-black px-2 py-1.5 text-white shadow">
             <Image
               src="/Ellipse 1.svg"
               alt="variant"
-              width={20}
-              height={20}
-              className="ml-2"
+              width={18}
+              height={18}
+              className="ml-1"
             />
-            <Link href="/dashboard/profile" className="text-white">
+            <Link href="/dashboard/profile" className="truncate text-sm text-white">
               {username}
             </Link>
             <TriangleDownIcon
-              className={`w-6 h-6 text-white mr-2 transform transition-transform duration-300 ${
+              className={`mr-1 h-5 w-5 text-white transform transition-transform duration-300 ${
                 showDropdown ? "rotate-180" : "rotate-0"
               }`}
               onClick={handleDropdownToggle}
@@ -67,8 +67,8 @@ const TutorNav = () => {
         {showDropdown && (
           <div
             className={clsx(
-              "absolute z-50 mt-2 rounded-xl bg-gray-800 shadow-lg w-40 p-2",
-              sidebarMinimized ? "right-[260px] top-[80px] " : "top-[60px]"
+              "absolute z-50 mt-2 w-44 rounded-xl bg-gray-800 p-2 shadow-lg",
+              sidebarMinimized ? "right-[220px] top-[68px]" : "top-[52px]"
             )}
           >
             <div className="flex flex-col">

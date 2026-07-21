@@ -15,14 +15,16 @@ const TutorWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
           <SideBar />
         </div>
         <div
-          className={`flex-grow py-6 md:overflow-y-auto hide-scrollbar sm:pr-10 container mx-auto ${
-            sidebarMinimized ? "ml-[90px]" : "ml-0"
+          className={`flex-grow py-4 md:overflow-y-auto hide-scrollbar ${
+            sidebarMinimized ? "md:pl-8" : "md:pl-4"
           }`}
         >
+          <div className="mx-auto flex min-h-full w-full max-w-[1440px] flex-col px-4 sm:px-6 lg:px-8">
           <TutorNav />
           <div className="flex flex-col min-h-[calc(100vh-5rem)]">
             <div className="flex-grow">{children}</div>
             <Footer />
+          </div>
           </div>
         </div>
       </div>

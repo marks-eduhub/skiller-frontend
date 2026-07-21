@@ -89,7 +89,7 @@ export const useFetchUserDetails = (userId: number) => {
 
 const fetchTutorDetails = async (userId: number) => {
   const response = await api.get(
-    `/api/tutors?filters[user][id]=${userId}&populate=user, profilepicture,socialLinks`
+    `/api/tutors?filters[user][id]=${userId}&populate[user][populate][0]=profilepicture&populate[user][populate][1]=socialLinks`
   );
 
   return response.data;

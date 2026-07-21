@@ -8,16 +8,16 @@ import Link from "next/link";
 
 export default function AuthDrawer({pageTo, link}:{pageTo:string, link:string}) {
   return (
-    <div className="hidden md:flex w-full flex-col gap-[3rem] bg-black h-screen justify-center relative items-center text-white" >
-      <div className="relative w-[22rem] h-[12rem]">
+    <div className="relative hidden h-screen w-full flex-col items-center justify-center gap-10 bg-black px-8 text-white md:flex">
+      <div className="relative h-[9rem] w-[18rem] lg:h-[10rem] lg:w-[20rem]">
       <Image
        src={data.logo}
        alt={"logo"}
        fill
       />
       </div>
-      <div className="text-[40px] mt-[2rem]">{data.tagline}</div>
-      <Link href={link} className="bg-white absolute bottom-[2rem] rounded-[22px] py-[1rem] text-[29px] min-w-[22rem] flex justify-center text-black">
+      <div className="max-w-[24rem] text-center text-[30px] font-medium leading-tight lg:text-[36px]">{data.tagline}</div>
+      <Link href={link} className="absolute bottom-8 flex min-h-[52px] min-w-[18rem] items-center justify-center rounded-[18px] bg-white px-6 text-[22px] text-black lg:min-w-[20rem] lg:text-[24px]">
       {pageTo}
       </Link>
     </div>

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchCommunitydetails = async () => {
   const response = await api.get(
-    "/api/communities?populate[user][populate]=*&sort=createdAt:desc&populate=*"
+    "/api/communities?populate[user][populate]=*&populate[community_responses]=true&sort=createdAt:desc"
   );
 
   return response.data;
@@ -37,7 +37,7 @@ export const useFetchLikeCount = () => {
 
 const fetchQuestionWithResponses = async (questionId: number) => {
   const response = await api.get(
-  `/api/community-responses?populate[user][populate]=*&populate=community&sort[0]=createdAt:desc`
+  `/api/community-responses?populate[user][populate]=*&populate[community]=true&sort[0]=createdAt:desc`
   
   );
   return response.data;
@@ -93,7 +93,7 @@ export const addResponse = async (
 };
 
 const fetchSearchCommunity = async (searchTerm: string) => {
-  const response = await api.get(`/api/communities?_q=${searchTerm}&populate[user][populate]=*&populate=*`);
+  const response = await api.get(`/api/communities?_q=${searchTerm}&populate[user][populate]=*&populate[community_responses]=true`);
 
   return response.data;
 };

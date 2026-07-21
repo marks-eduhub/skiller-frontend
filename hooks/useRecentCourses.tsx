@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchRecentCourses = async (userId: number) => {
   const response = await api.get(
-    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateLastAccessed:desc&populate[course][populate]=card,tutor`
+    `/api/recent-courses?filters[user][id][$eq]=${userId}&sort=dateLastAccessed:desc&populate[course][populate][0]=card&populate[course][populate][1]=tutor`
   );
 
   return response.data;
@@ -31,7 +31,7 @@ export const useRecentCourses = () => {
 export const addRecentCourse = async (courseId: number, userId: number) => {
   try {
     const existingEntry = await api.get(
-      `/api/recent-courses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&sort=dateLastAccessed:desc&populate[course][populate]=card,tutor`
+      `/api/recent-courses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&sort=dateLastAccessed:desc&populate[course][populate][0]=card&populate[course][populate][1]=tutor`
     );
 
     if (existingEntry.data.data.length > 0) {

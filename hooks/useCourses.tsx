@@ -19,7 +19,7 @@ export const useFetchCourses = () => {
 
 const fetchTutorCourses = async () => {
   const response = await api.get(
-    "/api/courses?populate[tutor][populate]=user&populate[card]=*&populate[category]=*&populate[ratings]=*"
+    "/api/courses?populate[tutor][populate]=user&populate[card]=true&populate[categories]=true&populate[courseratings]=true"
   );
     return response.data;
 };
@@ -51,7 +51,7 @@ export const useFetchTutors = () => {
 };
 
 const fetchTutorPopulate= async () => {
-  const response = await api.get("/api/tutors?populate[user][populate]=*&populate[profilepicture]=*");
+  const response = await api.get("/api/tutors?populate[user][populate]=*");
   return response.data
  
 };
@@ -69,7 +69,7 @@ export const useFetchTutorsPopulate = () => {
 
 
 const fetchSearchTutors = async (searchTerm: string) => {
-  const response = await api.get(`/api/tutors?search=${searchTerm}&populate=profilepicture`);
+  const response = await api.get(`/api/tutors?search=${searchTerm}&populate[user][populate]=profilepicture`);
   return response.data;
 };
 
@@ -117,7 +117,7 @@ export const useFetchCourseTopics = (courseId: number) => {
 };
 
 const fetchTutorSlug = async (id:string) => {
-  const response = await api.get(`api/tutors?filters[id][$eq]=${id}&populate[user][populate]=*&populate[profilepicture]=*`);
+  const response = await api.get(`api/tutors?filters[id][$eq]=${id}&populate[user][populate]=*`);
 
   return response.data;
 };

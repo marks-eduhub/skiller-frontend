@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchLikedCourses = async (userId: number) => {
   const response = await api.get(
-    `/api/liked-courses?filters[user][id][$eq]=${userId}&populate[course][populate]=card,tutor`
+    `/api/liked-courses?filters[user][id][$eq]=${userId}&populate[course][populate][0]=card&populate[course][populate][1]=tutor`
   );
   return response.data;
 };

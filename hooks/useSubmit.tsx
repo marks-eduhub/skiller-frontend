@@ -22,7 +22,7 @@ export const UsefetchResult = (topicId: number, userId: number) => {
 
 const fetchQuestionResultsByTestResult = async (testResultId: number) => {
   const response = await api.get(
-    `/api/user-question-results?filters[test_result][id][$eq]=${testResultId}&populate=questions`
+    `/api/user-question-results?filters[test_result][id][$eq]=${testResultId}&populate=question`
   );
   return response.data;
 };
@@ -72,7 +72,7 @@ export const useFetchCourseTests = (topicId: number) => {
 };
 const fetchAllCourseTests = async (topicId: number, userId: number) => {
   const response = await api.get(
-    `/api/tests?filters[topic][id]=${topicId}&populate[test_results][filters][user][id][$eq]=${userId}&populate=*`
+    `/api/tests?filters[topic][id]=${topicId}&populate[test_results][filters][user][id][$eq]=${userId}&populate[topic]=true&populate[questions]=true&populate[course]=true`
   );
   return response.data;
 };
@@ -279,7 +279,7 @@ export const useFetchUserCourses = (userId: number) => {
     queryKey: ["user-courses", userId],
     queryFn: async () => {
       const response = await api.get(
-        `/api/course-trackers?filters[user][id][$eq]=${userId}&populate[course][populate]=*&populate=topic_progress_trackers`
+        `/api/course-trackers?filters[user][id][$eq]=${userId}&populate[course][populate]=*&populate[topic_progress_trackers]=true`
 
       );
       return response.data.data; 
@@ -293,7 +293,7 @@ export const useFetchEnrolledCourses = (courseId: number) => {
     queryKey: ["enrolled-courses", courseId],
     queryFn: async () => {
       const response = await api.get(
-        `/api/course-trackers?filters[course][id][$eq]=${courseId}&populate[course][populate]=*&populate=topic_progress_trackers`
+        `/api/course-trackers?filters[course][id][$eq]=${courseId}&populate[course][populate]=*&populate[topic_progress_trackers]=true`
 
       );
       return response.data.data; 
@@ -354,7 +354,7 @@ export const useFetchCourseTracker = (userId: number, courseId: number) => {
 
 const fetchCourseRating = async (courseId: number, userId: number) => {
   const response = await api.get(
-    `/api/courseratings?filters[course][id][$eq]=${courseId}&filters[user][id][$eq]=${userId}&populate=user-course-progresses`
+    `/api/courseratings?filters[course][id][$eq]=${courseId}&filters[user][id][$eq]=${userId}&populate=user_course_progress`
   );
   return response.data;
 };
