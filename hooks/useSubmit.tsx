@@ -40,7 +40,7 @@ export const useFetchUserQuestionResults = (testResultId: number) => {
 
 const fetchTests = async (topicId: number, userId: number) => {
   const response = await api.get(
-    `/api/tests?filters[topic][id]=${topicId}&user=${userId}&populate=topic,user`
+    `/api/tests?filters[topic][id]=${topicId}&user=${userId}&populate=topic`
   );
   return response.data;
 };

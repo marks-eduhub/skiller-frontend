@@ -1,5 +1,5 @@
 "use client";
-import { useState, ReactNode } from "react";
+import { useEffect, useRef, useState, ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import SideNav from "@/components/Student/dashboadLayout/sidebar";
 import Navbar from "../../components/Student/dashboadLayout/NavBar";
@@ -11,6 +11,7 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarMinimized, setSidebarMinimized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const toggleSidebar = () => {
     setSidebarMinimized(!sidebarMinimized);
@@ -25,11 +26,30 @@ const ClientWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const handleNavigation = (path: string) => {
     if (path === pathname) return;
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
     setIsLoading(true);
-    setTimeout(() => {
+    navigationTimeoutRef.current = setTimeout(() => {
       router.push(path);
     }, 500);
   };
+
+  useEffect(() => {
+    setIsLoading(false);
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+      navigationTimeoutRef.current = null;
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="relative flex h-screen flex-col md:flex-row md:overflow-hidden">

@@ -106,12 +106,12 @@ const MainPage = () => {
                     </div>
                   )}
                   <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm">
-                    <div className="relative h-[180px]">
+                    <div className="relative h-[190px]">
                       <Image
                         src={image}
                         alt={courseAttributes.coursename}
                         fill
-                        className="object-cover object-center"
+                        className="object-cover object-center p-1"
                       />
                       <div className="absolute flex w-full items-center justify-between p-3">
                         <p className="rounded-full bg-white px-3 py-1 text-xs font-medium text-black">

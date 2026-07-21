@@ -62,7 +62,7 @@ const FeaturedProduct: React.FC = () => {
 
             return (
               <div key={course.id} className="relative">
-                <div className="relative aspect-[16/8] min-h-[220px] w-full sm:aspect-[16/7] md:min-h-[280px]">
+                <div className="relative aspect-[16/8.5] min-h-[230px] w-full sm:aspect-[16/7.4] md:min-h-[290px]">
                   <Image
                     src={imageUrl || "/fallback.webp"}
                     alt={
@@ -70,7 +70,7 @@ const FeaturedProduct: React.FC = () => {
                         .alternativeText || "course image"
                     }
                     fill
-                    className="object-cover"
+                    className="object-cover p-1"
                   />
                   <p className="absolute right-4 top-4 rounded-lg bg-white px-4 py-1 text-sm font-medium sm:right-6 sm:top-6">
                     Free

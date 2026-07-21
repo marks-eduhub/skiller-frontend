@@ -187,12 +187,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   return (
     <div className="h-full pb-6 pr-3 sm:pb-0">
       <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm transition hover:shadow-md" onClick={handleCourseRecent}>
-        <div className="relative flex h-[180px] overflow-hidden">
+        <div className="relative flex h-[190px] overflow-hidden">
           <Image
             src={imageUrl ||"/fallback.webp"}
             alt={card?.data?.attributes?.alternativeText || "Fallback Image"}
             fill
-            className="object-cover object-center"
+            className="object-cover object-center p-1"
           />
 
           <div className="absolute flex w-full items-center justify-between p-3">
