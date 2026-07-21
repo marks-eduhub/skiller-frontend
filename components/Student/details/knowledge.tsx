@@ -32,7 +32,7 @@ const Knowledge = () => {
   const { user } = useAuthContext();
   const userId = Number(user?.id);
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
   const [selectedTab, setselectedTab] = useState("Tests");
@@ -91,7 +91,7 @@ const Knowledge = () => {
       courseId,
       averageRating,
     }: {
-      courseId: number;
+      courseId: string;
       averageRating: number;
     }) => {
       return await updateCourseRating(courseId, averageRating);
@@ -122,9 +122,9 @@ const Knowledge = () => {
       comment
     }: {
       userId: number;
-      courseId: number;
+      courseId: string;
       score: number;
-      progressId: number;
+      progressId: string;
       comment:string
     }) => {
       return await courseRating(userId, courseId, score, progressId, comment);
@@ -202,7 +202,7 @@ useEffect(() => {
       return;
     }
 
-    const progressId = courseStatus.data[0].id;
+    const progressId = courseStatus.data[0].attributes.documentId;
 
     try {
       createCourseRating({ userId, courseId, score: rating, progressId , comment});

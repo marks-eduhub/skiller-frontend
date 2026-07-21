@@ -19,13 +19,13 @@ const Enroll = () => {
   const router = useRouter();
   const [tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const [isProcessing, setIsProcessing] = useState(false);
   const { data: coursetrackerdata } = useFetchCourseTracker(userId, courseId);
   const {data: totalStudentsEnrolled} = useFetchEnrolledCourses(courseId)
   const isEnrolled = coursetrackerdata?.data?.length > 0;
 
-  const { data, isLoading, error } = useFetchOverview(Number(slug));
+  const { data, isLoading, error } = useFetchOverview(courseId);
 
   if (!slug) {
     return;

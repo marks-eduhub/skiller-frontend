@@ -235,7 +235,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
                 setPassmark={setPassmark}
                 topic={String(topicId)}
                 setTopic={() => {}}
-                courseId={1}
+                courseId=""
               />
             )}
             {currentStep === 3 && (

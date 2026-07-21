@@ -19,7 +19,7 @@ import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 interface Topic {
-  id: number | null;
+  id: string | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;

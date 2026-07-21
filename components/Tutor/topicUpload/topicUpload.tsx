@@ -7,7 +7,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 interface Topic {
-  id: number | null;
+  id: string | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;

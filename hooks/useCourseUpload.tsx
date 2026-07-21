@@ -41,7 +41,7 @@ export const courseUpload = async (
 };
 
 export const courseEditing = async (
-  courseId:number,
+  courseId:string,
   coursename: string,
   level:string,
   days:string,

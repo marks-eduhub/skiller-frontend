@@ -8,7 +8,7 @@ interface ReviewModalProps {
   setRating: React.Dispatch<React.SetStateAction<number>>;
   isPosting: boolean;
   userId: number;
-  courseId: number;
+  courseId: string;
   rating: number;
   comment: string;
 }

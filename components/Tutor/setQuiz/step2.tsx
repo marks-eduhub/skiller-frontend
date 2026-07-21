@@ -16,14 +16,14 @@ const Step2 = ({
   setDuration: React.Dispatch<React.SetStateAction<string>>;
   topic: string;
   setTopic: React.Dispatch<React.SetStateAction<string>>;
-  courseId: number | string;
+  courseId: string;
   passmark: number | "";
   setPassmark: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const { user } = useAuthContext();
   const userId = user?.id;
   const { data, isLoading, error } = useFetchTopic(
-    Number(courseId),
+    courseId,
     Number(userId)
   );
 

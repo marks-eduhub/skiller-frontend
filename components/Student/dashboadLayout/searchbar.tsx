@@ -122,7 +122,7 @@ const SearchBar: React.FC = () => {
         if (resultToNavigate.type === "tutor") {
           router.push(`/dashboard/subscriptions/${resultToNavigate.id}`);
         } else {
-          router.push(`/dashboard/overview/${resultToNavigate.id}`);
+          router.push(`/dashboard/overview/${resultToNavigate.attributes.documentId}`);
         }
 
         setSearchTerm(""); 
@@ -177,7 +177,7 @@ const SearchBar: React.FC = () => {
                         `/dashboard/subscriptions/${result.id}`
                       );
                     } else {
-                      router.push(`/dashboard/overview/${result.id}`);
+                      router.push(`/dashboard/overview/${result.attributes.documentId}`);
                     }
                   }}
                 >

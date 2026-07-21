@@ -13,7 +13,7 @@ const CourseReview = () => {
   const { user } = useAuthContext();
   const userId = Number(user?.id);
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isPosting, setIsPosting] = useState(false);

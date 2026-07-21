@@ -157,7 +157,7 @@ export const removeLiked = async (responseId: number, userId: number) => {
       throw new Error("Liked response not found");
     }
 
-    const likedId = likedEntry.id;
+    const likedId = likedEntry.attributes.documentId;
     await api.delete(`/api/response-likes/${likedId}`);
   } catch (error) {
     throw new Error("Failed to remove like.");

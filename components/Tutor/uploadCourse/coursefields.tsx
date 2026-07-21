@@ -65,7 +65,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   const queryClient = useQueryClient();
   const pathname = usePathname();
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const { data, isLoading, error } = useFetchCategory();
   const [fileName, setFileName] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -115,7 +115,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       category,
       duration,
     }: {
-      courseId: number;
+      courseId: string;
       courseName: string;
       level: string;
       days: string;

@@ -10,7 +10,7 @@ import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
 
 const Overview = () => {
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const { data, isLoading, error } = useFetchOverview(courseId);
   const { data: topicData } = useFetchCourseTopics(courseId);
   const duration = data?.data?.attributes?.duration || "N/A";

@@ -21,7 +21,7 @@ const TopicsCard: React.FC = () => {
   const userId = user?.id;
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const { data: topicsData, isLoading, error } = useFetchOverview(Number(slug));
+  const { data: topicsData, isLoading, error } = useFetchOverview(String(slug));
   const { data: testResults } = UsefetchResult(Number(topicId), Number(userId));
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const { data: testsData } = useFetchTests(Number(topicId), Number(userId));
@@ -38,7 +38,7 @@ const TopicsCard: React.FC = () => {
       topicId,
     }: {
       isCompleted: boolean;
-      topicId: number;
+      topicId: string;
     }) => {
       return await markTopicCompleted(isCompleted, topicId);
     },
@@ -125,7 +125,7 @@ const TopicsCard: React.FC = () => {
       const passed = bestResult.attributes.score >= testPassmark;
 
       if (passed) {
-        topicCompleted({ isCompleted: true, topicId: topic.id });
+        topicCompleted({ isCompleted: true, topicId: topic.attributes.documentId });
       }
 
       return passed;

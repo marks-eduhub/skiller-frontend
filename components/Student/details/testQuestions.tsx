@@ -31,14 +31,14 @@ const TestQuestions= () => {
   const testId = searchParams.get("testId");
   const [timesAttempted, setTimesAttempted] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
-  const [testResultId, setTestResultId] = useState<number | null>(null);
+  const [testResultId, setTestResultId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 5;
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
   const [isSubmitting, setIsSubmitting] = useState(false); 
   const [userQuestionResultsMap, setUserQuestionResultsMap] = useState<
-    Record<number, number>
+    Record<number, string>
   >({});
   const { data, isLoading, error } = useFetchQuizQuestions(Number(testId));
   const {data: test} = useFetchTests(Number(topicId), Number(userId));
@@ -93,7 +93,7 @@ const TestQuestions= () => {
       questionId,
       passed,
     }: {
-      testResultId: number;
+      testResultId: string;
       userAnswer: string;
       passed: boolean;
       questionId: number;
@@ -106,7 +106,7 @@ const TestQuestions= () => {
       );
     },
     onSuccess: (data, variables) => {
-      const createdUserQuestionResultId = data?.id || data?.data?.id;
+      const createdUserQuestionResultId = data?.attributes?.documentId || data?.data?.attributes?.documentId;
 
       if (createdUserQuestionResultId) {
         setUserQuestionResultsMap((prevMap: any) => ({
@@ -126,7 +126,7 @@ const TestQuestions= () => {
       userAnswer,
       passed,
     }: {
-      userQuestionResultId: number;
+      userQuestionResultId: string;
       userAnswer: string;
       passed: boolean;
     }) => {
@@ -164,7 +164,7 @@ const TestQuestions= () => {
       return await createTestResult(userId, topicId, testId, times_attempted);
     },
     onSuccess: (data, variables) => {
-      const createdTestResultId = data?.id || data?.data?.id;
+      const createdTestResultId = data?.attributes?.documentId || data?.data?.attributes?.documentId;
 
       if (createdTestResultId) {
         setTestResultId(createdTestResultId);

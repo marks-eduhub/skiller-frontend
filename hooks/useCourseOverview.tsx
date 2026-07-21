@@ -2,7 +2,7 @@ import api from "@/lib/axios";
 import { Course } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetchOverview = (id: number) => {
+export const useFetchOverview = (id: string) => {
   return useQuery<{ data: any; course: Course }, Error>({
     queryFn: async () => {
       if (!id) {
@@ -19,13 +19,13 @@ export const useFetchOverview = (id: number) => {
   });
 };
 
-const fetchReviews = async (courseId: number) => {
+const fetchReviews = async (courseId: string) => {
   const response = await api.get(
-    `/api/courseratings?filters[course][id][$eq]=${courseId}&populate[user][populate]=*`);
+    `/api/courseratings?filters[course][documentId][$eq]=${courseId}&populate[user][populate]=*`);
   return response.data;
 };
 
-export const useFetchReviews = (courseId: number) => {
+export const useFetchReviews = (courseId: string) => {
   return useQuery({
     queryKey: ["coursereviews", courseId],
     queryFn: () => fetchReviews(courseId),
@@ -38,19 +38,19 @@ export const useFetchReviews = (courseId: number) => {
 
 export const updateReview = async (
   userId: number,
-  courseId: number,
+  courseId: string,
   comment: string,
   rating: number
 ) => {
   try {
     const reviewExists = await api.get(
-      `/api/courseratings?filters[course][id][$eq]=${courseId}&filters[user][id][$eq]=${userId}`
+      `/api/courseratings?filters[course][documentId][$eq]=${courseId}&filters[user][id][$eq]=${userId}`
     );
 
     if (reviewExists.data.data.length > 0) {
       const review = reviewExists.data.data[0];
 
-      const response = await api.put(`/api/courseratings/${review.id}`, {
+      const response = await api.put(`/api/courseratings/${review.attributes.documentId}`, {
         data: {
           review: comment,
           score: rating,
@@ -70,7 +70,7 @@ export const updateReview = async (
 
 export const postReview = async (
   userId: number,
-  courseId: number,
+  courseId: string,
   comment: string,
   rating: number
 ) => {

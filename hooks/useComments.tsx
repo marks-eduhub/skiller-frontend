@@ -126,6 +126,6 @@ export const addComment = async ( topicId:number, userId:number, topicComment:st
       throw new Error("Liked comment not found");
     }
   
-    const likedCommentId = likedComment.id;
+    const likedCommentId = likedComment.attributes.documentId;
     await api.delete(`/api/comment-likes/${likedCommentId}`);
   };

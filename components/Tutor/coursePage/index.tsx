@@ -17,8 +17,9 @@ import { stripHtmlTags } from "@/lib/utility";
 const CourseOverview = () => {
   const [Tab, setTab] = useState("Course Overview");
   const { slug } = useParams();
-  const { data, isLoading, error } = useFetchOverview(Number(slug));
-  const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(Number(slug));
+  const courseDocumentId = String(slug);
+  const { data, isLoading, error } = useFetchOverview(courseDocumentId);
+  const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(courseDocumentId);
   const { sidebarMinimized } = useSidebar();
   const { data: rateCourse } = useFetchCourseRate();
 
@@ -28,7 +29,7 @@ const CourseOverview = () => {
 
   const courseRatings = rateCourse?.data || [];
 
-  const courseId = Number(slug);
+  const courseId = data?.data?.id;
 const courseRatingsForCurrentCourse = courseRatings.filter(
   (rating: any) => rating?.attributes?.course?.data?.id === courseId
 );

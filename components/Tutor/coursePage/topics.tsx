@@ -9,7 +9,7 @@ import { Topic } from "@/lib/types";
 
 const Topics = () => {
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const { data: topicData } = useFetchCourseTopics(courseId);
   const [showModal, setShowModal] = useState(false);
   const [currentTopic, setCurrentTopic] = useState<Topic | null>(null);
@@ -17,6 +17,7 @@ const Topics = () => {
   const topics = topicData?.data
     ?.map((topic: Topic) => ({
       id: topic.id,
+      documentId: (topic as any).attributes.documentId,
       attributes: topic.attributes,
       name: topic.attributes.topicname || "Untitled Topic",
       position: topic.attributes.position || 0,
@@ -70,7 +71,7 @@ const Topics = () => {
         isOpen={showModal}
         onClose={handleModalClose}
         courseId={courseId}
-        topicId={currentTopic?.id}
+        topicId={(currentTopic as any)?.documentId}
         currentTopic={currentTopic}
       />
     </div>

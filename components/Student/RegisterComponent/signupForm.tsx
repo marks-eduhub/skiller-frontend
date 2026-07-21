@@ -211,9 +211,15 @@ const SignupForm = () => {
             required
             className="w-[1.2rem] h-[1.2rem]"
           />
-          <label>
-            I agree to <span className="text-blue-600">terms of service </span>
-            and <span className="text-blue-600">privacy policy</span>
+          <label className="text-sm leading-6 text-black/75 sm:text-[15px]">
+            I agree to{" "}
+            <Link href="/terms" className="text-blue-600 underline-offset-2 hover:underline">
+              terms of service
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-blue-600 underline-offset-2 hover:underline">
+              privacy policy
+            </Link>
           </label>
         </div>
 

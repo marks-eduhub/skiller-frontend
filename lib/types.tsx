@@ -103,6 +103,7 @@ export interface QuizData {
 
 export interface TopicAttributes {
   id:number
+  documentId: string;
   topicname: string;
   duration: string;
   topicExpectations: string;
@@ -129,6 +130,7 @@ export interface Course {
 
 export interface Coursedata {
   id: number;
+  documentId: string;
   rating: number;
   duration: string;
   coursename: string;
@@ -201,6 +203,7 @@ export interface Category {
 
 export interface Tutor {
   attributes: {
+    documentId: string;
     tutorname: string;
     profilepicture: {
       data: {

@@ -5,7 +5,7 @@ import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
 
 const defaultTopic = {
-  id: 0,
+  id: "",
   topicname: "",
   topicdescription: "",
   topicExpectations: "",
@@ -24,8 +24,8 @@ const defaultTopic = {
 interface TopicModalProps {
   isOpen: boolean;
   onClose: () => void;
-  courseId: number;
-  topicId?: number;
+  courseId: string;
+  topicId?: string;
   currentTopic?: any;
 }
 const TopicModal: React.FC<TopicModalProps> = ({
@@ -166,7 +166,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
         <div className="overflow-y-auto">
           <TopicFields
             topic={topic}
-            topicId={topicId ?? 0}
+            topicId={topicId ?? ""}
             onFieldChange={onFieldChange}
             onVideoChange={onVideoChange}
             onFileChange={(file) => onFileChange(file)}

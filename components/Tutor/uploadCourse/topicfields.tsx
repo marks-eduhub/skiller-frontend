@@ -32,7 +32,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
 interface Topic {
-  id: number | null;
+  id: string | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;
@@ -50,7 +50,7 @@ interface Topic {
 
 interface TopicFieldsProps {
   topic: Topic;
-  topicId: number;
+  topicId: string;
   onFieldChange: (
     field: keyof Topic,
     value: string | File | null | string[]
@@ -103,15 +103,15 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const { courseId: contextCourseId } = useCourseContext();
   const isUploadingCourse = pathname === "/tutor/dashboard/uploadCourse";
   const { data } = useFetchTutors();
-  let courseId: number = 0;
+  let courseId: string = "";
   if (isUploadingCourse) {
-    courseId = contextCourseId ?? 0;
+    courseId = contextCourseId ? String(contextCourseId) : "";
   } else {
-    courseId = slug ? Number(slug) : courseIdParam ? Number(courseIdParam) : 0;
+    courseId = slug ? String(slug) : courseIdParam ? String(courseIdParam) : "";
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
-  const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
+  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [newResourceFiles, setNewResourceFiles] = useState<File[]>([]);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
@@ -188,7 +188,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       duration,
       tutorId,
     }: {
-      courseId: number;
+      courseId: string;
       topicname: string;
       topicExpectations: string;
       topicdescription: string;
@@ -251,8 +251,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       instructions,
       duration,
     }: {
-      topicId: number;
-      courseId: number;
+      topicId: string;
+      courseId: string;
       topicname: string;
       topicExpectations: string;
       topicdescription: string;
@@ -325,7 +325,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           : [];
       const newResources = newResourceFiles;
 
-      if (!topicId || topicId === 0) {
+      if (!topicId) {
         createTopic({
           courseId,
           topicname: topic.topicname,
@@ -360,7 +360,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   };
 
   const { mutate: deleteTopics } = useMutation({
-    mutationFn: async (topicId: number) => {
+    mutationFn: async (topicId: string) => {
       return await topicDelete(topicId);
     },
     onSuccess: () => {
@@ -383,7 +383,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       topicId,
       videoId,
     }: {
-      topicId: number;
+      topicId: string;
       videoId: string;
     }) => {
       return await deleteTopicVideo(topicId, videoId);
@@ -409,7 +409,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       topicId,
       resourceId,
     }: {
-      topicId: number;
+      topicId: string;
       resourceId: string;
     }) => {
       try {
@@ -435,8 +435,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
   });
 
-  const handleDeleteClick = (topicId: number) => {
-    if (topicId === null || topicId === 0 || topicId === undefined) {
+  const handleDeleteClick = (topicId: string) => {
+    if (!topicId) {
       message.warning("You can't delete an unsaved topic.");
       return;
     }
@@ -444,7 +444,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setIsModalOpen(true);
   };
 
-  const handleVideoModal = (videoId: string, topicId: number) => {
+  const handleVideoModal = (videoId: string, topicId: string) => {
     setVideoId(videoId);
     setVideoModalOpen(true);
   };
@@ -730,19 +730,15 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
               </span>
             </span>
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              className="hidden"
-              onChange={(e) => {
-                if (topic.id !== null) {
-                  onVideoChange(topic.id, e);
-                } else {
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                onChange={(e) => {
                   onVideoChange(index, e);
-                }
-              }}
-              accept="video/*"
-            />
+                }}
+                accept="video/*"
+              />
           </div>
         )}
       </div>
@@ -785,7 +781,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       <CustomModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onConfirm={(id: number) => {
+        onConfirm={(id: string) => {
           deleteTopics(id);
         }}
         topicId={selectedTopicId}

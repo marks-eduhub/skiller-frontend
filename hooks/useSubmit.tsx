@@ -106,7 +106,7 @@ export const createTestResult = async (
 
 export const createQuestionResult = async (
   passed: boolean,
-  testResultId: number,
+  testResultId: string,
   userAnswer: string,
   questionId: number
 ) => {
@@ -122,7 +122,7 @@ export const createQuestionResult = async (
 };
 
 export const UseUpdateQuestionResult = async (
-  userQuestionResultId: number,
+  userQuestionResultId: string,
   userAnswer: string,
   passed: boolean,
   questionId: number
@@ -141,7 +141,7 @@ export const UseUpdateQuestionResult = async (
 };
 
 export const updateTestResultScore = async (
-  testResultId: number,
+  testResultId: string,
   score: number
 ) => {
   const response = await api.put(`/api/test-results/${testResultId}`, {
@@ -152,9 +152,9 @@ export const updateTestResultScore = async (
 
 export const courseRating = async (
   userId: number,
-  courseId: number,
+  courseId: string,
   score: number,
-  progressId: number,
+  progressId: string,
   comment :string
 ) => {
   try {
@@ -176,18 +176,18 @@ export const courseRating = async (
 
 export const createCourseProgress = async (
   userId: number,
-  courseId: number,
+  courseId: string,
   progressStatus: boolean
 ) => {
   try {
     const progressResponse = await api.get(
-      `/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`
+      `/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}`
     );
 
     const progressEntries = progressResponse.data?.data || [];
 
     if (progressEntries.length > 0) {
-      const progressId = progressEntries[0].id;
+      const progressId = progressEntries[0].attributes.documentId;
       const response = await api.put(
         `/api/user-course-progresses/${progressId}`,
         {
@@ -234,7 +234,7 @@ export const topicProgress = async (
     const progress = existingTopicProgress?.data?.data || [];
     
     if (progress.length > 0) {
-      const topicProgressId = progress[0]?.id;
+      const topicProgressId = progress[0]?.attributes?.documentId;
       const response = await api.put(
         `/api/topic-progress-trackers/${topicProgressId}`,
         {
@@ -264,11 +264,11 @@ export const topicProgress = async (
 };
 
 
-export const useCompletedTopics = (userId:number, courseId:number) => {
+export const useCompletedTopics = (userId:number, courseId:string) => {
   return useQuery({
     queryKey: ["completed-topics", userId, courseId],
     queryFn: async () => {
-      const response = await api.get(`/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[course_tracker][course][id][$eq]=${courseId}&filters[completion_status][$eq]=true`);
+      const response = await api.get(`/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[course_tracker][course][documentId][$eq]=${courseId}&filters[completion_status][$eq]=true`);
       return response.data.data; 
     },
     enabled: !!userId && !!courseId, 
@@ -288,12 +288,12 @@ export const useFetchUserCourses = (userId: number) => {
   });
 };
 
-export const useFetchEnrolledCourses = (courseId: number) => {
+export const useFetchEnrolledCourses = (courseId: string) => {
   return useQuery({
     queryKey: ["enrolled-courses", courseId],
     queryFn: async () => {
       const response = await api.get(
-        `/api/course-trackers?filters[course][id][$eq]=${courseId}&populate[course][populate]=*&populate[topic_progress_trackers]=true`
+        `/api/course-trackers?filters[course][documentId][$eq]=${courseId}&populate[course][populate]=*&populate[topic_progress_trackers]=true`
 
       );
       return response.data.data; 
@@ -304,17 +304,17 @@ export const useFetchEnrolledCourses = (courseId: number) => {
 
 
 
-export const courseTracker = async (userId: number, courseId: number) => {
+export const courseTracker = async (userId: number, courseId: string) => {
   try {
     const currentDate = new Date().toISOString();
 
     const existingCourseTracker = await api.get(
-      `/api/course-trackers?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&populate=*`
+      `/api/course-trackers?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}&populate=*`
     );
     const tracker = existingCourseTracker?.data?.data || [];
 
     if (tracker.length > 0) {
-      const trackerId = tracker[0].id;
+      const trackerId = tracker[0].attributes.documentId;
       const response = await api.put(`/api/course-trackers/${trackerId}`, {
         data: {
           user: userId,
@@ -338,28 +338,28 @@ export const courseTracker = async (userId: number, courseId: number) => {
   }
 };
 
-const fetchCourseTracker = async (userId: number, courseId: number) => {
+const fetchCourseTracker = async (userId: number, courseId: string) => {
   const response = await api.get(
-    `/api/course-trackers?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&populate=*`
+    `/api/course-trackers?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}&populate=*`
   );
   return response.data;
 };
 
-export const useFetchCourseTracker = (userId: number, courseId: number) => {
+export const useFetchCourseTracker = (userId: number, courseId: string) => {
   return useQuery<{ data: any }, Error>({
     queryKey: ["course_trackers", userId, courseId],
     queryFn: () => fetchCourseTracker(userId, courseId),
   });
 };
 
-const fetchCourseRating = async (courseId: number, userId: number) => {
+const fetchCourseRating = async (courseId: string, userId: number) => {
   const response = await api.get(
-    `/api/courseratings?filters[course][id][$eq]=${courseId}&filters[user][id][$eq]=${userId}&populate=user_course_progress`
+    `/api/courseratings?filters[course][documentId][$eq]=${courseId}&filters[user][id][$eq]=${userId}&populate=user_course_progress`
   );
   return response.data;
 };
 
-export const useFetchCourseRating = (courseId: number, userId: number) => {
+export const useFetchCourseRating = (courseId: string, userId: number) => {
   return useQuery({
     queryKey: ["course_rating", courseId, userId],
     queryFn: () => fetchCourseRating(courseId, userId),
@@ -369,14 +369,14 @@ export const useFetchCourseRating = (courseId: number, userId: number) => {
     enabled: !!userId && !!courseId,
   });
 };
-const fetchCourseCompletion = async (courseId: number, userId: number) => {
+const fetchCourseCompletion = async (courseId: string, userId: number) => {
   const response = await api.get(
-    `/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&populate=*`
+    `/api/user-course-progresses?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}&populate=*`
   );
   return response.data;
 };
 
-export const useFetchCourseCompletion = (courseId: number, userId: number) => {
+export const useFetchCourseCompletion = (courseId: string, userId: number) => {
   return useQuery({
     queryKey: ["course_completion", courseId, userId],
     queryFn: () => fetchCourseCompletion(courseId, userId),
@@ -387,14 +387,14 @@ export const useFetchCourseCompletion = (courseId: number, userId: number) => {
   });
 };
 
-const fetchSpecificCourseRate = async (courseId: number) => {
+const fetchSpecificCourseRate = async (courseId: string) => {
   const response = await api.get(
-    `/api/courseratings?filters[course][id][$eq]=${courseId}&populate=*`
+    `/api/courseratings?filters[course][documentId][$eq]=${courseId}&populate=*`
   );
   return response.data;
 };
 
-export const useFetchSpecificCourseRate = (courseId: number) => {
+export const useFetchSpecificCourseRate = (courseId: string) => {
   return useQuery({
     queryKey: ["specific-course-rating", courseId],
     queryFn: () => fetchSpecificCourseRate(courseId),
@@ -424,7 +424,7 @@ export const useFetchCourseRate = () => {
 };
 
 export const updateCourseRating = async (
-  courseId: number,
+  courseId: string,
   averageRating: number
 ) => {
   try {

@@ -101,12 +101,12 @@ export const useFetchSearchCourses = (searchTerm: string) => {
 };
 
 
-const fetchCourseTopics = async(courseId:number) => {
-  const response = await api.get(`/api/topics?filters[course][id][$eq]=${courseId}&populate=*`);
+const fetchCourseTopics = async(courseId:string) => {
+  const response = await api.get(`/api/topics?filters[course][documentId][$eq]=${courseId}&populate=*`);
   return response.data;
 }
 
-export const useFetchCourseTopics = (courseId: number) => {
+export const useFetchCourseTopics = (courseId: string) => {
   return useQuery<{ data: any }, Error>({
     queryFn: () => fetchCourseTopics(courseId), 
     queryKey: ["course_topics", courseId],
@@ -133,7 +133,7 @@ export const useFetchTutorSlug = (id:string) => {
 };
 
 
-export const courseDelete = async (courseId: number) => {
+export const courseDelete = async (courseId: string) => {
   try {
     const response = await api.delete(`/api/courses/${courseId}`);
     return response.data;

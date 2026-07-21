@@ -7,7 +7,7 @@ import { message } from "antd";
 interface CourseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  courseId: number;
+  courseId: string;
 }
 const CourseModal: React.FC<CourseModalProps> = ({
   isOpen,

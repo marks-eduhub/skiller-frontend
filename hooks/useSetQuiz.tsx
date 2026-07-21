@@ -1,7 +1,7 @@
 import api from "@/lib/axios"
 import { useQuery } from "@tanstack/react-query";
 
-export const PostTest = async(courseId:number, testname:string, testdescription:string, testduration:string, topicId:string, passmark:number) => {
+export const PostTest = async(courseId:string, testname:string, testdescription:string, testduration:string, topicId:string, passmark:number) => {
 
     const response = await api.post("/api/tests?populate=*", {
         data: {
@@ -38,14 +38,14 @@ export const PostQuestion = async(questions:string, options:string[], answers:st
 }
 
 
-const fetchTopic = async (courseId:number, userId:number) => {
+const fetchTopic = async (courseId:string, userId:number) => {
 
-    const response = await api.get (`/api/topics?filters[course][id]=${courseId}&user=${userId}&populate=course`);
+    const response = await api.get (`/api/topics?filters[course][documentId]=${courseId}&user=${userId}&populate=course`);
 
     return response.data;
   };
   
-  export const useFetchTopic = (courseId:number, userId:number) => {
+  export const useFetchTopic = (courseId:string, userId:number) => {
     return useQuery({
       queryKey: ["select_topic", courseId, userId],
       queryFn: () => fetchTopic(courseId, userId),

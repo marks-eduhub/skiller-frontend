@@ -8,16 +8,16 @@ import React from "react";
 interface DeletecourseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  courseId: number;
+  courseId: string;
 }
 const DeletecourseModal: React.FC<DeletecourseModalProps> = ({
   onClose,
   courseId,
 }) => {
-  const router = useRouter()  
-  
+  const router = useRouter()
+
   const { mutate: deleteCourse, isPending } = useMutation({
-    mutationFn: async (courseId: number) => {
+    mutationFn: async (courseId: string) => {
       return await courseDelete(courseId);
     },
     onSuccess: () => {

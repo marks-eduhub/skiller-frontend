@@ -16,8 +16,7 @@ import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 const SetQuiz = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const IdCourse = searchParams.get("courseId");
-  const courseId = Number(IdCourse);
+  const courseId = searchParams.get("courseId");
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
   const [testname, setTestname] = useState("");
@@ -41,7 +40,7 @@ const SetQuiz = () => {
       topicId,
       passmark,
     }: {
-      courseId: number;
+      courseId: string;
       testname: string;
       testdescription: string;
       testduration: string;
@@ -85,6 +84,11 @@ const SetQuiz = () => {
   };
 
   const handleSubmitQuiz = () => {
+    if (!courseId) {
+      message.error("Course information is missing.");
+      return;
+    }
+
     if (!testname) {
       message.error("Test name is missing.");
       return;

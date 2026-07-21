@@ -38,7 +38,7 @@ export const addRecentCourse = async (courseId: number, userId: number) => {
       const recentCourse = existingEntry.data.data[0];
       const updatedCount = (recentCourse.attributes.timesAccessed || 0) + 1;
 
-      const response = await api.put(`/api/recent-courses/${recentCourse.id}`, {
+      const response = await api.put(`/api/recent-courses/${recentCourse.attributes.documentId}`, {
         data: {
           timesAccessed: updatedCount,
           dateLastAccessed: new Date().toISOString(),

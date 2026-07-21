@@ -37,9 +37,9 @@ const MainPage = () => {
     return avg.toFixed(1);
   };
 
-  const handleCourseClick = (courseId: number) => {
-    setLoadingCourseId(courseId);
-    router.push(`/tutor/dashboard/courseoverview/${courseId}`);
+  const handleCourseClick = (course: any) => {
+    setLoadingCourseId(course.id);
+    router.push(`/tutor/dashboard/courseoverview/${course.attributes.documentId}`);
   };
 
   const tutorCourses = coursedata?.filter(
@@ -98,7 +98,7 @@ const MainPage = () => {
                 <div
                   key={course.id}
                   className="relative cursor-pointer"
-                  onClick={() => handleCourseClick(course.id)}
+                  onClick={() => handleCourseClick(course)}
                 >
                   {loadingCourseId === course.id && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-white/70 backdrop-blur-sm">

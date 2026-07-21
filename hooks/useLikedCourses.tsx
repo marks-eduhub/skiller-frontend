@@ -49,6 +49,6 @@ export const removeLikedCourse = async (courseId: number, userId: number) => {
     throw new Error("Liked course not found");
   }
 
-  const likedCourseId = likedCourseEntry.id;
+  const likedCourseId = likedCourseEntry.attributes.documentId;
   await api.delete(`/api/liked-courses/${likedCourseId}`);
 };

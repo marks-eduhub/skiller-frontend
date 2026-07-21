@@ -23,6 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   const tutorName = course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
   const courseId = course?.id;
+  const courseDocumentId = course?.attributes?.documentId;
   const { user } = useAuthContext();
   const userId = user?.id;
   const [isLiked, setIsLiked] = useState(false);
@@ -30,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
 
   const { data: likedCourses } = useLikedCourses();
 
-  const { data: specificCourseRate } = useFetchSpecificCourseRate(courseId);
+  const { data: specificCourseRate } = useFetchSpecificCourseRate(courseDocumentId);
   const ratings = specificCourseRate?.data || [];
   const totalRatings = ratings.length;
   const averageRating = totalRatings > 0  ? ratings.reduce((sum: number, rating: any) => sum + rating.attributes.score, 0 ) / totalRatings : 0;

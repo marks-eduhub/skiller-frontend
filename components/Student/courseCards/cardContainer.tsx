@@ -38,7 +38,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
                   key={course.id}
                   className="cursor-pointer"
                   onClick={() =>
-                    handleCourseClick(`/dashboard/overview/${course.id}`)
+                    handleCourseClick(`/dashboard/overview/${course.attributes.documentId}`)
                   }
                 >
                   <ProductCard course={course} />
@@ -58,7 +58,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
                   key={course.id}
                   className="cursor-pointer"
                   onClick={() =>
-                    handleCourseClick(`/dashboard/overview/${course.id}`)
+                    handleCourseClick(`/dashboard/overview/${course.attributes.documentId}`)
                   }
                 >
                   <ProductCard course={course} />

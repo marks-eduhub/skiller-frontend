@@ -7,7 +7,7 @@ import QuizModal from "./testModal";
 
 const Assessments = () => {
   const { slug } = useParams();
-  const courseId = Number(slug);
+  const courseId = String(slug);
   const { data: topicData } = useFetchCourseTopics(courseId);
   const [isDown, setIsDown] = useState<{ [key: number]: boolean }>({});
 

@@ -5,7 +5,7 @@ import { message } from "antd";
 import TopicFields from "./topicfields";
 
 interface Topic {
-  id: number | null;
+  id: string | null;
   topicname: string;
   topicdescription: string;
   resourceInstructions: string;
@@ -45,7 +45,7 @@ const Step2: React.FC<Step2Props> = ({
     null
   );
   const [videoId, setVideoId] = useState("");
-  const [topicId, setTopicId] = useState<number | null>(null);
+  const [topicId, setTopicId] = useState<string | null>(null);
   const [topicVideo, setTopicVideo] = useState<File | null>(null);
   const [resourceId, setResourceIds] = useState("")
   
@@ -54,7 +54,7 @@ const Step2: React.FC<Step2Props> = ({
     setExpandedIndex(expandedIndex === index ? null : index);
     setCurrentTopicIndex(index);
 
-    setTopicId(topics[index]?.id || null);
+    setTopicId(topics[index]?.id ? String(topics[index].id) : null);
   };
 
   const onVideoChange = (
@@ -142,7 +142,7 @@ const Step2: React.FC<Step2Props> = ({
               
               <TopicFields
                 topic={topic}
-                topicId={topicId ?? 0}
+                topicId={topicId ?? ""}
                 index={index}
                 onFieldChange={(field: any, value: any) =>
                   updateTopic(index, { [field]: value })
