@@ -2,6 +2,22 @@ import { Code } from "@mui/icons-material";
 import api from "../../lib/axios";
 import { isBrowser } from "@/lib/isBrowser";
 
+type GoogleAuthResponse = {
+  data?: {
+    token?: string;
+    user?: unknown;
+  };
+  token?: string;
+  user?: unknown;
+  jwt?: string;
+};
+
+const extractGoogleAuthToken = (payload: GoogleAuthResponse) =>
+  payload?.data?.token || payload?.token || payload?.jwt || null;
+
+const extractGoogleAuthUser = (payload: GoogleAuthResponse) =>
+  payload?.data?.user || payload?.user || null;
+
 export const register = async (formData: FormData) => {
   try {
     const response = await api.post("/api/auth/local/register", formData);
@@ -35,14 +51,19 @@ export const registerUserWithGoogle = async () => {
     // Step 3: Authenticate user with Strapi using the authCode
 
     const authData = await authenticateUserWithGoogle(authCode);
-    // console.log("Authenticated User Data:", authData.data.token);
+    const token = extractGoogleAuthToken(authData);
+    const returnedUser = extractGoogleAuthUser(authData);
+
+    if (!token) {
+      throw new Error("Google authentication succeeded but no token was returned");
+    }
 
     // Step 4: Store JWT in local storage
-    localStorage.setItem("token", authData.data.token);
-        // Step 5: Fetch authenticated user details
+    localStorage.setItem("token", token);
+    // Step 5: Use the returned user when available; only fall back to /me when needed
+    const user =
+      returnedUser || (await getAuthenticatedUser(token));
 
-
-    const user = await getAuthenticatedUser(authData.data.token);
     localStorage.setItem("USER", JSON.stringify(user));
 
     // console.log("User Successfully Registered:", user);
@@ -139,4 +160,3 @@ export const redirectToGoogleAuth = async () => {
     throw error;
   }
 };
-

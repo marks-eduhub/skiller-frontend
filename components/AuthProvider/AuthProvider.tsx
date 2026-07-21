@@ -31,7 +31,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         // If the default endpoint fails, try the Google Auth endpoint
         const fallbackResponse = await api.get(
-          "/strapi-googleauth-extended/me",
+          "/strapi-google-auth/me",
           {
             headers: { Authorization: `${BEARER} ${token}` },
           }
