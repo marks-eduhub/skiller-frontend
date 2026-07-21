@@ -111,45 +111,23 @@ export function NavLinks({
           </div>
 
           <hr className="border-gray-600 my-5" />
-          <div>
-            <div
-              onClick={() => handleNavigation("/dashboard/tutorspage")}
-              className={clsx("flex items-center mt-2 p-3 cursor-pointer", {
+          <div
+            onClick={() => handleNavigation("/dashboard/tutorspage")}
+            className={clsx(
+              "flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer",
+              {
                 "bg-gray-700 text-white rounded ":
                   pathname === "/dashboard/tutorspage",
-              })}
-            >
-              <p className="sm:mb-0 mb-2">Tutors</p>
-            </div>
-            {data?.data.slice(0, 5).map((subscription) => {
-              const slug = subscription.id;
-              const name = subscription.attributes.tutorname;
-              return (
-                <div
-                  key={name}
-                  onClick={() =>
-                    handleNavigation(`/dashboard/subscriptions/${slug}`)
-                  }
-                  className={clsx(
-                    "flex items-center justify-between sm:mb-0 mb-4 bg-black sm:pl-4 pb-4 sm:p-3 cursor-pointer",
-                    {
-                      "bg-gray-700 text-white rounded ":
-                        pathname === `/dashboard/subscriptions/${slug}`,
-                    }
-                  )}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Image
-                      src="/subscriptions.svg"
-                      alt=""
-                      width={20}
-                      height={20}
-                    />
-                    <p className="text-white">{name}</p>
-                  </div>
-                </div>
-              );
-            })}
+              }
+            )}
+          >
+            <Image
+              src="/subscriptions.svg"
+              alt="tutors"
+              width={20}
+              height={20}
+            />
+            <p>Tutors</p>
           </div>
           <hr className="my-4 border-gray-600" />
 

@@ -35,6 +35,12 @@ const TutorNav = () => {
         )}
 
         <div className="flex flex-row items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition hover:bg-black hover:text-white"
+          >
+            Student Dashboard
+          </Link>
           <div className="flex flex-row items-center gap-3 max-md:mt-5">
             <h2 className="text-[15px] font-semibold">Tutor</h2>
             <Image

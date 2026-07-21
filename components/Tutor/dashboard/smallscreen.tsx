@@ -23,13 +23,21 @@ const SmallScreen = () => {
       <div className="w-20 text-white">
           <SkillerLogo />
         </div>
-        <div className="flex w-48 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
+        <div className="flex items-center gap-2">
+          <Link
+            href="/dashboard"
+            className="rounded-full border border-black/15 bg-white px-3 py-2 text-xs font-medium text-black shadow-sm"
+          >
+            Student
+          </Link>
+          <div className="flex w-36 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
           <Image src="/magnify.svg" alt="magnify" width={30} height={30} />
           <input
             type="text"
             placeholder="Search..."
             className="outline-none bg-transparent ml-2"
           />
+        </div>
         </div>
       <HamburgerMenuIcon
         className="w-6 h-6 cursor-pointer text-black rotate90  "
