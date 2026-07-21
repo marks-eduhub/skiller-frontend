@@ -21,6 +21,32 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
 import { stripHtmlTags } from "@/lib/utility";
 
+const normalizeOptions = (rawOptions: unknown): string[] => {
+  if (Array.isArray(rawOptions)) {
+    return rawOptions.map((option) => String(option));
+  }
+
+  if (typeof rawOptions === "string") {
+    try {
+      const parsed = JSON.parse(rawOptions);
+      if (Array.isArray(parsed)) {
+        return parsed.map((option) => String(option));
+      }
+    } catch {
+      return rawOptions
+        .split("\n")
+        .map((option) => option.trim())
+        .filter(Boolean);
+    }
+  }
+
+  if (rawOptions && typeof rawOptions === "object") {
+    return Object.values(rawOptions).map((option) => String(option));
+  }
+
+  return [];
+};
+
 const TestQuestions= () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -354,7 +380,7 @@ const TestQuestions= () => {
         {currentQuestions &&
           currentQuestions?.map((questionItem: any, index: number) => {
             const questionText = questionItem?.attributes?.questions;
-            const options = questionItem?.attributes?.options || [];
+            const options = normalizeOptions(questionItem?.attributes?.options);
 
             return (
               <div key={index} className="flex flex-col py-10">
@@ -369,7 +395,7 @@ const TestQuestions= () => {
                       Reset option
                     </button>
                   </div>
-                  {options.map((option: any, optionIndex: string) => {
+                  {options.map((option: string, optionIndex: number) => {
                     return (
                       <div
                         key={optionIndex}

@@ -33,6 +33,12 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
             <>
               <Greeting username={username} />
               <div className="ml-auto flex items-center gap-5">
+                <Link
+                  href={isTutor ? "/tutor/dashboard" : "/dashboard/profile"}
+                  className="rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition hover:bg-black hover:text-white"
+                >
+                  {isTutor ? "Tutor Dashboard" : "Set Up Tutor Profile"}
+                </Link>
                 {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p> */}
@@ -81,6 +87,12 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
               </div>
 
               <div className="flex items-center gap-5">
+                <Link
+                  href={isTutor ? "/tutor/dashboard" : "/dashboard/profile"}
+                  className="rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition hover:bg-black hover:text-white"
+                >
+                  {isTutor ? "Tutor Dashboard" : "Set Up Tutor Profile"}
+                </Link>
                 {/* <p className="rounded-full px-6 py-2 shadow text-black bg-white">
                   Premium
                 </p> */}
