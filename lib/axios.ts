@@ -13,7 +13,7 @@ const api = axios.create({
   });
   
   api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+    const token = isBrowser() ? localStorage.getItem('token') : null;
     if (token) {
       config.headers.Authorization = `${BEARER} ${token}`;
     }
@@ -42,7 +42,7 @@ const api = axios.create({
         }
       }
   
-      if (status === 400 && config.url.includes("/auth/local")) {
+      if (status === 400 && config.url?.includes("/auth/local")) {
         message.error(data.error?.message || "Invalid identifier or password.");
       } else if (status === 404) {
         message.error("Requested resource not found.");

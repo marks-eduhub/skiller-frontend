@@ -10,7 +10,6 @@ import { useMutation } from "@tanstack/react-query";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   register,
-  registerUserWithGoogle,
   redirectToGoogleAuth,
 } from "../../../hooks/Authhooks/useRegister";
 const SignupForm = () => {
@@ -37,7 +36,7 @@ const SignupForm = () => {
     confirmPassword: "",
     studentname: "",
   });
-  const { mutate, isPending, isError} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
       message.success(`Welcome ${data.user.displayName}`);
@@ -53,17 +52,8 @@ const SignupForm = () => {
   const {
     mutate: mutateGoogle,
     isPending: isPendingGoogle,
-    isError: isErrorGoogle,
-    error: errorGoogle,
   } = useMutation({
     mutationFn: redirectToGoogleAuth,
-    onSuccess: (data) => {
-      // message.success(`Welcome ${data.user.displayName}`);
-      // if (setUser) {
-      //   setUser(data.user);
-      // }
-      // router.push("/google-callback");
-    },
     onError: (error) => {
       message.error((error as Error).message || "Something went wrong!");
     },
@@ -119,7 +109,6 @@ const SignupForm = () => {
       <h2 className="font-[400] sm:text-[50px] text-[38px]">
         {data.registerForm.title}
       </h2>
-      {isError && <p className="text-red-500">{isError}</p>}
       <div className="flex flex-col w-[100%] gap-[1.5rem] sm:gap-[1.5rem] mt-[2rem]">
         <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
           <div className="flex flex-col items-start w-full sm:w-[22rem]">
@@ -196,7 +185,7 @@ const SignupForm = () => {
             <label className="  sm:text-[22px]">Confirm password</label>
             <div className="relative sm:w-[22rem] w-full">
               <input
-                type={passwordVisible ? "text" : "password"}
+                type={confirmPasswordVisible ? "text" : "password"}
                 name="confirmPassword"
                 required
                 placeholder="Confirm your password"
@@ -232,7 +221,7 @@ const SignupForm = () => {
           <button
             onClick={handleSubmit}
             type="submit"
-            className="bg-black text-white rounded-lg py-3 text-xl flex justify-center w-96 my-4"
+            className="bg-black text-white rounded-lg py-3 text-xl flex justify-center w-full max-w-96 my-4"
             disabled={isPending}
           >
             {isPending ? "Loading..." : "Sign Up"}

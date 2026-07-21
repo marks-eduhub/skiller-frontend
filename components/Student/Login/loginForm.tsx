@@ -23,7 +23,7 @@ export default function LogIn() {
   const { setUser } = authContext || {};
   const router = useRouter();
 
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       message.success(`Welcome back ${data.user.username}`);
@@ -33,8 +33,8 @@ export default function LogIn() {
       }
       router.push("/dashboard");
     },
-    onError: (error: any) => {
-      error(error.message || "Something went wrong!");
+    onError: (mutationError: Error) => {
+      message.error(mutationError.message || "Something went wrong!");
     },
   });
 
@@ -51,17 +51,8 @@ export default function LogIn() {
   const {
     mutate: mutateGoogle,
     isPending: isPendingGoogle,
-    isError: isErrorGoogle,
-    error: errorGoogle,
   } = useMutation({
     mutationFn: redirectToGoogleAuth,
-    onSuccess: (data) => {
-      // message.success(`Welcome ${data.user.displayName}`);
-      // if (setUser) {
-      //   setUser(data.user);
-      // }
-      // router.push("/google-callback");
-    },
     onError: (error) => {
       message.error((error as Error).message || "Something went wrong!");
     },
@@ -79,10 +70,6 @@ export default function LogIn() {
         <h2 className="font-[600] text-[38px] sm:text-[50px] mt-[1rem]">
           {data.loginForm.title}
         </h2>
-        {/* {isError && (
-          <p className="text-red-500 mt-4">{error.message || "Login failed"}</p>
-        )} */}
-
         <form
           className="flex flex-col w-full gap-[2.2rem] mt-[2rem]"
           onSubmit={handleLogin}

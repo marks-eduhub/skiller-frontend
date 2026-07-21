@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import FeaturedProduct from "../courseCards/mainFeaturedCard";
 import ProductContainer from "../courseCards/cardContainer";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,12 @@ const HomePage: React.FC = () => {
 
   const { data, isLoading, error } = useFetchCourses();
 
+  useEffect(() => {
+    if (error || recentError || isError) {
+      message.error("Error fetching courses. Please try again later.");
+    }
+  }, [error, recentError, isError]);
+
   if (isLoading || loadingRecent || weeksLoading) {
     return (
       <div className="sm:ml-5">
@@ -62,10 +68,6 @@ const HomePage: React.FC = () => {
         </div>
       </div>
     );
-  }
-
-  if (error || recentError || isError) {
-    message.error("Error fetching courses. Please try again later.");
   }
 
   const coursesByCategory: {

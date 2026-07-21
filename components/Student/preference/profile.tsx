@@ -69,7 +69,7 @@ const Profile: React.FC<ProfileProps> = ({ updateForm }) => {
       gender,
       date_birth: dob,
     });
-  }, [phone, gender, dob]);
+  }, [selectedCode, phone, gender, dob, updateForm]);
 
   return (
     <form className="flex flex-col gap-6">

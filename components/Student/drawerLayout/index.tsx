@@ -12,10 +12,10 @@ export default function DrawerLayout({
 }) {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-      <div className="w-full flex-none md:w-[50%]">
+      <div className="w-full flex-none md:w-1/2">
         <AuthDrawer pageTo={pageTo} link={link} />
       </div>
-      <div className="md:w-[100%]">{children}</div>
+      <div className="w-full md:w-1/2">{children}</div>
     </div>
   );
 }
