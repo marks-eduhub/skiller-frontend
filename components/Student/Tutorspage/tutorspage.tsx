@@ -67,7 +67,7 @@ const Tutorspage = () => {
       ) : (
         <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">
           {tutors?.map((tutor: any, index: number) => {
-           const relativeUrl = tutor?.attributes?.user?.data?.attributes?.profilepicture?.data?.attributes?.url
+           const relativeUrl = tutor?.attributes?.user?.data?.attributes?.profilepicture?.data?.attributes?.url || "/profilepicture.webp"
 
              
           return (

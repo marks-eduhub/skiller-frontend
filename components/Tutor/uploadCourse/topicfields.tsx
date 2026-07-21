@@ -1,5 +1,11 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { GrCloudUpload } from "react-icons/gr";
@@ -192,8 +198,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       duration: string;
       tutorId: number;
     }) => {
+      const NewResources = Array.isArray(newResources) ? newResources : [];
       const newResourceIds = await Promise.all(
-        newResources.map(async (file) => {
+        NewResources.map(async (file) => {
           const id = await uploadMedia(file);
           return String(id);
         })

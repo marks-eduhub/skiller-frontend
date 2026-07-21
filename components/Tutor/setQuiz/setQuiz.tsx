@@ -1,5 +1,5 @@
 "use client";
-import React, { useState} from "react";
+import React, { useState } from "react";
 import StepTracker from "./tracker";
 import Step3 from "./step3";
 import Step2 from "./step2";
@@ -17,19 +17,20 @@ const SetQuiz = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const IdCourse = searchParams.get("courseId");
-  const courseId = Number(IdCourse)
+  const courseId = Number(IdCourse);
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
   const [testname, setTestname] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
-  const [passmark, setPassmark] = useState("");
+  const [passmark, setPassmark] = useState<number>(0);
   const [topic, setTopic] = useState("");
   const [quizData, setQuizData] = useState([
     { question: "", options: ["", ""], answers: "" },
   ]);
-  const [isUploading, setIsUploading] = useState(false)
-  const {sidebarMinimized} = useSidebar()
+  const [isUploading, setIsUploading] = useState(false);
+  const { sidebarMinimized } = useSidebar();
+
 
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
@@ -40,12 +41,12 @@ const SetQuiz = () => {
       topicId,
       passmark,
     }: {
-      courseId:number
+      courseId: number;
       testname: string;
       testdescription: string;
       testduration: string;
       topicId: string;
-      passmark: string;
+      passmark: number;
     }) => {
       return await PostTest(
         courseId,
@@ -94,17 +95,15 @@ const SetQuiz = () => {
     }
     if (!duration) {
       message.error("Test duration is missing.");
+      return;
     }
     if (!topic) {
       message.error("Please select a topic.");
       return;
     }
-    // if (passmark === "" || isNaN(passmark)) {
-    //   message.error("Please enter a valid passmark.");
-    //   return;
-    // }
-    if (!passmark) {
-      message.error("Please enter the test passmark.");
+    
+    if (Number(passmark) <= 0) {
+      message.error("Passmark must be greater than 0.");
       return;
     }
 
@@ -114,15 +113,15 @@ const SetQuiz = () => {
     }
 
     if (quizData.some(({ options }) => options.some((opt) => !opt))) {
-      message.error("Please ensure all options are filled in .");
+      message.error("Please ensure all options are filled in.");
       return;
     }
 
     if (quizData.some(({ answers }) => !answers)) {
-      message.error("Please select the correct answer for the questions .");
+      message.error("Please select the correct answer for the questions.");
       return;
     }
-    setIsUploading(true)
+    setIsUploading(true);
 
     testdata(
       {
@@ -194,7 +193,12 @@ const SetQuiz = () => {
         )}
       </div>
 
-      <h1 className={`text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center ${sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"}`}>
+      <h1
+        className={`text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center ${
+          sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"
+        }`}
+      >
+
         New Assignment
       </h1>
 
@@ -251,17 +255,25 @@ const SetQuiz = () => {
         ) : currentStep === 2 ? (
           <button
             className={`bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white ${
-              !topic ? "opacity-50 cursor-not-allowed" : ""
+              !topic ||
+              passmark  <= 0
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             }`}
             onClick={handleNextStep}
-            disabled={!topic}
+           disabled={!topic || passmark <= 0}
+
+
           >
             Next
           </button>
         ) : currentStep === 1 ? (
           <button
-            className="bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white"
+            className={`bg-black py-2 px-4 sm:mt-0 sm:ml-0 ml-20 mt-4 flex items-center justify-center rounded w-[150px] text-white ${
+              !testname || !description ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={handleNextStep}
+            disabled={!testname || !description}
           >
             Next
           </button>

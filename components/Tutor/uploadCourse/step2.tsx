@@ -120,14 +120,13 @@ const Step2: React.FC<Step2Props> = ({
     <div className="sm:p-4">
       {topics?.map((topic, index) => (
         <div key={index} className="flex flex-col mt-5 mb-5 cursor-pointer">
-          <h1 className="font-bold text-[20px] sm:mb-0 mb-5">{topic.topicname}</h1>
 
           <div className="w-full sm:h-[100px] h-[90px] sm:bg-gray-300 bg-gray-100 sm:mt-3">
             <div
               onClick={() => toggleExpanded(index)}
               className="flex items-center justify-between p-9 relative"
             >
-              <h1 className="font-bold text-[20px]">Get Started</h1>
+              <h1 className="font-bold text-[20px]">{topic.topicname}</h1>
 
               <div
                 className={`transition-transform duration-200 transform ${

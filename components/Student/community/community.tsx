@@ -532,7 +532,8 @@ const Community = () => {
                         <Image
                           src={
                             q.attributes.user?.data?.attributes?.profilepicture
-                              ?.data?.attributes?.url || "/Ellipse 445.webp"
+                              ?.data?.attributes?.url || "/profilepicture.webp"
+
                           }
                           alt={q.attributes?.user?.data?.attributes?.username}
                           width={70}

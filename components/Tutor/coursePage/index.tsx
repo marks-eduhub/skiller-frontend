@@ -5,13 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
-import TutorNav from "../dashboard/tutor-nav";
 import Topics from "./topics";
 import { useParams } from "next/navigation";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
-import { useFetchEnrolledCourses } from "@/hooks/useSubmit";
+import { useFetchCourseRate, useFetchEnrolledCourses } from "@/hooks/useSubmit";
 import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 import { stripHtmlTags } from "@/lib/utility";
 
@@ -20,13 +19,27 @@ const CourseOverview = () => {
   const { slug } = useParams();
   const { data, isLoading, error } = useFetchOverview(Number(slug));
   const { data: totalStudentsEnrolled } = useFetchEnrolledCourses(Number(slug));
-  const {sidebarMinimized} = useSidebar()
+  const { sidebarMinimized } = useSidebar();
+  const { data: rateCourse } = useFetchCourseRate();
 
   const handleClicks = (tabName: string) => {
     setTab(tabName);
   };
 
-  const rating = data?.data?.attributes?.averageRating || "No rating";
+  const courseRatings = rateCourse?.data || [];
+
+  const courseId = Number(slug);
+const courseRatingsForCurrentCourse = courseRatings.filter(
+  (rating: any) => rating?.attributes?.course?.data?.id === courseId
+);
+const totalRatings = courseRatingsForCurrentCourse.length;
+const averageRating =
+  totalRatings > 0
+    ? (courseRatingsForCurrentCourse.reduce(
+        (sum: number, rating: any) => sum + (rating?.attributes?.score || 0),
+        0
+      ) / totalRatings).toFixed(1)
+    : "No rating";
   const days = data?.data?.attributes?.days || 0;
   const learners = totalStudentsEnrolled?.length || 0;
   const coursename = data?.data?.attributes?.coursename;
@@ -48,13 +61,17 @@ const CourseOverview = () => {
   return (
     <div className="px-5 sm:py-0 py-7  h-full w-full cursor-pointer">
       <div className="flex flex-col sm:pr-0 pr-4  sm:mt-10 mt-20 sm:flex-row sm:justify-between sm:items-center">
-        <div className={`flex sm: items-center ${sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"}`}>
+        <div
+          className={`flex sm: items-center ${
+            sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"
+          }`}
+        >
+
           <Link href="/tutor/dashboard">
             <Image src="/backarrow.svg" alt="back" width={20} height={20} />
           </Link>
           <div className="flex sm:pl-5 pl-3 gap-2">
-            <Image src="/star.svg" alt="star" width={15} height={15} />
-            {rating}
+             ⭐ {averageRating}
           </div>
           <div className="flex sm:pl-5 pl-3 gap-1">
             <Image src="/clock.svg" alt="clock" width={15} height={15} />
@@ -67,7 +84,7 @@ const CourseOverview = () => {
             <h1>Learner(s)</h1>
           </div>
         </div>
-        
+
       </div>
 
       <div
@@ -80,6 +97,7 @@ const CourseOverview = () => {
           <h1 className="text-white font-bold sm:text-[40px] sm:w-2/3 mb-10 text-[30px] sm:mx-0 mx-2">
             {coursename}
           </h1>
+
           <p className="text-white mt-6 sm:w-2/3 ">{stripHtmlTags(description)}</p>
         </div>
       </div>
