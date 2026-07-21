@@ -49,11 +49,14 @@ const QuestionModal = () => {
     onError: ( err, variables, context: any) => {
       queryClient.setQueryData(["communityDetails"], context.previousData);
       message.error("Failed to post question.");
+      setIsSubmittingQuestion(false);
     },
     onSuccess: () => {
       message.success("Question posted successfully!");
+      setIsSubmittingQuestion(false);
     },
     onSettled: () => {
+      setIsSubmittingQuestion(false);
       queryClient.invalidateQueries({ queryKey: ["communityDetails"] });
     },
   });
@@ -74,7 +77,7 @@ const QuestionModal = () => {
   return (
     <div className="relative">
       <button
-        className="sm:mb-4 px-4 py-2 bg-gray-600 text-white rounded"
+        className="rounded bg-gray-600 px-4 py-2 text-sm text-white sm:mb-4"
         onClick={() => {
           setIsModalOpen(true);
         }}  >
@@ -89,7 +92,7 @@ const QuestionModal = () => {
             <ReactQuill
               value={questionContent}
               onChange={setQuestionContent}
-              className="mb-4"
+              className="community-editor mb-4"
               theme="snow"
             />
 

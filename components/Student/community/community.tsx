@@ -65,7 +65,7 @@ const Community = () => {
   const { data: likedResponses = [], isLoading: likesLoading } =
     useLikedResponses(Number(userId));
   const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 2;
+  const questionsPerPage = 3;
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
   const [likeCounts, setLikeCounts] = useState<{ [key: string]: number }>({});
@@ -232,6 +232,7 @@ const Community = () => {
         ...prev,
         [questionId]: "",
       }));
+      setIsSubmittingResponse(false);
     },
     onError: (error, variables, context: any) => {
       if (context?.previousData) {
@@ -240,6 +241,7 @@ const Community = () => {
       message.error("Failed to post response.");
     },
     onSettled: () => {
+      setIsSubmittingResponse(false);
       queryClient.invalidateQueries({ queryKey: ["question_responses", questionId] });
     },
   });
@@ -259,6 +261,7 @@ const Community = () => {
     }
   
     const responderName = user?.username || "Anonymous";
+    setIsSubmittingResponse(true);
   
     const newResponse = {
       id: Date.now(), 
@@ -447,21 +450,21 @@ const Community = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full sm:p-4  p-1 relative">
+    <div className="relative flex w-full flex-col gap-5 p-1 sm:p-3">
       <div>
-        <h1 className="text-2xl font-bold mb-5">Community Discussions</h1>
-        <p className="text-gray-600 ">
+        <h1 className="mb-3 text-[24px] font-bold sm:text-[26px]">Community Discussions</h1>
+        <p className="text-sm text-gray-600 sm:text-[15px]">
           Ask a question or help others by responding.
         </p>
       </div>
 
-      <div className="relative flex  flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
-        <div className="flex items-center relative rounded-lg shadow bg-white p-3 w-full sm:w-1/2">
+      <div className="relative flex w-full flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="relative flex w-full items-center rounded-lg bg-white p-3 shadow sm:w-[28rem]">
           <MagnifyingGlassIcon className="w-6 h-6 text-black mr-2 max-md:hidden" />
           <input
             type="text"
             placeholder="Search through community"
-            className="flex-1 outline-none bg-transparent"
+            className="flex-1 bg-transparent text-sm outline-none"
             value={searchQuery}
             onChange={handleSearchChange}
             onKeyDown={handleSearchKeyDown}
@@ -483,7 +486,7 @@ const Community = () => {
       {showDropdown && (
         <div
           ref={dropdownRef}
-          className="absolute bg-white top-[165px] shadow-lg rounded-lg mt-2 w-full z-50 max-h-60 overflow-y-auto"
+          className="absolute top-[150px] z-50 mt-2 max-h-60 w-full overflow-y-auto rounded-lg bg-white shadow-lg sm:top-[64px] sm:max-w-[28rem]"
         >
           {searchLoading ? (
             <div className="p-2">Loading...</div>
@@ -511,8 +514,8 @@ const Community = () => {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row gap-6 w-full h-auto mt-5">
-        <div className="w-full sm:w-[60%]">
+      <div className="mt-3 flex h-auto w-full flex-col gap-5 sm:flex-row">
+        <div className="w-full sm:w-[68%]">
           {currentQuestions && currentQuestions.length > 0 ? (
             currentQuestions.map((q: any, index: number) => {
               const { Question } = q.attributes;
@@ -524,11 +527,11 @@ const Community = () => {
               return (
                 <div
                   key={index}
-                  className="flex relative  flex-col shadow-lg  bg-white mb-10 px-4 sm:gap-6 border-b border-gray-100 pb-2  rounded-lg py-6"
+                  className="relative mb-6 flex flex-col rounded-lg border border-gray-100 bg-white px-4 py-4 shadow-sm sm:gap-4 sm:px-5"
                 >
                   <div key={index}>
                     <div className="flex items-center">
-                      <div className="mr-4">
+                      <div className="mr-3">
                         <Image
                           src={
                             q.attributes.user?.data?.attributes?.profilepicture
@@ -536,33 +539,33 @@ const Community = () => {
 
                           }
                           alt={q.attributes?.user?.data?.attributes?.username}
-                          width={70}
-                          height={70}
-                          className="rounded-full object-cover"
+                          width={54}
+                          height={54}
+                          className="h-[54px] w-[54px] rounded-full object-cover"
                         />
                       </div>
 
-                      <div className="flex flex-col">
-                        <h1 className="font-semibold">
+                      <div className="flex flex-1 flex-col">
+                        <h1 className="text-[15px] font-semibold leading-6 sm:text-[16px]">
                           <span className="font-normal">{stripHtmlTags(plainQuestion)}</span>
                         </h1>
 
-                        <p className="text-gray-400">
+                        <p className="mt-1 text-xs text-gray-400 sm:text-sm">
                           Asked by: {nameofquestioner}
                         </p>
                       </div>
                     </div>
                     <button
                       onClick={() => openReplyModal(questionId)}
-                      className="absolute flex gap-2 items-center top-3 right-3 text-gray-700 rounded-full p-2 transition"
+                      className="absolute right-3 top-3 flex items-center gap-1 rounded-full p-2 text-gray-700 transition"
                     >
-                      <FaComment size={18} />
-                      <span className="text-gray-500">{`${responses?.length}`}</span>
+                      <FaComment size={16} />
+                      <span className="text-sm text-gray-500">{`${responses?.length}`}</span>
                     </button>
                   </div>
                   {responses.length === 0 && (
-                    <div className="mt-4">
-                      <h1 className="text-gray-700 ml-2">Add a response</h1>
+                    <div className="mt-3">
+                      <h1 className="ml-1 text-sm text-gray-700">Add a response</h1>
                       <div className="">
                         <ReactQuill
                           value={responsesContentMap[questionId] || ""}
@@ -570,16 +573,17 @@ const Community = () => {
                           onChange={(value) =>
                             handleResponseChange(questionId, value)
                           }
-                          className="mb-4 mt-2"
+                          className="community-editor mb-3 mt-2"
                           theme="snow"
                         />
                         <button
-                          className="bg-gray-600 text-white px-3 py-2 mt-3 rounded-lg transition"
+                          className="mt-2 rounded-lg bg-gray-600 px-3 py-2 text-sm text-white transition disabled:cursor-not-allowed disabled:opacity-70"
                           onClick={() => handleSubmitResponse(questionId)}
+                          disabled={isSubmittingResponse}
                         >
                           {isSubmittingResponse ? (
                             <DotPulseWrapper
-                              size="30"
+                              size="20"
                               speed="1.5"
                               color="white"
                             />
@@ -591,20 +595,20 @@ const Community = () => {
                     </div>
                   )}
 
-                  <div className="px-4 mt-4 max-h-[600px] pb-4  flex flex-col">
+                  <div className="mt-3 flex max-h-[440px] flex-col px-2 pb-2 sm:px-3">
                     <div className="overflow-auto custom-scrollbar">
                       {responses.length === 0 ? (
-                        <p className="text-gray-700 mt-4 text-center">
+                        <p className="mt-3 text-center text-sm text-gray-700">
                           Be the first to respond.
                         </p>
                       ) : (
                         <>
-                          <div className="flex justify-start mt-3">
+                          <div className="mt-2 flex justify-start">
                             <button
                               onClick={() =>
                                 handleLoadMoreResponses(questionId)
                               }
-                              className="text-blue-600"
+                              className="text-sm text-blue-600"
                             >
                               {showAllResponsesMap[questionId]
                                 ? "Hide Responses"
@@ -621,10 +625,10 @@ const Community = () => {
                               return (
                                 <div
                                   key={responseId}
-                                  className="flex-col items-start mb-3 p-2 mt-5"
+                                  className="mt-3 flex-col items-start border-b border-black/5 pb-3"
                                 >
-                                  <div className="flex items-center gap-2 mb-5">
-                                    <div className="h-[50px] w-[50px] relative">
+                                  <div className="mb-3 flex items-center gap-2">
+                                    <div className="relative h-[40px] w-[40px]">
                                       <Image
                                         src={response?.profilePicture}
                                         alt={response?.responderName}
@@ -632,13 +636,13 @@ const Community = () => {
                                         className="rounded-full object-cover"
                                       />
                                     </div>
-                                    <p className="font-medium text-sm mb-1">
+                                    <p className="mb-1 text-sm font-medium">
                                       {response?.responderName}
                                     </p>
                                   </div>
-                                  <div className="ml-2">
-                                    <div className="text-gray-600 text-sm break-words overflow-hidden">
-                                      {stripHtmlTags(plainQuestion)}
+                                  <div className="ml-1">
+                                    <div className="overflow-hidden break-words text-sm leading-6 text-gray-600">
+                                      {stripHtmlTags(response?.responseText || "")}
                                     </div>
                                       
                                     <div className="flex gap-1 mt-2">
@@ -676,20 +680,21 @@ const Community = () => {
                     </div>
                     {showAllResponsesMap[questionId] &&
                       responses.length > 0 && (
-                        <div className="sticky bottom-0 bg-white flex max-md:flex-col sm:items-center sm:justify-between">
+                        <div className="sticky bottom-0 flex bg-white pt-2 max-md:flex-col sm:items-center sm:justify-between">
                           <ReactQuill
                             value={responsesContentMap[questionId] || ""}
                             placeholder="Write your response here..."
                             onChange={(value) =>
                               handleResponseChange(questionId, value)
                             }
-                            className="mb-4 mt-2 w-full sm:w-[85%]"
+                            className="community-editor mt-1 w-full sm:w-[85%]"
                             theme="snow"
                           />
                           <div className="max-md:justify-start">
                             <button
-                              className="bg-gray-600 text-white px-4 py-2 rounded-lg transition "
+                              className="rounded-lg bg-gray-600 px-4 py-2 text-sm text-white transition disabled:cursor-not-allowed disabled:opacity-70"
                               onClick={() => handleSubmitResponse(questionId)}
+                              disabled={isSubmittingResponse}
                             >
                               {isSubmittingResponse ? (
                                 <DotPulseWrapper
@@ -717,7 +722,7 @@ const Community = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-4 gap-4">
+      <div className="mt-2 flex items-center justify-center gap-4">
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
@@ -730,7 +735,7 @@ const Community = () => {
           Previous
         </button>
 
-        <p className="text-gray-700 font-medium ">
+        <p className="text-sm font-medium text-gray-700">
           Page {currentPage} of
           <span className="ml-1">{totalPages}</span>
         </p>

@@ -130,6 +130,18 @@
 
 }
 
+.community-editor .ql-container {
+  min-height: 96px;
+}
+
+.community-editor .ql-editor {
+  min-height: 96px;
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
