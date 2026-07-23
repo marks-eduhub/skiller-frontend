@@ -179,6 +179,8 @@ const MainPage = () => {
                   : courseStatus === "Pending"
                   ? "bg-amber-100 text-amber-800"
                   : "bg-slate-200 text-slate-700";
+              const courseStatusLabel =
+                courseStatus === "Pending" ? "Pending Admin Review" : courseStatus;
 
               return (
                 <div
@@ -205,7 +207,7 @@ const MainPage = () => {
                           Free
                         </p>
                         <p className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyles}`}>
-                          {courseStatus}
+                          {courseStatusLabel}
                         </p>
                       </div>
                     </div>

@@ -10,12 +10,12 @@ const TutorWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <SidebarProvider>
-      <div className="relative flex h-screen flex-col overflow-hidden bg-[#f8fafc] md:flex-row md:overflow-hidden">
+      <div className="relative flex h-screen flex-col bg-[#f8fafc] md:flex-row md:overflow-hidden">
         <div className={`w-full ${sidebarMinimized ? "md:w-[116px]" : "md:w-[224px]"}`}>
           <SideBar />
         </div>
         <div
-          className={`flex-grow py-4 md:overflow-y-auto hide-scrollbar ${
+          className={`flex-grow overflow-y-auto py-4 hide-scrollbar ${
             sidebarMinimized ? "md:pl-6" : "md:pl-4"
           }`}
         >

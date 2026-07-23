@@ -19,34 +19,28 @@ const SmallScreen = () => {
   };
 
   return (
-    <div className="sm:hidden absolute top-0 left-5 right-5 z-50  flex items-center justify-between pt-6">
-      <div className="w-20 text-white">
+    <div className="sm:hidden absolute top-0 left-5 right-5 z-50 flex items-center justify-between gap-2 pt-6">
+      <div className="w-16 shrink-0 text-white">
           <SkillerLogo />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
           <Link
             href="/dashboard"
-            className="rounded-full border border-black/15 bg-white px-3 py-2 text-xs font-medium text-black shadow-sm"
+            className="shrink-0 whitespace-nowrap rounded-full border border-black/15 bg-white px-3 py-2 text-xs font-medium text-black shadow-sm"
           >
             Student
           </Link>
-          <Link
-            href="/"
-            className="rounded-full border border-black/15 bg-white px-3 py-2 text-xs font-medium text-black shadow-sm"
-          >
-            Normal
-          </Link>
-          <div className="flex w-36 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
-          <Image src="/magnify.svg" alt="magnify" width={30} height={30} />
+          <div className="flex min-w-0 max-w-[140px] flex-1 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
+          <Image src="/magnify.svg" alt="magnify" width={18} height={18} className="shrink-0" />
           <input
             type="text"
             placeholder="Search..."
-            className="outline-none bg-transparent ml-2"
+            className="min-w-0 w-full outline-none bg-transparent ml-2 text-sm"
           />
         </div>
         </div>
       <HamburgerMenuIcon
-        className="w-6 h-6 cursor-pointer text-black rotate90  "
+        className="w-6 h-6 shrink-0 cursor-pointer text-black rotate90  "
         onClick={toggleSidebar}
       />
     

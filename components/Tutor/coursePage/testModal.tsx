@@ -9,6 +9,7 @@ import Loader from "@/components/Student/loader";
 import { useMutation } from "@tanstack/react-query";
 import { EditTest, EditTestQuestion } from "@/hooks/useSetQuiz";
 import { message } from "antd";
+import { normalizeOptions } from "@/lib/utility";
 
 interface QuizModalProps {
   modalOpen: boolean;
@@ -52,7 +53,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
           const formattedQuizData = test.questions.data.map((q: any) => ({
             questionId: q.id,
             question: q.attributes.questions,
-            options: q.attributes.options,
+            options: normalizeOptions(q.attributes.options),
             answers: q.attributes.answers || "",
           }));
 

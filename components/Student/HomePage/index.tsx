@@ -31,11 +31,13 @@ const HomePage: React.FC = () => {
   } = useFetchCarouselCourses();
 
   const courseData = weeksData?.data?.filter(
-    (course: any) => course?.attributes.categoryName === "Week's Picks"
+    (course: any) => course?.attributes?.categoryName === "Week's Picks"
   );
   const weeksCourses =
-    courseData?.map((course: any) => course.attributes.courses.data).flat() ||
-    [];
+    courseData
+      ?.map((course: any) => course?.attributes?.courses?.data)
+      .filter(Boolean)
+      .flat() || [];
 
   const { data, isLoading, error } = useFetchCourses();
 
@@ -75,7 +77,7 @@ const HomePage: React.FC = () => {
   } = {};
 
   data?.data.forEach((course: any) => {
-    const categories = course.attributes.categories.data;
+    const categories = course?.attributes?.categories?.data || [];
 
     categories.forEach((category: any) => {
       const categorySlug = category.attributes.slug;
@@ -150,7 +152,8 @@ const HomePage: React.FC = () => {
         recentlyAccessedCourses?.data.length > 0 ? (
           <ProductContainer
             courses={recentlyAccessedCourses.data
-              .map((item: any) => item.attributes.course.data)
+              .map((item: any) => item?.attributes?.course?.data)
+              .filter(Boolean)
               .slice(0, 3)}
           />
         ) : (

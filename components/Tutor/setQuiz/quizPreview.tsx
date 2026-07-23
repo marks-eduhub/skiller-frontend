@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import { normalizeOptions } from "@/lib/utility";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -62,7 +63,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
               item.question
             }`}</h2>
             <div className="pl-5 mt-4 font-normal">
-              {item.options.map((option, optIndex) => (
+              {normalizeOptions(item.options).map((option, optIndex) => (
                 <label key={optIndex} className="block mb-2">
                   <input
                     type="radio"

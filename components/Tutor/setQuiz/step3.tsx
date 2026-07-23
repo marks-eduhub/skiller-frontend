@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { normalizeOptions } from "@/lib/utility";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -120,15 +121,20 @@ const Step3 = ({
     ]);
   };
 
-  const removeQuestion = (id: number) => {
-    setQuizData(quizData.filter((q) => q.id !== id));
+  const removeQuestion = (index: number) => {
+    if (index < 0 || index >= quizData.length) {
+      return;
+    }
+    setQuizData(quizData.filter((_, i) => i !== index));
   };
 
   return (
     <div className="rounded-lg border mb-5 w-full border-gray-100 sm:p-6 p-4 bg-gray-100">
       <h1>Add Questions and Answers to Your Quiz</h1>
 
-      {currentQuestions.map((q, qIndex) => (
+      {currentQuestions.map((q, qIndex) => {
+        const questionOptions = normalizeOptions(q.options);
+        return (
         <div
           key={qIndex}
           className="rounded-lg border w-full flex flex-col h-auto border-gray-900 bg-white mt-5 p-4"
@@ -136,7 +142,7 @@ const Step3 = ({
           <div className="flex justify-between items-center w-full sm:mb-0 mb-3">
             <h2>Question {qIndex + 1}</h2>
             <button
-              onClick={() => removeQuestion(qIndex)}
+              onClick={() => removeQuestion(indexOfFirstQuestion + qIndex)}
               className="text-red-500 text-sm border border-black p-2 rounded-md"
             >
               Remove Question
@@ -152,7 +158,7 @@ const Step3 = ({
             />
           </div>
 
-          {q.options.map((option: string, oIndex: number) => (
+          {questionOptions.map((option: string, oIndex: number) => (
             <div key={oIndex} className="flex items-center gap-3 my-2">
               <input
                 type="text"
@@ -200,7 +206,7 @@ const Step3 = ({
               <option value="" disabled>
                 Select Answer
               </option>
-              {q.options.map((option: string, oIndex: number) => (
+              {questionOptions.map((option: string, oIndex: number) => (
                 <option key={oIndex} value={option}>
                   {option || `Option ${oIndex + 1}`}
                 </option>
@@ -208,7 +214,8 @@ const Step3 = ({
             </select>
           </div>
         </div>
-      ))}
+        );
+      })}
 
       <div
         className="gap-2 cursor-pointer my-10 rounded-md items-center justify-center w-[200px] py-3 px-4 flex border border-gray-600"

@@ -458,8 +458,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       });
       queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
 
-      closeModal();
-      onClose();
+      setVideoPreview(null);
+      onFieldChange("topicVideo", null);
     },
     onError: () => {
       message.error("Error deleting topic video. Please try again later.");
@@ -489,8 +489,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       });
       queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
 
-      closeModal();
-      onClose();
+      if (resourceIndex !== null) {
+        onRemoveResource(resourceIndex);
+      }
     },
     onError: (error) => {
       message.error("Error deleting topic resource. Please try again later.");

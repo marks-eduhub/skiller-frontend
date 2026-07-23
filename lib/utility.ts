@@ -26,3 +26,29 @@ export const isValidResourceLink = (value: string) => {
     return false;
   }
 };
+
+export const normalizeOptions = (rawOptions: unknown): string[] => {
+  if (Array.isArray(rawOptions)) {
+    return rawOptions.map((option) => String(option));
+  }
+
+  if (typeof rawOptions === "string") {
+    try {
+      const parsed = JSON.parse(rawOptions);
+      if (Array.isArray(parsed)) {
+        return parsed.map((option) => String(option));
+      }
+    } catch {
+      return rawOptions
+        .split("\n")
+        .map((option) => option.trim())
+        .filter(Boolean);
+    }
+  }
+
+  if (rawOptions && typeof rawOptions === "object") {
+    return Object.values(rawOptions).map((option) => String(option));
+  }
+
+  return [];
+};
