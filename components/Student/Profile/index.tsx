@@ -113,7 +113,10 @@ const ProfilePage: React.FC = () => {
         linkedin: data.socialLinks?.linkedin || "",
       });
 
-      const profilePicUrl = data.profilepicture?.url;
+      const profilePicUrl =
+        data.profilepicture?.formats?.thumbnail?.url ||
+        data.profilepicture?.formats?.small?.url ||
+        data.profilepicture?.url;
 
       if (profilePicUrl) {
         setUploadImage(profilePicUrl);
