@@ -51,12 +51,12 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
     {
       icon: HiOutlineUserGroup,
       name: "Community",
-      path: "/tutor/dashboard/communications/QandA",
+      path: "/tutor/dashboard/community",
     },
     {
       icon: HiOutlineUserCircle,
       name: "Profile",
-      path: "/dashboard/profile",
+      path: "/tutor/dashboard/profile",
     },
     // {
     //   src: "/tools.svg",
@@ -161,7 +161,10 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
       <Link
         href="/dashboard"
         className={clsx(
-          "mt-5 flex h-[46px] grow items-center rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm font-medium text-white transition md:flex-none md:hover:-translate-y-0.5 md:hover:border-white/20 md:hover:bg-gray-900",
+          "mt-5 flex items-center rounded-2xl border border-white/10 bg-black text-sm font-medium text-white transition md:hover:-translate-y-0.5 md:hover:border-white/20 md:hover:bg-gray-900",
+          sidebarMinimized
+            ? "mx-auto h-10 w-10 justify-center px-0"
+            : "h-[46px] grow px-3 py-2 md:flex-none",
           {
             "bg-white text-slate-950": pathname === "/dashboard",
           }
@@ -169,7 +172,8 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
       >
         <div
           className={clsx(
-            "mr-2 flex h-7 w-7 items-center justify-center rounded-xl",
+            "flex h-7 w-7 items-center justify-center rounded-xl",
+            sidebarMinimized ? "" : "mr-2",
             pathname === "/dashboard"
               ? "bg-slate-100 text-slate-700"
               : "bg-white/8 text-gray-300"
