@@ -20,6 +20,12 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import queryClient from "@/lib/queryClient";
 import QualificationsDropdown from "../../../lib/Qualifications";
+import {
+  FaEnvelope,
+  FaFacebookF,
+  FaLinkedinIn,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -64,6 +70,32 @@ const ProfilePage: React.FC = () => {
   });
 
   const tutorId = tutor?.data[0]?.id;
+  const socialIconLinks = [
+    {
+      key: "email",
+      href: socialLinks.email ? `mailto:${socialLinks.email}` : "",
+      icon: FaEnvelope,
+      label: "Email",
+    },
+    {
+      key: "facebook",
+      href: socialLinks.facebook || "",
+      icon: FaFacebookF,
+      label: "Facebook",
+    },
+    {
+      key: "twitter",
+      href: socialLinks.twitter || "",
+      icon: FaXTwitter,
+      label: "X",
+    },
+    {
+      key: "linkedin",
+      href: socialLinks.linkedin || "",
+      icon: FaLinkedinIn,
+      label: "LinkedIn",
+    },
+  ];
 
   useEffect(() => {
     if (data) {
@@ -226,7 +258,7 @@ const ProfilePage: React.FC = () => {
       socialLinks,
     }: {
       studentname: string;
-      profilepicture: string;
+      profilepicture: number | null;
       lastName: string;
       firstName: string;
       userId: number | null;
@@ -247,7 +279,12 @@ const ProfilePage: React.FC = () => {
       );
     },
     onError: handleError,
-    onSuccess: handleSuccess,
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["user_details", variables.userId],
+      });
+      handleSuccess();
+    },
   });
 
   const { mutate: updateTutorProfile } = useMutation({
@@ -321,7 +358,7 @@ const ProfilePage: React.FC = () => {
       return;
     }
 
-    let profilePictureId = null;
+    let profilePictureId: number | null = null;
 
     if (image) {
       if (exisitingprofileId) {
@@ -334,7 +371,7 @@ const ProfilePage: React.FC = () => {
         return;
       }
     } else {
-      profilePictureId = exisitingprofileId ? String(exisitingprofileId) : null;
+      profilePictureId = exisitingprofileId ? Number(exisitingprofileId) : null;
     }
     setIsSaving(true);
 
@@ -441,92 +478,138 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="max-md:p-0 max-md:pr-4 sm:pl-10 items-center sm:w-1/2">
-      <div className="flex sm:gap-10 gap-6 sm:mt-4 mt-0">
+    <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mb-8 flex items-start gap-4 sm:items-center sm:gap-6">
         <IoMdArrowRoundBack
-          className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
+          className="mt-1 cursor-pointer text-[28px] sm:mt-0 sm:text-[30px]"
           onClick={handleBack}
         />
-        <h2 className="font-bold text-[30px] mb-3 max-md:mt-0 ">Profile</h2>
-      </div>
-      <p>
-        Add your personal details as you would like them to appear on your
-        profile
-      </p>
-
-      <div className="h-[200px] border border-gray-200 rounded-lg mb-5 mt-5 items-center">
-        <div className="flex items-center justify-center my-3">
-          {isImageLoading && !uploadImage ? (
-            <DotPulseWrapper size="30" speed="1.5" color="black" />
-          ) : (
-            <div className="w-32 h-32 overflow-hidden rounded-full">
-              <Image
-                src={uploadImage || "/profilepicture.webp"}
-                alt="userimage"
-                width={120}
-                height={120}
-                className="w-full h-full object-cover rounded-full"
-                onLoad={() => {
-                  setIsImageLoading(false);
-                }}
-                onError={() => {
-                  setIsImageLoading(false);
-                  setUploadImage("/profilepicture.webp");
-                }}
-              />
-            </div>
-          )}
-
-          <div className="flex flex-col gap-5 ml-9">
-            <input
-              type="file"
-              accept="image/*"
-              id="file-upload"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-
-            <label
-              htmlFor="file-upload"
-              className="bg-black text-white rounded-md px-4 py-1 cursor-pointer text-center flex items-center justify-center"
-            >
-              {isUploading ? (
-                <DotPulseWrapper
-                  type="ring"
-                  size="30"
-                  speed="1.75"
-                  color="white"
-                />
-              ) : null}
-              {isUploading ? "Uploading..." : "Upload Photo"}
-            </label>
-
-            <button
-              onClick={handleRemoveImage}
-              className="bg-white text-black border border-black rounded-md px-4 py-1"
-              disabled={isUploading}
-            >
-              Remove Photo
-            </button>
-          </div>
+        <div>
+          <h2 className="text-[30px] font-bold leading-tight text-slate-950 sm:text-[34px]">
+            Profile
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
+            Add your personal details as you would like them to appear across your student and tutor profile.
+          </p>
         </div>
-
-        <p className="ml-4 italic mt-2 text-[14px]">
-          Maximum size: 1MB. Supported formats: JPG, GIF or PNG
-        </p>
       </div>
 
-      <div className="items-center justify-center">
-        <form className="space-y-4">
-          <div className="flex flex-col md:flex-row md:space-x-10">
-            <div className="flex-1">
+      <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] sm:p-6">
+          <div className="rounded-[24px] bg-[linear-gradient(180deg,_#f8fafc_0%,_#eef2ff_100%)] p-5">
+            <div className="flex flex-col items-center text-center">
+              {isImageLoading && !uploadImage ? (
+                <DotPulseWrapper size="30" speed="1.5" color="black" />
+              ) : (
+                <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white shadow-lg">
+                  <Image
+                    src={uploadImage || "/profilepicture.webp"}
+                    alt="userimage"
+                    width={120}
+                    height={120}
+                    className="h-full w-full rounded-full object-cover"
+                    onLoad={() => {
+                      setIsImageLoading(false);
+                    }}
+                    onError={() => {
+                      setIsImageLoading(false);
+                      setUploadImage("/profilepicture.webp");
+                    }}
+                  />
+                </div>
+              )}
+
+              <h3 className="mt-4 text-xl font-semibold text-slate-950">
+                {firstName || lastName
+                  ? `${firstName} ${lastName}`.trim()
+                  : "Your profile"}
+              </h3>
+              {toggle && (
+                <span className="mt-3 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  Tutor Profile
+                </span>
+              )}
+              <p className="mt-2 text-sm text-slate-600">
+                Upload a clean profile image and keep your public details up to date.
+              </p>
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                {socialIconLinks.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = Boolean(item.href);
+
+                  if (isActive) {
+                    return (
+                      <a
+                        key={item.key}
+                        href={item.href}
+                        target={item.key === "email" ? undefined : "_blank"}
+                        rel={item.key === "email" ? undefined : "noreferrer"}
+                        aria-label={item.label}
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-900 hover:text-slate-950"
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={item.key}
+                      aria-label={`${item.label} unavailable`}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col">
+              <input
+                type="file"
+                accept="image/*"
+                id="file-upload"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+
               <label
-                htmlFor="first-name"
-                className="w-[100px] text-sm font-medium"
+                htmlFor="file-upload"
+                className="flex cursor-pointer items-center justify-center rounded-xl bg-slate-950 px-4 py-2.5 text-center text-sm font-medium text-white"
               >
-                First Name
+                {isUploading ? (
+                  <DotPulseWrapper
+                    type="ring"
+                    size="30"
+                    speed="1.75"
+                    color="white"
+                  />
+                ) : null}
+                {isUploading ? "Uploading..." : "Upload Photo"}
               </label>
 
+              <button
+                onClick={handleRemoveImage}
+                className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-900"
+                disabled={isUploading}
+              >
+                Remove Photo
+              </button>
+            </div>
+
+            <p className="mt-4 text-center text-xs italic text-slate-500 lg:text-left">
+              Maximum size: 1MB. Supported formats: JPG, GIF or PNG
+            </p>
+          </div>
+        </section>
+
+        <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] sm:p-6">
+          <div className="grid gap-5 md:grid-cols-2">
+            <div>
+              <label htmlFor="first-name" className="text-sm font-medium text-slate-700">
+                First Name
+              </label>
               <input
                 type="text"
                 id="first-name"
@@ -536,15 +619,12 @@ const ProfilePage: React.FC = () => {
                 }}
                 placeholder="Enter your first name"
                 required
-                className="mt-1 w-[300px] rounded-lg block px-3 py-2 border border-gray-200 mb-6 bg-inherit"
-                style={{ outline: "none", borderColor: "black" }}
+                className="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3"
+                style={{ outline: "none" }}
               />
             </div>
-            <div className="flex-1">
-              <label
-                htmlFor="last-name"
-                className="text-sm w-[100px] font-medium"
-              >
+            <div>
+              <label htmlFor="last-name" className="text-sm font-medium text-slate-700">
                 Last Name
               </label>
               <input
@@ -556,14 +636,13 @@ const ProfilePage: React.FC = () => {
                 }}
                 placeholder="Enter your last name"
                 required
-                className="mt-1 w-[300px] block rounded-lg px-3 py-2 border border-gray-200 mb-6 bg-inherit"
-                style={{ outline: "none", borderColor: "black" }}
+                className="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3"
+                style={{ outline: "none" }}
               />
             </div>
           </div>
-        </form>
 
-        <div className="flex items-center my-5">
+        <div className="my-6 flex flex-col gap-3 rounded-2xl bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
           <label htmlFor="toggle-switch" className="mr-3 text-sm font-medium">
             Click the toggle if you want a tutor profile
           </label>
@@ -583,16 +662,18 @@ const ProfilePage: React.FC = () => {
 
         {toggle && (
           <div className="flex flex-col">
-            <div className="sm:mb-10 mt-4 ">
-              <div className="flex items-center  w-full mb-5">
-                <label className="block text-sm mb-1 mr-16">Tutor title</label>
+            <div className="mt-4 sm:mb-10">
+              <div className="mb-5 flex w-full flex-col gap-2 sm:flex-row sm:items-center">
+                <label className="block text-sm font-medium text-slate-700 sm:min-w-[120px]">
+                  Tutor title
+                </label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => {
                     setRole(e.target.value);
                   }}
-                  className="border border-black sm:w-[250px] rounded-lg bg-[#F9F9F9] px-3 py-2 outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 outline-none sm:max-w-[320px]"
                 />
               </div>
 
@@ -604,19 +685,19 @@ const ProfilePage: React.FC = () => {
                 className="w-2/3"
               />
 
-              <label className="block text-sm mt-8 mb-3 font-semibold ">
-                Enter your biography
-              </label>
+                <label className="mb-3 mt-8 block text-sm font-semibold text-slate-800">
+                  Enter your biography
+                </label>
 
-              <div>
-                <ReactQuill
+                <div>
+                  <ReactQuill
                   placeholder="Write content here"
                   value={Biography}
                   onChange={setBiography}
                   theme="snow"
-                  className="bg-white h-[200px] mb-5"
-                />
-              </div>
+                    className="mb-5 h-[200px] bg-white"
+                  />
+                </div>
 
               {/* <div className="mt-20 ">
                 <span>
@@ -634,53 +715,53 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         )}
-        <div className="mb-4  mt-2 grid grid-cols-2 gap-4">
+        <div className="mb-4 mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm mb-1">Email</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">Email</label>
             <input
               type="email"
               value={socialLinks.email}
               onChange={(e) =>
                 setSocialLinks({ ...socialLinks, email: e.target.value })
               }
-              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
-              style={{ outline: "none", borderColor: "black" }}
+              className="w-full rounded-xl border border-slate-300 px-3 py-3"
+              style={{ outline: "none" }}
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Facebook</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">Facebook</label>
             <input
               type="text"
               value={socialLinks.facebook}
               onChange={(e) =>
                 setSocialLinks({ ...socialLinks, facebook: e.target.value })
               }
-              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
-              style={{ outline: "none", borderColor: "black" }}
+              className="w-full rounded-xl border border-slate-300 px-3 py-3"
+              style={{ outline: "none" }}
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Twitter</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">Twitter</label>
             <input
               type="text"
               value={socialLinks.twitter}
               onChange={(e) =>
                 setSocialLinks({ ...socialLinks, twitter: e.target.value })
               }
-              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
-              style={{ outline: "none", borderColor: "black" }}
+              className="w-full rounded-xl border border-slate-300 px-3 py-3"
+              style={{ outline: "none" }}
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">LinkedIn</label>
+            <label className="mb-1 block text-sm font-medium text-slate-700">LinkedIn</label>
             <input
               type="text"
               value={socialLinks.linkedin}
               onChange={(e) =>
                 setSocialLinks({ ...socialLinks, linkedin: e.target.value })
               }
-              className="rounded-lg px-3 py-2 border border-gray-300 w-full"
-              style={{ outline: "none", borderColor: "black" }}
+              className="w-full rounded-xl border border-slate-300 px-3 py-3"
+              style={{ outline: "none" }}
             />
           </div>
         </div>
@@ -689,7 +770,7 @@ const ProfilePage: React.FC = () => {
           type="button"
           onClick={handleSaveChanges}
           disabled={isSaving}
-          className={`mt-5 bg-black text-white py-2 px-6 rounded-md transition-opacity ${
+          className={`mt-6 rounded-xl bg-black px-6 py-3 text-white transition-opacity ${
             isSaving ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
           }`}
         >
@@ -704,6 +785,7 @@ const ProfilePage: React.FC = () => {
             "Save Changes"
           )}
         </button>
+        </section>
       </div>
     </div>
   );

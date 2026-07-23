@@ -594,10 +594,16 @@ const Community = () => {
                     </div>
                   )}
 
-                  <div className="mt-3 flex max-h-[440px] flex-col px-2 pb-2 sm:px-3">
+                  <div
+                    className={`flex flex-col px-2 sm:px-3 ${
+                      responses.length === 0
+                        ? "mt-1 pb-0"
+                        : "mt-3 max-h-[440px] pb-2"
+                    }`}
+                  >
                     <div className="overflow-auto custom-scrollbar">
                       {responses.length === 0 ? (
-                        <p className="mt-3 text-center text-sm text-gray-700">
+                        <p className="mt-1 text-center text-sm text-gray-600">
                           Be the first to respond.
                         </p>
                       ) : (

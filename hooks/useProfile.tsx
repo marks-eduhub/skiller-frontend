@@ -30,7 +30,7 @@ export const addTutor = async (
 
 export const updateStudent = async (
   studentname: string,
-  profilepicture: string,
+  profilepicture: number | null,
   lastName: string,
   firstName: string,
   userId: number | null,
@@ -165,7 +165,7 @@ export const deleteProfilePicture = async (
     await api.delete(`/api/upload/files/${profilepictureId}`);
 
     await api.put(`/api/users/${userId}`, {
-      profilepicture: null, 
+      profilepicture: null,
     });
 
     return { message: "Profile picture deleted successfully." };
