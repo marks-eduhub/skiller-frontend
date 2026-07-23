@@ -10,7 +10,7 @@ export const PostTest = async(courseId:string, testname:string, testdescription:
             testdescription,
             testduration,
             topic: topicId,
-            passmark
+            passmark: String(passmark)
 
         },
         meta:{
@@ -85,7 +85,7 @@ const fetchTopic = async (courseId:string, userId:number) => {
         testdescription,
         testduration,
         topic: topicId,
-        passmark,
+        passmark: String(passmark),
       },
       meta: {
         errorMessage: "Failed to edit test details",

@@ -242,7 +242,7 @@ const MainPage = () => {
             <div className="relative mt-5 flex h-[220px] w-full cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-slate-300 bg-white/75 shadow-[0_12px_40px_rgba(15,23,42,0.04)] sm:mt-0">
               <Link href="/tutor/dashboard/uploadCourse">
                 <div className="flex items-center justify-center rounded-3xl bg-slate-950 px-7 py-4 shadow-lg">
-                  <Image src="/Vector.png" alt="plus" width={26} height={26} />
+                  <HiPlus className="h-6 w-6 text-white" />
                 </div>
                 <p className="mt-5 text-center font-medium text-slate-900">Add a course</p>
               </Link>

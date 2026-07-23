@@ -231,13 +231,6 @@ const Step3 = ({
           Previous
         </button>
 
-        <p className="text-gray-700 font-medium ">
-          Page {currentPage} of
-          <span className="ml-1">
-            {Math.ceil(quizData.length / questionsPerPage)}
-          </span>
-        </p>
-
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage * questionsPerPage >= quizData.length}

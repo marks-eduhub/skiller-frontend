@@ -79,17 +79,17 @@ const averageRating =
         </div>
 
         <div className="grid gap-2 sm:grid-cols-3 lg:w-[360px] lg:grid-cols-1 xl:grid-cols-3">
-          <div className="rounded-[18px] border border-slate-200 bg-white p-3 shadow-sm">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Rating</p>
-            <p className="mt-1.5 text-lg font-semibold text-slate-950">⭐ {averageRating}</p>
+          <div className="rounded-[18px] border border-slate-200 bg-white p-2.5 shadow-sm">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Rating</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">⭐ {averageRating}</p>
           </div>
-          <div className="rounded-[18px] border border-slate-200 bg-white p-3 shadow-sm">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Duration</p>
-            <p className="mt-1.5 text-lg font-semibold text-slate-950">{days} day(s)</p>
+          <div className="rounded-[18px] border border-slate-200 bg-white p-2.5 shadow-sm">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Duration</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{days} day(s)</p>
           </div>
-          <div className="rounded-[18px] border border-slate-200 bg-white p-3 shadow-sm">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Learners</p>
-            <p className="mt-1.5 text-lg font-semibold text-slate-950">{learners}</p>
+          <div className="rounded-[18px] border border-slate-200 bg-white p-2.5 shadow-sm">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Learners</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{learners}</p>
           </div>
         </div>
       </div>
