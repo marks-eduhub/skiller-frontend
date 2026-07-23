@@ -82,14 +82,20 @@ const Enroll = () => {
   const topics = courseAttributes?.topicname?.data || [];
 
   const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
-
+  const courseStatus = (courseAttributes?.status || "").toLowerCase();
+  const isDraft = courseStatus !== "published";
+  const enrollDisabled = isProcessing || (isDraft && !isEnrolled);
 
   const handleTab = (tabName: string) => setTab(tabName);
 
   const handleEnrollClick = async () => {
     if (isProcessing) return;
+    if (isDraft && !isEnrolled) {
+      message.error("This course is not published yet and cannot be enrolled in.");
+      return;
+    }
     setIsProcessing(true);
-  
+
     try {
       if (!isEnrolled) {
         await courseTracker(userId, courseId);
@@ -102,7 +108,7 @@ const Enroll = () => {
       setIsProcessing(false);
     }
   };
-  
+
 
   return (
     <div>
@@ -123,12 +129,14 @@ const Enroll = () => {
             <button
               className="rounded-md max-md:hidden sm:px-7 py-2 bg-white text-black"
               onClick={handleEnrollClick}
-              disabled={isProcessing} 
+              disabled={enrollDisabled}
             >
               {isProcessing
                 ? "Please wait..."
                 : isEnrolled
                 ? "Go to Course"
+                : isDraft
+                ? "Not available yet"
                 : "Enroll today!"}
             </button>
           </div>
@@ -150,12 +158,14 @@ const Enroll = () => {
         <button
               className="sm:rounded-md  sm:px-7 py-2 sm:bg-white sm:text-black text-white"
               onClick={handleEnrollClick}
-              disabled={isProcessing} 
+              disabled={enrollDisabled}
             >
               {isProcessing
                 ? "Please wait..."
                 : isEnrolled
                 ? "Go to Course"
+                : isDraft
+                ? "Not available yet"
                 : "Enroll today!"}
             </button>
         
