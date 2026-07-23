@@ -572,9 +572,9 @@ const Community = () => {
         >
           {searchLoading ? (
             <div className="p-2">Loading...</div>
-          ) : searchResults?.data?.length > 0 ? (
+          ) : searchResults?.data?.length ? (
             <div className="gap-6">
-              {searchResults.data.map((item: any) => (
+              {searchResults?.data?.map((item: any) => (
                 <div
                   key={item.id}
                   className="cursor-pointer p-3 hover:bg-gray-100"
