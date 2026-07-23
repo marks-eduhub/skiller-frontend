@@ -120,6 +120,7 @@ const Enroll = () => {
           className="object-cover bg-no-repeat rounded-2xl"
         />
         <div className="absolute inset-0 video-overlay rounded-lg"></div>
+        <div className="absolute inset-x-0 bottom-0 h-1/2 rounded-b-2xl bg-gradient-to-t from-black/60 to-transparent backdrop-blur-sm"></div>
         <div className="flex justify-between w-full absolute inset-0 mb-5 z-30">
           <div className="flex flex-col text-white p-4 gap-2 self-end">
             <h1 className="font-bold text-[20px]">{coursename}</h1>
