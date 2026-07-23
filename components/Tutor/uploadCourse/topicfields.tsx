@@ -18,6 +18,7 @@ import {
   topicDelete,
   topicEditing,
   topicUpload,
+  TopicLink,
 } from "@/hooks/useCourseTopics";
 import { message } from "antd";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
@@ -27,6 +28,7 @@ import VideoModal from "./videoModal";
 import ResourceModal from "./resourceModal";
 import { useCourseContext } from "@/Context/CourseContext";
 import { useFetchTutors } from "@/hooks/useCourses";
+import { isValidResourceLink } from "../../../lib/utility";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -46,6 +48,7 @@ interface Topic {
   instructions: string;
   videoFile: File | null;
   resourceFile: File | null;
+  topicLinks: TopicLink[];
 }
 
 interface TopicFieldsProps {
@@ -53,7 +56,7 @@ interface TopicFieldsProps {
   topicId: string;
   onFieldChange: (
     field: keyof Topic,
-    value: string | File | null | string[]
+    value: string | File | null | string[] | TopicLink[]
   ) => void;
   onVideoChange: (
     index: number,
@@ -67,6 +70,7 @@ interface TopicFieldsProps {
   index: number;
   setVideoPreview: (updatedPreview: string | null) => void;
   onRemoveResource: (resourceIndex: number) => void;
+  onRemoveLink: (linkId: string) => void;
   resourceIds: Array<string | number>;
   setIsTopicUploaded: (isTopicUploaded: boolean) => void;
 }
@@ -83,6 +87,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   index,
   setVideoPreview,
   onRemoveResource,
+  onRemoveLink,
   resourceIds,
   setIsTopicUploaded,
 }) => {
@@ -117,6 +122,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
   const [seconds, setSeconds] = useState("");
+  const [linkLabel, setLinkLabel] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
   const tutorId = Number(IdTutor);
   useEffect(() => {
     if (topic.duration) {
@@ -128,7 +135,39 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     }
   }, [topic.duration]);
 
-  const handleTextChange = (text: string) => {};
+  const addLink = (rawUrl: string, rawLabel: string) => {
+    const url = rawUrl.trim();
+    const label = rawLabel.trim();
+
+    if (!url) {
+      message.error("Please enter a resource link.");
+      return;
+    }
+
+    if (!isValidResourceLink(url)) {
+      message.error("Please enter a valid http(s) URL.");
+      return;
+    }
+
+    const newLink: TopicLink = {
+      id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      label: label || url,
+      url,
+    };
+
+    const currentLinks = Array.isArray(topic.topicLinks) ? topic.topicLinks : [];
+    onFieldChange("topicLinks", [...currentLinks, newLink]);
+  };
+
+  const handleTextChange = (text: string) => {
+    addLink(text, text);
+  };
+
+  const handleAddLink = () => {
+    addLink(linkUrl, linkLabel);
+    setLinkLabel("");
+    setLinkUrl("");
+  };
 
   const handleModalClose = () => {
     setModalOpen(false);
@@ -182,6 +221,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       instructions,
       duration,
       tutorId,
+      links = [],
     }: {
       courseId: string;
       topicname: string;
@@ -192,6 +232,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       instructions: string;
       duration: string;
       tutorId: number;
+      links: TopicLink[];
     }) => {
       const NewResources = Array.isArray(newResources) ? newResources : [];
       const newResourceIds = await Promise.all(
@@ -215,7 +256,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         newVideoIds,
         instructions,
         duration,
-        tutorId
+        tutorId,
+        links
       );
     },
     onSuccess: () => {
@@ -246,6 +288,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       newVideos,
       instructions,
       duration,
+      links = [],
     }: {
       topicId: string;
       courseId: string;
@@ -258,6 +301,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       newVideos: File[];
       instructions: string;
       duration: string;
+      links: TopicLink[];
     }) => {
       const newResourceIds = await Promise.all(
         newResources.map(async (file) => {
@@ -293,7 +337,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         allResourceIds,
         finalVideoId,
         instructions,
-        duration
+        duration,
+        links
       );
     },
     onSuccess: () => {
@@ -339,6 +384,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         (resource): resource is File => resource instanceof File
       );
 
+      const links = Array.isArray(topic.topicLinks) ? topic.topicLinks : [];
+
       if (!topicId) {
         createTopic({
           courseId,
@@ -350,6 +397,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           instructions: topic.resourceInstructions,
           duration: topic.duration,
           tutorId,
+          links,
         });
       } else {
         editTopic({
@@ -364,6 +412,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           newVideos: topic.topicVideo instanceof File ? [topic.topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,
+          links,
         });
       }
     } catch (error) {
@@ -669,6 +718,59 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             accept=".pdf,.ppt,.pptx,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
           />
         </div>
+      </div>
+
+      <div className="sm:mt-10 mt-5">
+        <h1>Add a Link Resource</h1>
+        <div className="mt-5 flex flex-col gap-2 rounded border border-black p-4 sm:w-[50%]">
+          <input
+            type="text"
+            value={linkLabel}
+            onChange={(e) => setLinkLabel(e.target.value)}
+            placeholder="Link title (optional)"
+            className="border rounded-md border-black bg-[#F9F9F9] px-3 py-2 outline-none"
+          />
+          <input
+            type="text"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            placeholder="https://example.com/resource"
+            className="border rounded-md border-black bg-[#F9F9F9] px-3 py-2 outline-none"
+          />
+          <button
+            type="button"
+            onClick={handleAddLink}
+            className="self-start rounded-md bg-gray-700 px-4 py-2 text-sm text-white hover:bg-gray-900"
+          >
+            Add Link
+          </button>
+        </div>
+
+        {Array.isArray(topic.topicLinks) && topic.topicLinks.length > 0 && (
+          <div className="mt-5">
+            {topic.topicLinks.map((link) => (
+              <div
+                key={link.id}
+                className="border border-gray-300 p-2 rounded mb-3 flex justify-between items-center"
+              >
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500"
+                >
+                  {link.label}
+                </a>
+                <button
+                  className="text-red-500 hover:text-red-700 ml-2"
+                  onClick={() => onRemoveLink(link.id)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="sm:mt-10 mt-5">

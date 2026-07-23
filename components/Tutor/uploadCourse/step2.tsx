@@ -11,6 +11,7 @@ import {
   TOPIC_VIDEO_MAX_BYTES,
   TOPIC_VIDEO_TYPES,
 } from "@/lib/uploadRules";
+import { TopicLink } from "@/hooks/useCourseTopics";
 
 interface Topic {
   id: string | null;
@@ -27,6 +28,7 @@ interface Topic {
   instructions: string;
   videoFile: File | null;
   resourceFile: File | null;
+  topicLinks: TopicLink[];
 }
 
 interface Step2Props {
@@ -114,6 +116,14 @@ const Step2: React.FC<Step2Props> = ({
     updateTopic(topicIndex, { topicResources: updatedResources });
   };
 
+  const removeLink = (topicIndex: number, linkId: string) => {
+    const currentLinks = Array.isArray(topics[topicIndex].topicLinks)
+      ? topics[topicIndex].topicLinks
+      : [];
+    const updatedLinks = currentLinks.filter((link) => link.id !== linkId);
+    updateTopic(topicIndex, { topicLinks: updatedLinks });
+  };
+
   const closeModal = () => {};
 
   return (
@@ -160,8 +170,9 @@ const Step2: React.FC<Step2Props> = ({
                 }
                 onRemoveResource={(resourceIndex) =>
                   removeResource(index, resourceIndex)
-                } 
-                setIsTopicUploaded={setIsTopicUploaded} 
+                }
+                onRemoveLink={(linkId) => removeLink(index, linkId)}
+                setIsTopicUploaded={setIsTopicUploaded}
                 resourcePreview={Array.isArray(topic.topicResources) ? topic.topicResources : []}
                 resourceIds={Array.isArray(topic.topicResources) ? topic.topicResources.map((resource: any) => resource?.id ?? "") : []}
               />

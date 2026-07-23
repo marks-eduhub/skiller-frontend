@@ -41,6 +41,8 @@ export const useFetchTopics = () => {
   });
 };
 
+export type TopicLink = { id: string; label: string; url: string };
+
 export const topicUpload = async (
   courseId:string,
   topicname: string,
@@ -50,7 +52,8 @@ export const topicUpload = async (
   videoIds: string | null,
   resourceInstructions:string,
   duration : string,
-  tutor:number | undefined
+  tutor:number | undefined,
+  links: TopicLink[] = []
 
 ) => {
   try {
@@ -67,6 +70,7 @@ export const topicUpload = async (
         ...(typeof tutor === "number" && Number.isFinite(tutor)
           ? { tutor: normalizeRelationId(tutor) }
           : {}),
+        topicLinks: links,
       },
     });
     return response.data;
@@ -85,14 +89,15 @@ export const topicEditing = async (
   topicExpectations: string,
   topicdescription: string,
   resourceIds: string[],
-  videoIds: string | null, 
+  videoIds: string | null,
   resourceInstructions: string,
-  duration: string
+  duration: string,
+  links: TopicLink[] = []
 ) => {
   try {
     const response = await api.put(
       `/api/topics/${topicId}`, {
-    
+
         data: {
           course: normalizeRelationId(courseId),
           topicname,
@@ -102,6 +107,7 @@ export const topicEditing = async (
           ...(duration ? { duration } : {}),
           topicResources: resourceIds.map((id) => normalizeRelationId(id)),
           ...(videoIds ? { topicVideo: normalizeRelationId(videoIds) } : { topicVideo: null }),
+          topicLinks: links,
         },
       },
       {
@@ -154,25 +160,22 @@ export const deleteTopicResource = async (topicId: string, resourceId: string) =
   try {
     const response = await api.get(`/api/topics/${topicId}?populate=topicResources`);
     const topicData = response.data?.data;
-    if (!topicData || !topicData.attributes?.topicResources) {
+    const rawResources = topicData?.attributes?.topicResources?.data;
+    if (!topicData || !Array.isArray(rawResources)) {
       throw new Error("No resources found for this topic");
     }
-    const topicResources = Array.isArray(topicData.attributes.topicResources)
-      ? topicData.attributes.topicResources
-      : [];
-
 
     await api.delete(`/api/upload/files/${resourceId}`);
 
-    const updatedResources = topicResources.filter(
-      (resource: { id: string }) => resource.id !== resourceId
-    );
+    const updatedResourceIds = rawResources
+      .filter((resource: { id: number | string }) => String(resource.id) !== String(resourceId))
+      .map((resource: { id: number | string }) => resource.id);
 
     await api.put(`/api/topics/${topicId}`, {
-      data: { topicResources: updatedResources },
+      data: { topicResources: updatedResourceIds },
     });
 
-    return { message: "Resource deleted successfully", updatedResources };
+    return { message: "Resource deleted successfully", updatedResourceIds };
   } catch (error) {
     throw new Error("Failed to delete the resource. Please try again.");
   }

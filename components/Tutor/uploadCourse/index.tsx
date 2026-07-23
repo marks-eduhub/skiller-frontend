@@ -15,6 +15,7 @@ import { useFetchTutors } from "@/hooks/useCourses";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "@/components/AuthProvider/sidebarContext";
+import { TopicLink } from "@/hooks/useCourseTopics";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -33,6 +34,7 @@ interface Topic {
   instructions: string;
   videoFile: File | null;
   resourceFile: File | null;
+  topicLinks: TopicLink[];
 }
 
 const UploadCourse = () => {
@@ -101,6 +103,7 @@ const UploadCourse = () => {
       instructions: "",
       videoFile: null,
       resourceFile: null,
+      topicLinks: [],
     };
 
     setIsTopicUploaded(false);

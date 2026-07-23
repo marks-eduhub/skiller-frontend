@@ -14,6 +14,7 @@ const Resources = () => {
   const topicId = searchParams.get("topicId");
   const { data, isLoading, error } = useFetchTopicResources(Number(topicId));
   const resources = data?.data?.attributes?.topicResources?.data || [];
+  const links = data?.data?.attributes?.topicLinks?.data || [];
   const instructions = data?.data?.attributes?.resourceInstructions || "No instructions available.";
 
   if (isLoading) {
@@ -49,7 +50,7 @@ const Resources = () => {
     <div className="sm:ml-6 sm:mr-6">
       <div className="overflow-x-auto">
         <h1>{stripHtmlTags(instructions)}</h1>
-        {resources?.length > 0 ? (
+        {resources?.length > 0 &&
           resources?.map((resource: any) => (
             <div
               key={resource.id}
@@ -65,8 +66,27 @@ const Resources = () => {
                 <BiSolidDownArrow className="text-white mr-6" />
               </Link>
             </div>
-          ))
-        ) : (
+          ))}
+
+        {links?.length > 0 &&
+          links?.map((link: any) => (
+            <div
+              key={link.id}
+              className="h-20 mt-10 bg-gray-700 text-white flex items-center justify-between px-4"
+            >
+              <Link
+                href={`${link.attributes.url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between w-full"
+              >
+                <h2 className="ml-6">{link.attributes.label || "Resource link"}</h2>
+                <BiSolidDownArrow className="text-white mr-6" />
+              </Link>
+            </div>
+          ))}
+
+        {resources?.length === 0 && links?.length === 0 && (
           <div className="p-4 font-bold text-center">No resources available for this topic.</div>
         )}
       </div>

@@ -17,3 +17,12 @@ export const stripHtmlTags = (html: string) => {
     .replace(/\s+/g, " ")
     .trim();
 };
+
+export const isValidResourceLink = (value: string) => {
+  try {
+    const parsed = new URL(value.trim());
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+};

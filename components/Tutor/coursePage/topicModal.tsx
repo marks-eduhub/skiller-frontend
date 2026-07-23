@@ -11,6 +11,7 @@ import {
   TOPIC_VIDEO_MAX_BYTES,
   TOPIC_VIDEO_TYPES,
 } from "@/lib/uploadRules";
+import { TopicLink } from "@/hooks/useCourseTopics";
 
 const defaultTopic = {
   id: "",
@@ -27,6 +28,7 @@ const defaultTopic = {
   instructions: "",
   videoFile: null,
   resourceFile: null,
+  topicLinks: [] as TopicLink[],
 };
 
 type TopicModalState = {
@@ -44,6 +46,7 @@ type TopicModalState = {
   instructions: string;
   videoFile: File | null;
   resourceFile: File | null;
+  topicLinks: TopicLink[];
 };
 
 interface TopicModalProps {
@@ -94,7 +97,16 @@ const TopicModal: React.FC<TopicModalProps> = ({
   
       setVideoId(videoId);
       setResourceIds(resourceIds);
-  
+
+      const linkData = currentTopic.attributes.topicLinks;
+      const links: TopicLink[] = linkData?.data
+        ? linkData.data.map((link: { id: any; attributes: { label: any; url: any } }) => ({
+            id: String(link.id),
+            label: link.attributes?.label || link.attributes?.url,
+            url: link.attributes?.url,
+          }))
+        : [];
+
       const durationBackend = currentTopic.attributes.duration;
       let hh = "00", mm = "00", ss = "00";
       if (durationBackend) {
@@ -115,6 +127,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
           currentTopic.attributes.resourceInstructions || "",
         topicVideo: videoId,
         topicResources: resourceIds,
+        topicLinks: links,
       }));
   
       setVideoPreview(firstTopicVideoUrl);
@@ -217,7 +230,13 @@ const TopicModal: React.FC<TopicModalProps> = ({
                 prev.filter((_, i) => i!== resourceIndex)
               )
             }
-            setIsTopicUploaded={setIsTopicUploaded} 
+            onRemoveLink={(linkId) =>
+              setTopic((prev) => ({
+                ...prev,
+                topicLinks: prev.topicLinks.filter((link) => link.id !== linkId),
+              }))
+            }
+            setIsTopicUploaded={setIsTopicUploaded}
 
           />
         </div>

@@ -6,6 +6,7 @@ import Step2 from "../uploadCourse/step2";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "@/components/AuthProvider/sidebarContext";
+import { TopicLink } from "@/hooks/useCourseTopics";
 interface Topic {
   id: string | null;
   topicname: string;
@@ -21,6 +22,7 @@ interface Topic {
   instructions: string;
   videoFile: File | null;
   resourceFile: File | null;
+  topicLinks: TopicLink[];
 }
 
 const TopicUpload = () => {
@@ -45,6 +47,7 @@ const TopicUpload = () => {
       instructions: "",
       videoFile: null,
       resourceFile: null,
+      topicLinks: [],
     };
 
     setTopics([...topics, newTopic]);
