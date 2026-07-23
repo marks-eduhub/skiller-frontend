@@ -24,15 +24,15 @@ export interface SocialLinks {
 
 export interface UserDetails {
   id: number;
-
-    username: string;
-    email: string;
-    firstName: string | null;
-    lastName: string | null;
-    profilepicture: ProfilePicture
-    socialLinks: SocialLinks
-    studentname: string | null;
-  }
+  username: string;
+  email: string;
+  provider?: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  profilepicture: ProfilePicture
+  socialLinks: SocialLinks
+  studentname: string | null;
+}
  
 
 export  interface Reply {
@@ -179,11 +179,12 @@ export interface CorrectAnswer {
 }
 export interface User {
   id: number;
-    email: string;
-    password: string;
-    username: string;
-    studentname: string;
-  }
+  email: string;
+  password: string;
+  username: string;
+  studentname: string;
+  provider?: string | null;
+}
 
 
 export interface Wishlist {
