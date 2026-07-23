@@ -388,6 +388,8 @@ const ProfilePage: React.FC = () => {
       return;
     }
 
+    setIsSaving(true);
+
     let profilePictureId: number | null = null;
 
     if (image) {
@@ -395,12 +397,12 @@ const ProfilePage: React.FC = () => {
         profilePictureId = await uploadMedia(image);
       } catch (error) {
         message.error("Error uploading image");
+        setIsSaving(false);
         return;
       }
     } else {
       profilePictureId = exisitingprofileId ? Number(exisitingprofileId) : null;
     }
-    setIsSaving(true);
 
     try {
       if (toggle) {
