@@ -30,8 +30,16 @@ const CoursecategoryPage = ({ params }: { params: { slug: string } }) => {
 
   if (!filteredCourses || filteredCourses.length === 0) {
     return (
-      <div className="flex items-center justify-center">
-        No courses found in this category
+      <div className="flex items-center justify-center px-4 py-16">
+        <div className="rounded-[24px] border border-dashed border-slate-300 bg-white px-6 py-12 text-center shadow-sm">
+          <p className="text-xl font-semibold text-slate-900">
+            No courses found in this category.
+          </p>
+          <p className="mt-3 max-w-md text-sm text-slate-600">
+            New courses will show up here as they are added and assigned to this
+            category.
+          </p>
+        </div>
       </div>
     );
   }

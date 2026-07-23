@@ -6,7 +6,11 @@ import clsx from "clsx";
 import dynamic from "next/dynamic";
 import { PiUserSwitchBold } from "react-icons/pi";
 import Link from "next/link";
-import { HiOutlineAcademicCap, HiOutlineUserGroup } from "react-icons/hi2";
+import {
+  HiOutlineAcademicCap,
+  HiOutlineUserCircle,
+  HiOutlineUserGroup,
+} from "react-icons/hi2";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -46,6 +50,11 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
       icon: HiOutlineUserGroup,
       name: "Community",
       path: "/dashboard/community",
+    },
+    {
+      icon: HiOutlineUserCircle,
+      name: "Profile",
+      path: "/dashboard/profile",
     },
     // {
     //   src: "/tools.svg",

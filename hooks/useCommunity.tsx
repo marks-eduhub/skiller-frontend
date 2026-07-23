@@ -20,6 +20,24 @@ export const useFetchCommunityDetails = () => {
   });
 };
 
+const fetchCommunityResponses = async () => {
+  const response = await api.get(
+    "/api/community-responses?populate[user][populate]=*&populate[community][populate][user][populate]=*&sort[0]=createdAt:desc"
+  );
+
+  return response.data;
+};
+
+export const useFetchCommunityResponses = () => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: fetchCommunityResponses,
+    queryKey: ["communityResponses"],
+    meta: {
+      errorMessage: "Failed to fetch community responses",
+    },
+  });
+};
+
 const fetchLikeCounts = async () => {
   const response = await api.get("/api/response-likes?populate=*");
   return response.data;
@@ -127,6 +145,25 @@ export const useLikedResponses = (userId: number) => {
     queryKey: ["likedResponses", userId],
     meta: {
       errorMessage: "Failed to fetch liked responses.",
+    },
+  });
+};
+
+const fetchLikedResponseEntries = async (userId: number) => {
+  const response = await api.get(
+    `/api/response-likes?filters[user][id][$eq]=${userId}&populate[community_response][populate][0]=community&populate[community_response][populate][1]=user&sort[0]=createdAt:desc`
+  );
+
+  return response.data;
+};
+
+export const useFetchLikedResponseEntries = (userId: number) => {
+  return useQuery<{ data: any }, Error>({
+    queryFn: () => fetchLikedResponseEntries(userId),
+    queryKey: ["likedResponseEntries", userId],
+    enabled: Boolean(userId),
+    meta: {
+      errorMessage: "Failed to fetch liked response entries.",
     },
   });
 };

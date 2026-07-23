@@ -42,9 +42,15 @@ const Wishlist: React.FC = () => {
   
   if (!wishlist || wishlist.length === 0) {
     return (
-      <p className="font-semibold flex items-center justify-center sm:p-20 p-10 sm:mt-0 mt-10 text-[20px]">
-        Your wishlist is empty.
-      </p>
+      <div className="mt-10 rounded-[24px] border border-dashed border-slate-300 bg-white/80 px-6 py-12 text-center sm:p-20">
+        <p className="text-xl font-semibold text-slate-900">
+          Your wishlist is empty.
+        </p>
+        <p className="mt-3 text-sm text-slate-600">
+          Save courses you want to revisit later and they will be collected
+          here.
+        </p>
+      </div>
     );
   } 
   

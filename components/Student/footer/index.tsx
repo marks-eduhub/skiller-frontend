@@ -7,6 +7,9 @@ const Footer: React.FC = () => {
       <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
         <p>&copy; 2025 Khusoma Platform. All rights reserved.</p>
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          <Link href="/about" className="transition hover:text-black">
+            About
+          </Link>
           <Link href="/terms" className="transition hover:text-black">
             Terms
           </Link>

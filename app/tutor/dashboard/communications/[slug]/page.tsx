@@ -14,15 +14,10 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
           <h1 className="text-2xl sm:text-2xl font-bold mt-6 mb-4 text-center">
             No questions yet
           </h1>
-          <h1 className="text-gray-500 text-sm sm:text-base text-center">
-            Q&A is a form where your students can ask
-          </h1>
-          <h1 className="text-gray-500 text-sm sm:text-base text-center">
-            questions, hear your responses and respond to one
-          </h1>
-          <h1 className="text-gray-500 text-sm sm:text-base text-center">
-            another. Here is where you will see your courses Q&A threads
-          </h1>
+          <p className="max-w-xl text-center text-sm text-gray-500 sm:text-base">
+            This is where course questions, tutor answers, and student follow-up
+            discussions will appear once your learners begin engaging.
+          </p>
         </div>
       </div>
     ),
@@ -32,15 +27,10 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
         <div className="flex flex-col items-center justify-center mt-20">
           <Image src="/QandA.svg" alt="QandA" width={300} height={300} />
           <h1 className="text-2xl font-bold mt-6 mb-4">No new messages</h1>
-          <h1 className="text-gray-500 text-sm">
-            Direct messages are for you to communicate with
-          </h1>
-          <h1 className="text-gray-500 text-sm">
-            your students or other instructors privately. Heres
-          </h1>
-          <h1 className="text-gray-500 text-sm">
-            where you will learn to use them.
-          </h1>
+          <p className="max-w-xl text-center text-sm text-gray-500">
+            Direct conversations with students and collaborators will appear
+            here when messaging is active for your courses.
+          </p>
         </div>
       </div>
     ),
@@ -66,8 +56,11 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
 
         <div className="flex flex-col items-center justify-center mt-10">
           <Image src="/assigments.svg" alt="QandA" width={300} height={300} />
-          <h1 className="text-2xl font-bold mt-6 mb-4">No results</h1>
-          <h1 className="text-gray-500">Try a different filter </h1>
+          <h1 className="text-2xl font-bold mt-6 mb-4">No assignments yet</h1>
+          <p className="text-center text-gray-500">
+            Published assignments and learner submissions will be organized here
+            once you begin using them.
+          </p>
         </div>
       </div>
     ),
@@ -76,15 +69,10 @@ const CommunicationsPage = ({ params }: { params: { slug: string } }) => {
         <div className="flex flex-col items-center justify-center mt-20">
           <Image src="/QandA.svg" alt="QandA" width={300} height={300} />
           <h1 className="text-2xl font-bold mt-6 mb-4">No announcements yet</h1>
-          <h1 className="text-gray-500 max-md:text-[15px] ">
-            Here is where you send your students a few email
-          </h1>
-          <h1 className="text-gray-500  max-md:text-[15px]">
-            announcements every month. Use educational
-          </h1>
-          <h1 className="text-gray-500  max-md:text-[15px]">
-            emails to support your students learning.
-          </h1>
+          <p className="max-w-xl text-center text-gray-500 max-md:text-[15px]">
+            Course updates, reminders, and learning prompts will appear here
+            when announcements are enabled for your students.
+          </p>
         </div>
       </div>
     ),

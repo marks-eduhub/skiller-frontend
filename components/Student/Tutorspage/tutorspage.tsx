@@ -61,8 +61,16 @@ const Tutorspage = () => {
   return (
     <div className="sm:pl-10 py-5 sm:w-full">
       {tutors.length === 0 ? (
-        <div className="text-center flex min-h-screen justify-center text-gray-700 font-semibold mt-10">
-          No tutors available at the moment.
+        <div className="mt-10 flex min-h-[50vh] items-center justify-center">
+          <div className="rounded-[24px] border border-dashed border-slate-300 bg-white/80 px-6 py-12 text-center">
+            <p className="text-xl font-semibold text-slate-900">
+              No tutors available right now.
+            </p>
+            <p className="mt-3 max-w-md text-sm text-slate-600">
+              Tutor profiles will appear here as instructors complete their
+              setup and publish their teaching presence.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">

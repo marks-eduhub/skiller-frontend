@@ -154,9 +154,15 @@ const HomePage: React.FC = () => {
               .slice(0, 3)}
           />
         ) : (
-          <p className="font-semibold flex justify-center my-10 items-center text-[20px]">
-            No recently accessed courses available.
-          </p>
+          <div className="my-10 rounded-[24px] border border-dashed border-slate-300 bg-white/80 px-6 py-10 text-center">
+            <p className="text-lg font-semibold text-slate-900">
+              No recently accessed courses yet.
+            </p>
+            <p className="mt-3 text-sm text-slate-600">
+              Start a course and it will appear here so you can quickly resume
+              where you left off.
+            </p>
+          </div>
         )}
       </div>
     </div>
