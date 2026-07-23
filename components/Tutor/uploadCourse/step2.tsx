@@ -50,11 +50,13 @@ const Step2: React.FC<Step2Props> = ({
   }>({});
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [topicId, setTopicId] = useState<string | null>(null);
+  const topicId =
+    expandedIndex !== null && topics[expandedIndex]?.id
+      ? String(topics[expandedIndex].id)
+      : null;
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
-    setTopicId(topics[index]?.id ? String(topics[index].id) : null);
   };
 
   const onVideoChange = (

@@ -11,6 +11,7 @@ import { message } from "antd";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useSearchParams } from "next/navigation";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const SetQuiz = () => {
   const router = useRouter();
@@ -178,6 +179,14 @@ const SetQuiz = () => {
   }
   return (
     <div className="flex w-full flex-col px-1 py-4 sm:px-0 sm:py-6">
+      <button
+        onClick={() => router.back()}
+        className="mb-4 inline-flex w-fit items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-950"
+      >
+        <IoMdArrowRoundBack className="h-5 w-5" />
+        Back to Topics
+      </button>
+
       <div className="sm:hidden flex items-center justify-between w-full">
         {(currentStep === 2 || currentStep === 3) && (
           <button

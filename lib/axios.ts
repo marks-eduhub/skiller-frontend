@@ -29,21 +29,17 @@ const api = axios.create({
       }
   
       const { status, config, data } = error.response;
-  
-      if (isBrowser()) {
-        if (status === 401) {
-          message.warning("Unauthorized. Please log in again.");
-          localStorage.removeItem("token");
-          window.location.href = "/auth";
-        } else if (status === 403) {
-          message.error("Your session has expired. Please log in again.");
+
+      if (status === 401) {
+        if (isBrowser()) {
+          message.warning("Your session has expired. Please log in again.");
           localStorage.removeItem("token");
           window.location.href = "/auth";
         }
-      }
-  
-      if (status === 400 && config.url?.includes("/auth/local")) {
+      } else if (status === 400 && config.url?.includes("/auth/local")) {
         message.error(data.error?.message || "Invalid identifier or password.");
+      } else if (status === 403) {
+        message.error("You don't have permission to do that.");
       } else if (status === 404) {
         message.error("Requested resource not found.");
       } else if (status >= 500) {
@@ -51,7 +47,7 @@ const api = axios.create({
       } else {
         message.error(data?.message || "An error occurred.");
       }
-  
+
       return Promise.reject(error);
     }
   );

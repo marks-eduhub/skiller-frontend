@@ -260,9 +260,15 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         links
       );
     },
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       message.success("New topic created successfully");
       setIsTopicUploaded(true);
+
+      const newTopicId = response?.data?.attributes?.documentId;
+      if (newTopicId) {
+        onFieldChange("id", newTopicId);
+      }
+
       queryClient.invalidateQueries({
         queryKey: ["course_topics", String(courseId)],
       });

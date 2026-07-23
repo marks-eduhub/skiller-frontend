@@ -309,6 +309,14 @@ const UploadCourse = () => {
       )}
       {currentStep === 3 && <Step3 />}
 
+      {currentStep === 2 && !isTopicUploaded && (
+        <p className="mt-3 text-sm text-red-600">
+          {topics.length === 0
+            ? "Add a topic and click its Upload button before continuing — a quiz can't be added without a saved topic."
+            : "You have unsaved changes on a topic. Click that topic's Upload/Save changes button before continuing."}
+        </p>
+      )}
+
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {currentStep > 1 && (
           <button
