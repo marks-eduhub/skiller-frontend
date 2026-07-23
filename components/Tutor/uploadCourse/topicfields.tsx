@@ -88,6 +88,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resourceFileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuthContext();
   const pathname = usePathname();
   const { slug } = useParams();
@@ -635,11 +636,38 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             value={topic?.resourceInstructions}
             onChange={(value) => onFieldChange("resourceInstructions", value)}
           />
-          <div className="p-3 bg-gray-100 text-gray-700 text-sm rounded-md border-l-4 border-blue-500">
-            <span className="font-semibold">Tip:</span> Click the
-            <strong> Image icon</strong> in the toolbar to add PDFs,
-            PowerPoints, or links as resources for this topic.
-          </div>
+        </div>
+      </div>
+
+      <div className="sm:mt-10 mt-5">
+        <h1>Upload Resource</h1>
+        <div className="relative mt-5 flex h-[200px] w-full flex-col items-center justify-center rounded border border-black sm:w-[50%]">
+          <p className="text-gray-500 mb-5">Attach a resource file to this topic</p>
+          <p className="mb-3 text-center text-xs text-gray-500">
+            Allowed file types: PDF, PPT, PPTX (max 25MB)
+          </p>
+          <GrCloudUpload className="text-blue-800 w-10 h-10" />
+          <span className="text-gray-500">
+            Drag & drop files or{" "}
+            <span
+              className="text-blue-500 ml-1 cursor-pointer"
+              onClick={() => resourceFileInputRef.current?.click()}
+            >
+              Browse
+            </span>
+          </span>
+
+          <input
+            ref={resourceFileInputRef}
+            type="file"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0] ?? null;
+              onFileChange(file);
+              e.target.value = "";
+            }}
+            accept=".pdf,.ppt,.pptx,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+          />
         </div>
       </div>
 

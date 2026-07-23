@@ -77,6 +77,22 @@ export const courseEditing = async (
   }
 };
 
+export const submitCourseForReview = async (courseId: string) => {
+  try {
+    const response = await api.put(`/api/courses/${courseId}`, {
+      data: {
+        status: "Pending",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      "There was an error submitting the course for review. Please try again."
+    );
+  }
+};
+
 export const uploadMedia = async (file: File | null) => {
   if (!file) {
     message.error("No file selected");
