@@ -37,21 +37,24 @@ const TopicModal: React.FC<TopicModalProps> = ({
   const [topic, setTopic] = useState({ ...defaultTopic });
   const [videoPreview, setVideoPreview] = useState("");
   const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
-  const [resourcePreview, setResourcePreview] = useState<File[]>([]);
-  const [index, setIndex] = useState(0);
+  const [resourcePreview, setResourcePreview] = useState<Array<File | string>>([]);
+  const [index] = useState(0);
   const [videoId, setVideoId] = useState("");
-  const [resourceId, setResourceIds] = useState("")
+  const [resourceIds, setResourceIds] = useState<Array<string | number>>([]);
   const [isTopicUploaded, setIsTopicUploaded] = useState(false);
 
   useEffect(() => {
     if (currentTopic && currentTopic.attributes) {
-      const videoData = currentTopic.attributes.topicVideo.data;
+      const videoRelation = currentTopic.attributes.topicVideo?.data;
+      const videoData = Array.isArray(videoRelation)
+        ? videoRelation[0]
+        : videoRelation;
       const firstTopicVideoUrl =
-        videoData && videoData.length > 0
-          ? `${videoData[0].attributes.url}`
+        videoData
+          ? `${videoData.attributes.url}`
           : "";
       const videoId =
-        videoData && videoData.length > 0 ? videoData[0].id : null;
+        videoData ? String(videoData.id) : "";
   
       const resourceData = currentTopic.attributes.topicResources;
       const resourceIds = resourceData?.data
@@ -174,12 +177,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
             resourcePreview={resourcePreview}
             expandedIndex={null}
             onClose={onClose}
-            topicVideo={newVideoFile}
             index={index}
-            videoId={videoId}
-            setVideoId={setVideoId}
-            resourceIds={resourceId}
-            setResourceIds={setResourceIds}
+            resourceIds={resourceIds}
             setVideoPreview={(updatedPreview) =>
               setVideoPreview(updatedPreview ?? "")
             }

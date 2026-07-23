@@ -62,7 +62,7 @@ interface TopicFieldsProps {
   onFileChange: (file: File | null) => void;
   videoPreview: string | null;
   expandedIndex: number | null;
-  resourcePreview: File[];
+  resourcePreview: Array<File | string>;
   onClose: () => void;
   index: number;
   setVideoPreview: (updatedPreview: string | null) => void;
