@@ -130,12 +130,15 @@ const TutorCommunity = () => {
 
   useEffect(() => {
     if (likedResponses.length > 0) {
-      const initialMap = likedResponses.reduce((acc, id) => {
-        acc[id] = true;
-        return acc;
-      }, {} as { [key: number]: boolean });
-
-      setLikedResponsesMap(initialMap);
+      setLikedResponsesMap((prev) => {
+        const merged = { ...prev };
+        likedResponses.forEach((id) => {
+          if (!(id in merged)) {
+            merged[id] = true;
+          }
+        });
+        return merged;
+      });
     }
   }, [likedResponses]);
 

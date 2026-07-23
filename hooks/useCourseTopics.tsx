@@ -144,11 +144,17 @@ export const deleteTopicVideo = async (topicId: string, videoId: string) => {
       throw new Error("No video found for this topic");
     }
 
-    await api.delete(`/api/upload/files/${videoId}`);
-
     await api.put(`/api/topics/${topicId}`, {
       data: { topicVideo: null },
     });
+
+    try {
+      await api.delete(`/api/upload/files/${videoId}`);
+    } catch (_error) {
+      // Some storage backends may refuse physical deletion even after detaching
+      // the relation. The topic should still behave correctly, so do not fail
+      // the whole action here.
+    }
 
     return { message: "Video deleted successfully" };
   } catch (error) {
@@ -165,8 +171,6 @@ export const deleteTopicResource = async (topicId: string, resourceId: string) =
       throw new Error("No resources found for this topic");
     }
 
-    await api.delete(`/api/upload/files/${resourceId}`);
-
     const updatedResourceIds = rawResources
       .filter((resource: { id: number | string }) => String(resource.id) !== String(resourceId))
       .map((resource: { id: number | string }) => resource.id);
@@ -174,6 +178,14 @@ export const deleteTopicResource = async (topicId: string, resourceId: string) =
     await api.put(`/api/topics/${topicId}`, {
       data: { topicResources: updatedResourceIds },
     });
+
+    try {
+      await api.delete(`/api/upload/files/${resourceId}`);
+    } catch (_error) {
+      // Some storage backends may refuse physical deletion even after detaching
+      // the relation. The topic should still behave correctly, so do not fail
+      // the whole action here.
+    }
 
     return { message: "Resource deleted successfully", updatedResourceIds };
   } catch (error) {
