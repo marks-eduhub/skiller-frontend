@@ -8,6 +8,8 @@ import { PiUserSwitchBold } from "react-icons/pi";
 import Link from "next/link";
 import {
   HiOutlineAcademicCap,
+  HiOutlineRectangleStack,
+  HiOutlineSparkles,
   HiOutlineUserCircle,
   HiOutlineUserGroup,
 } from "react-icons/hi2";
@@ -42,7 +44,7 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
 
   const links = [
     {
-      icon: HiOutlineAcademicCap,
+      icon: HiOutlineRectangleStack,
       name: "Courses",
       path: "/tutor/dashboard",
     },
@@ -99,20 +101,20 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
       )}
       <div
         className={clsx(
-          "mb-4 rounded-[24px] border px-3 py-3 text-white transition",
+          "mb-4 rounded-[22px] border px-3 py-3 text-white transition",
           sidebarMinimized
             ? "mx-1 border-white/10 bg-white/5"
             : "border-white/10 bg-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
         )}
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400 text-base font-semibold text-slate-950">
-            T
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-slate-950">
+            <HiOutlineSparkles className="h-[17px] w-[17px]" />
           </div>
           {!sidebarMinimized && (
             <div>
-              <p className="text-xs text-white/65">Tutor Workspace</p>
-              <h2 className="text-sm font-semibold">Manage your teaching</h2>
+              <p className="text-[11px] text-white/65">Tutor Workspace</p>
+              <h2 className="text-[13px] font-medium">Manage your teaching</h2>
             </div>
           )}
         </div>
@@ -142,10 +144,10 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
                 sidebarMinimized ? "h-8 w-8" : "h-8 w-8"
               )}
             >
-              <link.icon className="h-[17px] w-[17px]" />
+              <link.icon className="h-4 w-4" />
             </div>
 
-            {!sidebarMinimized && <h2 className="ml-3 text-[14px] font-medium">{link.name}</h2>}
+            {!sidebarMinimized && <h2 className="ml-3 text-[13px] font-medium">{link.name}</h2>}
 
             {sidebarMinimized && (
               <span className="absolute left-12 rounded-md bg-black px-2 py-1 text-sm text-white opacity-0 transition-opacity group-hover:opacity-100">
@@ -176,7 +178,7 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
           <PiUserSwitchBold className="h-4 w-4" />
         </div>
         {!sidebarMinimized && (
-          <p className="md:block text-[14px]">Switch to student</p>
+          <p className="md:block text-[13px]">Switch to student</p>
         )}
       </Link>
     </div>

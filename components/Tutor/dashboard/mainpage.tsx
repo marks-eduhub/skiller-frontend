@@ -77,16 +77,16 @@ const MainPage = () => {
   }
   return (
     <div className="w-full px-0 py-4">
-      <section className="mt-12 overflow-hidden rounded-[32px] border border-slate-200/70 bg-[linear-gradient(135deg,_rgba(15,23,42,0.96)_0%,_rgba(29,78,216,0.92)_58%,_rgba(245,158,11,0.86)_100%)] px-6 py-8 text-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] sm:mt-0 sm:px-8">
-        <div className="grid gap-8 lg:grid-cols-[1.45fr_0.95fr] lg:items-end">
+      <section className="mt-4 overflow-hidden rounded-[28px] border border-slate-200 bg-white px-5 py-6 text-slate-950 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:mt-0 sm:px-7">
+        <div className="grid gap-5 lg:grid-cols-[1.35fr_0.95fr] lg:items-end">
           <div>
-            <p className="text-sm uppercase tracking-[0.24em] text-white/70">
+            <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
               Tutor Studio
             </p>
-            <h1 className="mt-3 max-w-2xl text-3xl font-semibold leading-tight sm:text-5xl">
-              Build, publish, and track your courses from one sharper workspace.
+            <h1 className="mt-3 max-w-2xl text-2xl font-semibold leading-tight sm:text-[34px]">
+              Build, publish, and manage your courses from one workspace.
             </h1>
-            <p className="mt-4 max-w-2xl text-sm text-white/78 sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm text-slate-600 sm:text-[15px]">
               {username ? `${username}, ` : ""}
               manage your course catalog, watch engagement, and jump back into editing without digging through menus.
             </p>
@@ -94,13 +94,13 @@ const MainPage = () => {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/tutor/dashboard/uploadCourse"
-                className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
+                className="rounded-full bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
               >
                 Create New Course
               </Link>
               <Link
                 href="/dashboard"
-                className="rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                className="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-900 hover:bg-slate-900 hover:text-white"
               >
                 Return to Student View
               </Link>
@@ -108,20 +108,20 @@ const MainPage = () => {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/65">Courses</p>
+            <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Courses</p>
               <h2 className="mt-3 text-3xl font-semibold">{tutorCourses?.length || 0}</h2>
-              <p className="mt-2 text-sm text-white/72">Total managed courses</p>
+              <p className="mt-2 text-sm text-slate-600">Total managed courses</p>
             </div>
-            <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/65">Published</p>
+            <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Published</p>
               <h2 className="mt-3 text-3xl font-semibold">{publishedCourses}</h2>
-              <p className="mt-2 text-sm text-white/72">Live and visible now</p>
+              <p className="mt-2 text-sm text-slate-600">Live and visible now</p>
             </div>
-            <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs uppercase tracking-[0.2em] text-white/65">Ratings</p>
+            <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Ratings</p>
               <h2 className="mt-3 text-3xl font-semibold">{totalRatingsCount}</h2>
-              <p className="mt-2 text-sm text-white/72">Reviews across your catalog</p>
+              <p className="mt-2 text-sm text-slate-600">Reviews across your catalog</p>
             </div>
           </div>
         </div>
@@ -167,7 +167,7 @@ const MainPage = () => {
               const courseAttributes = course?.attributes;
               const image =
                 courseAttributes?.card?.data?.attributes?.url ||
-                "/placeholder.png";
+                "/course-placeholder.svg";
               const averageRating = getAverageRating(course.id);
               const courseStatus = courseAttributes?.status || "Draft";
               const statusStyles =

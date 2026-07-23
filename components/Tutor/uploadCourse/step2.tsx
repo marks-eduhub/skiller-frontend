@@ -54,7 +54,7 @@ const Step2: React.FC<Step2Props> = ({
     const file = e.target.files?.[0];
 
     if (file) {
-      const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
+      const validVideoTypes = ["video/mp4", "video/x-msvideo", "video/webm"];
       if (validVideoTypes.includes(file.type)) {
         const videoPreviewURL = URL.createObjectURL(file);
         setVideoPreview((prev) => ({
@@ -63,7 +63,7 @@ const Step2: React.FC<Step2Props> = ({
         }));
         updateTopic(index, { topicVideo: file });
       } else {
-        message.error("Please select a valid video file.");
+        message.error("Please upload a supported video file: MP4, AVI, or WEBM.");
       }
     } else {
       message.error("No topic video selected. Please try again.");
@@ -149,7 +149,7 @@ const Step2: React.FC<Step2Props> = ({
                   removeResource(index, resourceIndex)
                 } 
                 setIsTopicUploaded={setIsTopicUploaded} 
-                resourcePreview={topic.topicResources} 
+                resourcePreview={Array.isArray(topic.topicResources) ? topic.topicResources : []}
                 resourceIds={Array.isArray(topic.topicResources) ? topic.topicResources.map((resource: any) => resource?.id ?? "") : []}
               />
             </div>

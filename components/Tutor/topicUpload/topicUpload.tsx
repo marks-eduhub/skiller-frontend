@@ -91,6 +91,9 @@ const TopicUpload = () => {
           <Image src="/bulb.svg" alt="light" width={15} height={15} />
           <p>Tip: courses are made of topics</p>
         </div>
+        <p className="mt-3 text-sm text-slate-600">
+          Upload videos and attach topic resources inside each expanded topic card on this page.
+        </p>
       </div>
 
       <Step2

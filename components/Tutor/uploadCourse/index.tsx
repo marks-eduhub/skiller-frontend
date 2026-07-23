@@ -58,7 +58,7 @@ const UploadCourse = () => {
   const [existingMediaId, setExistingMediaId] = useState<number | null>(null);
   const [isTopicUploaded, setIsTopicUploaded] = useState(false);
   const router = useRouter();
-  const { sidebarMinimized, toggleSidebar } = useSidebar();
+  const { sidebarMinimized } = useSidebar();
   
 
   const tutorId = data?.data?.find(
@@ -247,24 +247,25 @@ const UploadCourse = () => {
     }
   };
 
+  const stepHeading =
+    currentStep === 1
+      ? "Upload a Course"
+      : currentStep === 2
+      ? "Upload a topic"
+      : "Add quizzes";
+
   return (
-    <div className={`flex w-full flex-col p-4 sm:mt-0 sm:p-6 ${sidebarMinimized ? "mt-12" : "mt-0 sm:mt-0"}`}>
+    <div className="flex w-full flex-col px-1 py-4 sm:px-0 sm:py-6">
       {currentStep === 1 && (
-        <div className={`flex gap-4 my-2 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px] "}`}>
-         
+        <div className="my-2 flex items-center gap-4">
           <IoMdArrowRoundBack
-            className="text-[30px] sm:mt-2 mt-2 cursor-pointer"
+            className="mt-1 cursor-pointer text-[28px]"
             onClick={handleBack}
           />
-          <h1 className="text-[20px] mb-6 mt-2">Upload a Course</h1>
+          <h1 className="mb-2 text-[20px] font-medium">{stepHeading}</h1>
         </div>
       )}
-      {currentStep === 2 && (
-        <h1 className={`text-[20px] mb-6 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px]"}`}>Upload a topic</h1>
-      )}
-      {currentStep === 3 && (
-        <h1 className={`text-[20px] mb-6 sm:mt-0 mt-5 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px]"}`}>Add resources</h1>
-      )}
+      {currentStep !== 1 && <h1 className="mb-6 text-[20px] font-medium">{stepHeading}</h1>}
       <StepTracker currentStep={currentStep} />
 
       {currentStep === 1 && (

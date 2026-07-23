@@ -108,7 +108,7 @@ const Enroll = () => {
     <div>
       <div className="w-full relative sm:h-[500px] h-[300px]">
         <Image
-          src={card || "/fallback.webp"}
+          src={card || "/course-placeholder.svg"}
           alt="Course Image"
           fill
           className="object-cover bg-no-repeat rounded-2xl"

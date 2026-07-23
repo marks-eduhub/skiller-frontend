@@ -7,6 +7,7 @@ import {useFetchTutorsPopulate } from "@/hooks/useCourses";
 import Skeleton from "react-loading-skeleton";
 import { message } from "antd";
 import "react-loading-skeleton/dist/skeleton.css";
+import { shouldBypassImageOptimization } from "@/lib/media";
 
 
 const Tutorspage = () => {
@@ -73,7 +74,7 @@ const Tutorspage = () => {
           </div>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-10 ">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {tutors?.map((tutor: any, index: number) => {
            const relativeUrl = tutor?.attributes?.user?.data?.attributes?.profilepicture?.data?.attributes?.url || "/profilepicture.webp"
 
@@ -81,22 +82,23 @@ const Tutorspage = () => {
           return (
             <div
               key={tutor.id}
-              className="flex flex-col items-center relative"
+              className="relative flex flex-col items-center"
               onMouseEnter={() => setHovered(index)}
               onMouseLeave={() => setHovered(null)}
             >
               {relativeUrl ? (
-                <div className="sm:w-[200px] w-[150px] h-[150px] sm:h-[200px] relative">
+                <div className="relative h-[124px] w-[124px] sm:h-[148px] sm:w-[148px] lg:h-[164px] lg:w-[164px]">
                   <Image
                     src={relativeUrl}
                     alt={tutor.attributes.tutorname}
                     fill
-                    className="hover:scale-110 rounded-full object-cover transition duration-300 hover:brightness-75"
+                    unoptimized={shouldBypassImageOptimization(relativeUrl)}
+                    className="rounded-full object-cover transition duration-300 hover:scale-105 hover:brightness-90"
                   />
                   {hovered === index && (
                     <FontAwesomeIcon
                       icon={faHeart}
-                      className={`absolute inset-0 m-auto text-4xl cursor-pointer ${
+                      className={`absolute inset-0 m-auto text-3xl cursor-pointer ${
                         favorites[index] ? "text-red-500" : "text-white"
                       }`}
                       onClick={() => handleFavoriteClick(index)}
@@ -116,8 +118,10 @@ const Tutorspage = () => {
                 <p>No Image</p>
               )}
               <div className="mt-3 text-center">
-                <h1>{tutor.attributes.tutorname}</h1>
-                <h1 className="text-gray-600">
+                <h1 className="text-sm font-medium text-slate-950 sm:text-[15px]">
+                  {tutor.attributes.tutorname}
+                </h1>
+                <h1 className="mt-1 text-xs text-gray-600 sm:text-sm">
                   {tutor.attributes.role || "Tutor"}
                 </h1>
               </div>

@@ -53,7 +53,7 @@ const Progress = () => {
           <div key={id} className="border border-gray-400">
             <div className="rounded-lg flex relative overflow-hidden h-[180px]">
               <Image
-                src={imageUrl || "/fallback.webp"}
+                src={imageUrl || "/course-placeholder.svg"}
                 alt={coursename || "Course Image"}
                 fill
                 className="object-cover object-center p-1"

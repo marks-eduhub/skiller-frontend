@@ -7,6 +7,7 @@ import Greeting from "@/lib/greeting";
 import SkillerLogo from "@/components/ui/logo";
 import SearchBar from "./searchbar";
 import { useFetchTutors } from "@/hooks/useCourses";
+import { useFetchUserDetails } from "@/hooks/useProfile";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
@@ -15,11 +16,17 @@ interface NavBarProps {
 const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
   const { user } = useAuthContext();
   const username = user?.username || "Guest";
-  const {data} =  useFetchTutors()
+  const { data } = useFetchTutors();
+  const { data: userDetails } = useFetchUserDetails(Number(user?.id));
   const isTutor = data?.data?.some(
     (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
   );
   const [showDropdown, setShowDropdown] = useState(false);
+  const profileImage =
+    userDetails?.profilepicture?.formats?.thumbnail?.url ||
+    userDetails?.profilepicture?.formats?.small?.url ||
+    userDetails?.profilepicture?.url ||
+    "/profilepicture.webp";
 
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
@@ -48,11 +55,11 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 </p> */}
                 <div className="relative flex min-w-[160px] items-center justify-between gap-1 rounded-full bg-black px-2 py-1.5 text-white shadow">
                   <Image
-                    src="/Ellipse 1.svg"
-                    alt="variant"
-                    width={18}
-                    height={18}
-                    className="ml-1"
+                    src={profileImage}
+                    alt={username}
+                    width={28}
+                    height={28}
+                    className="ml-1 h-7 w-7 rounded-full object-cover"
                   />
                   <Link href="/dashboard/profile" className="truncate text-sm text-white">
                     {username}
@@ -106,11 +113,11 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                 </p> */}
                 <div className="relative flex min-w-[160px] items-center justify-between rounded-full bg-black px-2 py-1.5 text-white shadow">
                   <Image
-                    src="/Ellipse 1.svg"
-                    alt="variant"
-                    width={18}
-                    height={18}
-                    className="ml-1"
+                    src={profileImage}
+                    alt={username}
+                    width={28}
+                    height={28}
+                    className="ml-1 h-7 w-7 rounded-full object-cover"
                   />
                   <Link href="/dashboard/profile" className="ml-2 truncate text-sm text-white">
                     {username}

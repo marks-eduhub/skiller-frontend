@@ -377,25 +377,38 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       </div>
 
       <div className="mt-10">
-        <h1>Upload Course Image</h1>
+        <h1 className="text-base font-medium text-slate-950">Upload Course Image</h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Use a clear thumbnail that helps learners recognize the course quickly.
+        </p>
 
-        <div className="relative flex h-[200px] w-full items-center justify-center rounded border border-black sm:mt-4 sm:w-1/2">
+        <div className="relative mt-4 flex h-[220px] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 sm:w-[420px]">
           {uploadImage ? (
             <Image
               src={uploadImage}
               alt="Course Image"
               fill
-              className="object-cover rounded-md"
+              className="object-cover"
             />
           ) : (
-            <div className="flex flex-col items-center justify-center">
-              <GrCloudUpload className="text-blue-800 w-10 h-10" />
-              <span className="text-gray-500">
-                Drag & drop files or
-                <span className="text-blue-500 ml-1 cursor-pointer">
-                  Browse
+            <div className="flex h-full w-full flex-col items-center justify-center bg-white p-6 text-center">
+              <div className="relative h-[124px] w-[220px] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm">
+                <Image
+                  src="/course-placeholder.svg"
+                  alt="Course placeholder"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="mt-5 flex items-center gap-3 text-slate-700">
+                <GrCloudUpload className="h-5 w-5" />
+                <span className="text-sm font-medium">
+                  Drop an image here or click to browse
                 </span>
-              </span>
+              </div>
+              <p className="mt-2 text-xs text-slate-500">
+                Recommended landscape image for a cleaner course card.
+              </p>
             </div>
           )}
           <input

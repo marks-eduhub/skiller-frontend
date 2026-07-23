@@ -105,7 +105,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ModalOpen, setModalOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
-  const [newResourceFiles, setNewResourceFiles] = useState<File[]>([]);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
   const [resourceIndex, setResourceIndex] = useState<number | null>(null);
@@ -313,25 +312,39 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
 
   const handleSaveChanges = async () => {
     try {
+      if (!courseId) {
+        message.error("Course context is missing. Please reopen this page from the course overview.");
+        return;
+      }
+
+      if (!Number.isFinite(tutorId) || tutorId <= 0) {
+        message.error("Tutor profile not found. Refresh and try again.");
+        return;
+      }
+
       const existingVideoIds =
         topic.topicVideo && topic.topicVideo !== null ? [topic.topicVideo] : [];
 
-      const existingResourceIds =
-        topic.topicResources?.length || newResourceFiles.length
-          ? topic.topicResources
-          : [];
-      const newResources = newResourceFiles;
+      const safeResourcePreview = Array.isArray(resourcePreview)
+        ? resourcePreview
+        : [];
+      const safeTopicResources = Array.isArray(topic.topicResources)
+        ? topic.topicResources
+        : [];
+      const existingResourceIds = safeTopicResources.filter(
+        (resource): resource is number => typeof resource === "number"
+      );
+      const newResources = safeResourcePreview.filter(
+        (resource): resource is File => resource instanceof File
+      );
 
       if (!topicId) {
-        const uploadableResources = resourcePreview.filter(
-          (resource): resource is File => resource instanceof File
-        );
         createTopic({
           courseId,
           topicname: topic.topicname,
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
-          newResources: uploadableResources,
+          newResources,
           newVideos: topic.topicVideo instanceof File ? [topic.topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,
@@ -717,6 +730,9 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         ) : (
           <div className="relative mt-5 flex h-[200px] w-full flex-col items-center justify-center rounded border border-black sm:w-[50%]">
             <p className="text-gray-500 mb-5">Attach a video to your topic</p>
+            <p className="mb-3 text-center text-xs text-gray-500">
+              Allowed video types: MP4, AVI, WEBM
+            </p>
             <GrCloudUpload className="text-blue-800 w-10 h-10" />
             <span className="text-gray-500">
               Drag & drop files or{" "}
@@ -735,7 +751,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
                 onChange={(e) => {
                   onVideoChange(index, e);
                 }}
-                accept="video/*"
+                accept=".mp4,.avi,.webm,video/mp4,video/x-msvideo,video/webm"
               />
           </div>
         )}

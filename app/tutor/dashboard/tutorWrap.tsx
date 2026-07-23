@@ -10,13 +10,13 @@ const TutorWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <SidebarProvider>
-      <div className="relative flex h-screen flex-col overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(247,196,95,0.18),_transparent_30%),linear-gradient(180deg,_#fffaf0_0%,_#f5f7fb_45%,_#eef2f7_100%)] md:flex-row md:overflow-hidden">
-        <div className={`w-full ${sidebarMinimized ? "md:w-16" : "md:w-64"}`}>
+      <div className="relative flex h-screen flex-col overflow-hidden bg-[#f8fafc] md:flex-row md:overflow-hidden">
+        <div className={`w-full ${sidebarMinimized ? "md:w-[116px]" : "md:w-[224px]"}`}>
           <SideBar />
         </div>
         <div
           className={`flex-grow py-4 md:overflow-y-auto hide-scrollbar ${
-            sidebarMinimized ? "md:pl-8" : "md:pl-4"
+            sidebarMinimized ? "md:pl-6" : "md:pl-4"
           }`}
         >
           <div className="mx-auto flex min-h-full w-full max-w-[1440px] flex-col px-4 sm:px-6 lg:px-8">

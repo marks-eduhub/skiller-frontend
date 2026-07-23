@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import { AiFillHome, AiOutlineTeam } from "react-icons/ai";
+import { HiOutlineAcademicCap } from "react-icons/hi2";
 import MinimizedNavLinks from "./minimized-navlink";
 import Image from "next/image";
 import { useFetchTutors } from "@/hooks/useCourses";
@@ -121,12 +122,7 @@ export function NavLinks({
               }
             )}
           >
-            <Image
-              src="/subscriptions.svg"
-              alt="tutors"
-              width={20}
-              height={20}
-            />
+            <HiOutlineAcademicCap className="h-6 w-6 text-white" />
             <p>Tutors</p>
           </div>
           <hr className="my-4 border-gray-600" />

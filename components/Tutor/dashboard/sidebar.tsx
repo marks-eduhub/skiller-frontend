@@ -19,7 +19,7 @@ const SideBar = () => {
       ) : (
         <div
           className={`fixed h-full sm:flex hidden flex-col ${
-            sidebarMinimized ? "w-[100px]" : "w-[208px]"
+            sidebarMinimized ? "w-[116px]" : "w-[224px]"
           } text-white bg-black`}
         >
           <div className="flex items-center justify-start space-x-4 px-4 py-3">

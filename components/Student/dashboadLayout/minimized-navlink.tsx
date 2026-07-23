@@ -1,5 +1,5 @@
 import { AiOutlineTeam } from "react-icons/ai";
-import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
+import { HiOutlineAcademicCap } from "react-icons/hi2";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export default function MinimizedNavLinks({
       </Link>
       <Link href="/dashboard/tutorspage">
         <div className="flex items-center justify-center" title="Tutors">
-          <SubscriptionsIcon className="w-10 h-7 mb-1 " />
+          <HiOutlineAcademicCap className="w-10 h-7 mb-1" />
         </div>
       </Link>
       <Link href="/dashboard/learning">

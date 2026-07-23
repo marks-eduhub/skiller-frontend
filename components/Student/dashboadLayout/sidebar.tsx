@@ -72,6 +72,9 @@ const SideNav: React.FC<SideNavProps> = ({
               onNavigate={handleNavigation}
             />
           </div>
+          <div className="px-4 pb-2 text-center text-[10px] font-medium uppercase tracking-[0.24em] text-white/35">
+            v_1
+          </div>
           <form onSubmit={handleSignOut}>
             <button
               type="submit"

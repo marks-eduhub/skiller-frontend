@@ -124,12 +124,12 @@ const TopicModal: React.FC<TopicModalProps> = ({
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const validVideoTypes = ["video/mp4", "video/avi", "video/mov"];
+      const validVideoTypes = ["video/mp4", "video/x-msvideo", "video/webm"];
       if (validVideoTypes.includes(file.type)) {
         setNewVideoFile(file);
         setVideoPreview(URL.createObjectURL(file));
       } else {
-        message.error("Please select a valid video file.");
+        message.error("Please upload a supported video file: MP4, AVI, or WEBM.");
       }
     } else {
       message.error("No topic video selected. Please try again.");

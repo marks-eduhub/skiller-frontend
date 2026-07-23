@@ -57,7 +57,7 @@ const Community = () => {
     [responseId: number]: boolean;
   }>({});
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
-  const [selectedResult, setSelectedResult] = useState("");
+  const [selectedResult, setSelectedResult] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState<ActivityTab>("posts");
   const { data: searchResults, isLoading: searchLoading } =
     useFetchSearchCommuity(searchQuery);
@@ -79,6 +79,13 @@ const Community = () => {
   const [showModalForQuestion, setShowModalForQuestion] = useState<
     string | boolean
   >(false);
+  const [prioritizedQuestionId, setPrioritizedQuestionId] = useState<
+    number | null
+  >(null);
+  const [highlightedQuestionId, setHighlightedQuestionId] = useState<
+    number | null
+  >(null);
+  const questionRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   const myPosts = useMemo(() => {
     const posts = questions || [];
@@ -93,6 +100,16 @@ const Community = () => {
   }, [allResponsesData, userId]);
 
   const likedResponseItems = likedResponseEntries?.data || [];
+
+  const prioritizeQuestion = (questionId: number) => {
+    setSelectedResult(null);
+    setSearchQuery("");
+    setFilteredData([]);
+    setShowDropdown(false);
+    setCurrentPage(1);
+    setPrioritizedQuestionId(questionId);
+    setHighlightedQuestionId(questionId);
+  };
 
   useEffect(() => {
     if (likedCount) {
@@ -129,14 +146,16 @@ const Community = () => {
   };
 
   const handleSearchResultClick = (result: any) => {
-    setSelectedResult(result);
-    setShowDropdown(false);
+      setSelectedResult(result);
+      setShowDropdown(false);
+      setCurrentPage(1);
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchResults?.data?.length) {
       setSelectedResult(searchResults.data[0]);
       setShowDropdown(false);
+      setCurrentPage(1);
     }
   };
 
@@ -430,11 +449,30 @@ const Community = () => {
     setQuestionId(questionId);
   };
 
-  const displayedQuestions = selectedResult
-    ? [selectedResult]
-    : filteredData.length > 0
-    ? filteredData
-    : questions;
+  const displayedQuestions = useMemo(() => {
+    const baseQuestions = selectedResult
+      ? [selectedResult]
+      : filteredData.length > 0
+      ? filteredData
+      : questions || [];
+
+    if (!prioritizedQuestionId) {
+      return baseQuestions;
+    }
+
+    const prioritizedQuestion = baseQuestions.find(
+      (item: any) => item.id === prioritizedQuestionId
+    );
+
+    if (!prioritizedQuestion) {
+      return baseQuestions;
+    }
+
+    return [
+      prioritizedQuestion,
+      ...baseQuestions.filter((item: any) => item.id !== prioritizedQuestionId),
+    ];
+  }, [filteredData, prioritizedQuestionId, questions, selectedResult]);
 
   const currentQuestions = displayedQuestions?.slice(
     indexOfFirstQuestion,
@@ -445,6 +483,24 @@ const Community = () => {
     Math.ceil((displayedQuestions?.length || 0) / questionsPerPage),
     1
   );
+
+  useEffect(() => {
+    if (!highlightedQuestionId) {
+      return;
+    }
+
+    const card = questionRefs.current[highlightedQuestionId];
+
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    const timeout = window.setTimeout(() => {
+      setHighlightedQuestionId(null);
+    }, 3200);
+
+    return () => window.clearTimeout(timeout);
+  }, [highlightedQuestionId, currentQuestions]);
 
   if (isLoading) {
     return (
@@ -476,14 +532,19 @@ const Community = () => {
       }
 
       return myPosts.slice(0, 5).map((post: any) => (
-        <div key={post.id} className="border-b border-black/8 pb-3">
+        <button
+          key={post.id}
+          type="button"
+          onClick={() => prioritizeQuestion(post.id)}
+          className="w-full border-b border-black/8 pb-3 text-left transition hover:opacity-75"
+        >
           <p className="text-xs uppercase tracking-[0.14em] text-black/40">
             Your post
           </p>
           <p className="mt-2 text-sm leading-6 text-black/80">
             {stripHtmlTags(post?.attributes?.Question || "")}
           </p>
-        </div>
+        </button>
       ));
     }
 
@@ -497,16 +558,28 @@ const Community = () => {
         );
       }
 
-      return myResponses.slice(0, 5).map((response: any) => (
-        <div key={response.id} className="border-b border-black/8 pb-3">
-          <p className="text-xs uppercase tracking-[0.14em] text-black/40">
-            Your response
-          </p>
-          <p className="mt-2 text-sm leading-6 text-black/80">
-            {stripHtmlTags(response?.attributes?.responseText || "")}
-          </p>
-        </div>
-      ));
+      return myResponses.slice(0, 5).map((response: any) => {
+        const question = response?.attributes?.community?.data;
+
+        return (
+          <button
+            key={response.id}
+            type="button"
+            onClick={() => question?.id && prioritizeQuestion(question.id)}
+            className="w-full border-b border-black/8 pb-3 text-left transition hover:opacity-75"
+          >
+            <p className="text-xs uppercase tracking-[0.14em] text-black/40">
+              Your response
+            </p>
+            <p className="mt-2 line-clamp-2 text-sm leading-6 text-black/80">
+              {stripHtmlTags(response?.attributes?.responseText || "")}
+            </p>
+            <p className="mt-2 text-xs text-black/45">
+              On: {stripHtmlTags(question?.attributes?.Question || "")}
+            </p>
+          </button>
+        );
+      });
     }
 
     if (likedResponseItems.length === 0) {
@@ -520,15 +593,25 @@ const Community = () => {
 
     return likedResponseItems.slice(0, 5).map((entry: any) => {
       const likedResponse = entry?.attributes?.community_response?.data;
+      const question = likedResponse?.attributes?.community?.data;
+
       return (
-        <div key={entry.id} className="border-b border-black/8 pb-3">
+        <button
+          key={entry.id}
+          type="button"
+          onClick={() => question?.id && prioritizeQuestion(question.id)}
+          className="w-full border-b border-black/8 pb-3 text-left transition hover:opacity-75"
+        >
           <p className="text-xs uppercase tracking-[0.14em] text-black/40">
             Liked response
           </p>
-          <p className="mt-2 text-sm leading-6 text-black/80">
+          <p className="mt-2 line-clamp-2 text-sm leading-6 text-black/80">
             {stripHtmlTags(likedResponse?.attributes?.responseText || "")}
           </p>
-        </div>
+          <p className="mt-2 text-xs text-black/45">
+            On: {stripHtmlTags(question?.attributes?.Question || "")}
+          </p>
+        </button>
       );
     });
   };
@@ -605,7 +688,14 @@ const Community = () => {
               return (
                 <div
                   key={index}
-                  className="relative mb-6 flex flex-col rounded-lg border border-black/8 bg-white px-4 py-4 shadow-sm sm:gap-4 sm:px-5"
+                  ref={(node) => {
+                    questionRefs.current[currentQuestionId] = node;
+                  }}
+                  className={`relative mb-6 flex flex-col rounded-lg border bg-white px-4 py-4 shadow-sm transition sm:gap-4 sm:px-5 ${
+                    highlightedQuestionId === currentQuestionId
+                      ? "border-black ring-1 ring-black"
+                      : "border-black/8"
+                  }`}
                 >
                   <div>
                     <div className="flex items-center">

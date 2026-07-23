@@ -801,9 +801,6 @@ const ProfilePage: React.FC = () => {
         </button>
         </section>
       </div>
-      <div className="mt-8 text-center text-xs font-medium uppercase tracking-[0.24em] text-slate-400">
-        v_1
-      </div>
     </div>
   );
 };

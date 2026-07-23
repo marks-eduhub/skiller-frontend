@@ -64,7 +64,7 @@ const FeaturedProduct: React.FC = () => {
               <div key={course.id} className="relative">
                 <div className="relative aspect-[16/8.5] min-h-[230px] w-full sm:aspect-[16/7.4] md:min-h-[290px]">
                   <Image
-                    src={imageUrl || "/fallback.webp"}
+                    src={imageUrl || "/course-placeholder.svg"}
                     alt={
                       course?.attributes.Image?.data[0]?.attributes
                         .alternativeText || "course image"
