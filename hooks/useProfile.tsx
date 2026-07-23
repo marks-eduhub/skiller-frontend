@@ -162,11 +162,17 @@ export const deleteProfilePicture = async (
       throw new Error("No profile picture found to delete.");
     }
 
-    await api.delete(`/api/upload/files/${profilepictureId}`);
-
     await api.put(`/api/users/${userId}`, {
       profilepicture: null,
     });
+
+    try {
+      await api.delete(`/api/upload/files/${profilepictureId}`);
+    } catch (_error) {
+      // Some storage backends may refuse physical deletion even after detaching
+      // the relation. The profile should still behave correctly, so do not fail
+      // the whole action here.
+    }
 
     return { message: "Profile picture deleted successfully." };
   } catch (error) {

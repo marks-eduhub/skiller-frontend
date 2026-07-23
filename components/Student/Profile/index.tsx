@@ -371,9 +371,6 @@ const ProfilePage: React.FC = () => {
     let profilePictureId: number | null = null;
 
     if (image) {
-      if (exisitingprofileId) {
-        await deleteProfilePicture(userId, String(exisitingprofileId));
-      }
       try {
         profilePictureId = await uploadMedia(image);
       } catch (error) {
