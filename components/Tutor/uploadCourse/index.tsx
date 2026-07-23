@@ -103,10 +103,12 @@ const UploadCourse = () => {
       resourceFile: null,
     };
 
+    setIsTopicUploaded(false);
     setTopics([...topics, newTopic]);
   };
 
   const updateTopic = (index: number, updatedFields: Partial<Topic>) => {
+    setIsTopicUploaded(false);
     setTopics((prevTopics) =>
       prevTopics.map((topic, i) =>
         i === index ? { ...topic, ...updatedFields } : topic
@@ -161,27 +163,14 @@ const UploadCourse = () => {
 
   const handleSubmit = async () => {
     try {
-      if (!selectedImage) {
-        message.error("Please select a course image to upload.");
+      if (!tutorId) {
+        message.error("Tutor profile not found. Please refresh and try again.");
         return false;
       }
 
-      let videoId = null;
-      if (videoFile) {
-        videoId = await uploadMedia(videoFile);
-        if (!videoId) {
-          message.error("Topic video upload failed.");
-          return false;
-        }
-      }
-
-      let resourceId = null;
-      if (resourceFile) {
-        resourceId = await uploadMedia(resourceFile);
-        if (!resourceId) {
-          message.error("Resource upload failed.");
-          return false;
-        }
+      if (!selectedImage) {
+        message.error("Please select a course image to upload.");
+        return false;
       }
 
       if (
@@ -259,7 +248,7 @@ const UploadCourse = () => {
   };
 
   return (
-    <div className={`p-6 w-full flex flex-col sm:mt-0 mt-12 ${sidebarMinimized ? "p" : "sm:mt-0 mt-0"}`}>
+    <div className={`flex w-full flex-col p-4 sm:mt-0 sm:p-6 ${sidebarMinimized ? "mt-12" : "mt-0 sm:mt-0"}`}>
       {currentStep === 1 && (
         <div className={`flex gap-4 my-2 ${sidebarMinimized ? "sm:mt-[-10px]" : "sm:mt-[-60px] "}`}>
          
@@ -316,10 +305,10 @@ const UploadCourse = () => {
       )}
       {currentStep === 3 && <Step3 />}
 
-      <div className="mt-5 flex items-center justify-between">
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {currentStep > 1 && (
           <button
-            className="bg-black py-2 px-4 sm:mt-0 mt-4 flex items-center justify-center rounded w-[150px] text-white"
+            className="mt-2 flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white sm:mt-0 sm:w-[150px]"
             onClick={handlePreviousStep}
           >
             Back
@@ -328,7 +317,7 @@ const UploadCourse = () => {
 
         {currentStep !== 3 && (
           <button
-            className={`bg-black py-2 px-4 mt-5 flex items-center justify-center rounded w-[150px] text-white ${
+            className={`mt-2 flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white sm:mt-5 sm:w-[150px] ${
               isUploading || (currentStep === 2 && !isTopicUploaded)
                 ? "opacity-50 cursor-not-allowed"
                 : ""

@@ -379,7 +379,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
       <div className="mt-10">
         <h1>Upload Course Image</h1>
 
-        <div className="flex items-center justify-center sm:mt-4 border  border-black relative h-[200px] sm:w-1/2  rounded ">
+        <div className="relative flex h-[200px] w-full items-center justify-center rounded border border-black sm:mt-4 sm:w-1/2">
           {uploadImage ? (
             <Image
               src={uploadImage}

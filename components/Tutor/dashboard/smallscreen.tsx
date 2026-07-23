@@ -30,6 +30,12 @@ const SmallScreen = () => {
           >
             Student
           </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-black/15 bg-white px-3 py-2 text-xs font-medium text-black shadow-sm"
+          >
+            Normal
+          </Link>
           <div className="flex w-36 items-center rounded-lg shadow bg-white p-2 cursor-pointer">
           <Image src="/magnify.svg" alt="magnify" width={30} height={30} />
           <input

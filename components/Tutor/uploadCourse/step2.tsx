@@ -39,21 +39,11 @@ const Step2: React.FC<Step2Props> = ({
     [key: number]: string | null;
   }>({});
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [currentTopicIndex, setCurrentTopicIndex] = useState<number | null>(
-    null
-  );
-  const [videoId, setVideoId] = useState("");
   const [topicId, setTopicId] = useState<string | null>(null);
-  const [topicVideo, setTopicVideo] = useState<File | null>(null);
-  const [resourceId, setResourceIds] = useState("")
-  
 
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
-    setCurrentTopicIndex(index);
-
     setTopicId(topics[index]?.id ? String(topics[index].id) : null);
   };
 
@@ -72,8 +62,6 @@ const Step2: React.FC<Step2Props> = ({
           [index]: videoPreviewURL,
         }));
         updateTopic(index, { topicVideo: file });
-
-        setTopicVideo(file);
       } else {
         message.error("Please select a valid video file.");
       }
@@ -113,8 +101,7 @@ const Step2: React.FC<Step2Props> = ({
     updateTopic(topicIndex, { topicResources: updatedResources });
   };
 
- 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {};
 
   return (
     <div className="sm:p-4">
@@ -152,22 +139,18 @@ const Step2: React.FC<Step2Props> = ({
                 expandedIndex={expandedIndex}
                 onClose={closeModal}
                 onFileChange={(file) => onFileChange(index, file)} 
-                topicVideo={topicVideo}
                 setVideoPreview={(updatedPreview) =>
                   setVideoPreview((prev) => ({
                     ...prev,
                     [index]: updatedPreview,
                   }))
                 }
-                videoId={videoId}
-                setVideoId={setVideoId}
                 onRemoveResource={(resourceIndex) =>
                   removeResource(index, resourceIndex)
                 } 
                 setIsTopicUploaded={setIsTopicUploaded} 
                 resourcePreview={topic.topicResources} 
-                resourceIds={resourceId}
-                setResourceIds={setResourceIds}
+                resourceIds={Array.isArray(topic.topicResources) ? topic.topicResources.map((resource: any) => resource?.id ?? "") : []}
               />
             </div>
           )}

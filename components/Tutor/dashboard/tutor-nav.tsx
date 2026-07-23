@@ -24,7 +24,7 @@ const TutorNav = () => {
     <>
       <div
         className={clsx(
-          "hidden w-full items-center max-md:hidden",
+          "hidden w-full items-center rounded-[28px] border border-white/70 bg-white/75 px-5 py-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur max-md:hidden",
           sidebarMinimized ? "mb-8 mt-2 justify-between" : "justify-end"
         )}
       >
@@ -37,12 +37,20 @@ const TutorNav = () => {
         <div className="flex flex-row items-center gap-3">
           <Link
             href="/dashboard"
-            className="rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition hover:bg-black hover:text-white"
+            className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:border-slate-900 hover:bg-slate-900 hover:text-white"
           >
             Student Dashboard
           </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-900 shadow-sm transition hover:border-amber-500 hover:bg-amber-500 hover:text-white"
+          >
+            Normal View
+          </Link>
           <div className="flex flex-row items-center gap-3 max-md:mt-5">
-            <h2 className="text-[15px] font-semibold">Tutor</h2>
+            <h2 className="rounded-full bg-emerald-50 px-3 py-1 text-[15px] font-semibold text-emerald-800">
+              Tutor
+            </h2>
             <Image
               src="/Notification-Button.svg"
               alt="notification"
@@ -50,7 +58,7 @@ const TutorNav = () => {
               height={18}
             />
           </div>
-          <div className="relative flex min-w-[160px] items-center justify-between gap-1 rounded-full bg-black px-2 py-1.5 text-white shadow">
+          <div className="relative flex min-w-[180px] items-center justify-between gap-1 rounded-full bg-slate-950 px-2 py-1.5 text-white shadow-[0_12px_30px_rgba(15,23,42,0.28)]">
             <Image
               src="/Ellipse 1.svg"
               alt="variant"

@@ -65,13 +65,9 @@ interface TopicFieldsProps {
   resourcePreview: File[];
   onClose: () => void;
   index: number;
-  topicVideo: File | null;
   setVideoPreview: (updatedPreview: string | null) => void;
-  videoId: string;
-  setVideoId: (prev: string) => void;
   onRemoveResource: (resourceIndex: number) => void;
-  resourceIds: string;
-  setResourceIds: (prev: string) => void;
+  resourceIds: Array<string | number>;
   setIsTopicUploaded: (isTopicUploaded: boolean) => void;
 }
 
@@ -85,10 +81,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   topicId,
   onClose,
   index,
-  topicVideo,
   setVideoPreview,
-  videoId,
-  setVideoId,
   onRemoveResource,
   resourceIds,
   setIsTopicUploaded,
@@ -116,6 +109,8 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [resourceModalOpen, setResourceModalOpen] = useState(false);
   const [resourceIndex, setResourceIndex] = useState<number | null>(null);
+  const [selectedVideoId, setSelectedVideoId] = useState("");
+  const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
   const IdTutor = data?.data?.find(
     (tutor: any) => tutor.attributes?.user?.data?.id === user?.id
   )?.id;
@@ -225,6 +220,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
     onSuccess: () => {
       message.success("New topic created successfully");
+      setIsTopicUploaded(true);
       queryClient.invalidateQueries({
         queryKey: ["course_topics", String(courseId)],
       });
@@ -302,6 +298,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
     onSuccess: () => {
       message.success("Topic data edited successfully");
+      setIsTopicUploaded(true);
       queryClient.invalidateQueries({
         queryKey: ["course_topics", String(courseId)],
       });
@@ -332,7 +329,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
           newResources: resourcePreview,
-          newVideos: topicVideo ? [topicVideo] : [],
+          newVideos: topic.topicVideo instanceof File ? [topic.topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,
           tutorId,
@@ -347,12 +344,11 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
           existingResourceIds: existingResourceIds,
           existingVideoIds: existingVideoIds,
           newResources,
-          newVideos: topicVideo ? [topicVideo] : [],
+          newVideos: topic.topicVideo instanceof File ? [topic.topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,
         });
       }
-      setIsTopicUploaded(true);
     } catch (error) {
       message.error("Error saving changes");
     } finally {
@@ -444,34 +440,32 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     setIsModalOpen(true);
   };
 
-  const handleVideoModal = (videoId: string, topicId: string) => {
-    setVideoId(videoId);
+  const handleVideoModal = (videoId: string) => {
+    setSelectedVideoId(videoId);
     setVideoModalOpen(true);
   };
 
   const handleDeleteVideo = () => {
-    if (videoId && topicId) {
-      topicVideoDelete({ topicId, videoId });
+    if (selectedVideoId && topicId) {
+      topicVideoDelete({ topicId, videoId: selectedVideoId });
     } else {
       message.error("An error has occurred while deleting video.");
     }
     setVideoModalOpen(false);
   };
 
-  const handleResourceModal = (resourceId: number, resourceIndex: number) => {
+  const handleResourceModal = (
+    resourceId: string | number,
+    resourceIndex: number
+  ) => {
+    setSelectedResourceId(String(resourceId));
     setResourceIndex(resourceIndex);
     setResourceModalOpen(true);
   };
 
   const handleResourceDelete = () => {
-    if (resourceIndex !== null && resourceIds && topicId) {
-      const resourceId = resourceIds[resourceIndex];
-
-      if (resourceId) {
-        topicResourceDelete({ topicId, resourceId });
-      } else {
-        message.error("An error has occurred while deleting the resource.");
-      }
+    if (resourceIndex !== null && selectedResourceId && topicId) {
+      topicResourceDelete({ topicId, resourceId: selectedResourceId });
     } else {
       message.error("An error has occurred while deleting the resource.");
     }
@@ -689,24 +683,25 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       <div className="sm:mt-10 mt-5">
         <div className="flex justify-between items-center sm:mt-10 mt-5">
           <h1>Upload Video</h1>
-          {videoPreview && (
+              {videoPreview && (
             <button
               onClick={() => {
-                if (topicVideo) {
+                if (topic.topicVideo instanceof File) {
                   setVideoPreview("");
+                  onFieldChange("topicVideo", null);
                 } else {
-                  handleVideoModal(videoId, topicId);
+                  handleVideoModal(String(topic.topicVideo));
                 }
               }}
               className=" text-white bg-gray-600 rounded-md px-4 py-1  hover:bg-white hover:border-2 hover:border-black hover:text-black"
             >
-              {topicVideo ? "Remove Video" : "Edit Existing Video"}
+              {topic.topicVideo instanceof File ? "Remove Video" : "Edit Existing Video"}
             </button>
           )}
         </div>
 
         {videoPreview ? (
-          <div className="flex flex-col mt-5 items-center justify-center border sm:w-[40%] border-black relative h-[200px] rounded">
+          <div className="relative mt-5 flex h-[200px] w-full flex-col items-center justify-center rounded border border-black sm:w-[40%]">
             <iframe
               src={videoPreview}
               width="100%"
@@ -717,7 +712,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
             />
           </div>
         ) : (
-          <div className="flex flex-col mt-5 items-center justify-center border sm:w-[50%] border-black relative h-[200px] rounded">
+          <div className="relative mt-5 flex h-[200px] w-full flex-col items-center justify-center rounded border border-black sm:w-[50%]">
             <p className="text-gray-500 mb-5">Attach a video to your topic</p>
             <GrCloudUpload className="text-blue-800 w-10 h-10" />
             <span className="text-gray-500">
@@ -743,10 +738,10 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         )}
       </div>
 
-      <div className="flex justify-between items-center my-4">
+      <div className="my-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <button
           onClick={() => handleDeleteClick(topicId)}
-          className="bg-black text-white rounded-md py-2 px-4"
+          className="rounded-md bg-black px-4 py-2 text-white"
         >
           Delete Topic
         </button>
@@ -754,7 +749,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
         <button
           onClick={handleSaveChanges}
           disabled={isPending || editLoading}
-          className={`border border-black justify-end mb-4 sm:mt-0 mt-4 py-2 px-4 flex items-center rounded w-[150px] 
+          className={`mb-4 flex w-full items-center justify-center rounded border border-black px-4 py-2 sm:mt-0 sm:w-[150px] 
         ${
           pathname === "/tutor/dashboard/uploadCourse" ||
           pathname === "/tutor/dashboard/topicUpload"
