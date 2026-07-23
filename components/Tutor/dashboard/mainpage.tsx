@@ -10,6 +10,7 @@ import Skeleton from "react-loading-skeleton";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useFetchCourseRate } from "@/hooks/useSubmit";
+import { HiPlus } from "react-icons/hi2";
 
 const MainPage = () => {
   const { user } = useAuthContext();
@@ -77,13 +78,13 @@ const MainPage = () => {
   }
   return (
     <div className="w-full px-0 py-4">
-      <section className="mt-4 overflow-hidden rounded-[28px] border border-slate-200 bg-white px-5 py-6 text-slate-950 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:mt-0 sm:px-7">
-        <div className="grid gap-5 lg:grid-cols-[1.35fr_0.95fr] lg:items-end">
+      <section className="mt-2 overflow-hidden rounded-[24px] border border-slate-200 bg-white px-4 py-5 text-slate-950 shadow-[0_12px_30px_rgba(15,23,42,0.05)] sm:mt-0 sm:px-6">
+        <div className="grid gap-4 lg:grid-cols-[1.25fr_0.95fr] lg:items-end">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
               Tutor Studio
             </p>
-            <h1 className="mt-3 max-w-2xl text-2xl font-semibold leading-tight sm:text-[34px]">
+            <h1 className="mt-2 max-w-2xl text-xl font-semibold leading-tight sm:text-[30px]">
               Build, publish, and manage your courses from one workspace.
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-slate-600 sm:text-[15px]">
@@ -108,20 +109,20 @@ const MainPage = () => {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-[18px] border border-slate-200 bg-slate-50 p-3.5">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Courses</p>
-              <h2 className="mt-3 text-3xl font-semibold">{tutorCourses?.length || 0}</h2>
-              <p className="mt-2 text-sm text-slate-600">Total managed courses</p>
+              <h2 className="mt-2 text-2xl font-semibold">{tutorCourses?.length || 0}</h2>
+              <p className="mt-1.5 text-xs text-slate-600">Total managed courses</p>
             </div>
-            <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-[18px] border border-slate-200 bg-slate-50 p-3.5">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Published</p>
-              <h2 className="mt-3 text-3xl font-semibold">{publishedCourses}</h2>
-              <p className="mt-2 text-sm text-slate-600">Live and visible now</p>
+              <h2 className="mt-2 text-2xl font-semibold">{publishedCourses}</h2>
+              <p className="mt-1.5 text-xs text-slate-600">Live and visible now</p>
             </div>
-            <div className="rounded-[22px] border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-[18px] border border-slate-200 bg-slate-50 p-3.5">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Ratings</p>
-              <h2 className="mt-3 text-3xl font-semibold">{totalRatingsCount}</h2>
-              <p className="mt-2 text-sm text-slate-600">Reviews across your catalog</p>
+              <h2 className="mt-2 text-2xl font-semibold">{totalRatingsCount}</h2>
+              <p className="mt-1.5 text-xs text-slate-600">Reviews across your catalog</p>
             </div>
           </div>
         </div>
@@ -134,12 +135,12 @@ const MainPage = () => {
             <p className="mb-6 max-w-xl text-[17px] text-slate-600">
               Start with your first course and this dashboard will turn into your command center for publishing, course edits, and learner activity.
             </p>
-            <div className="relative flex h-[260px] w-full max-w-[340px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-slate-200 bg-[linear-gradient(180deg,_#ffffff_0%,_#f8fafc_100%)]">
+            <div className="relative flex h-[220px] w-full max-w-[300px] cursor-pointer flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-[linear-gradient(180deg,_#ffffff_0%,_#f8fafc_100%)] px-5 text-center">
               <Link href="/tutor/dashboard/uploadCourse">
-                <div className="flex items-center justify-center rounded-3xl bg-slate-950 px-7 py-4 shadow-lg">
-                  <Image src="/Vector.png" alt="plus" width={26} height={26} />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-950 shadow-sm">
+                  <HiPlus className="h-6 w-6" />
                 </div>
-                <p className="mt-5 text-center text-base font-medium text-slate-900">Add your first course</p>
+                <p className="mt-4 text-center text-sm font-medium text-slate-900 sm:text-base">Add your first course</p>
               </Link>
             </div>
           </div>

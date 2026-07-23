@@ -6,13 +6,16 @@ import { useParams } from "next/navigation";
 import TopicModal from "./topicModal";
 import Link from "next/link";
 import { Topic } from "@/lib/types";
+import { useFetchOverview } from "@/hooks/useCourseOverview";
 
 const Topics = () => {
   const { slug } = useParams();
   const courseId = String(slug);
   const { data: topicData } = useFetchCourseTopics(courseId);
+  const { data: courseOverview } = useFetchOverview(courseId);
   const [showModal, setShowModal] = useState(false);
   const [currentTopic, setCurrentTopic] = useState<Topic | null>(null);
+  const courseRecordId = courseOverview?.data?.id;
 
   const topics = topicData?.data
     ?.map((topic: Topic) => ({
@@ -60,7 +63,7 @@ const Topics = () => {
         </div>
       )}
       <div className="relative w-full bg-[#E7E8EA] pt-2 pb-4 px-4 mb-4">
-        <Link href={`/tutor/dashboard/topicUpload?courseId=${courseId}`}>
+        <Link href={`/tutor/dashboard/topicUpload?courseId=${courseRecordId || courseId}`}>
           <div className="w-full h-[90px] mt-4 gap-2 bg-gray-300 flex items-center justify-center cursor-pointer">
             <Image src="/pluss.svg" alt="plus" width={20} height={20} />
             <h1 className="text-black text-[20px]">Add a topic</h1>

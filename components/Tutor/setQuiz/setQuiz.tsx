@@ -11,7 +11,6 @@ import { message } from "antd";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Student/loader";
 import { useSearchParams } from "next/navigation";
-import { useSidebar } from "@/components/AuthProvider/sidebarContext";
 
 const SetQuiz = () => {
   const router = useRouter();
@@ -28,8 +27,6 @@ const SetQuiz = () => {
     { question: "", options: ["", ""], answers: "" },
   ]);
   const [isUploading, setIsUploading] = useState(false);
-  const { sidebarMinimized } = useSidebar();
-
 
   const { mutate: testdata } = useMutation({
     mutationFn: async ({
@@ -180,29 +177,24 @@ const SetQuiz = () => {
     );
   }
   return (
-    <div className="p-6 w-full flex flex-col sm:mt-0 mt-10">
+    <div className="flex w-full flex-col px-1 py-4 sm:px-0 sm:py-6">
       <div className="sm:hidden flex items-center justify-between w-full">
         {(currentStep === 2 || currentStep === 3) && (
           <button
-            className="flex sm:hidden sm:mt-0 mt-8 text-[18px] text-gray-600 underline"
+            className="mt-4 flex text-[18px] text-gray-600 underline sm:hidden"
             onClick={handlePreviousStep}
           >
             Go back
           </button>
         )}
         {currentStep === 3 && (
-          <button className="underline mt-10 " onClick={handleQuizPreview}>
+          <button className="mt-6 underline" onClick={handleQuizPreview}>
             Quiz Preview
           </button>
         )}
       </div>
 
-      <h1
-        className={`text-[20px] mb-6 mt-8 sm:mt-0 sm:text-left text-center ${
-          sidebarMinimized ? "sm:mt-[-20px]" : "sm:mt-[-60px]"
-        }`}
-      >
-
+      <h1 className="mb-6 mt-2 text-center text-[20px] font-medium sm:mt-0 sm:text-left">
         New Assignment
       </h1>
 

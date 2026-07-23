@@ -1,5 +1,14 @@
 import api from "@/lib/axios";
 import {useQuery } from "@tanstack/react-query";
+
+const normalizeRelationId = (value: string | number) => {
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return /^\d+$/.test(value) ? Number(value) : value;
+};
+
 const fetchTopicDetails = async (topicId: number) => {
 
   const response = await api.get(`/api/topics?filters[id][$eq]=${topicId}&populate[course][populate]=tutor&populate[topicVideo]=true`);
@@ -45,20 +54,19 @@ export const topicUpload = async (
 
 ) => {
   try {
-  
-   
     const response = await api.post("/api/topics?populate=*", {
       data: {
-        course:courseId,
+        course: normalizeRelationId(courseId),
         topicname,
         topicExpectations,
         topicdescription,
-        topicResources: resourceIds,
-        topicVideo: videoIds, 
+        topicResources: resourceIds.map((id) => normalizeRelationId(id)),
+        ...(videoIds ? { topicVideo: normalizeRelationId(videoIds) } : {}),
         resourceInstructions,
-        duration,
-        tutor
-
+        ...(duration ? { duration } : {}),
+        ...(typeof tutor === "number" && Number.isFinite(tutor)
+          ? { tutor: normalizeRelationId(tutor) }
+          : {}),
       },
     });
     return response.data;
@@ -86,14 +94,14 @@ export const topicEditing = async (
       `/api/topics/${topicId}`, {
     
         data: {
-          course: courseId,
+          course: normalizeRelationId(courseId),
           topicname,
           topicExpectations,
           topicdescription,
           resourceInstructions,
-          duration,
-          topicResources: resourceIds,
-          topicVideo: videoIds 
+          ...(duration ? { duration } : {}),
+          topicResources: resourceIds.map((id) => normalizeRelationId(id)),
+          ...(videoIds ? { topicVideo: normalizeRelationId(videoIds) } : { topicVideo: null }),
         },
       },
       {
@@ -205,4 +213,3 @@ export const markTopicCompleted = async (
   });
   return response.data;
 };
-

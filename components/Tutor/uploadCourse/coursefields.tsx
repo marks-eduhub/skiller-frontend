@@ -11,6 +11,12 @@ import {
 import { message } from "antd";
 import { useParams, usePathname } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  COURSE_IMAGE_MAX_BYTES,
+  COURSE_IMAGE_TYPES,
+  isValidUploadSize,
+  isValidUploadType,
+} from "@/lib/uploadRules";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -90,6 +96,16 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!isValidUploadType(file, COURSE_IMAGE_TYPES)) {
+        message.error("Course thumbnail must be a JPG, PNG, or WEBP image.");
+        return;
+      }
+
+      if (!isValidUploadSize(file, COURSE_IMAGE_MAX_BYTES)) {
+        message.error("Course thumbnail must be 8MB or smaller.");
+        return;
+      }
+
       setSelectedImage(file);
       setFileName(file.name);
       const reader = new FileReader();
@@ -414,6 +430,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
           <input
             type="file"
             className="absolute inset-0 opacity-0 cursor-pointer"
+            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
             onChange={handleImageChange}
           />
         </div>

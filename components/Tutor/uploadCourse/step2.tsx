@@ -3,6 +3,14 @@ import Image from "next/image";
 import "react-quill/dist/quill.snow.css";
 import { message } from "antd";
 import TopicFields from "./topicfields";
+import {
+  isValidUploadSize,
+  isValidUploadType,
+  TOPIC_RESOURCE_MAX_BYTES,
+  TOPIC_RESOURCE_TYPES,
+  TOPIC_VIDEO_MAX_BYTES,
+  TOPIC_VIDEO_TYPES,
+} from "@/lib/uploadRules";
 
 interface Topic {
   id: string | null;
@@ -54,17 +62,22 @@ const Step2: React.FC<Step2Props> = ({
     const file = e.target.files?.[0];
 
     if (file) {
-      const validVideoTypes = ["video/mp4", "video/x-msvideo", "video/webm"];
-      if (validVideoTypes.includes(file.type)) {
-        const videoPreviewURL = URL.createObjectURL(file);
-        setVideoPreview((prev) => ({
-          ...prev,
-          [index]: videoPreviewURL,
-        }));
-        updateTopic(index, { topicVideo: file });
-      } else {
+      if (!isValidUploadType(file, TOPIC_VIDEO_TYPES)) {
         message.error("Please upload a supported video file: MP4, AVI, or WEBM.");
+        return;
       }
+
+      if (!isValidUploadSize(file, TOPIC_VIDEO_MAX_BYTES)) {
+        message.error("Topic video must be 250MB or smaller.");
+        return;
+      }
+
+      const videoPreviewURL = URL.createObjectURL(file);
+      setVideoPreview((prev) => ({
+        ...prev,
+        [index]: videoPreviewURL,
+      }));
+      updateTopic(index, { topicVideo: file });
     } else {
       message.error("No topic video selected. Please try again.");
     }
@@ -72,24 +85,24 @@ const Step2: React.FC<Step2Props> = ({
 
   const onFileChange = (index: number, file: File | null) => {
     if (file) {
-      const validFileTypes = [
-        "application/pdf",
-        "application/vnd.ms-powerpoint",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-      ];
-  
-      if (validFileTypes.includes(file.type)) {
-        const currentResources = Array.isArray(topics[index].topicResources)
-          ? topics[index].topicResources
-          : [];
-  
-        const updatedResources = [...currentResources, file]; 
-        updateTopic(index, { topicResources: updatedResources }); 
-      } else {
+      if (!isValidUploadType(file, TOPIC_RESOURCE_TYPES)) {
         message.error(
           "Unsupported file type. Please upload a PDF or PowerPoint."
         );
+        return;
       }
+
+      if (!isValidUploadSize(file, TOPIC_RESOURCE_MAX_BYTES)) {
+        message.error("Topic resource must be 25MB or smaller.");
+        return;
+      }
+
+      const currentResources = Array.isArray(topics[index].topicResources)
+        ? topics[index].topicResources
+        : [];
+
+      const updatedResources = [...currentResources, file]; 
+      updateTopic(index, { topicResources: updatedResources }); 
     }
   };
   

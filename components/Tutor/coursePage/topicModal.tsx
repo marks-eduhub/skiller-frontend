@@ -3,6 +3,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import TopicFields from "../uploadCourse/topicfields";
 import { message } from "antd";
 import { uploadMedia } from "@/hooks/useCourseUpload";
+import {
+  isValidUploadSize,
+  isValidUploadType,
+  TOPIC_RESOURCE_MAX_BYTES,
+  TOPIC_RESOURCE_TYPES,
+  TOPIC_VIDEO_MAX_BYTES,
+  TOPIC_VIDEO_TYPES,
+} from "@/lib/uploadRules";
 
 const defaultTopic = {
   id: "",
@@ -124,13 +132,18 @@ const TopicModal: React.FC<TopicModalProps> = ({
   ) => {
     const file = e.target.files?.[0];
     if (file) {
-      const validVideoTypes = ["video/mp4", "video/x-msvideo", "video/webm"];
-      if (validVideoTypes.includes(file.type)) {
-        setNewVideoFile(file);
-        setVideoPreview(URL.createObjectURL(file));
-      } else {
+      if (!isValidUploadType(file, TOPIC_VIDEO_TYPES)) {
         message.error("Please upload a supported video file: MP4, AVI, or WEBM.");
+        return;
       }
+
+      if (!isValidUploadSize(file, TOPIC_VIDEO_MAX_BYTES)) {
+        message.error("Topic video must be 250MB or smaller.");
+        return;
+      }
+
+      setNewVideoFile(file);
+      setVideoPreview(URL.createObjectURL(file));
     } else {
       message.error("No topic video selected. Please try again.");
     }
@@ -138,29 +151,29 @@ const TopicModal: React.FC<TopicModalProps> = ({
 
   const onFileChange = async (file: File | null) => {
     if (file && topicId) {
-      const validFileTypes = [
-        "application/pdf",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        "application/vnd.ms-powerpoint",
-      ];
-
-      if (validFileTypes.includes(file.type)) {
-        try {
-          const resourceId = await uploadMedia(file);
-          if (resourceId) {
-            setTopic((prev) => ({
-              ...prev,
-              topicResources: [...(prev.topicResources || []), resourceId],
-            }));
-            setResourcePreview((prev) => [...prev, file]);
-          }
-        } catch (error) {
-          message.error("Failed to upload the resource.");
-        }
-      } else {
+      if (!isValidUploadType(file, TOPIC_RESOURCE_TYPES)) {
         message.error(
           "Unsupported file type. Please upload a PDF or PowerPoint."
         );
+        return;
+      }
+
+      if (!isValidUploadSize(file, TOPIC_RESOURCE_MAX_BYTES)) {
+        message.error("Topic resource must be 25MB or smaller.");
+        return;
+      }
+
+      try {
+        const resourceId = await uploadMedia(file);
+        if (resourceId) {
+          setTopic((prev) => ({
+            ...prev,
+            topicResources: [...(prev.topicResources || []), resourceId],
+          }));
+          setResourcePreview((prev) => [...prev, file]);
+        }
+      } catch (error) {
+        message.error("Failed to upload the resource.");
       }
     }
   };

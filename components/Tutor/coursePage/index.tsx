@@ -60,8 +60,8 @@ const averageRating =
   }
 
   return (
-    <div className="h-full w-full cursor-pointer px-1 py-6 sm:px-5 sm:py-2">
-      <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+    <div className="h-full w-full cursor-pointer px-1 py-4 sm:px-4 sm:py-2">
+      <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <Link
             href="/tutor/dashboard"
@@ -70,56 +70,57 @@ const averageRating =
             <IoMdArrowRoundBack className="h-5 w-5" />
             Back to dashboard
           </Link>
-          <h1 className="mt-4 text-2xl font-semibold text-slate-950 sm:text-[30px]">
+          <h1 className="mt-3 text-xl font-semibold text-slate-950 sm:text-[26px]">
             {coursename}
           </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 sm:text-[15px]">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-[14px]">
             {stripHtmlTags(description)}
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3 lg:w-[420px] lg:grid-cols-1 xl:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="grid gap-2 sm:grid-cols-3 lg:w-[360px] lg:grid-cols-1 xl:grid-cols-3">
+          <div className="rounded-[18px] border border-slate-200 bg-white p-3 shadow-sm">
             <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Rating</p>
-            <p className="mt-2 text-xl font-semibold text-slate-950">⭐ {averageRating}</p>
+            <p className="mt-1.5 text-lg font-semibold text-slate-950">⭐ {averageRating}</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="rounded-[18px] border border-slate-200 bg-white p-3 shadow-sm">
             <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Duration</p>
-            <p className="mt-2 text-xl font-semibold text-slate-950">{days} day(s)</p>
+            <p className="mt-1.5 text-lg font-semibold text-slate-950">{days} day(s)</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="rounded-[18px] border border-slate-200 bg-white p-3 shadow-sm">
             <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Learners</p>
-            <p className="mt-2 text-xl font-semibold text-slate-950">{learners}</p>
+            <p className="mt-1.5 text-lg font-semibold text-slate-950">{learners}</p>
           </div>
         </div>
       </div>
 
-      <div className="mb-8 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
-        <div className="relative h-[250px] w-full sm:h-[360px]">
+      <div className="mb-6 overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.05)]">
+        <div className="relative h-[210px] w-full sm:h-[280px]">
           <Image
             src={courseImage}
             alt={coursename || "Course image"}
             fill
+            unoptimized={courseImage.startsWith("http")}
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
+          <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6">
             <div className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-950">
               Course Overview
             </div>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-white/88">
+            <p className="mt-3 max-w-2xl text-xs leading-5 text-white/88 sm:text-sm">
               Review the course setup, manage topics, track learners, and move into edits without leaving this workspace.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mb-8 flex gap-3 overflow-x-auto hide-scrollbar">
+      <div className="mb-6 flex gap-2 overflow-x-auto hide-scrollbar">
         <div
           className={`cursor-pointer ${
             Tab === "Course Overview"
-              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-5 py-2 text-sm font-semibold text-white transition"
-              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
+              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-4 py-2 text-sm font-semibold text-white transition"
+              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
           }`}
           onClick={() => handleClicks("Course Overview")}
         >
@@ -128,8 +129,8 @@ const averageRating =
         <div
           className={`cursor-pointer ${
             Tab === "Topics"
-              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-5 py-2 text-sm font-semibold text-white transition"
-              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
+              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-4 py-2 text-sm font-semibold text-white transition"
+              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
           }`}
           onClick={() => handleClicks("Topics")}
         >
@@ -138,8 +139,8 @@ const averageRating =
         <div
           className={`cursor-pointer ${
             Tab === "Assessments"
-              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-5 py-2 text-sm font-semibold text-white transition"
-              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
+              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-4 py-2 text-sm font-semibold text-white transition"
+              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
           }`}
           onClick={() => handleClicks("Assessments")}
         >
@@ -148,8 +149,8 @@ const averageRating =
         <div
           className={`cursor-pointer ${
             Tab === "Analytics"
-              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-5 py-2 text-sm font-semibold text-white transition"
-              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
+              ? "inline-flex whitespace-nowrap rounded-full border border-black bg-black px-4 py-2 text-sm font-semibold text-white transition"
+              : "inline-flex whitespace-nowrap rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
           }`}
           onClick={() => handleClicks("Analytics")}
         >

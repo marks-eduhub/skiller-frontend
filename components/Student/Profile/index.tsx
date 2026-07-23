@@ -26,6 +26,13 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import {
+  isValidUploadSize,
+  isValidUploadType,
+  PROFILE_IMAGE_MAX_BYTES,
+  PROFILE_IMAGE_TYPES,
+} from "@/lib/uploadRules";
+import { shouldBypassImageOptimization } from "@/lib/media";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
@@ -183,6 +190,16 @@ const ProfilePage: React.FC = () => {
     const file = e.target.files?.[0];
 
     if (file) {
+      if (!isValidUploadType(file, PROFILE_IMAGE_TYPES)) {
+        message.error("Profile image must be a JPG, PNG, or WEBP file.");
+        return;
+      }
+
+      if (!isValidUploadSize(file, PROFILE_IMAGE_MAX_BYTES)) {
+        message.error("Profile image must be 5MB or smaller.");
+        return;
+      }
+
       setIsUploading(true);
       setImage(file);
       const reader = new FileReader();
@@ -517,6 +534,7 @@ const ProfilePage: React.FC = () => {
                     alt="userimage"
                     width={120}
                     height={120}
+                    unoptimized={shouldBypassImageOptimization(uploadImage)}
                     className="h-full w-full rounded-full object-cover"
                     onLoad={() => {
                       setIsImageLoading(false);

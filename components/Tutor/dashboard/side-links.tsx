@@ -51,7 +51,7 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
     {
       icon: HiOutlineUserGroup,
       name: "Community",
-      path: "/dashboard/community",
+      path: "/tutor/dashboard/communications/QandA",
     },
     {
       icon: HiOutlineUserCircle,
@@ -113,8 +113,8 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
           </div>
           {!sidebarMinimized && (
             <div>
-              <p className="text-[11px] text-white/65">Tutor Workspace</p>
-              <h2 className="text-[13px] font-medium">Manage your teaching</h2>
+              <p className="text-[10px] text-white/60">Tutor Workspace</p>
+              <h2 className="text-[12px] font-medium">Manage your teaching</h2>
             </div>
           )}
         </div>

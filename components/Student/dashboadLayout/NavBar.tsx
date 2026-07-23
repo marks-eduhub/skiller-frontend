@@ -8,6 +8,7 @@ import SkillerLogo from "@/components/ui/logo";
 import SearchBar from "./searchbar";
 import { useFetchTutors } from "@/hooks/useCourses";
 import { useFetchUserDetails } from "@/hooks/useProfile";
+import { shouldBypassImageOptimization } from "@/lib/media";
 
 interface NavBarProps {
   sidebarMinimized: boolean;
@@ -59,6 +60,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     alt={username}
                     width={28}
                     height={28}
+                    unoptimized={shouldBypassImageOptimization(profileImage)}
                     className="ml-1 h-7 w-7 rounded-full object-cover"
                   />
                   <Link href="/dashboard/profile" className="truncate text-sm text-white">
@@ -117,6 +119,7 @@ const Navbar: React.FC<NavBarProps> = ({ sidebarMinimized }) => {
                     alt={username}
                     width={28}
                     height={28}
+                    unoptimized={shouldBypassImageOptimization(profileImage)}
                     className="ml-1 h-7 w-7 rounded-full object-cover"
                   />
                   <Link href="/dashboard/profile" className="ml-2 truncate text-sm text-white">
