@@ -19,18 +19,19 @@ const SideBar = () => {
       ) : (
         <div
           className={`fixed h-full sm:flex hidden flex-col ${
-            sidebarMinimized ? "w-[116px]" : "w-[224px]"
+            sidebarMinimized ? "w-[100px]" : "w-[208px]"
           } text-white bg-black`}
         >
           <div className="flex items-center justify-start space-x-4 px-4 py-3">
-            <div className="flex items-center space-x-4 cursor-pointer">
+            <div className="flex items-center space-x-3 cursor-pointer">
             <HamburgerMenuIcon
-              className={`w-6 h-6 text-white ${
-                sidebarMinimized ? "rotate-90 mt-1 ml-4" : ""
+              className={`h-5 w-5 text-white transition ${
+                sidebarMinimized ? "ml-3 mt-1 rotate-90" : ""
               }`}
               onClick={toggleSidebar}
-            />              {!sidebarMinimized && (
-                <div className="w-24 text-white">
+            />
+              {!sidebarMinimized && (
+                <div className="w-20 text-white">
                   <SkillerLogo />
                 </div>
               )}
