@@ -13,7 +13,6 @@ import {
   useFetchSearchCommuity,
   useLikedResponses,
 } from "@/hooks/useCommunity";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -30,6 +29,7 @@ import { FaComment } from "react-icons/fa";
 import { stripHtmlTags } from "../../../lib/utility";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 type ActivityTab = "posts" | "responses" | "likes";
 

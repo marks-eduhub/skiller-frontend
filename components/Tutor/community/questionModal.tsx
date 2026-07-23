@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { postQuestion } from "@/hooks/useCommunity";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
@@ -8,6 +7,7 @@ import { message } from "antd";
 import dynamic from "next/dynamic";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const TutorQuestionModal = () => {
   const { user } = useAuthContext();
