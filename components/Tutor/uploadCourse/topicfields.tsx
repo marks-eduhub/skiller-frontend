@@ -323,12 +323,15 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       const newResources = newResourceFiles;
 
       if (!topicId) {
+        const uploadableResources = resourcePreview.filter(
+          (resource): resource is File => resource instanceof File
+        );
         createTopic({
           courseId,
           topicname: topic.topicname,
           topicExpectations: topic.topicExpectations,
           topicdescription: topic.topicdescription,
-          newResources: resourcePreview,
+          newResources: uploadableResources,
           newVideos: topic.topicVideo instanceof File ? [topic.topicVideo] : [],
           instructions: topic.resourceInstructions,
           duration: topic.duration,

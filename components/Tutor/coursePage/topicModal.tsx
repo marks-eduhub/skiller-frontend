@@ -21,6 +21,23 @@ const defaultTopic = {
   resourceFile: null,
 };
 
+type TopicModalState = {
+  id: string;
+  topicname: string;
+  topicdescription: string;
+  topicExpectations: string;
+  topicresource: string;
+  duration: string;
+  resourceInstructions: string;
+  topicVideo: string | null;
+  topicResources: Array<string | number>;
+  topicexpectation: string;
+  topicduration: string;
+  instructions: string;
+  videoFile: File | null;
+  resourceFile: File | null;
+};
+
 interface TopicModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,7 +51,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
   topicId,
   currentTopic,
 }) => {
-  const [topic, setTopic] = useState({ ...defaultTopic });
+  const [topic, setTopic] = useState<TopicModalState>({ ...defaultTopic });
   const [videoPreview, setVideoPreview] = useState("");
   const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
   const [resourcePreview, setResourcePreview] = useState<Array<File | string>>([]);
