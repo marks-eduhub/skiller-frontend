@@ -182,7 +182,7 @@ const SetQuiz = () => {
   return (
     <div className="flex w-full flex-col px-1 py-4 sm:px-0 sm:py-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => router.push(`/tutor/dashboard/courseoverview/${courseId}?tab=Topics`)}
         className="mb-4 inline-flex w-fit items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-slate-950"
       >
         <IoMdArrowRoundBack className="h-5 w-5" />

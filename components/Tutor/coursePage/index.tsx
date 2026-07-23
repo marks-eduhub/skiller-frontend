@@ -6,7 +6,7 @@ import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
 import Topics from "./topics";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
 import { message } from "antd";
@@ -14,8 +14,14 @@ import { useFetchCourseRate, useFetchEnrolledCourses } from "@/hooks/useSubmit";
 import { stripHtmlTags } from "@/lib/utility";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
+const VALID_TABS = ["Course Overview", "Topics", "Assessments", "Analytics"];
+
 const CourseOverview = () => {
-  const [Tab, setTab] = useState("Course Overview");
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get("tab");
+  const [Tab, setTab] = useState(
+    initialTab && VALID_TABS.includes(initialTab) ? initialTab : "Course Overview"
+  );
   const { slug } = useParams();
   const courseDocumentId = String(slug);
   const { data, isLoading, error } = useFetchOverview(courseDocumentId);
