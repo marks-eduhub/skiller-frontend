@@ -77,7 +77,7 @@ const ProfilePage: React.FC = () => {
     profilePictureId: "",
   });
 
-  const tutorId = tutor?.data[0]?.id;
+  const tutorId = tutor?.data[0]?.attributes?.documentId;
   const shouldSetupTutor = searchParams.get("setupTutor") === "yes";
   const loginMethod =
     user?.provider && user.provider !== "local" ? "Google" : "Email";
