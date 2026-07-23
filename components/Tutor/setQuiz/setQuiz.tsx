@@ -5,7 +5,7 @@ import Step3 from "./step3";
 import Step2 from "./step2";
 import Step1 from "./step1";
 import QuizPreview from "./quizPreview";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PostQuestion, PostTest } from "@/hooks/useSetQuiz";
 import { message } from "antd";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 const SetQuiz = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const courseId = searchParams.get("courseId");
   const [currentStep, setCurrentStep] = useState(1);
@@ -141,7 +142,8 @@ const SetQuiz = () => {
           quizData.forEach(({ question, options, answers }) => {
             PostQuestion(question, options, answers, testId);
           });
-          router.push("/tutor/dashboard");
+          queryClient.invalidateQueries({ queryKey: ["course_topics"] });
+          router.push(`/tutor/dashboard/courseoverview/${courseId}`);
         },
         onError: (err) => {
           message.error("Failed to submit quiz.");

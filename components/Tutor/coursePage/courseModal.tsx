@@ -125,6 +125,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
             setDays={setDays}
             level={level}
             days={days}
+            showSaveButton
           />
         </div>
       </div>

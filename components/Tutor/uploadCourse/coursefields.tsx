@@ -9,7 +9,7 @@ import {
   useFetchCategory,
 } from "@/hooks/useCourseUpload";
 import { message } from "antd";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   COURSE_IMAGE_MAX_BYTES,
@@ -43,6 +43,7 @@ interface CourseFieldsProps {
   setSelectedImage: React.Dispatch<React.SetStateAction<File | null>>;
   onClose: () => void;
   existingMediaId: number | null;
+  showSaveButton?: boolean;
 }
 const CourseFields: React.FC<CourseFieldsProps> = ({
   courseName,
@@ -67,9 +68,9 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
   setDays,
   level,
   days,
+  showSaveButton = false,
 }) => {
   const queryClient = useQueryClient();
-  const pathname = usePathname();
   const { slug } = useParams();
   const courseId = String(slug);
   const { data, isLoading, error } = useFetchCategory();
@@ -435,7 +436,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
           />
         </div>
         <div className="flex items-center justify-center my-5">
-          {pathname === `/tutor/dashboard/courseoverview/${courseId}` && (
+          {showSaveButton && (
             <button
               className="bg-black text-white px-4 py-2 rounded-md"
               onClick={handleSaveChanges}
