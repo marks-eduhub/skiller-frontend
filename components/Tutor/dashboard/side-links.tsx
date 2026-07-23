@@ -9,7 +9,6 @@ import Link from "next/link";
 import {
   HiOutlineAcademicCap,
   HiOutlineRectangleStack,
-  HiOutlineSparkles,
   HiOutlineUserCircle,
   HiOutlineUserGroup,
 } from "react-icons/hi2";
@@ -99,26 +98,12 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
           />
         </div>
       )}
-      <div
-        className={clsx(
-          "mb-4 rounded-[22px] border px-3 py-3 text-white transition",
-          sidebarMinimized
-            ? "mx-1 border-white/10 bg-white/5"
-            : "border-white/10 bg-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-        )}
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-slate-950">
-            <HiOutlineSparkles className="h-[17px] w-[17px]" />
-          </div>
-          {!sidebarMinimized && (
-            <div>
-              <p className="text-[10px] text-white/60">Tutor Workspace</p>
-              <h2 className="text-[12px] font-medium">Manage your teaching</h2>
-            </div>
-          )}
+      {!sidebarMinimized && (
+        <div className="mb-4 rounded-[22px] border border-white/10 bg-white/5 px-3 py-3 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition">
+          <p className="text-[10px] text-white/60">Tutor Workspace</p>
+          <h2 className="text-[12px] font-medium">Manage your teaching</h2>
         </div>
-      </div>
+      )}
       {links.map((link, index) => (
         <div key={index} className="mt-4">
           <link.icon
@@ -172,7 +157,7 @@ const SideLinks: React.FC<SideLinksProps> = ({ sidebarMinimized }) => {
       >
         <div
           className={clsx(
-            "flex h-7 w-7 items-center justify-center rounded-xl",
+            "flex h-8 w-8 items-center justify-center rounded-xl",
             sidebarMinimized ? "" : "mr-2",
             pathname === "/dashboard"
               ? "bg-slate-100 text-slate-700"

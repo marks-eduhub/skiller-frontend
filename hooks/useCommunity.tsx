@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchCommunitydetails = async () => {
   const response = await api.get(
-    "/api/communities?populate[user][populate]=*&populate[community_responses]=true&sort=createdAt:desc"
+    "/api/communities?populate[user][populate][0]=profilepicture&populate[community_responses]=true&sort=createdAt:desc"
   );
 
   return response.data;
@@ -111,7 +111,7 @@ export const addResponse = async (
 };
 
 const fetchSearchCommunity = async (searchTerm: string) => {
-  const response = await api.get(`/api/communities?_q=${searchTerm}&populate[user][populate]=*&populate[community_responses]=true`);
+  const response = await api.get(`/api/communities?_q=${searchTerm}&populate[user][populate][0]=profilepicture&populate[community_responses]=true`);
 
   return response.data;
 };

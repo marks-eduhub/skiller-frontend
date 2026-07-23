@@ -1,5 +1,5 @@
-import Community from "@/components/Student/community/community";
+import TutorCommunity from "@/components/Tutor/community/community";
 
 export default function TutorCommunityPage() {
-  return <Community />;
+  return <TutorCommunity />;
 }

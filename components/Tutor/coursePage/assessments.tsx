@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useFetchCourseTopics } from "@/hooks/useCourses";
 import { useParams } from "next/navigation";
 import QuizModal from "./testModal";
+import { stripHtmlTags } from "@/lib/utility";
 
 const Assessments = () => {
   const { slug } = useParams();
@@ -76,7 +77,7 @@ const Assessments = () => {
                             {test.attributes?.testname}
                           </span>
                           <span className="sm:text-sm text-white">
-                            {test.attributes?.testdescription}
+                            {stripHtmlTags(test.attributes?.testdescription || "")}
                           </span>
                         </div>
 
