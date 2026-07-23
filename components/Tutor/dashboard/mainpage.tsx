@@ -48,7 +48,7 @@ const MainPage = () => {
   );
   const publishedCourses =
     tutorCourses?.filter(
-      (course: any) => course?.attributes?.status?.toLowerCase() === "published"
+      (course: any) => course?.attributes?.adminStatus?.toLowerCase() === "published"
     ).length || 0;
   const totalRatingsCount = tutorCourses?.reduce((sum: number, course: any) => {
     const courseId = course?.id;
@@ -170,7 +170,7 @@ const MainPage = () => {
                 courseAttributes?.card?.data?.attributes?.url ||
                 "/course-placeholder.svg";
               const averageRating = getAverageRating(course.id);
-              const courseStatus = courseAttributes?.status || "Draft";
+              const courseStatus = courseAttributes?.adminStatus || "Draft";
               const statusStyles =
                 courseStatus === "Published"
                   ? "bg-emerald-100 text-emerald-800"

@@ -81,7 +81,7 @@ export const submitCourseForReview = async (courseId: string) => {
   try {
     const response = await api.put(`/api/courses/${courseId}`, {
       data: {
-        status: "Pending",
+        adminStatus: "Pending",
       },
     });
 

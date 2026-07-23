@@ -82,7 +82,7 @@ const Enroll = () => {
   const topics = courseAttributes?.topicname?.data || [];
 
   const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
-  const courseStatus = (courseAttributes?.status || "").toLowerCase();
+  const courseStatus = (courseAttributes?.adminStatus || "").toLowerCase();
   const isDraft = courseStatus !== "published";
   const enrollDisabled = isProcessing || (isDraft && !isEnrolled);
 

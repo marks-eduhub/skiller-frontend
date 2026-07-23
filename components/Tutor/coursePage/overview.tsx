@@ -47,7 +47,7 @@ const Overview = () => {
   );
   const numberOfTests = totalTests || 0;
   const studentsenrolled = totalStudentsEnrolled?.length || 0;
-  const courseStatus = (data?.data?.attributes?.status || "").toLowerCase();
+  const courseStatus = (data?.data?.attributes?.adminStatus || "").toLowerCase();
   const isDraftCourse = courseStatus !== "published" && courseStatus !== "pending";
   const hasTopic = (topicData?.data?.length || 0) > 0;
   const hasAssessment = numberOfTests > 0;
