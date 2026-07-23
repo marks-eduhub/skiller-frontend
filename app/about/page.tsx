@@ -1,72 +1,62 @@
-import Link from "next/link";
+import type { Metadata } from "next";
+import PolicyShell from "@/components/Legal/PolicyShell";
+
+export const metadata: Metadata = {
+  title: "About Skiller | Skiller",
+  description:
+    "Operational overview of Skiller, its open-use model, contribution path, and maintenance approach.",
+};
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="rounded-[32px] border border-slate-200 bg-[linear-gradient(135deg,_#0f172a_0%,_#1d4ed8_52%,_#f59e0b_100%)] px-6 py-10 text-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] sm:px-8">
-        <p className="text-sm uppercase tracking-[0.24em] text-white/70">
-          About Skiller
+    <PolicyShell
+      title="About Skiller"
+      description="Skiller is currently published as a free tool for free use and learning. It is intentionally practical, adaptable, and open to contribution while the platform grows into a stronger self-sustaining model."
+    >
+      <section>
+        <h2 className="text-lg font-semibold text-black">Current use model</h2>
+        <p className="mt-2">
+          The platform is open in its current form and can be adopted,
+          customized, and improved for real learning use. It is being operated
+          in a lightweight public mode while usage and community traffic grow.
         </p>
-        <h1 className="mt-3 text-3xl font-semibold leading-tight sm:text-5xl">
-          Open learning infrastructure, published in a practical form.
-        </h1>
-        <p className="mt-4 max-w-3xl text-sm text-white/80 sm:text-base">
-          Skiller is currently available as a free tool for free use and
-          learning. It is designed to be adopted, customized, and improved in
-          the open while the platform continues to grow.
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-black">Return model</h2>
+        <p className="mt-2">
+          Return-model planning is expected to begin once open traffic grows
+          beyond roughly 400 active users in the platform’s public form. Until
+          then, the priority remains access, learning value, and practical
+          iteration.
         </p>
-      </div>
+      </section>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
-          <h2 className="text-xl font-semibold text-slate-950">
-            Current operating model
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-slate-700">
-            The platform is open in its current form and is being maintained as
-            a practical learning and delivery tool. Return-model planning is
-            expected to begin once open traffic grows beyond roughly 400 active
-            users in this public form.
-          </p>
-          <p className="mt-4 text-sm leading-7 text-slate-700">
-            Most future advancements are added on a non-timed basis while the
-            product remains in maintenance-first mode. Issues are reviewed and
-            handled on a monthly cadence, with faster feature development
-            expected once funding or a stronger self-sustaining traffic model is
-            reached.
-          </p>
-        </section>
+      <section>
+        <h2 className="text-lg font-semibold text-black">Maintenance and roadmap</h2>
+        <p className="mt-2">
+          Most future advancements are added on a non-timed basis. In its
+          current maintenance mode, issues are handled on a monthly cycle where
+          practical, while faster and more aggressive feature work is expected
+          only after stronger funding or a more self-sustaining traffic-backed
+          operating model is reached.
+        </p>
+      </section>
 
-        <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
-          <h2 className="text-xl font-semibold text-slate-950">
-            Contributing and support
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-slate-700">
-            Open contributions are welcome. If you want to contribute to the
-            project, reach out to{" "}
-            <a
-              href="mailto:support@khusoma.org"
-              className="font-medium text-slate-950 underline"
-            >
-              support@khusoma.org
-            </a>{" "}
-            to be added to the project.
-          </p>
-          <p className="mt-4 text-sm leading-7 text-slate-700">
-            This platform is meant to be clear, usable, and adaptable first. As
-            support grows, the roadmap can move from careful maintenance into
-            more aggressive feature delivery.
-          </p>
-          <div className="mt-6">
-            <Link
-              href="/dashboard"
-              className="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-            >
-              Open Dashboard
-            </Link>
-          </div>
-        </section>
-      </div>
-    </main>
+      <section>
+        <h2 className="text-lg font-semibold text-black">Open contributions</h2>
+        <p className="mt-2">
+          Open contributions are welcome. If you want to contribute to the
+          project, reach out to{" "}
+          <a
+            href="mailto:support@khusoma.org"
+            className="font-medium text-black underline"
+          >
+            support@khusoma.org
+          </a>{" "}
+          to be added to the project.
+        </p>
+      </section>
+    </PolicyShell>
   );
 }

@@ -542,14 +542,10 @@ const ProfilePage: React.FC = () => {
               <p className="mt-2 text-sm text-slate-600">
                 Upload a clean profile image and keep your public details up to date.
               </p>
-              <div className="mt-4 rounded-2xl bg-white/80 px-4 py-3 text-left shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  Login Method
-                </p>
-                <p className="mt-1 text-sm font-medium text-slate-800">
-                  {loginMethod}
-                </p>
-              </div>
+              <p className="mt-3 text-sm text-slate-500">
+                Login Method:{" "}
+                <span className="font-medium text-slate-800">{loginMethod}</span>
+              </p>
               <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
                 {socialIconLinks.map((item) => {
                   const Icon = item.icon;
