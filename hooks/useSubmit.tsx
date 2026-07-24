@@ -243,6 +243,7 @@ export const topicProgress = async (
             topic: topicId,
             course_tracker: courseTrackerId,
             completion_status: isCompleted,
+            ...(isCompleted ? { time_completed: new Date().toISOString() } : {}),
           },
         }
       );
@@ -254,12 +255,60 @@ export const topicProgress = async (
           topic: topicId,
           course_tracker: courseTrackerId,
           completion_status: isCompleted,
+          ...(isCompleted ? { time_completed: new Date().toISOString() } : {}),
         },
       });
       return response.data;
     }
   } catch (error) {
     throw new Error("Error updating topic progress");
+  }
+};
+
+export const startTopicProgress = async (
+  userId: number,
+  topicId: number,
+  courseTrackerId: number
+) => {
+  if (!userId || !topicId || !courseTrackerId) {
+    return;
+  }
+
+  try {
+    const existingTopicProgress = await api.get(
+      `/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[topic][id][$eq]=${topicId}&filters[course_tracker][id][$eq]=${courseTrackerId}`
+    );
+
+    const progress = existingTopicProgress?.data?.data || [];
+
+    if (progress.length > 0) {
+      const existing = progress[0];
+      if (existing?.attributes?.time_started) {
+        return existing;
+      }
+
+      const topicProgressId = existing?.attributes?.documentId;
+      const response = await api.put(`/api/topic-progress-trackers/${topicProgressId}`, {
+        data: {
+          time_started: new Date().toISOString(),
+        },
+      });
+      return response.data;
+    }
+
+    const response = await api.post("/api/topic-progress-trackers", {
+      data: {
+        user: userId,
+        topic: topicId,
+        course_tracker: courseTrackerId,
+        completion_status: false,
+        time_started: new Date().toISOString(),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Best-effort - a student should still be able to view the topic even
+    // if recording the start time fails.
   }
 };
 
@@ -341,6 +390,7 @@ export const courseTracker = async (userId: number, courseId: string) => {
           user: userId,
           course: courseNumericId,
           date: currentDate,
+          time_started: new Date().toISOString(),
         },
       });
       return response.data;
@@ -348,6 +398,15 @@ export const courseTracker = async (userId: number, courseId: string) => {
   } catch (error) {
     throw new Error("Error creating course tracker");
   }
+};
+
+export const completeCourseTracking = async (courseTrackerDocumentId: string) => {
+  const response = await api.put(`/api/course-trackers/${courseTrackerDocumentId}`, {
+    data: {
+      time_completed: new Date().toISOString(),
+    },
+  });
+  return response.data;
 };
 
 const fetchCourseTracker = async (userId: number, courseId: string) => {

@@ -7,7 +7,12 @@ import { CiShare2 } from "react-icons/ci";
 import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { UsefetchResult, useFetchTests } from "@/hooks/useSubmit";
+import {
+  UsefetchResult,
+  useFetchTests,
+  useFetchCourseTracker,
+  completeCourseTracking,
+} from "@/hooks/useSubmit";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 import {
   markTopicCompleted,
@@ -17,11 +22,12 @@ import { useMutation } from "@tanstack/react-query";
 
 const TopicsCard: React.FC = () => {
   const { slug } = useParams();
+  const courseId = String(slug);
   const { user } = useAuthContext();
   const userId = user?.id;
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const { data: topicsData, isLoading, error } = useFetchOverview(String(slug));
+  const { data: topicsData, isLoading, error } = useFetchOverview(courseId);
   const { data: testResults } = UsefetchResult(Number(topicId), Number(userId));
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const { data: testsData } = useFetchTests(Number(topicId), Number(userId));
@@ -29,8 +35,12 @@ const TopicsCard: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const {
     data: allTestResults,
-  
+
   } = useFetchAllResults(Number(userId));
+  const { data: coursetrackerdata } = useFetchCourseTracker(Number(userId), courseId);
+  const courseTrackerEntry = coursetrackerdata?.data?.[0];
+  const courseTrackerDocumentId = courseTrackerEntry?.attributes?.documentId;
+  const courseTimeCompleted = courseTrackerEntry?.attributes?.time_completed;
 
   const { mutate: topicCompleted } = useMutation({
     mutationFn: async ({
@@ -133,7 +143,23 @@ const TopicsCard: React.FC = () => {
 
     const calculatedProgress = (completedTopics.length / topics.length) * 100;
     setProgress(calculatedProgress);
-  }, [topicsData, allTestResults, topicCompleted]);
+
+    if (
+      calculatedProgress === 100 &&
+      courseTrackerDocumentId &&
+      !courseTimeCompleted
+    ) {
+      completeCourseTracking(courseTrackerDocumentId).catch(() => {
+        // Best-effort - progress display already reflects 100% regardless.
+      });
+    }
+  }, [
+    topicsData,
+    allTestResults,
+    topicCompleted,
+    courseTrackerDocumentId,
+    courseTimeCompleted,
+  ]);
 
   if (isLoading) {
     return (
