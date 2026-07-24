@@ -7,7 +7,7 @@ import StepTracker from "../setQuiz/tracker";
 import QuizPreview from "../setQuiz/quizPreview";
 import Loader from "@/components/Student/loader";
 import { useMutation } from "@tanstack/react-query";
-import { EditTest, EditTestQuestion } from "@/hooks/useSetQuiz";
+import { EditTest, EditTestQuestion, PostQuestion } from "@/hooks/useSetQuiz";
 import { message } from "antd";
 import { normalizeOptions } from "@/lib/utility";
 
@@ -144,6 +144,28 @@ const QuizModal: React.FC<QuizModalProps> = ({
     },
   });
 
+  const { mutate: createTestQuestionMutation } = useMutation({
+    mutationFn: async ({
+      questions,
+      options,
+      answers,
+      testDocumentId,
+    }: {
+      questions: string;
+      options: string[];
+      answers: string;
+      testDocumentId: string;
+    }) => {
+      return await PostQuestion(questions, options, answers, testDocumentId);
+    },
+    onSuccess: () => {
+      // message.success("Test questions added successfully!");
+    },
+    onError: (err) => {
+      message.error("Error adding new quiz question");
+    },
+  });
+
   const handleSubmitQuiz = async () => {
     if (!testname) {
       message.error("Test name is missing.");
@@ -177,8 +199,17 @@ const QuizModal: React.FC<QuizModalProps> = ({
       await Promise.all(
         quizData.map(({ questionId, question, options, answers }) => {
           if (question && options.length > 0 && answers) {
-            return editTestQuestionMutation({
-              questionId,
+            if (typeof questionId === "number") {
+              return editTestQuestionMutation({
+                questionId,
+                questions: question,
+                options,
+                answers,
+                testDocumentId: selectedTest.testDocumentId,
+              });
+            }
+
+            return createTestQuestionMutation({
               questions: question,
               options,
               answers,

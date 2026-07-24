@@ -320,16 +320,3 @@ export interface AuthContextType {
 
 
 
-export interface NoteTypes {
-  type: string;
-  children: Array<{ text: string }>;
-  format?: string; 
-}
-
-export interface TopicDetails {
-  data: {
-    attributes: {
-      notes: NoteTypes[];
-    };
-  };
-}

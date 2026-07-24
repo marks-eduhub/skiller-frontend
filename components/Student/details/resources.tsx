@@ -1,9 +1,8 @@
 import { useFetchTopicResources } from '@/hooks/useTopicResources';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
-import { BiSolidDownArrow } from 'react-icons/bi';
+import { HiOutlineDownload, HiOutlineDocumentText, HiOutlineLink } from 'react-icons/hi';
 import Link from "next/link";
-import api from '@/lib/axios';
 import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import "react-loading-skeleton/dist/skeleton.css";
@@ -15,27 +14,14 @@ const Resources = () => {
   const { data, isLoading, error } = useFetchTopicResources(Number(topicId));
   const resources = data?.data?.attributes?.topicResources?.data || [];
   const links = data?.data?.attributes?.topicLinks?.data || [];
-  const instructions = data?.data?.attributes?.resourceInstructions || "No instructions available.";
+  const instructions = data?.data?.attributes?.resourceInstructions || "";
 
   if (isLoading) {
     return (
-      <div className='ml-5'>
-        <h2 className="text-lg font-300 my-4">
-          <Skeleton
-            width={200}
-            height={24}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-          />
-        </h2>
-        <div>
-          <Skeleton
-            height={300}
-            count={1}
-            baseColor="#e0e0e0"
-            highlightColor="#f5f5f5"
-            enableAnimation={true}
-          />
+      <div className="px-4 sm:px-6 py-4">
+        <Skeleton width={220} height={18} baseColor="#e0e0e0" highlightColor="#f0f0f0" />
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <Skeleton height={44} count={4} baseColor="#e0e0e0" highlightColor="#f5f5f5" />
         </div>
       </div>
     );
@@ -46,50 +32,54 @@ const Resources = () => {
     return null;
   }
 
+  const hasContent = resources.length > 0 || links.length > 0;
+
   return (
-    <div className="sm:ml-6 sm:mr-6">
-      <div className="overflow-x-auto">
-        <h1>{stripHtmlTags(instructions)}</h1>
-        {resources?.length > 0 &&
-          resources?.map((resource: any) => (
-            <div
+    <div className="px-4 sm:px-6 pb-6">
+      {instructions && (
+        <p className="mb-4 text-sm text-gray-600">{stripHtmlTags(instructions)}</p>
+      )}
+
+      {hasContent ? (
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          {resources.map((resource: any) => (
+            <Link
               key={resource.id}
-              className="h-20 mt-10 bg-gray-700 text-white flex items-center justify-between px-4"
+              href={`${resource.attributes.url}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex min-w-0 items-center justify-between gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2.5 transition hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
             >
-              <Link
-                href={`${resource.attributes.url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between w-full"
-              >
-                <h2 className="ml-6">{resource.attributes.name || "Resource1"}</h2>
-                <BiSolidDownArrow className="text-white mr-6" />
-              </Link>
-            </div>
+              <span className="flex min-w-0 items-center gap-2.5">
+                <HiOutlineDocumentText className="shrink-0 text-lg text-gray-500" />
+                <span className="truncate text-sm font-medium text-gray-800">
+                  {resource.attributes.name || "Resource"}
+                </span>
+              </span>
+              <HiOutlineDownload className="shrink-0 text-gray-400 transition group-hover:text-gray-700" />
+            </Link>
           ))}
 
-        {links?.length > 0 &&
-          links?.map((link: any) => (
-            <div
+          {links.map((link: any) => (
+            <Link
               key={link.id}
-              className="h-20 mt-10 bg-gray-700 text-white flex items-center justify-between px-4"
+              href={`${link.attributes.url}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex min-w-0 items-center gap-2.5 rounded-lg border border-gray-200 bg-white px-3 py-2.5 transition hover:-translate-y-0.5 hover:border-gray-400 hover:shadow-sm"
             >
-              <Link
-                href={`${link.attributes.url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between w-full"
-              >
-                <h2 className="ml-6">{link.attributes.label || "Resource link"}</h2>
-                <BiSolidDownArrow className="text-white mr-6" />
-              </Link>
-            </div>
+              <HiOutlineLink className="shrink-0 text-lg text-gray-500" />
+              <span className="truncate text-sm font-medium text-gray-800">
+                {link.attributes.label || "Resource link"}
+              </span>
+            </Link>
           ))}
-
-        {resources?.length === 0 && links?.length === 0 && (
-          <div className="p-4 font-bold text-center">No resources available for this topic.</div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center rounded-lg border border-dashed border-gray-300 py-10 text-sm font-medium text-gray-500">
+          No resources available for this topic.
+        </div>
+      )}
     </div>
   );
 };

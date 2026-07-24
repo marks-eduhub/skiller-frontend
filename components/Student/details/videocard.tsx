@@ -33,7 +33,7 @@ const VideoCard: React.FC = () => {
   }
 
   const topicdata = data?.data?.attributes || [];
-  const videoFilePath = topicdata?.topicVideo?.data?.[0]?.attributes?.url;
+  const videoFilePath = topicdata?.topicVideo?.data?.attributes?.url;
   const tutorName = topicdata?.course?.data?.attributes?.tutor?.data?.attributes?.tutorname || "DS";
   const tutorRole = topicdata?.course?.data?.attributes?.tutor?.data?.attributes?.role || "DS";
   const topicname = topicdata?.topicname;

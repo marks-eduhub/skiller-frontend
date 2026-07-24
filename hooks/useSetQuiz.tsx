@@ -22,7 +22,7 @@ export const PostTest = async(courseId:string, testname:string, testdescription:
 }
 
 
-export const PostQuestion = async(questions:string, options:string[], answers:string, testId:number) => {
+export const PostQuestion = async(questions:string, options:string[], answers:string, testId:number|string) => {
     const response = await api.post("/api/questions", {
         data: {
             questions,
