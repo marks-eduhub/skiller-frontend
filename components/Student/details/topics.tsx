@@ -77,17 +77,17 @@ const TopicsCard: React.FC = () => {
   
     const previousTests =
       testsData?.data?.filter(
-        (test: any) => test.attributes.topic.data.id === previousTopic.id
+        (test: any) => test.attributes.topic?.data?.id === previousTopic.id
       ) || [];
-  
+
     if (previousTests.length === 0) {
       return canAccessTopic(topics, testResults, currentTopicIndex - 1);
     }
-  
+
     const allPassed = previousTests.every((test: any) => {
       return testResults?.data?.some(
         (result: any) =>
-          result.attributes.test.data.id === test.id &&
+          result.attributes.test?.data?.id === test.id &&
           result.attributes.score >= test.attributes.passmark
       );
     });
@@ -106,7 +106,7 @@ const TopicsCard: React.FC = () => {
 
     const completedTopics = topics.filter((topic: any) => {
       const topicResults = results.filter(
-        (result: any) => result.attributes.topic.data.id === topic.id
+        (result: any) => result.attributes.topic?.data?.id === topic.id
       );
 
       if (topicResults.length === 0) {
@@ -118,7 +118,7 @@ const TopicsCard: React.FC = () => {
       });
 
       const testPassmark = parseInt(
-        bestResult.attributes.test.data.attributes.passmark,
+        bestResult.attributes.test?.data?.attributes?.passmark,
         10
       );
 
