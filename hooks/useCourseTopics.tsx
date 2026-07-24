@@ -223,7 +223,6 @@ export const markTopicCompleted = async (
   const response = await api.put(`/api/topics/${topicId}`, {
     data: {
      isCompleted,
-     topicId
     },
   });
   return response.data;

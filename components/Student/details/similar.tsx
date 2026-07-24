@@ -30,7 +30,7 @@ const SimilarCourses: React.FC = () => {
         <b>Similar Courses</b>
       </h2>
 
-      <ProductContainer courses={recentCourses} />
+      <ProductContainer courses={recentCourses} imageHeightClass="h-[130px]" />
     </div>
   );
 };

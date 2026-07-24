@@ -16,9 +16,10 @@ import { useFetchSpecificCourseRate } from "@/hooks/useSubmit";
 
 interface ProductCardProps {
   course: any;
+  imageHeightClass?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ course, imageHeightClass = "h-[190px]" }) => {
   const { coursename, card, duration} = course?.attributes || {};
   const tutorName = course?.attributes.tutor?.data?.attributes?.tutorname || "Tutor Name";
   const imageUrl = course?.attributes?.card?.data?.attributes?.url;
@@ -188,7 +189,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course }) => {
   return (
     <div className="h-full pb-6 pr-3 sm:pb-0">
       <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm transition hover:shadow-md" onClick={handleCourseRecent}>
-        <div className="relative flex h-[190px] overflow-hidden">
+        <div className={`relative flex ${imageHeightClass} overflow-hidden`}>
           <Image
             src={imageUrl || "/course-placeholder.svg"}
             alt={card?.data?.attributes?.alternativeText || "Fallback Image"}

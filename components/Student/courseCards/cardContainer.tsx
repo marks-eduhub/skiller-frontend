@@ -6,9 +6,10 @@ import Loader from "../loader";
 import { usePathname } from "next/navigation";
 interface ProductContainerProps {
   courses: Course[];
+  imageHeightClass?: string;
 }
 
-const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
+const ProductContainer: React.FC<ProductContainerProps> = ({ courses, imageHeightClass }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -41,7 +42,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
                     handleCourseClick(`/dashboard/overview/${course.attributes.documentId}`)
                   }
                 >
-                  <ProductCard course={course} />
+                  <ProductCard course={course} imageHeightClass={imageHeightClass} />
                 </div>
               ) : null
             )}
@@ -61,7 +62,7 @@ const ProductContainer: React.FC<ProductContainerProps> = ({ courses }) => {
                     handleCourseClick(`/dashboard/overview/${course.attributes.documentId}`)
                   }
                 >
-                  <ProductCard course={course} />
+                  <ProductCard course={course} imageHeightClass={imageHeightClass} />
                 </div>
               ) : null
             )}
