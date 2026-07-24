@@ -16,7 +16,6 @@ import { message } from "antd";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState , useRef} from "react";
-import Image from "next/image";
 import AttemptTestModal from "@/components/Student/details/warning";
 import { useFetchTopicResult } from "@/hooks/useQuestions";
 import { useMutation } from "@tanstack/react-query";
@@ -322,27 +321,14 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col rounded-lg">
-      <div className="flex w-full mb-4 cursor-pointer">
-        <div
-          className={`bg-gray-300 justify-center items-center flex w-1/2 h-full ${
-            selectedTab === "Tests"
-              ? "text-black transition-all duration-300 ease-in-out border-b-2 border-black"
-              : "text-gray-400"
-          }`}
-          onClick={() => setselectedTab("Tests")}
-        >
-          <h2
-            className={`p-4 ${
-              selectedTab === "Tests" ? "font-bold text-[20px]" : "text-[20px]"
-            }`}
-          >
-            Tests
-          </h2>
-        </div>
+      <div className="mb-4">
+        <span className="inline-block border-b-2 border-black pb-1 text-sm font-bold text-black">
+          Tests
+        </span>
       </div>
 
       {selectedTab === "Tests" && (
-        <>
+        <div className="flex flex-col gap-2.5">
           {hasTests ? (
             tests?.data?.map((test: any) => {
               const testname = test.attributes?.testname || "Test1";
@@ -350,99 +336,76 @@ useEffect(() => {
                 totalAttempts - (attemptsByTest[test.id] || 0);
               const hasAttempted = attemptsremaining < totalAttempts;
               const passmark = tests?.data[0]?.attributes?.passmark;
+              const passed = highestScores[test.id] >= passmark;
 
               return (
-                <div key={test.id} className="w-full py-6 cursor-pointer">
-                  <div className="flex flex-col sm:flex-row sm:space-x-4">
-                    <div className="bg-gray-200 w-full sm:w-[300px] mb-2 sm:mb-0">
-                      <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                        {testname}
-                      </h1>
-                    </div>
+                <div
+                  key={test.id}
+                  className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
+                >
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-sm font-semibold text-gray-900 sm:text-base">
+                      {testname}
+                    </h3>
+                    {hasAttempted && (
+                      <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-gray-500">
+                        <span>Highest: {highestScores[test.id] || 0}%</span>
+                        <span>Recent: {mostRecentScores[test.id] || 0}%</span>
+                        <span>
+                          {attemptsremaining} attempt
+                          {attemptsremaining === 1 ? "" : "s"} left
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex shrink-0 items-center gap-2.5">
+                    {hasAttempted && (
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          passed
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {passed ? "Passed" : "Failed"}
+                      </span>
+                    )}
 
                     {!hasAttempted ? (
-                      <div className="w-full sm:w-1/4 mb-2 sm:mb-0">
-                        <button
-                          onClick={() => handleAttemptTest(test.id)}
-                          className="bg-gray-600 text-white font-bold text-[15px] p-4 sm:p-6 rounded-md"
-                        >
+                      <button
+                        onClick={() => handleAttemptTest(test.id)}
+                        className="flex items-center gap-2 rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-700"
+                      >
                         <span>Attempt test</span>
                         {isAttempting && (
-                         <DotPulseWrapper size="20" speed="1.5" color="white" />
-                         )}
-                         </button>
-                      </div>
+                          <DotPulseWrapper size="14" speed="1.5" color="white" />
+                        )}
+                      </button>
+                    ) : attemptsremaining === 0 ? (
+                      <span className="text-sm font-medium text-gray-400">
+                        No attempts left
+                      </span>
                     ) : (
-                      <>
-                        <div className="bg-gray-700 w-full sm:w-1/4 mb-2 sm:mb-0">
-                          <h1 className="text-white font-bold text-[15px] p-4 sm:p-6">
-                            Attempts left: {attemptsremaining}
-                          </h1>
-                        </div>
-
-                        <div className="bg-gray-200 w-full sm:w-1/4 mb-2 sm:mb-0">
-                          {attemptsremaining === 0 ? (
-                            <h1 className="font-bold text-[15px] p-4 sm:p-6 cursor-not-allowed opacity-50">
-                              No attempts left
-                            </h1>
-                          ) : (
-                            <button
-                              onClick={() => handleAttemptTest(test.id)}
-                              className="font-bold text-[15px] p-4 sm:p-6 hover:text-blue-600 hover:underline"
-                            >
-                              Re-attempt Test
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="bg-gray-700 w-full sm:w-1/5 mb-2 sm:mb-0">
-                          <div className="flex flex-col sm:my-0 sm:ml-0 my-4 ml-2">
-                            <h1 className="font-semibold text-[15px] p-4  text-white">
-                              Highest Score: {highestScores[test.id] || 0}
-                            </h1>
-                            <h1 className="font-semibold text-[15px] p-4 text-white">
-                              Most Recent Score:{" "}
-                              {mostRecentScores[test.id] || 0}
-                            </h1>
-                          </div>
-                        </div>
-
-                        <div className="bg-gray-300 w-full sm:w-1/6 flex flex-col items-center justify-center py-3">
-                          <h1 className="font-bold text-[15px] p-4 sm:p-6">
-                            {highestScores[test.id] >= passmark
-                              ? "Passed"
-                              : "Failed"}
-                          </h1>
-                          {highestScores[test.id] >= passmark ? (
-                            <Image
-                              src="/tick1.svg"
-                              alt="tick"
-                              width={25}
-                              height={25}
-                            />
-                          ) : (
-                            <Image
-                              src="/fail.svg"
-                              alt="fail"
-                              width={20}
-                              height={20}
-                            />
-                          )}
-                        </div>
-                      </>
+                      <button
+                        onClick={() => handleAttemptTest(test.id)}
+                        className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-100"
+                      >
+                        Re-attempt
+                      </button>
                     )}
                   </div>
                 </div>
               );
             })
           ) : (
-            <div className="w-full flex flex-col items-center justify-center py-6">
-              <h1 className="font-bold text-[15px] p-4">
+            <div className="flex items-center justify-center rounded-lg border border-dashed border-gray-300 py-10">
+              <p className="text-sm font-medium text-gray-500">
                 No tests available for this topic.
-              </h1>
+              </p>
             </div>
           )}
-        </>
+        </div>
       )}
 
       {showModal && selectedTestId && (

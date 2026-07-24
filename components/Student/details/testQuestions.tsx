@@ -86,7 +86,7 @@ const TestQuestions= () => {
       return newAnswers;
     });
   };
-  const { mutate: submitQuestionResult } = useMutation({
+  const { mutate: submitQuestionResult, mutateAsync: submitQuestionResultAsync } = useMutation({
     mutationFn: async ({
       testResultId,
       userAnswer,
@@ -120,7 +120,7 @@ const TestQuestions= () => {
     },
   });
 
-  const { mutate: updating } = useMutation({
+  const { mutate: updating, mutateAsync: updatingAsync } = useMutation({
     mutationFn: async ({
       userQuestionResultId,
       userAnswer,
@@ -258,39 +258,56 @@ const TestQuestions= () => {
   
     let passedCount = 0;
     // const totalQuestions = Object.keys(userAnswers).length;
+    const questionResultWrites: Promise<any>[] = [];
 
     for (const questionId in userAnswers) {
       const userAnswer = userAnswers[questionId];
       const correctAnswer = correctAnswerMap[Number(questionId)];
-  
+
       const passed = Array.isArray(correctAnswer)
         ? correctAnswer.includes(userAnswer)
         : userAnswer.trim().toLowerCase() ===
           correctAnswer.trim().toLowerCase();
-  
+
       if (passed) {
         passedCount++;
       }
-  
+
       const userQuestionResultId = userQuestionResultsMap[Number(questionId)];
       if (userQuestionResultId) {
-        updating({ userQuestionResultId, userAnswer, passed });
+        questionResultWrites.push(
+          updatingAsync({ userQuestionResultId, userAnswer, passed })
+        );
       } else {
-        submitQuestionResult({
-          testResultId,
-          userAnswer,
-          passed,
-          questionId: Number(questionId),
-        });
+        questionResultWrites.push(
+          submitQuestionResultAsync({
+            testResultId,
+            userAnswer,
+            passed,
+            questionId: Number(questionId),
+          })
+        );
       }
     }
-  
+
+    // Wait for every per-question write to actually land before touching the
+    // test-result's score - firing them concurrently with the score PUT races
+    // against the same document and can 500 (both target the same test_result
+    // relation while it's mid-write).
+    await Promise.allSettled(questionResultWrites);
+
     const scorePercentage = (passedCount / totalQuestions) * 100;
     const roundedScore = Math.round(scorePercentage);
-  
-    await updateTestResultScore(testResultId, roundedScore);
-  
-    message.success(`Quiz submitted successfully!`);
+
+    try {
+      await updateTestResultScore(testResultId, roundedScore);
+      message.success(`Quiz submitted successfully!`);
+    } catch (error) {
+      message.warning(
+        "Your answers were saved, but we couldn't confirm your final score. It should update shortly."
+      );
+    }
+
     setUserAnswers({});
     router.back();
   };
@@ -370,6 +387,13 @@ const TestQuestions= () => {
                     </button>
                   </div>
                   {options.map((option: string, optionIndex: number) => {
+                    const correctAnswer = questionItem?.attributes?.answers;
+                    const isCorrect = Array.isArray(correctAnswer)
+                      ? correctAnswer.includes(option)
+                      : typeof correctAnswer === "string" &&
+                        option.trim().toLowerCase() ===
+                          correctAnswer.trim().toLowerCase();
+
                     return (
                       <div
                         key={optionIndex}
@@ -381,7 +405,7 @@ const TestQuestions= () => {
                           value={option}
                           id={`option-${index}-${optionIndex}`}
                           onChange={() =>
-                            handleOptionSelect(option, true, questionItem.id)
+                            handleOptionSelect(option, isCorrect, questionItem.id)
                           }
                           checked={userAnswers[questionItem.id] === option}
                         />
