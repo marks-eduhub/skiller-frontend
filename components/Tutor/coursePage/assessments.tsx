@@ -114,6 +114,7 @@ const Assessments = () => {
           modalOpen={modalOpen}
           onClose={handleModalClose}
           selectedTest={selectedTest}
+          courseId={courseId}
         />
       )}
     </div>

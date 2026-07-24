@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { normalizeOptions } from "@/lib/utility";
@@ -12,17 +12,6 @@ const Step3 = ({
   quizData: any[];
   setQuizData: Function;
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 4;
-
-  const indexOfLastQuestion = currentPage * questionsPerPage;
-  const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
-
-  const currentQuestions = quizData.slice(
-    indexOfFirstQuestion,
-    indexOfLastQuestion
-  );
-
   const handleQuestionChange = (index: number, value: string) => {
     if (index < 0 || index >= quizData.length) {
      
@@ -70,45 +59,41 @@ const Step3 = ({
   };
 
   const addOption = (qIndex: number) => {
-    const realIndex = indexOfFirstQuestion + qIndex;
-
-    if (realIndex < 0 || realIndex >= quizData.length) {
+    if (qIndex < 0 || qIndex >= quizData.length) {
       return;
     }
 
     const updatedQuizData = [...quizData];
 
-    if (!updatedQuizData[realIndex].options) {
-      updatedQuizData[realIndex].options = [];
+    if (!updatedQuizData[qIndex].options) {
+      updatedQuizData[qIndex].options = [];
     }
 
-    updatedQuizData[realIndex].options.push("");
+    updatedQuizData[qIndex].options.push("");
 
     setQuizData(updatedQuizData);
   };
 
   const removeOption = (qIndex: number, oIndex: number) => {
-    const realIndex = indexOfFirstQuestion + qIndex;
-
-    if (realIndex < 0 || realIndex >= quizData.length) {
+    if (qIndex < 0 || qIndex >= quizData.length) {
       return;
     }
 
     const updatedQuizData = [...quizData];
 
     if (
-      !updatedQuizData[realIndex].options ||
-      updatedQuizData[realIndex].options.length === 0
+      !updatedQuizData[qIndex].options ||
+      updatedQuizData[qIndex].options.length === 0
     ) {
       return;
     }
 
-    const removedOption = updatedQuizData[realIndex].options[oIndex];
+    const removedOption = updatedQuizData[qIndex].options[oIndex];
 
-    updatedQuizData[realIndex].options.splice(oIndex, 1);
+    updatedQuizData[qIndex].options.splice(oIndex, 1);
 
-    if (updatedQuizData[realIndex].answers === removedOption) {
-      updatedQuizData[realIndex].answers = "";
+    if (updatedQuizData[qIndex].answers === removedOption) {
+      updatedQuizData[qIndex].answers = "";
     }
 
     setQuizData(updatedQuizData);
@@ -132,7 +117,7 @@ const Step3 = ({
     <div className="rounded-lg border mb-5 w-full border-gray-100 sm:p-6 p-4 bg-gray-100">
       <h1>Add Questions and Answers to Your Quiz</h1>
 
-      {currentQuestions.map((q, qIndex) => {
+      {quizData.map((q, qIndex) => {
         const questionOptions = normalizeOptions(q.options);
         return (
         <div
@@ -142,7 +127,7 @@ const Step3 = ({
           <div className="flex justify-between items-center w-full sm:mb-0 mb-3">
             <h2>Question {qIndex + 1}</h2>
             <button
-              onClick={() => removeQuestion(indexOfFirstQuestion + qIndex)}
+              onClick={() => removeQuestion(qIndex)}
               className="text-red-500 text-sm border border-black p-2 rounded-md"
             >
               Remove Question
@@ -198,7 +183,7 @@ const Step3 = ({
               }
               onChange={(e) =>
                 handleCorrectAnswerChange(
-                  q.questionId ? q.questionId : indexOfFirstQuestion + qIndex,
+                  q.questionId ? q.questionId : qIndex,
                   e.target.value
                 )
               }
@@ -223,32 +208,6 @@ const Step3 = ({
       >
         <Image src="/pluss.svg" alt="plus" width={20} height={20} />
         <h1>Add a Question</h1>
-      </div>
-
-      <div className="flex justify-center items-center mt-4 gap-4">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-lg text-white font-medium ${
-            currentPage === 1
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-gray-600 hover:bg-gray-700"
-          }`}
-        >
-          Previous
-        </button>
-
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage * questionsPerPage >= quizData.length}
-          className={`px-4 py-2 rounded-lg text-white font-medium ${
-            currentPage * questionsPerPage >= quizData.length
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-zinc-500 hover:bg-zinc-700"
-          }`}
-        >
-          Next
-        </button>
       </div>
     </div>
   );

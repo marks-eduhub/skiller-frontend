@@ -262,7 +262,6 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
     },
     onSuccess: (response: any) => {
       message.success("New topic created successfully");
-      setIsTopicUploaded(true);
 
       const newTopicId = response?.data?.attributes?.documentId;
       if (newTopicId) {
@@ -275,6 +274,7 @@ const TopicFields: React.FC<TopicFieldsProps> = ({
       queryClient.invalidateQueries({ queryKey: ["topicDetails", topicId] });
 
       onClose();
+      setIsTopicUploaded(true);
     },
     onError: (err) => {
       message.error("Error creating new topic. Please try again later.");

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { normalizeOptions } from "@/lib/utility";
+import { normalizeOptions, stripHtmlTags } from "@/lib/utility";
 
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 
@@ -59,9 +59,9 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
       <div className="p-10 mt-10">
         {quizData.map((item, index) => (
           <div key={index} className="mb-6">
-            <h2 className="text-lg font-semi-bold">{`Q${index + 1}: ${
+            <h2 className="text-lg font-semi-bold">{`Q${index + 1}: ${stripHtmlTags(
               item.question
-            }`}</h2>
+            )}`}</h2>
             <div className="pl-5 mt-4 font-normal">
               {normalizeOptions(item.options).map((option, optIndex) => (
                 <label key={optIndex} className="block mb-2">

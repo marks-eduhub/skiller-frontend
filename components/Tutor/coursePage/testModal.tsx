@@ -15,12 +15,14 @@ interface QuizModalProps {
   modalOpen: boolean;
   onClose: () => void;
   selectedTest: { testId: number; topicId: number };
+  courseId: string;
 }
 
 const QuizModal: React.FC<QuizModalProps> = ({
   modalOpen,
   onClose,
   selectedTest,
+  courseId,
 }) => {
   const { topicId } = selectedTest;
   const [isSaving, setIsSaving] = useState(false);
@@ -236,7 +238,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
                 setPassmark={setPassmark}
                 topic={String(topicId)}
                 setTopic={() => {}}
-                courseId=""
+                courseId={courseId}
               />
             )}
             {currentStep === 3 && (
