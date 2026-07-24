@@ -32,6 +32,17 @@ export const normalizeOptions = (rawOptions: unknown): string[] => {
     return rawOptions.map((option) => String(option));
   }
 
+  // The backend's v4-response-shape middleware wraps any array-valued field
+  // (this is a plain JSON array field, not a relation) as { data: [...] },
+  // the same way it wraps populated relations. Unwrap that shape first.
+  if (
+    rawOptions &&
+    typeof rawOptions === "object" &&
+    Array.isArray((rawOptions as { data?: unknown }).data)
+  ) {
+    return (rawOptions as { data: unknown[] }).data.map((option) => String(option));
+  }
+
   if (typeof rawOptions === "string") {
     try {
       const parsed = JSON.parse(rawOptions);

@@ -3,14 +3,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFetchCourseTopics } from "@/hooks/useCourses";
 import { useParams } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { message } from "antd";
 import QuizModal from "./testModal";
+import { DeleteTest } from "@/hooks/useSetQuiz";
 import { stripHtmlTags } from "@/lib/utility";
 
 const Assessments = () => {
   const { slug } = useParams();
   const courseId = String(slug);
+  const queryClient = useQueryClient();
   const { data: topicData } = useFetchCourseTopics(courseId);
   const [isDown, setIsDown] = useState<{ [key: number]: boolean }>({});
+  const [deleteTarget, setDeleteTarget] = useState<{
+    testDocumentId: string;
+    testname: string;
+  } | null>(null);
+
+  const { mutate: deleteTestMutation, isPending: isDeleting } = useMutation({
+    mutationFn: async (testDocumentId: string) => {
+      return await DeleteTest(testDocumentId);
+    },
+    onSuccess: () => {
+      message.success("Test deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["course_topics", courseId] });
+      setDeleteTarget(null);
+    },
+    onError: () => {
+      message.error("Error deleting test. Please try again later.");
+    },
+  });
 
   const toggleDown = (topicId: number) => {
     setIsDown((prev) => ({
@@ -22,11 +44,16 @@ const Assessments = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTest, setSelectedTest] = useState<{
     testId: number;
+    testDocumentId: string;
     topicId: number;
   } | null>(null);
 
-  const handleModalOpen = (testId: number, topicId: number) => {
-    setSelectedTest({ testId, topicId });
+  const handleModalOpen = (
+    testId: number,
+    testDocumentId: string,
+    topicId: number
+  ) => {
+    setSelectedTest({ testId, testDocumentId, topicId });
     setModalOpen(true);
   };
 
@@ -79,19 +106,39 @@ const Assessments = () => {
                           </span>
                         </div>
 
-                        <div
-                          className="flex shrink-0 cursor-pointer items-center justify-center gap-2 self-start rounded-md bg-white px-3 py-1.5 text-gray-800 transition hover:-translate-y-0.5 hover:shadow-sm sm:self-auto"
-                          onClick={() => handleModalOpen(test.id, topic.id)}
-                        >
-                          <Image
-                            src="/pluss.svg"
-                            alt="plus"
-                            width={10}
-                            height={10}
-                          />
-                          <span className="text-xs font-semibold sm:text-sm">
-                            View Test
-                          </span>
+                        <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
+                          <div
+                            className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-white px-3 py-1.5 text-gray-800 transition hover:-translate-y-0.5 hover:shadow-sm"
+                            onClick={() =>
+                              handleModalOpen(
+                                test.id,
+                                test.attributes?.documentId,
+                                topic.id
+                              )
+                            }
+                          >
+                            <Image
+                              src="/pluss.svg"
+                              alt="plus"
+                              width={10}
+                              height={10}
+                            />
+                            <span className="text-xs font-semibold sm:text-sm">
+                              View Test
+                            </span>
+                          </div>
+
+                          <button
+                            className="cursor-pointer rounded-md border border-red-900 px-3 py-1.5 text-xs font-semibold text-red-900 transition hover:-translate-y-0.5 hover:bg-red-900 hover:text-white sm:text-sm"
+                            onClick={() =>
+                              setDeleteTarget({
+                                testDocumentId: test.attributes?.documentId,
+                                testname: test.attributes?.testname,
+                              })
+                            }
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     )
@@ -116,6 +163,33 @@ const Assessments = () => {
           selectedTest={selectedTest}
           courseId={courseId}
         />
+      )}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-[90%] max-w-md rounded-lg bg-white p-5 shadow-lg">
+            <h2 className="mb-4 text-xl font-semibold">Confirm Deletion</h2>
+            <p className="mb-6">
+              Are you sure you want to delete &quot;{deleteTarget.testname}&quot;?
+              This cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="rounded bg-gray-300 px-4 py-2 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isDeleting}
+                onClick={() => deleteTestMutation(deleteTarget.testDocumentId)}
+                className="rounded bg-red-900 px-4 py-2 text-white hover:bg-red-800 disabled:opacity-60"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

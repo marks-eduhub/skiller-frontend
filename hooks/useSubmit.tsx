@@ -308,6 +308,18 @@ export const courseTracker = async (userId: number, courseId: string) => {
   try {
     const currentDate = new Date().toISOString().split("T")[0];
 
+    // Resolve the course's plain numeric id first. Connecting the "course"
+    // relation by documentId requires Strapi to disambiguate between that
+    // course's draft/published rows (course still has draftAndPublish
+    // enabled); connecting by the unambiguous numeric id avoids that
+    // resolution step entirely.
+    const courseResponse = await api.get(`/api/courses/${courseId}`);
+    const courseNumericId = courseResponse?.data?.data?.id;
+
+    if (!courseNumericId) {
+      throw new Error("Course not found");
+    }
+
     const existingCourseTracker = await api.get(
       `/api/course-trackers?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}&populate=*`
     );
@@ -318,7 +330,7 @@ export const courseTracker = async (userId: number, courseId: string) => {
       const response = await api.put(`/api/course-trackers/${trackerId}`, {
         data: {
           user: userId,
-          course: courseId,
+          course: courseNumericId,
           date: currentDate,
         },
       });
@@ -327,7 +339,7 @@ export const courseTracker = async (userId: number, courseId: string) => {
       const response = await api.post("/api/course-trackers", {
         data: {
           user: userId,
-          course: courseId,
+          course: courseNumericId,
           date: currentDate,
         },
       });

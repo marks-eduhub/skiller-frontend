@@ -14,7 +14,7 @@ import { normalizeOptions } from "@/lib/utility";
 interface QuizModalProps {
   modalOpen: boolean;
   onClose: () => void;
-  selectedTest: { testId: number; topicId: number };
+  selectedTest: { testId: number; testDocumentId: string; topicId: number };
   courseId: string;
 }
 
@@ -83,14 +83,14 @@ const QuizModal: React.FC<QuizModalProps> = ({
 
   const { mutate: editTestMutation } = useMutation({
     mutationFn: async ({
-      testId,
+      testDocumentId,
       testname,
       testdescription,
       testduration,
       topicId,
       passmark,
     }: {
-      testId: number;
+      testDocumentId: string;
       testname: string;
       testdescription: string;
       testduration: string;
@@ -98,7 +98,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
       passmark: number;
     }) => {
       return await EditTest(
-        testId,
+        testDocumentId,
         testname,
         testdescription,
         testduration,
@@ -120,20 +120,20 @@ const QuizModal: React.FC<QuizModalProps> = ({
       questions,
       options,
       answers,
-      testId,
+      testDocumentId,
     }: {
       questionId: number;
       questions: string;
       options: string[];
       answers: string;
-      testId: number;
+      testDocumentId: string;
     }) => {
       return await EditTestQuestion({
         questionId,
         questions,
         options,
         answers,
-        testId,
+        testDocumentId,
       });
     },
     onSuccess: () => {
@@ -166,7 +166,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
 
     try {
       editTestMutation({
-        testId: selectedTest.testId,
+        testDocumentId: selectedTest.testDocumentId,
         testname,
         testdescription: description,
         testduration: duration,
@@ -182,7 +182,7 @@ const QuizModal: React.FC<QuizModalProps> = ({
               questions: question,
               options,
               answers,
-              testId: selectedTest.testId,
+              testDocumentId: selectedTest.testDocumentId,
             });
           }
         })

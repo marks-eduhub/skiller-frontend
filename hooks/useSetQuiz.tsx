@@ -70,7 +70,7 @@ const fetchTopic = async (courseId:string, userId:number) => {
     });
   };
   export const EditTest = async (
-    testId: number,
+    testDocumentId: string,
     testname: string,
     testdescription: string,
     testduration: string,
@@ -78,8 +78,8 @@ const fetchTopic = async (courseId:string, userId:number) => {
     passmark: number
   ) => {
 
-  
-    const response = await api.put(`/api/tests/${testId}?populate=*`, {
+
+    const response = await api.put(`/api/tests/${testDocumentId}?populate=*`, {
       data: {
         testname,
         testdescription,
@@ -96,24 +96,37 @@ const fetchTopic = async (courseId:string, userId:number) => {
   };
   
   export const EditTestQuestion = async ({
-    questionId,   
+    questionId,
     questions,
     options,
     answers,
-    testId,
+    testDocumentId,
   }: {
-    questionId: number;  
+    questionId: number;
     questions: string;
     options: string[];
     answers: string;
-    testId: number;
+    testDocumentId: string;
   }) => {
-    const response = await api.put(`/api/questions/${questionId}`, {   
+    // test.questions.data (populated via populate=*) doesn't reliably carry
+    // documentId on the nested question rows, so resolve it with a direct
+    // top-level query instead of trusting the nested populate shape.
+    const questionResponse = await api.get(
+      `/api/questions?filters[id][$eq]=${questionId}`
+    );
+    const questionDocumentId =
+      questionResponse?.data?.data?.[0]?.attributes?.documentId;
+
+    if (!questionDocumentId) {
+      throw new Error("Question not found");
+    }
+
+    const response = await api.put(`/api/questions/${questionDocumentId}`, {
       data: {
         questions,
         options,
         answers,
-        test: testId, 
+        test: testDocumentId,
       },
       meta: {
         errorMessage: "Failed to edit quiz questions",
@@ -121,5 +134,14 @@ const fetchTopic = async (courseId:string, userId:number) => {
     });
     return response.data;
   };
-  
+
+  export const DeleteTest = async (testDocumentId: string) => {
+    try {
+      const response = await api.delete(`/api/tests/${testDocumentId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to delete the test. Please try again.");
+    }
+  };
+
   
