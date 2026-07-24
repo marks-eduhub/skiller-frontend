@@ -23,7 +23,7 @@ const DetailsPage: React.FC = () => {
     if (!userId || !topicId || !courseTrackerId) {
       return;
     }
-    startTopicProgress(userId, Number(topicId), courseTrackerId);
+    startTopicProgress(userId, topicId, courseTrackerId);
   }, [userId, topicId, courseTrackerId]);
 
   return (

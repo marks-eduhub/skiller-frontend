@@ -14,7 +14,7 @@ import { normalizeOptions } from "@/lib/utility";
 interface QuizModalProps {
   modalOpen: boolean;
   onClose: () => void;
-  selectedTest: { testId: number; testDocumentId: string; topicId: number };
+  selectedTest: { testId: number; testDocumentId: string; topicId: string };
   courseId: string;
 }
 

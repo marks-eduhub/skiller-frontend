@@ -9,13 +9,13 @@ const normalizeRelationId = (value: string | number) => {
   return /^\d+$/.test(value) ? Number(value) : value;
 };
 
-const fetchTopicDetails = async (topicId: number) => {
+const fetchTopicDetails = async (topicId: string) => {
 
-  const response = await api.get(`/api/topics?filters[id][$eq]=${topicId}&populate[course][populate]=tutor&populate[topicVideo]=true`);
+  const response = await api.get(`/api/topics?filters[documentId][$eq]=${topicId}&populate[course][populate]=tutor&populate[topicVideo]=true`);
   return { data: response.data?.data?.[0], meta: response.data?.meta };
 };
 
-export const useFetchTopicDetails = (topicId: number) => {
+export const useFetchTopicDetails = (topicId: string) => {
   return useQuery({
     queryKey: ["topicDetails", topicId],
     queryFn: () => fetchTopicDetails(topicId),
@@ -216,14 +216,3 @@ export const useFetchAllResults = (userId: number) => {
 
 
 
-export const markTopicCompleted = async (
-  isCompleted: boolean,
-  topicId: string
-) => {
-  const response = await api.put(`/api/topics/${topicId}`, {
-    data: {
-     isCompleted,
-    },
-  });
-  return response.data;
-};

@@ -1,13 +1,13 @@
 import api from "@/lib/axios";
 import {useQuery} from "@tanstack/react-query";
 
-const fetchComments = async (topicId:number) => {
-  const response = await api.get(`/api/comments?filters[topic][id]=${topicId}&populate[user][populate]=*`);
+const fetchComments = async (topicId:string) => {
+  const response = await api.get(`/api/comments?filters[topic][documentId]=${topicId}&populate[user][populate]=*`);
 
   return response.data;
 };
 
-export const useFetchComments = (topicId:number) => {
+export const useFetchComments = (topicId:string) => {
   return useQuery({
     queryKey: ["comments", topicId],
     queryFn: () => fetchComments(topicId),
@@ -61,7 +61,7 @@ export const useFetchReplyCount= () => {
   });
 };
 
-export const addComment = async ( topicId:number, userId:number, topicComment:string ) => {
+export const addComment = async ( topicId:string, userId:number, topicComment:string ) => {
     const response = await api.post("/api/comments", {
       data: {
         topic: topicId,

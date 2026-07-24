@@ -130,7 +130,7 @@ const Step2 = ({
               data.data.map((topicData: any) => (
                 <option
                   key={topicData.id}
-                  value={topicData.id}
+                  value={topicData.attributes.documentId}
                   className="text-black"
                 >
                   {topicData.attributes.topicname}

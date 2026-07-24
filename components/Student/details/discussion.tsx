@@ -45,7 +45,7 @@ const Discussion = () => {
     {}
   );
 
-  const { data, isLoading, error } = useFetchComments(Number(topicId));
+  const { data, isLoading, error } = useFetchComments(topicId ?? "");
   const [totalCounts, setTotalCounts] = useState<{ [key: string]: number }>({});
   const [totalRepliesCount, setTotalRepliesCount] = useState<{
     [key: number]: number;
@@ -128,7 +128,7 @@ const Discussion = () => {
   const { mutate: addToComments } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
-      return await addComment(Number(topicId), userId, topicComment);
+      return await addComment(topicId ?? "", userId, topicComment);
     },
     onMutate: async () => {
       if (!userId) return;

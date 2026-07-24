@@ -9,7 +9,7 @@ import Skeleton from "react-loading-skeleton";
 const VideoCard: React.FC = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const { data, isLoading, error} = useFetchTopicDetails(Number(topicId));
+  const { data, isLoading, error} = useFetchTopicDetails(topicId ?? "");
   if (isLoading) {
     return (
       <div>

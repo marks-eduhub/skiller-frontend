@@ -37,14 +37,14 @@ const fetchTestResult = async (userId: number, testId: number) => {
     });
   };
 
-  const fetchTopicResult = async (userId: number, topicId: number) => {
+  const fetchTopicResult = async (userId: number, topicId: string) => {
     const response = await api.get(
-      `/api/test-results?filters[user][id][$eq]=${userId}&filters[topic][id][$eq]=${topicId}&populate=user_question_results,topic,test,user`
+      `/api/test-results?filters[user][id][$eq]=${userId}&filters[topic][documentId][$eq]=${topicId}&populate=user_question_results,topic,test,user`
     );
     return response.data;
   };
-  
-  export const useFetchTopicResult = (userId: number, topicId: number) => {
+
+  export const useFetchTopicResult = (userId: number, topicId: string) => {
     return useQuery({
       queryKey: ["topicresults_1", userId, topicId],
       queryFn: () => fetchTopicResult(userId, topicId),

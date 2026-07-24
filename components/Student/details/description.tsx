@@ -9,7 +9,7 @@ import { stripHtmlTags } from "@/lib/utility";
 const Description = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const { data, isLoading, error } = useFetchTopicDetails(Number(topicId));
+  const { data, isLoading, error } = useFetchTopicDetails(topicId ?? "");
   if (isLoading) {
     return (
       <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">

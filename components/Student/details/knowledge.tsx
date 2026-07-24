@@ -5,7 +5,6 @@ import {
   courseRating,
   useFetchCourseCompletion,
   useFetchCourseRating,
-  updateCourseRating,
   useFetchSpecificCourseRate,
   topicProgress,
   useFetchCourseTracker,
@@ -26,8 +25,7 @@ import Loader from "../loader";
 const DotPulseWrapper = dynamic(() => import("@/hooks/pulse"), { ssr: false });
 const Knowledge = () => {
   const searchParams = useSearchParams();
-  const idTopic = searchParams.get("topicId");
-  const topicId = Number(idTopic)
+  const topicId = searchParams.get("topicId") ?? "";
   const { user } = useAuthContext();
   const userId = Number(user?.id);
   const { slug } = useParams();
@@ -64,17 +62,14 @@ const Knowledge = () => {
   const shouldShowRatingModal = !hasRated && courseprogress;
   const { data: specificCourseRate } = useFetchSpecificCourseRate(courseId);
   const ratings = specificCourseRate?.data || [];
-  const { data, isLoading, error } = useFetchTopicResult(
-    Number(userId),
-    Number(topicId)
-  );
+  const { data, isLoading, error } = useFetchTopicResult(Number(userId), topicId);
   const testresultdata = data?.data;
   const isTestAvailable = Boolean(testresultdata && testresultdata.length > 0);
   const {
     data: tests,
     isLoading: isTests,
     error: isError,
-  } = useFetchTests(Number(topicId), Number(userId), isTestAvailable);
+  } = useFetchTests(topicId, Number(userId), isTestAvailable);
   const hasTests = tests?.data?.length > 0;
   
   useEffect(() => {
@@ -82,36 +77,9 @@ const Knowledge = () => {
     }
   }, [completedTopics, isLoading]);
 
-  const isTopicCompleted = completedTopics?.some((topic: { id: number; }) => topic.id === topicId);
+  const isTopicCompleted = completedTopics?.includes(topicId);
 
  
-  const { mutate: updateRate } = useMutation({
-    mutationFn: async ({
-      courseId,
-      averageRating,
-    }: {
-      courseId: string;
-      averageRating: number;
-    }) => {
-      return await updateCourseRating(courseId, averageRating);
-    },
-    onError: (err) => {
-      message.error("Error updating rating");
-    },
-  });
-
-  const handleRatingUpdate = async (rating: number) => {
-    const totalRatings = ratings?.length || 0;
-    const totalScore = ratings.reduce(
-      (sum: number, r: any) => sum + r.attributes.score,
-      0
-    );
-
-    const averageRating =
-      totalRatings > 0 ? (totalScore + rating) / (totalRatings + 1) : rating;
-    updateRate({ courseId, averageRating });
-  };
-
   const { mutate: createCourseRating } = useMutation({
     mutationFn: async ({
       userId,
@@ -127,9 +95,6 @@ const Knowledge = () => {
       comment:string
     }) => {
       return await courseRating(userId, courseId, score, progressId, comment);
-    },
-    onSuccess: (_, { score }) => {
-      handleRatingUpdate(score);
     },
     onError: () => {
       message.error("Error attaching a rating to course");

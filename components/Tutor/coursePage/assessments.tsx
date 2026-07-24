@@ -45,13 +45,13 @@ const Assessments = () => {
   const [selectedTest, setSelectedTest] = useState<{
     testId: number;
     testDocumentId: string;
-    topicId: number;
+    topicId: string;
   } | null>(null);
 
   const handleModalOpen = (
     testId: number,
     testDocumentId: string,
-    topicId: number
+    topicId: string
   ) => {
     setSelectedTest({ testId, testDocumentId, topicId });
     setModalOpen(true);
@@ -113,7 +113,7 @@ const Assessments = () => {
                               handleModalOpen(
                                 test.id,
                                 test.attributes?.documentId,
-                                topic.id
+                                topic.attributes?.documentId
                               )
                             }
                           >

@@ -41,7 +41,7 @@ const TestQuestions= () => {
     Record<number, string>
   >({});
   const { data, isLoading, error } = useFetchQuizQuestions(Number(testId));
-  const {data: test} = useFetchTests(Number(topicId), Number(userId));
+  const {data: test} = useFetchTests(topicId ?? "", Number(userId));
   const { data: Resultdata } = UsefetchTestResult(
     Number(testId),
     Number(userId)
@@ -153,7 +153,7 @@ const TestQuestions= () => {
       times_attempted,
     }: {
       userId: number;
-      topicId: number;
+      topicId: string;
       testId: number;
       userAnswer: string;
       passed: boolean;
@@ -202,7 +202,7 @@ const TestQuestions= () => {
       const newAttemptCount = timesAttempted + 1;
       submitTestResult({
         userId,
-        topicId: Number(topicId),
+        topicId: topicId ?? "",
         testId: Number(testId),
         userAnswer,
         passed,

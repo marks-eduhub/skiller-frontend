@@ -1,14 +1,18 @@
 import api from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchResult = async (userId: number, topicId: number) => {
+// Topics are addressed by documentId, never by the numeric id. A topic is a
+// draft-and-publish type, so publishing it deletes the published row and
+// recreates it with a fresh numeric id - documentId is the only identifier
+// that survives an edit by the tutor.
+const fetchResult = async (userId: number, topicId: string) => {
   const response = await api.get(
-    `/api/test-results?filters[topic][id][$eq]=${topicId}&filters[user][id][$eq]=${userId}&populate=user_question_results,topic,test,user`
+    `/api/test-results?filters[topic][documentId][$eq]=${topicId}&filters[user][id][$eq]=${userId}&populate=user_question_results,topic,test,user`
   );
   return response.data;
 };
 
-export const UsefetchResult = (topicId: number, userId: number) => {
+export const UsefetchResult = (topicId: string, userId: number) => {
   return useQuery({
     queryKey: ["testresults_2", topicId, userId],
     queryFn: () => fetchResult(userId, topicId),
@@ -38,15 +42,15 @@ export const useFetchUserQuestionResults = (testResultId: number) => {
   });
 };
 
-const fetchTests = async (topicId: number, userId: number) => {
+const fetchTests = async (topicId: string, userId: number) => {
   const response = await api.get(
-    `/api/tests?filters[topic][id]=${topicId}&user=${userId}&populate=topic`
+    `/api/tests?filters[topic][documentId]=${topicId}&user=${userId}&populate=topic`
   );
   return response.data;
 };
 
 export const useFetchTests = (
-  topicId: number,
+  topicId: string,
   userId: number,
   enabled: boolean = true
 ) => {
@@ -57,36 +61,41 @@ export const useFetchTests = (
   });
 };
 
-const fetchCourseTests = async (topicId: number) => {
+const fetchCourseTests = async (topicId: string) => {
   const response = await api.get(
-    `/api/tests?filters[topic][id]=${topicId}&populate=*`
+    `/api/tests?filters[topic][documentId]=${topicId}&populate=*`
   );
   return response.data;
 };
 
-export const useFetchCourseTests = (topicId: number) => {
+export const useFetchCourseTests = (topicId: string) => {
   return useQuery<{ data: any }, Error>({
     queryKey: ["topic_tests", topicId],
     queryFn: () => fetchCourseTests(topicId),
   });
 };
-const fetchAllCourseTests = async (topicId: number, userId: number) => {
+const fetchAllCourseTests = async (topicId: string, userId: number) => {
   const response = await api.get(
-    `/api/tests?filters[topic][id]=${topicId}&populate[test_results][filters][user][id][$eq]=${userId}&populate[topic]=true&populate[questions]=true&populate[course]=true`
+    `/api/tests?filters[topic][documentId]=${topicId}&populate[test_results][filters][user][id][$eq]=${userId}&populate[topic]=true&populate[questions]=true&populate[course]=true`
   );
   return response.data;
 };
 
-export const useFetchAllCourseTests = (topicId: number, userId: number) => {
+export const useFetchAllCourseTests = (topicId: string, userId: number) => {
   return useQuery<{ data: any }, Error>({
     queryKey: ["course_tests", topicId, userId],
     queryFn: () => fetchAllCourseTests(topicId, userId),
   });
 };
 
+// Passing the topic's documentId as a string (rather than a numeric id) matters
+// here: Strapi resolves a string to a documentId, and because test-result has
+// draft-and-publish disabled while topic has it enabled, it then links the row
+// to *both* the draft and published topic. A numeric id pins the link to the
+// single published row, which republishing deletes.
 export const createTestResult = async (
   userId: number,
-  topicId: number,
+  topicId: string,
   testId: number,
   times_attempted: number
 ) => {
@@ -216,39 +225,70 @@ export const createCourseProgress = async (
   }
 };
 
+// Recording topic progress is a check-then-act: read whether a tracker exists,
+// then insert one if it doesn't. Two overlapping calls - a remount, a double
+// effect, or startTopicProgress racing topicProgress - both read "none" and both
+// insert, which is how a student ends up with duplicate trackers that inflate
+// their progress. Serialising per (user, topic, course tracker) makes the read
+// and the write atomic from this client's point of view.
+const topicProgressQueue = new Map<string, Promise<unknown>>();
+
+const serializeTopicProgress = <T,>(
+  key: string,
+  task: () => Promise<T>
+): Promise<T> => {
+  const previous = topicProgressQueue.get(key) ?? Promise.resolve();
+  const next = previous.then(task, task);
+  topicProgressQueue.set(key, next);
+  // Only clear the slot if nothing else has queued behind us in the meantime.
+  next.then(
+    () => {
+      if (topicProgressQueue.get(key) === next) topicProgressQueue.delete(key);
+    },
+    () => {
+      if (topicProgressQueue.get(key) === next) topicProgressQueue.delete(key);
+    }
+  );
+  return next;
+};
+
 export const topicProgress = async (
   userId: number,
-  topicId: number,
+  topicId: string,
   courseTrackerId: number,
   isCompleted: boolean
-) => {
-  try {
-    if (!courseTrackerId) {
-      throw new Error("Course Tracker ID is missing");
-    }
+) =>
+  serializeTopicProgress(`${userId}:${topicId}:${courseTrackerId}`, async () => {
+    try {
+      if (!courseTrackerId) {
+        throw new Error("Course Tracker ID is missing");
+      }
 
-    const existingTopicProgress = await api.get(
-      `/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[topic][id][$eq]=${topicId}&filters[course_tracker][id][$eq]=${courseTrackerId}`
-    );
-
-    const progress = existingTopicProgress?.data?.data || [];
-    
-    if (progress.length > 0) {
-      const topicProgressId = progress[0]?.attributes?.documentId;
-      const response = await api.put(
-        `/api/topic-progress-trackers/${topicProgressId}`,
-        {
-          data: {
-            user: userId,
-            topic: topicId,
-            course_tracker: courseTrackerId,
-            completion_status: isCompleted,
-            ...(isCompleted ? { time_completed: new Date().toISOString() } : {}),
-          },
-        }
+      const existingTopicProgress = await api.get(
+        `/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[topic][documentId][$eq]=${topicId}&filters[course_tracker][id][$eq]=${courseTrackerId}`
       );
-      return response.data;
-    } else {
+
+      const progress = existingTopicProgress?.data?.data || [];
+
+      if (progress.length > 0) {
+        const topicProgressId = progress[0]?.attributes?.documentId;
+        const response = await api.put(
+          `/api/topic-progress-trackers/${topicProgressId}`,
+          {
+            data: {
+              user: userId,
+              topic: topicId,
+              course_tracker: courseTrackerId,
+              completion_status: isCompleted,
+              ...(isCompleted
+                ? { time_completed: new Date().toISOString() }
+                : {}),
+            },
+          }
+        );
+        return response.data;
+      }
+
       const response = await api.post("/api/topic-progress-trackers", {
         data: {
           user: userId,
@@ -259,68 +299,95 @@ export const topicProgress = async (
         },
       });
       return response.data;
+    } catch (error) {
+      throw new Error("Error updating topic progress");
     }
-  } catch (error) {
-    throw new Error("Error updating topic progress");
-  }
-};
+  });
 
 export const startTopicProgress = async (
   userId: number,
-  topicId: number,
+  topicId: string,
   courseTrackerId: number
 ) => {
   if (!userId || !topicId || !courseTrackerId) {
     return;
   }
 
-  try {
-    const existingTopicProgress = await api.get(
-      `/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[topic][id][$eq]=${topicId}&filters[course_tracker][id][$eq]=${courseTrackerId}`
-    );
+  // Shares the queue with topicProgress: the two race each other otherwise, one
+  // recording the start time while the other records completion.
+  return serializeTopicProgress(
+    `${userId}:${topicId}:${courseTrackerId}`,
+    async () => {
+      try {
+        const existingTopicProgress = await api.get(
+          `/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[topic][documentId][$eq]=${topicId}&filters[course_tracker][id][$eq]=${courseTrackerId}`
+        );
 
-    const progress = existingTopicProgress?.data?.data || [];
+        const progress = existingTopicProgress?.data?.data || [];
 
-    if (progress.length > 0) {
-      const existing = progress[0];
-      if (existing?.attributes?.time_started) {
-        return existing;
+        if (progress.length > 0) {
+          const existing = progress[0];
+          if (existing?.attributes?.time_started) {
+            return existing;
+          }
+
+          const topicProgressId = existing?.attributes?.documentId;
+          const response = await api.put(
+            `/api/topic-progress-trackers/${topicProgressId}`,
+            {
+              data: {
+                time_started: new Date().toISOString(),
+              },
+            }
+          );
+          return response.data;
+        }
+
+        const response = await api.post("/api/topic-progress-trackers", {
+          data: {
+            user: userId,
+            topic: topicId,
+            course_tracker: courseTrackerId,
+            completion_status: false,
+            time_started: new Date().toISOString(),
+          },
+        });
+        return response.data;
+      } catch (error) {
+        // Best-effort - a student should still be able to view the topic even
+        // if recording the start time fails.
       }
-
-      const topicProgressId = existing?.attributes?.documentId;
-      const response = await api.put(`/api/topic-progress-trackers/${topicProgressId}`, {
-        data: {
-          time_started: new Date().toISOString(),
-        },
-      });
-      return response.data;
     }
-
-    const response = await api.post("/api/topic-progress-trackers", {
-      data: {
-        user: userId,
-        topic: topicId,
-        course_tracker: courseTrackerId,
-        completion_status: false,
-        time_started: new Date().toISOString(),
-      },
-    });
-    return response.data;
-  } catch (error) {
-    // Best-effort - a student should still be able to view the topic even
-    // if recording the start time fails.
-  }
+  );
 };
 
 
-export const useCompletedTopics = (userId:number, courseId:string) => {
+// Returns the documentIds of the topics this user has completed on this course.
+// The topic relation has to be populated: callers compare against a topic, and
+// the tracker's own id is a different entity entirely.
+export const useCompletedTopics = (userId: number, courseId: string) => {
   return useQuery({
     queryKey: ["completed-topics", userId, courseId],
     queryFn: async () => {
-      const response = await api.get(`/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[course_tracker][course][documentId][$eq]=${courseId}&filters[completion_status][$eq]=true`);
-      return response.data.data; 
+      const response = await api.get(
+        `/api/topic-progress-trackers?filters[user][id][$eq]=${userId}&filters[course_tracker][course][documentId][$eq]=${courseId}&filters[completion_status][$eq]=true&populate=topic`
+      );
+      const trackers = response.data.data || [];
+      // Deduplicated: a tracker can hold links to both the draft and the
+      // published row of the same topic, so a relation filter can return it
+      // more than once, and duplicates here would overstate progress.
+      return Array.from(
+        new Set(
+          trackers
+            .map(
+              (tracker: any) =>
+                tracker?.attributes?.topic?.data?.attributes?.documentId
+            )
+            .filter(Boolean)
+        )
+      ) as string[];
     },
-    enabled: !!userId && !!courseId, 
+    enabled: !!userId && !!courseId,
   });
 };
 export const useFetchUserCourses = (userId: number) => {
@@ -492,20 +559,4 @@ export const useFetchCourseRate = () => {
       errorMessage: "Failed to fetch rating"
     },
   });
-};
-
-export const updateCourseRating = async (
-  courseId: string,
-  averageRating: number
-) => {
-  try {
-    const response = await api.put(`/api/courses/${courseId}`, {
-      data: {
-        averageRating,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
 };

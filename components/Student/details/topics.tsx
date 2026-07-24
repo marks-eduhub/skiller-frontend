@@ -14,11 +14,7 @@ import {
   completeCourseTracking,
 } from "@/hooks/useSubmit";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
-import {
-  markTopicCompleted,
-  useFetchAllResults,
-} from "@/hooks/useCourseTopics";
-import { useMutation } from "@tanstack/react-query";
+import { useFetchAllResults } from "@/hooks/useCourseTopics";
 
 const TopicsCard: React.FC = () => {
   const { slug } = useParams();
@@ -26,11 +22,11 @@ const TopicsCard: React.FC = () => {
   const { user } = useAuthContext();
   const userId = user?.id;
   const searchParams = useSearchParams();
-  const topicId = searchParams.get("topicId");
+  const topicId = searchParams.get("topicId") ?? "";
   const { data: topicsData, isLoading, error } = useFetchOverview(courseId);
-  const { data: testResults } = UsefetchResult(Number(topicId), Number(userId));
+  const { data: testResults } = UsefetchResult(topicId, Number(userId));
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
-  const { data: testsData } = useFetchTests(Number(topicId), Number(userId));
+  const { data: testsData } = useFetchTests(topicId, Number(userId));
   const currentTopicId = searchParams.get("topicId");
   const [progress, setProgress] = useState(0);
   const {
@@ -41,24 +37,6 @@ const TopicsCard: React.FC = () => {
   const courseTrackerEntry = coursetrackerdata?.data?.[0];
   const courseTrackerDocumentId = courseTrackerEntry?.attributes?.documentId;
   const courseTimeCompleted = courseTrackerEntry?.attributes?.time_completed;
-
-  const { mutate: topicCompleted } = useMutation({
-    mutationFn: async ({
-      isCompleted,
-      topicId,
-    }: {
-      isCompleted: boolean;
-      topicId: string;
-    }) => {
-      return await markTopicCompleted(isCompleted, topicId);
-    },
-    onSuccess: () => {
-      // message.success("Topic status updated!");
-    },
-    onError: (err) => {
-      message.error("Error updating topic status");
-    },
-  });
 
   useEffect(() => {
     if (currentTopicId) {
@@ -87,7 +65,9 @@ const TopicsCard: React.FC = () => {
   
     const previousTests =
       testsData?.data?.filter(
-        (test: any) => test.attributes.topic?.data?.id === previousTopic.id
+        (test: any) =>
+          test.attributes.topic?.data?.attributes?.documentId ===
+          previousTopic.attributes?.documentId
       ) || [];
 
     if (previousTests.length === 0) {
@@ -116,7 +96,9 @@ const TopicsCard: React.FC = () => {
 
     const completedTopics = topics.filter((topic: any) => {
       const topicResults = results.filter(
-        (result: any) => result.attributes.topic?.data?.id === topic.id
+        (result: any) =>
+          result.attributes.topic?.data?.attributes?.documentId ===
+          topic.attributes?.documentId
       );
 
       if (topicResults.length === 0) {
@@ -132,13 +114,12 @@ const TopicsCard: React.FC = () => {
         10
       );
 
-      const passed = bestResult.attributes.score >= testPassmark;
-
-      if (passed) {
-        topicCompleted({ isCompleted: true, topicId: topic.attributes.documentId });
-      }
-
-      return passed;
+      // Per-student completion is recorded on the topic-progress-tracker (see
+      // topicProgress in hooks/useSubmit). It must not be written back onto the
+      // Topic itself - that record is shared by every student, and a PUT to a
+      // draft-and-publish type republishes it, rotating its numeric id and
+      // stranding every query that filters topics by id.
+      return bestResult.attributes.score >= testPassmark;
     });
 
     const calculatedProgress = (completedTopics.length / topics.length) * 100;
@@ -156,7 +137,6 @@ const TopicsCard: React.FC = () => {
   }, [
     topicsData,
     allTestResults,
-    topicCompleted,
     courseTrackerDocumentId,
     courseTimeCompleted,
   ]);
@@ -197,7 +177,7 @@ const TopicsCard: React.FC = () => {
                 key={topic.id}
                 href={
                   canAccess
-                    ? `/dashboard/overview/${slug}/topics?topicId=${topic.id}`
+                    ? `/dashboard/overview/${slug}/topics?topicId=${(topic as any).attributes?.documentId}`
                     : "#"
                 }
                 onClick={(e) => {

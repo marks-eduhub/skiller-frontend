@@ -81,7 +81,8 @@ const Enroll = () => {
   const studentsenrolled = totalStudentsEnrolled?.length || 0;
   const topics = courseAttributes?.topicname?.data || [];
 
-  const firstTopicId = topics.length > 0 ? topics[0]?.id : null;
+  const firstTopicId =
+    topics.length > 0 ? topics[0]?.attributes?.documentId : null;
   const courseStatus = (courseAttributes?.adminStatus || "").toLowerCase();
   const isDraft = courseStatus !== "published";
   const enrollDisabled = isProcessing || (isDraft && !isEnrolled);

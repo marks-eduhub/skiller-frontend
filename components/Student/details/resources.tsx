@@ -11,7 +11,7 @@ import { stripHtmlTags } from '@/lib/utility';
 const Resources = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const { data, isLoading, error } = useFetchTopicResources(Number(topicId));
+  const { data, isLoading, error } = useFetchTopicResources(topicId ?? "");
   const resources = data?.data?.attributes?.topicResources?.data || [];
   const links = data?.data?.attributes?.topicLinks?.data || [];
   const instructions = data?.data?.attributes?.resourceInstructions || "";
