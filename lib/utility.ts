@@ -39,8 +39,9 @@ export const normalizeOptions = (rawOptions: unknown): string[] => {
         return parsed.map((option) => String(option));
       }
     } catch {
+      const delimiter = rawOptions.includes("\n") ? "\n" : ",";
       return rawOptions
-        .split("\n")
+        .split(delimiter)
         .map((option) => option.trim())
         .filter(Boolean);
     }
