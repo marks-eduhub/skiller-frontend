@@ -52,12 +52,26 @@ const QuizModal: React.FC<QuizModalProps> = ({
         setPassmark(test.passmark || "");
 
         if (Array.isArray(test.questions?.data)) {
-          const formattedQuizData = test.questions.data.map((q: any) => ({
-            questionId: q.id,
-            question: q.attributes.questions,
-            options: normalizeOptions(q.attributes.options),
-            answers: q.attributes.answers || "",
-          }));
+          // Some questions have duplicate draft/published rows sharing the same
+          // documentId with identical content; keep only one per documentId,
+          // preferring the published copy, so the edit form doesn't show duplicates.
+          const dedupedByDocumentId = new Map<string, any>();
+          test.questions.data.forEach((q: any) => {
+            const key = q.attributes?.documentId || String(q.id);
+            const existing = dedupedByDocumentId.get(key);
+            if (!existing || (q.attributes?.publishedAt && !existing.attributes?.publishedAt)) {
+              dedupedByDocumentId.set(key, q);
+            }
+          });
+
+          const formattedQuizData = Array.from(dedupedByDocumentId.values()).map(
+            (q: any) => ({
+              questionId: q.id,
+              question: q.attributes.questions,
+              options: normalizeOptions(q.attributes.options),
+              answers: q.attributes.answers || "",
+            })
+          );
 
           setQuizData(formattedQuizData);
         } else {
