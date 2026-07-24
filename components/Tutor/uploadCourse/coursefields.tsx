@@ -180,32 +180,25 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
         return;
       }
   
-      const categoryId =
-        category || data?.data?.attributes?.categories?.data[0]?.id;
-  
-      if (!categoryId) {
-        message.error("Category ID is required.");
+      if (!category) {
+        message.error("Category is required.");
         setIsSaving(false);
         return;
       }
-  
+
       const payload = {
         courseId,
-        courseName: courseName || data?.data?.attributes?.coursename,
-        level: level || data?.data?.attributes?.level,
-        days: days || data?.data?.attributes?.days,
-        courseLearning: courseLearning || data?.data?.attributes?.expectations,
-        courseDescription:
-          courseDescription || data?.data?.attributes?.coursedescription,
-        courseRequirements:
-          courseRequirements || data?.data?.attributes?.requirements,
+        courseName,
+        level,
+        days,
+        courseLearning,
+        courseDescription,
+        courseRequirements,
         mediaId,
-        category: categoryId, 
-        duration: duration || data?.data?.attributes?.duration,
+        category,
+        duration,
       };
-  
-      console.log("Payload:", payload);
-  
+
       courseEdit(payload, {
         onSettled: () => {
           setIsSaving(false);
@@ -442,7 +435,7 @@ const CourseFields: React.FC<CourseFieldsProps> = ({
               onClick={handleSaveChanges}
               disabled={isSaving}
             >
-              {isSaving ? "Submitting ..." : "Submit changes"}
+              {isSaving ? "Uploading and saving..." : "Upload and Save"}
             </button>
           )}
         </div>

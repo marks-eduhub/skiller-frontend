@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import StepTracker from "./tracker";
-import Step3 from "./step3";
 import Step2 from "./step2";
 import { courseUpload, uploadMedia } from "@/hooks/useCourseUpload";
 import { message } from "antd";
@@ -68,7 +67,7 @@ const UploadCourse = () => {
   )?.id;
 
   const handleNextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 2) {
       setCurrentStep((prevStep) => prevStep + 1);
     }
   };
@@ -211,7 +210,7 @@ const UploadCourse = () => {
           },
           {
             onSuccess: (data) => {
-              const courseId = data?.data?.id;
+              const courseId = data?.data?.attributes?.documentId;
               setCourseId(courseId);
               if (!courseId) {
                 message.error("An error has occurred. Try again later!");
@@ -246,16 +245,11 @@ const UploadCourse = () => {
         setIsUploading(false);
       }
     } else if (currentStep === 2) {
-      handleNextStep();
+      router.push(`/tutor/dashboard/courseoverview/${courseId}`);
     }
   };
 
-  const stepHeading =
-    currentStep === 1
-      ? "Upload a Course"
-      : currentStep === 2
-      ? "Upload a topic"
-      : "Add quizzes";
+  const stepHeading = currentStep === 1 ? "Upload a Course" : "Upload a topic";
 
   return (
     <div className="flex w-full flex-col px-1 py-4 sm:px-0 sm:py-6">
@@ -307,8 +301,6 @@ const UploadCourse = () => {
           setIsTopicUploaded={setIsTopicUploaded}
         />
       )}
-      {currentStep === 3 && <Step3 />}
-
       {currentStep === 2 && !isTopicUploaded && (
         <p className="mt-3 text-sm text-red-600">
           {topics.length === 0
@@ -327,23 +319,23 @@ const UploadCourse = () => {
           </button>
         )}
 
-        {currentStep !== 3 && (
-          <button
-            className={`mt-2 flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white sm:mt-5 sm:w-[150px] ${
-              isUploading || (currentStep === 2 && !isTopicUploaded)
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
-            onClick={handleClick}
-            disabled={isUploading || (currentStep === 2 && !isTopicUploaded)}
-          >
-            {isUploading ? (
-              <DotPulseWrapper size="30" speed="1.5" color="white" />
-            ) : currentStep === 1 || currentStep === 2 ? (
-              <span>Continue</span>
-            ) : null}
-          </button>
-        )}
+        <button
+          className={`mt-2 flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white sm:mt-5 sm:w-[150px] ${
+            isUploading || (currentStep === 2 && !isTopicUploaded)
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+          onClick={handleClick}
+          disabled={isUploading || (currentStep === 2 && !isTopicUploaded)}
+        >
+          {isUploading ? (
+            <DotPulseWrapper size="30" speed="1.5" color="white" />
+          ) : currentStep === 1 ? (
+            <span>Continue</span>
+          ) : (
+            <span>Save and Continue</span>
+          )}
+        </button>
       </div>
     </div>
   );

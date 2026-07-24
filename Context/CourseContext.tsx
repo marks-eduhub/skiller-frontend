@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useMemo } from "react";
 
 interface CourseContextType {
-  courseId: number | null;
-  setCourseId: (id: number | null) => void;
+  courseId: string | number | null;
+  setCourseId: (id: string | number | null) => void;
   topicId:number | null;
   setTopicId: (id: number | null) => void;
 }
@@ -10,7 +10,7 @@ interface CourseContextType {
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
 export const CourseProvider = ({ children }: { children: ReactNode }) => {
-  const [courseId, setCourseId] = useState<number | null>(null);
+  const [courseId, setCourseId] = useState<string | number | null>(null);
   const [topicId, setTopicId] = useState<number | null>(null);
 
   const value = useMemo(() => ({ courseId, setCourseId, topicId, setTopicId }), [courseId, topicId]);

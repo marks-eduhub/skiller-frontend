@@ -6,6 +6,7 @@ import Link from "next/link";
 import Assessments from "./assessments";
 import Analytics from "./analytics";
 import Topics from "./topics";
+import SubmitForReview from "./submitForReview";
 import { useParams, useSearchParams } from "next/navigation";
 import { useFetchOverview } from "@/hooks/useCourseOverview";
 import Loader from "@/components/Student/loader";
@@ -163,6 +164,9 @@ const averageRating =
           <h2>Analytics</h2>
         </div>
       </div>
+
+      <SubmitForReview />
+
       {Tab === "Topics" && <Topics />}
 
       {Tab === "Course Overview" && <Overview />}

@@ -306,7 +306,7 @@ export const useFetchEnrolledCourses = (courseId: string) => {
 
 export const courseTracker = async (userId: number, courseId: string) => {
   try {
-    const currentDate = new Date().toISOString();
+    const currentDate = new Date().toISOString().split("T")[0];
 
     const existingCourseTracker = await api.get(
       `/api/course-trackers?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}&populate=*`

@@ -73,12 +73,6 @@ const CourseModal: React.FC<CourseModalProps> = ({
     }
   }, [data]);
 
-  if (isLoading) {
-    <div className="flex items-center  min-h-screen justify-center p-20">
-      <Loader />
-    </div>;
-  }
-
   if (error) {
     message.error("Error displaying course information");
   }
@@ -102,31 +96,37 @@ const CourseModal: React.FC<CourseModalProps> = ({
           Edit Course Details
         </h2>
         <div className="overflow-y-auto">
-          <CourseFields
-            setCourseName={setCourseName}
-            setCourseDescription={setCourseDescription}
-            setCourseRequirements={setCourseRequirements}
-            setCourseLearning={setCourseLearning}
-            setCategory={setCategory}
-            setUploadImage={setUploadImage}
-            setDuration={setDuration}
-            courseName={courseName}
-            courseDescription={courseDescription}
-            courseRequirements={courseRequirements}
-            courseLearning={courseLearning}
-            category={category}
-            uploadImage={uploadImage}
-            duration={duration}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-            onClose={onClose}
-            existingMediaId={existingMediaId}
-            setLevel={setLevel}
-            setDays={setDays}
-            level={level}
-            days={days}
-            showSaveButton
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center p-20">
+              <Loader />
+            </div>
+          ) : (
+            <CourseFields
+              setCourseName={setCourseName}
+              setCourseDescription={setCourseDescription}
+              setCourseRequirements={setCourseRequirements}
+              setCourseLearning={setCourseLearning}
+              setCategory={setCategory}
+              setUploadImage={setUploadImage}
+              setDuration={setDuration}
+              courseName={courseName}
+              courseDescription={courseDescription}
+              courseRequirements={courseRequirements}
+              courseLearning={courseLearning}
+              category={category}
+              uploadImage={uploadImage}
+              duration={duration}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+              onClose={onClose}
+              existingMediaId={existingMediaId}
+              setLevel={setLevel}
+              setDays={setDays}
+              level={level}
+              days={days}
+              showSaveButton
+            />
+          )}
         </div>
       </div>
     </div>
