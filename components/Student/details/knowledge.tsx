@@ -119,7 +119,12 @@ const hasUserPassedAllTests = useCallback(() => {
   });
 }, [all]);
 
-const hasUpdatedProgress = useRef(false);
+// Guards against firing the completion write repeatedly while the effect below
+// re-runs. It has to be keyed on the topic: moving between topics is a search
+// param change on the same route, so this component re-renders rather than
+// remounting and a plain boolean would stay true, silently swallowing the
+// completion write for every later topic in the course.
+const completionWrittenFor = useRef<string | null>(null);
 
 const handleTopicCompletion = useCallback(async () => {
   if (!hasUserPassedAllTests()) {
@@ -130,11 +135,11 @@ const handleTopicCompletion = useCallback(async () => {
     return;
   }
 
-  if (hasUpdatedProgress.current) {
+  if (completionWrittenFor.current === topicId) {
     return;
   }
 
-  hasUpdatedProgress.current = true; 
+  completionWrittenFor.current = topicId;
 
   try {
     await topicProgress(userId, topicId, coursetrackerId, true);

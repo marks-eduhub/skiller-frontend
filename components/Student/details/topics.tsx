@@ -46,7 +46,9 @@ const TopicsCard: React.FC = () => {
 
   const topics = topicsData?.data?.attributes?.topicname?.data || [];
 
-  const sortedTopics = topics.sort(
+  // Copy before sorting: topics is the array held in the react-query cache,
+  // and Array.sort mutates in place.
+  const sortedTopics = [...topics].sort(
     (a: any, b: any) =>
       (a.attributes.position || 0) - (b.attributes.position || 0)
   );
@@ -172,12 +174,16 @@ const TopicsCard: React.FC = () => {
         <ul className="p-4 flex flex-col">
           {sortedTopics?.map((topic: Topic, index: number) => {
             const canAccess = canAccessTopic(sortedTopics, testResults, index);
+            // Topics are identified by documentId everywhere, including the
+            // ?topicId= param this highlight is seeded from. Comparing against
+            // the numeric id here would never match.
+            const topicDocumentId = (topic as any).attributes?.documentId;
             return (
               <Link
                 key={topic.id}
                 href={
                   canAccess
-                    ? `/dashboard/overview/${slug}/topics?topicId=${(topic as any).attributes?.documentId}`
+                    ? `/dashboard/overview/${slug}/topics?topicId=${topicDocumentId}`
                     : "#"
                 }
                 onClick={(e) => {
@@ -191,11 +197,11 @@ const TopicsCard: React.FC = () => {
               >
                 <li
                   className={`flex justify-between items-center px-4 py-[14px] rounded transition duration-300 ease-in-out ${
-                    selectedTopicId === String(topic.id)
+                    selectedTopicId === topicDocumentId
                       ? "bg-zinc-600"
                       : "hover:bg-zinc-600 mt-4"
                   } ${canAccess ? "" : "opacity-50 cursor-not-allowed"}`}
-                  onClick={() => setSelectedTopicId(String(topic.id))}
+                  onClick={() => setSelectedTopicId(topicDocumentId)}
                 >
                   <span className="text-white">{`${index + 1}. ${
                     topic.attributes.topicname

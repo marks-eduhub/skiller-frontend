@@ -27,7 +27,9 @@ export const useLikedCourses = () => {
   });
 };
 
-export const addLikedCourse = async (courseId: number, userId: number) => {
+// courseId is the course documentId: course is a draft-and-publish type, so its
+// numeric id is replaced whenever a tutor edits the course.
+export const addLikedCourse = async (courseId: string, userId: number) => {
   const response = await api.post("/api/liked-courses", {
     data: {
       course: courseId,
@@ -38,9 +40,9 @@ export const addLikedCourse = async (courseId: number, userId: number) => {
   return response.data;
 };
 
-export const removeLikedCourse = async (courseId: number, userId: number) => {
+export const removeLikedCourse = async (courseId: string, userId: number) => {
   const response = await api.get(
-    `/api/liked-courses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}`
+    `/api/liked-courses?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}`
   );
 
   const likedCourseEntry = response.data?.data?.[0];

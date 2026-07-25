@@ -28,10 +28,11 @@ export const useRecentCourses = () => {
   });
 };
 
-export const addRecentCourse = async (courseId: number, userId: number) => {
+// courseId is the course documentId - see addLikedCourse.
+export const addRecentCourse = async (courseId: string, userId: number) => {
   try {
     const existingEntry = await api.get(
-      `/api/recent-courses?filters[user][id][$eq]=${userId}&filters[course][id][$eq]=${courseId}&sort=dateLastAccessed:desc&populate[course][populate][0]=card&populate[course][populate][1]=tutor`
+      `/api/recent-courses?filters[user][id][$eq]=${userId}&filters[course][documentId][$eq]=${courseId}&sort=dateLastAccessed:desc&populate[course][populate][0]=card&populate[course][populate][1]=tutor`
     );
 
     if (existingEntry.data.data.length > 0) {

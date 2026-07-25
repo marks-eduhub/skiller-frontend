@@ -42,16 +42,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ course, imageHeightClass = "h
       // A liked-course whose course has since been deleted serialises as
       // { data: null }, so the id has to be reached defensively.
       const likedCourseIds = likedCourses?.data
-        ?.map((likedCourse: any) => likedCourse?.attributes?.course?.data?.id)
+        ?.map(
+          (likedCourse: any) =>
+            likedCourse?.attributes?.course?.data?.attributes?.documentId
+        )
         .filter(Boolean);
-      setIsLiked(likedCourseIds?.includes(courseId));
+      setIsLiked(likedCourseIds?.includes(courseDocumentId));
     }
-  }, [likedCourses, courseId]);
+  }, [likedCourses, courseDocumentId]);
 
   const { mutate: removeFromWishlist, isPending: isUnLiking } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
-      const response = await removeLikedCourse(courseId, userId);
+      const response = await removeLikedCourse(courseDocumentId, userId);
       return response;
     },
     onMutate: async () => {
@@ -95,7 +98,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course, imageHeightClass = "h
   const { mutate: addToWishlist, isPending } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
-      const response = await addLikedCourse(courseId, userId);
+      const response = await addLikedCourse(courseDocumentId, userId);
       return response;
     },
     onMutate: async () => {
@@ -141,7 +144,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ course, imageHeightClass = "h
   const { mutate: addRecent } = useMutation({
     mutationFn: async () => {
       if (!userId) throw new Error("User not logged in");
-      return await addRecentCourse(courseId, userId);
+      return await addRecentCourse(courseDocumentId, userId);
     },
     onMutate: async () => {
       if (!userId) return;

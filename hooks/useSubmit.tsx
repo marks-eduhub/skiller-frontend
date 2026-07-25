@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { serializeByKey } from "@/lib/serializeByKey";
 import { useQuery } from "@tanstack/react-query";
 
 // Topics are addressed by documentId, never by the numeric id. A topic is a
@@ -231,26 +232,7 @@ export const createCourseProgress = async (
 // insert, which is how a student ends up with duplicate trackers that inflate
 // their progress. Serialising per (user, topic, course tracker) makes the read
 // and the write atomic from this client's point of view.
-const topicProgressQueue = new Map<string, Promise<unknown>>();
-
-const serializeTopicProgress = <T,>(
-  key: string,
-  task: () => Promise<T>
-): Promise<T> => {
-  const previous = topicProgressQueue.get(key) ?? Promise.resolve();
-  const next = previous.then(task, task);
-  topicProgressQueue.set(key, next);
-  // Only clear the slot if nothing else has queued behind us in the meantime.
-  next.then(
-    () => {
-      if (topicProgressQueue.get(key) === next) topicProgressQueue.delete(key);
-    },
-    () => {
-      if (topicProgressQueue.get(key) === next) topicProgressQueue.delete(key);
-    }
-  );
-  return next;
-};
+const serializeTopicProgress = serializeByKey;
 
 export const topicProgress = async (
   userId: number,
