@@ -53,7 +53,8 @@ const FeaturedProduct: React.FC = () => {
             const { duration, level, days } = course?.attributes;
 
             const courseRatingsForCurrentCourse = courseRatings.filter(
-              (rating: any) => rating.attributes.course.data.id === course.id
+              (rating: any) =>
+                rating?.attributes?.course?.data?.id === course.id
             );
             const totalRatings = courseRatingsForCurrentCourse.length;
             const averageRating = totalRatings > 0

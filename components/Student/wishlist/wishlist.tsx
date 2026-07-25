@@ -89,9 +89,14 @@ const Wishlist: React.FC = () => {
           </div>
         ) : (
           <div className="grid sm:grid-cols-3 grid-cols-1 gap-2">
-            {wishlist.map((item: any) => (
-              <ProductCard key={item.id} course={item.attributes.course.data} />
-            ))}
+            {wishlist
+              .filter((item: any) => item?.attributes?.course?.data)
+              .map((item: any) => (
+                <ProductCard
+                  key={item.id}
+                  course={item.attributes.course.data}
+                />
+              ))}
           </div>
         )
       ) : !likedTutors || likedTutors.length === 0 ? (

@@ -35,9 +35,9 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor }) => {
 
   useEffect(() => {
     if (likedTutors) {
-      const likedTutorIds = likedTutors?.data?.map(
-        (likedTutor: any) => likedTutor.attributes.tutor.data.id
-      );
+      const likedTutorIds = likedTutors?.data
+        ?.map((likedTutor: any) => likedTutor?.attributes?.tutor?.data?.id)
+        .filter(Boolean);
       setIsLiked(likedTutorIds?.includes(tutorId));
     }
   }, [likedTutors, tutorId]);
@@ -55,7 +55,8 @@ const TutorCard: React.FC<TutorCardProps> = ({ tutor }) => {
       queryClient.setQueryData(["likedTutors", userId], (oldData: any) => ({
         ...oldData,
         data: oldData?.data?.filter(
-          (likedTutor: any) => likedTutor.attributes.tutor.data.id !== tutorId
+          (likedTutor: any) =>
+            likedTutor?.attributes?.tutor?.data?.id !== tutorId
         ),
       }));
       return { previousLikedTutors };

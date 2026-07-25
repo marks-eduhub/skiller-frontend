@@ -40,9 +40,9 @@ const TutorProfile = () => {
 
   useEffect(() => {
     if (likedTutors) {
-      const likedTutorIds = likedTutors?.data?.map(
-        (likedTutor: any) => likedTutor.attributes.tutor.data.id
-      );
+      const likedTutorIds = likedTutors?.data
+        ?.map((likedTutor: any) => likedTutor?.attributes?.tutor?.data?.id)
+        .filter(Boolean);
       setIsLiked(likedTutorIds?.includes(tutorNumericId));
     }
   }, [likedTutors, tutorNumericId]);
@@ -60,7 +60,8 @@ const TutorProfile = () => {
       queryClient.setQueryData(["likedTutors", userId], (oldData: any) => ({
         ...oldData,
         data: oldData?.data?.filter(
-          (likedTutor: any) => likedTutor.attributes.tutor.data.id !== tutorNumericId
+          (likedTutor: any) =>
+            likedTutor?.attributes?.tutor?.data?.id !== tutorNumericId
         ),
       }));
       return { previousLikedTutors };

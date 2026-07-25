@@ -39,9 +39,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ course, imageHeightClass = "h
 
   useEffect(() => {
     if (likedCourses) {
-      const likedCourseIds = likedCourses?.data?.map(
-        (likedCourse: any) => likedCourse.attributes.course.data.id
-      );
+      // A liked-course whose course has since been deleted serialises as
+      // { data: null }, so the id has to be reached defensively.
+      const likedCourseIds = likedCourses?.data
+        ?.map((likedCourse: any) => likedCourse?.attributes?.course?.data?.id)
+        .filter(Boolean);
       setIsLiked(likedCourseIds?.includes(courseId));
     }
   }, [likedCourses, courseId]);
