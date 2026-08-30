@@ -65,49 +65,53 @@ export default function LogIn() {
    };
 
   return (
-    <div className="bg-[#E9E9E9] min-h-screen w-full px-4 py-10 sm:px-6">
+    <div className="min-h-screen w-full bg-background px-4 py-10 sm:px-6">
       <div className="mx-auto flex w-full max-w-[440px] flex-col items-center justify-center">
-        <h2 className="mt-2 text-center text-[34px] font-[600] sm:text-[42px]">
+        <h2 className="mt-2 text-center text-3xl font-display font-bold sm:text-4xl">
           {data.loginForm.title}
         </h2>
         <form
           className="mt-8 flex w-full flex-col gap-6"
           onSubmit={handleLogin}
         >
-          <div className="flex w-full flex-row gap-[1.5rem]">
-            <div className="flex w-full flex-col items-start">
-              <label className="my-2 text-[16px] font-medium sm:text-[18px]">Email</label>
-              <input
-                placeholder="black@gmail.com"
-                type="email"
-                required
-                name="email"
-                className="w-full rounded-md border border-gray-600 bg-inherit px-3 py-4 text-[15px]"
-              />
-            </div>
+          <div className="flex w-full flex-col items-start">
+            <label className="mb-2 text-sm font-medium sm:text-base">Email</label>
+            <input
+              placeholder="black@gmail.com"
+              type="email"
+              required
+              name="email"
+              className="w-full rounded-md border border-input bg-background px-3 py-3.5 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            />
           </div>
 
           <div className="relative flex flex-col items-start">
-            <label className="my-2 text-[16px] font-medium sm:text-[18px]">Password</label>
+            <label className="mb-2 text-sm font-medium sm:text-base">Password</label>
             <input
               placeholder="***************"
               type={showPassword ? "text" : "password"}
               required
               name="password"
-              className="w-full rounded-md border border-gray-600 bg-inherit px-3 py-4 pr-10 text-[15px]"
+              className="w-full rounded-md border border-input bg-background px-3 py-3.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
-            <span
+            <button
+              type="button"
               onClick={handlePassword}
-              className="absolute right-3 top-[70%] -translate-y-[50%] cursor-pointer"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
             >
               {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </span>
+            </button>
           </div>
-          <Link href="/auth/forgot-password">
-            <h1 className="text-right text-[15px] text-blue-600">Forgot Password?</h1>
+          <Link
+            href="/auth/forgot-password"
+            className="text-right text-sm font-medium text-primary hover:underline"
+          >
+            Forgot Password?
           </Link>
           <button
-            className="mx-auto flex min-h-[48px] w-full max-w-[320px] items-center justify-center rounded-md bg-black px-4 text-sm text-zinc-300 transition disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
+            className="mx-auto flex min-h-[48px] w-full max-w-[320px] items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             type="submit"
             disabled={isPending}
           >
@@ -123,36 +127,34 @@ export default function LogIn() {
         </form>
       </div>
 
-      <div className="mx-auto mt-8 flex w-full max-w-[440px] flex-row items-center gap-6 font-[700]">
-        <hr className="border-[1px] border-black flex-grow" />
+      <div className="mx-auto mt-8 flex w-full max-w-[440px] flex-row items-center gap-6 text-sm font-semibold text-muted-foreground">
+        <hr className="flex-grow border-border" />
         OR
-        <hr className="border-[1px] border-black flex-grow" />
+        <hr className="flex-grow border-border" />
       </div>
 
       <div className="mx-auto flex max-w-[440px] justify-center">
         <button
           onClick={handleGoogleSignUp}
           disabled={isPendingGoogle}
-          className="my-4 flex min-h-[48px] w-full max-w-[320px] items-center justify-center gap-2 rounded-md border border-black px-4 text-base transition disabled:cursor-not-allowed disabled:opacity-70"
+          className="my-4 flex min-h-[48px] w-full max-w-[320px] items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-70 sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Image
             src={data.loginForm.googlelogo}
-            alt={"google"}
-            width={32}
-            height={32}
+            alt=""
+            width={20}
+            height={20}
           />
-          <p className="text-[15px] sm:text-[16px]">
-            {isPendingGoogle ? "Redirecting..." : "Sign In with Google"}
-          </p>
+          <span>{isPendingGoogle ? "Redirecting..." : "Sign In with Google"}</span>
         </button>
       </div>
-      <div className="mt-8 flex w-full items-center justify-center sm:hidden">
-        <h1>
+      <div className="mt-8 flex w-full items-center justify-center text-sm sm:hidden">
+        <p>
           Dont have an account?{" "}
-          <Link href="/auth/register" className="text-blue-600">
+          <Link href="/auth/register" className="font-medium text-primary hover:underline">
             Sign Up
           </Link>
-        </h1>
+        </p>
       </div>
     </div>
   );

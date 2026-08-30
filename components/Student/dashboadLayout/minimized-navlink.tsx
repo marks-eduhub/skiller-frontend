@@ -3,73 +3,89 @@ import { HiOutlineAcademicCap } from "react-icons/hi2";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface MinimizedNavLinksProps {
   links: any;
   communityLink: any;
 }
 
+const itemClass =
+  "flex h-12 w-12 items-center justify-center self-center rounded-lg text-primary-foreground/70 transition-colors hover:bg-white/10 hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
+const activeClass = "bg-white/15 text-primary-foreground";
+
 export default function MinimizedNavLinks({
   links,
   communityLink,
 }: MinimizedNavLinksProps) {
+  const pathname = usePathname();
+
   return (
-    <>
+    <div className="flex flex-col items-center gap-2 px-2 py-2">
       {links.map((link: any) => {
         const LinkIcon = link.icon;
         return (
           <Link
             key={link.name}
             href={link.href}
-            className={clsx(
-              "flex flex-col items-center justify-center h-[48px] p-3 text-sm font-medium bg-black  md:flex-none md:p-2 md:px-3 mb-4"
-            )}
+            aria-label={link.name}
+            aria-current={pathname === link.href ? "page" : undefined}
+            className={clsx(itemClass, pathname === link.href && activeClass)}
           >
-            <div className="flex items-center justify-center mb-1" title="Home">
-              <LinkIcon className="w-10 h-7 " />
-            </div>
+            <LinkIcon className="h-5 w-5" />
           </Link>
         );
       })}
 
       <Link
-        key={communityLink.name}
-        href={communityLink.href}
+        href="/dashboard/learning"
+        aria-label="My Learning"
+        aria-current={pathname === "/dashboard/learning" ? "page" : undefined}
         className={clsx(
-          "flex flex-col items-center justify-center h-[48px] p-3 text-sm font-medium bg-black  md:flex-none md:p-2 md:px-3 mb-4"
+          itemClass,
+          pathname === "/dashboard/learning" && activeClass
         )}
       >
-        <div className="flex items-center justify-center mb-1">
-          <AiOutlineTeam className="w-10 h-7 " title="Community" />
-        </div>
+        <Image src="/mylearning.svg" alt="" width={20} height={20} />
       </Link>
-      <Link href="/dashboard/tutorspage">
-        <div className="flex items-center justify-center" title="Tutors">
-          <HiOutlineAcademicCap className="w-10 h-7 mb-1" />
-        </div>
+
+      <Link
+        href="/dashboard/wishlist"
+        aria-label="Wishlist"
+        aria-current={pathname === "/dashboard/wishlist" ? "page" : undefined}
+        className={clsx(
+          itemClass,
+          pathname === "/dashboard/wishlist" && activeClass
+        )}
+      >
+        <Image src="/wishlist.svg" alt="" width={20} height={20} />
       </Link>
-      <Link href="/dashboard/learning">
-        <div className="flex  items-center  ml-14 mt-9 mb-10">
-          <Image
-            src="/mylearning.svg"
-            alt="learning"
-            width={20}
-            height={20}
-            title="My Learning"
-          />
-        </div>
+
+      <hr className="my-1 w-8 border-white/10" />
+
+      <Link
+        href="/dashboard/tutorspage"
+        aria-label="Tutors"
+        aria-current={pathname === "/dashboard/tutorspage" ? "page" : undefined}
+        className={clsx(
+          itemClass,
+          pathname === "/dashboard/tutorspage" && activeClass
+        )}
+      >
+        <HiOutlineAcademicCap className="h-5 w-5" />
       </Link>
-      <Link href = "/dashboard/wishlist">
-      <div className="flex  items-center ml-14">
-        <Image
-          src="/wishlist.svg"
-          alt="wishlist"
-          width={20}
-          height={20}
-          title="Wishlist"
-        />
-      </div>
+
+      <hr className="my-1 w-8 border-white/10" />
+
+      <Link
+        key={communityLink.name}
+        href={communityLink.href}
+        aria-label={communityLink.name}
+        aria-current={pathname === communityLink.href ? "page" : undefined}
+        className={clsx(itemClass, pathname === communityLink.href && activeClass)}
+      >
+        <AiOutlineTeam className="h-5 w-5" />
       </Link>
-    </>
+    </div>
   );
 }

@@ -11,6 +11,36 @@ import { BsPersonFill } from "react-icons/bs";
 import { PiUserSwitchBold } from "react-icons/pi";
 import { useAuthContext } from "@/components/AuthProvider/AuthContext";
 
+function NavItem({
+  label,
+  active,
+  onClick,
+  className,
+  children,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={clsx(
+        "flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-primary-foreground/70 transition-colors hover:bg-white/10 hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary",
+        active && "bg-white/15 text-primary-foreground",
+        className
+      )}
+    >
+      {children}
+      <span>{label}</span>
+    </button>
+  );
+}
+
 export function NavLinks({
   minimized,
   onNavigate,
@@ -55,124 +85,71 @@ export function NavLinks({
       {minimized ? (
         <MinimizedNavLinks links={links} communityLink={communityLink} />
       ) : (
-        <>
-          {links.map((link) => {
-            const LinkIcon = link.icon;
-            return (
-              <div
-                key={link.name}
-                onClick={() => handleNavigation(link.href)}
-                className={clsx(
-                  "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 cursor-pointer",
-                  {
-                    "ml-2": link.name === "Home",
-                    "ml-20": link.name !== "Home",
-                    "bg-gray-700 text-white rounded-lg ":
-                      pathname === link.href,
-                  }
-                )}
-              >
-                <LinkIcon className="w-10 h-6 mr-2 text-white" />
-                <p className="md:block">{link.name}</p>
-              </div>
-            );
-          })}
+        <nav className="flex flex-col gap-1 px-3 py-2">
+          <NavItem
+            label="Home"
+            active={pathname === "/dashboard"}
+            onClick={() => handleNavigation("/dashboard")}
+          >
+            <AiFillHome className="h-5 w-5" />
+          </NavItem>
 
-          <div
+          <NavItem
+            label="My Learning"
+            active={pathname === "/dashboard/learning"}
             onClick={() => handleNavigation("/dashboard/learning")}
-            className={clsx(
-              "flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer",
-              {
-                "bg-gray-700 text-white rounded ":
-                  pathname === "/dashboard/learning",
-              }
-            )}
           >
-            <Image
-              src="/mylearning.svg"
-              alt="learning"
-              width={20}
-              height={20}
-            />
-            <p>My Learning</p>
-          </div>
+            <Image src="/mylearning.svg" alt="" width={20} height={20} />
+          </NavItem>
 
-          <div
+          <NavItem
+            label="Wishlist"
+            active={pathname === "/dashboard/wishlist"}
             onClick={() => handleNavigation("/dashboard/wishlist")}
-            className={clsx(
-              "flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer",
-              {
-                "bg-gray-700 text-white rounded ":
-                  pathname === "/dashboard/wishlist",
-              }
-            )}
           >
-            <Image src="/wishlist.svg" alt="wishlist" width={20} height={20} />
-            <p>Wishlist</p>
-          </div>
+            <Image src="/wishlist.svg" alt="" width={20} height={20} />
+          </NavItem>
 
-          <hr className="border-gray-600 my-5" />
-          <div
+          <hr className="my-2 border-white/10" />
+
+          <NavItem
+            label="Tutors"
+            active={pathname === "/dashboard/tutorspage"}
             onClick={() => handleNavigation("/dashboard/tutorspage")}
-            className={clsx(
-              "flex items-center space-x-2 pl-6 my-5 p-3 cursor-pointer",
-              {
-                "bg-gray-700 text-white rounded ":
-                  pathname === "/dashboard/tutorspage",
-              }
-            )}
           >
-            <HiOutlineAcademicCap className="h-6 w-6 text-white" />
-            <p>Tutors</p>
-          </div>
-          <hr className="my-4 border-gray-600" />
+            <HiOutlineAcademicCap className="h-5 w-5" />
+          </NavItem>
 
-          <div
+          <hr className="my-2 border-white/10" />
+
+          <NavItem
+            label={communityLink.name}
+            active={pathname === communityLink.href}
             onClick={() => handleNavigation(communityLink.href)}
-            className={clsx(
-              "flex h-[48px] grow items-end p-3 text-sm font-medium bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
-              {
-                "bg-gray-700 text-white rounded ":
-                  pathname === communityLink.href,
-              }
-            )}
           >
-            <AiOutlineTeam className="w-10 h-7 mr-2 text-white" />
-            <p className="md:block">{communityLink.name}</p>
-          </div>
+            <AiOutlineTeam className="h-5 w-5" />
+          </NavItem>
 
           {isTutor && (
-            <div
+            <NavItem
+              label="Switch to tutor"
+              active={pathname === "/tutor/dashboard"}
               onClick={() => handleNavigation("/tutor/dashboard")}
-              className={clsx(
-                "flex h-[48px] grow mt-4 items-end p-3 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
-                {
-                  "bg-gray-700 text-white rounded ":
-                    pathname === "/tutor/dashboard",
-                }
-              )}
+              className="mt-2 sm:hidden"
             >
-              <PiUserSwitchBold className="w-10 h-7 mr-2 text-white" />
-
-              <p className="md:block text-[15px]">Switch to tutor</p>
-            </div>
+              <PiUserSwitchBold className="h-5 w-5" />
+            </NavItem>
           )}
 
-          <div
+          <NavItem
+            label="Profile"
+            active={pathname === "/dashboard/profile"}
             onClick={() => handleNavigation("/dashboard/profile")}
-            className={clsx(
-              "flex h-[48px] grow mt-4 items-end p-3 text-sm font-medium sm:hidden bg-black hover:bg-gray-900 hover:rounded-md md:flex-none md:p-2 md:px-3 cursor-pointer",
-              {
-                "bg-gray-700 text-white rounded ":
-                  pathname === "/dashboard/profile",
-              }
-            )}
+            className="mt-2 sm:hidden"
           >
-            <BsPersonFill className="w-10 h-7 mr-2 text-white" />
-
-            <p className="md:block text-[15px]">Profile</p>
-          </div>
-        </>
+            <BsPersonFill className="h-5 w-5" />
+          </NavItem>
+        </nav>
       )}
     </>
   );
