@@ -255,8 +255,8 @@ const SignupForm = () => {
             <Image
               src={data.registerForm.action.googlelogo}
               alt=""
-              width={20}
-              height={20}
+              width={40}
+              height={40}
             />
             <span>{isPendingGoogle ? "Redirecting..." : "Sign In with Google"}</span>
           </button>
