@@ -216,3 +216,32 @@ export const useFetchAllResults = (userId: number) => {
 
 
 
+
+
+/**
+ * Every test in a course, in a single request.
+ *
+ * The topic gate used to read useFetchTests(currentTopicId) and then search
+ * that response for the *previous* topic's tests, which could never match - so
+ * the gate silently let everything through. Course-wide tests are what the
+ * mastery path needs to evaluate the gate correctly and to explain a lock.
+ *
+ * Read-only: no new fields, no writes, nothing the backend has to know about.
+ */
+const fetchCourseTests = async (courseId: string) => {
+  const response = await api.get(
+    `/api/tests?filters[topic][course][documentId][$eq]=${courseId}&populate=topic&pagination[pageSize]=200`
+  );
+  return response.data;
+};
+
+export const useFetchCourseTests = (courseId: string) => {
+  return useQuery({
+    queryKey: ["course_tests", courseId],
+    queryFn: () => fetchCourseTests(courseId),
+    enabled: !!courseId,
+    meta: {
+      errorMessage: "Failed to fetch course tests",
+    },
+  });
+};

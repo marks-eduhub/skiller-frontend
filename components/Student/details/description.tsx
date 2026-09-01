@@ -2,18 +2,23 @@ import { useFetchTopicDetails } from "@/hooks/useCourseTopics";
 import { message } from "antd";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { BsBookmarkCheck, BsFillShareFill } from "react-icons/bs";
-import Loader from "../loader";
-import { stripHtmlTags } from "@/lib/utility";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import RichContent from "@/components/ui/richContent";
+import { hasRichContent } from "@/lib/richText";
 
 const Description = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
   const { data, isLoading, error } = useFetchTopicDetails(topicId ?? "");
+
   if (isLoading) {
     return (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-opacity-80">
-        <Loader />
+      <div className="px-4 sm:px-6 py-4">
+        <Skeleton width={200} height={18} baseColor="#e0e0e0" highlightColor="#f0f0f0" />
+        <div className="mt-4">
+          <Skeleton count={6} height={14} baseColor="#e0e0e0" highlightColor="#f5f5f5" />
+        </div>
       </div>
     );
   }
@@ -21,40 +26,35 @@ const Description = () => {
   if (error) {
     message.error("Error fetching details. Please try again later.");
   }
-  const description = data?.data?.attributes?.topicdescription || [];
+
+  const topic = data?.data?.attributes;
+  const description = topic?.topicdescription || "";
+  const expectations = topic?.topicExpectations || "";
+
+  if (!hasRichContent(description) && !hasRichContent(expectations)) {
+    return (
+      <div className="px-4 sm:px-6 pb-6">
+        <div className="flex items-center justify-center rounded-lg border border-dashed border-gray-300 py-12 text-sm font-medium text-gray-500">
+          No learning description available for this topic.
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-[#F5F5F5]">
-      <div className="flex">
-        <div className="mb-2 sm:ml-3 mr-3 p-6  w-full  ml-5 ">
-            {description?.length > 0 ? (
-              <p>{ stripHtmlTags(description)}</p>
-            ) : (
-              <div className="flex items-center justify-center font-bold sm:p-10">
-                <p className="text-[18px]">
-                  No learning description available.
-                </p>
-              </div>
-            )}
-        </div>
+    <div className="px-4 sm:px-6 pb-8">
+      {/* Tutors have always filled in "What will the student learn?" - it just
+          never had anywhere to appear on the student side. */}
+      {hasRichContent(expectations) && (
+        <section className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:p-5">
+          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">
+            What you will learn
+          </h3>
+          <RichContent html={expectations} className="rich-content--compact" />
+        </section>
+      )}
 
-        {/* <div className="flex flex-col mr-8 pb-10">
-          <div className="flex items-center justify-between gap-8 sm:mt-0 mt-20 ">
-            <button className="rounded-t-md  rounded-b-md border border-black bg-white px-8 py-2 ml-5 md:p-20 md:py-2 md:ml-0 hover:bg-gray-600 focus:outline-none flex items-center">
-              <BsBookmarkCheck className="text-lg" />
-              <span className="ml-2">Save</span>
-            </button>
-            <button className="rounded-t-md rounded-b-md border border-black bg-white px-8 py-2 md:p-20 md:py-2 hover:bg-gray-600 focus:outline-none flex items-center">
-              <BsFillShareFill className="text-lg " />
-              <span className="ml-2">Share</span>
-            </button>
-          </div>
-
-          <div className="bg-[#ffffff8e] flex flex-col justify-center md:w-[570px] h-[500px] items-center mt-7 max-md:w-[280px] max-md:ml-5 sm:pr-0 pr-2">
-            <h2 className="font-bold">Screenshots go here</h2>
-          </div>
-        </div> */}
-      </div>
+      <RichContent html={description} />
     </div>
   );
 };

@@ -1,29 +1,28 @@
+"use client";
+
+import React from "react";
 import { useSearchParams } from "next/navigation";
-import { useFetchTopicDetails } from "@/hooks/useCourseTopics";
-import api from "@/lib/axios";
-import "react-loading-skeleton/dist/skeleton.css";
 import { message } from "antd";
 import Skeleton from "react-loading-skeleton";
-
+import "react-loading-skeleton/dist/skeleton.css";
+import { useFetchTopicDetails } from "@/hooks/useCourseTopics";
 
 const VideoCard: React.FC = () => {
   const searchParams = useSearchParams();
   const topicId = searchParams.get("topicId");
-  const { data, isLoading, error} = useFetchTopicDetails(topicId ?? "");
+  const { data, isLoading, error } = useFetchTopicDetails(topicId ?? "");
+
   if (isLoading) {
     return (
       <div>
-        <h2 className="text-lg font-300 my-4 ">
-          <Skeleton
-            width={1000}
-            height={500}
-            baseColor="#e0e0e0"
-            highlightColor="#f0f0f0"
-            enableAnimation={true}
-          />
-        </h2>
-
-       
+        <Skeleton
+          className="aspect-video w-full rounded-xl"
+          baseColor="#e0e0e0"
+          highlightColor="#f0f0f0"
+        />
+        <div className="mt-4">
+          <Skeleton width="60%" height={22} baseColor="#e0e0e0" highlightColor="#f0f0f0" />
+        </div>
       </div>
     );
   }
@@ -32,58 +31,48 @@ const VideoCard: React.FC = () => {
     message.error("Error fetching details. Please try again later.");
   }
 
-  const topicdata = data?.data?.attributes || [];
-  const videoFilePath = topicdata?.topicVideo?.data?.attributes?.url;
-  const tutorName = topicdata?.course?.data?.attributes?.tutor?.data?.attributes?.tutorname || "DS";
-  const tutorRole = topicdata?.course?.data?.attributes?.tutor?.data?.attributes?.role || "DS";
-  const topicname = topicdata?.topicname;
-  
+  const topic = data?.data?.attributes;
+  const videoFilePath = topic?.topicVideo?.data?.attributes?.url;
+  const tutor = topic?.course?.data?.attributes?.tutor?.data?.attributes;
+  const tutorName = tutor?.tutorname || "Skiller tutor";
+  const tutorRole = tutor?.role || "";
+  const topicname = topic?.topicname;
+  const duration = topic?.duration;
 
   return (
-    <>
-      <div className=" max-md:hidden relative w-full rounded-lg">
-        {videoFilePath? (
-          <video controls className="w-full rounded-lg">
-            <source src={videoFilePath} type="video/mp4" />
-          </video>
-        ) : (
-          <div className="flex items-center justify-center font-bold p-10 w-[1000px] h-[500px]">
-            <p>No video available</p>
-          </div>
-        )}
-
-        <div className="text-left mt-6 text-black max-md:text-lg">
-          <h2 className="text-md  mb-2 font-bold">{topicname}</h2>
-          <p className="text-md max-md:mt-4">
-            {tutorName} : {tutorRole}
-          </p>
-        </div>
-      </div>
-
-      <div className="sm:hidden w-full rounded-lg relative">
-        <div className="flex items-center mb-3">
-          <h2 className="p-1 text-[19px] font-bold text-gray-600">
-            {topicname}
-          </h2>
-        </div>
+    <article>
+      <div className="overflow-hidden rounded-xl bg-black">
         {videoFilePath ? (
-          <video controls className="w-full rounded-lg">
+          // The player fills the reading column instead of the old fixed
+          // 1000x500 box, so the lesson keeps its shape at every width.
+          <video
+            key={videoFilePath}
+            controls
+            controlsList="nodownload"
+            className="aspect-video w-full bg-black"
+          >
             <source src={videoFilePath} type="video/mp4" />
           </video>
         ) : (
-          <div className="flex items-center justify-center font-bold p-10 w-[1000px] h-[500px]">
-            <p>No video available</p>
+          <div className="flex aspect-video w-full items-center justify-center bg-gray-900">
+            <p className="text-sm font-semibold text-gray-400">
+              No video for this topic yet.
+            </p>
           </div>
         )}
-
-        <div className="text-left mt-4 text-black max-md:text-lg">
-          <h2 className="text-md font-bold">{topicname}</h2>
-          <p className="text-md max-md:mt-4">
-            {tutorName} : {tutorRole}
-          </p>
-        </div>
       </div>
-    </>
+
+      <header className="mt-4">
+        <h1 className="text-lg font-bold leading-snug text-gray-900 sm:text-xl">
+          {topicname}
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">
+          {tutorName}
+          {tutorRole ? ` · ${tutorRole}` : ""}
+          {duration ? ` · ${duration}` : ""}
+        </p>
+      </header>
+    </article>
   );
 };
 

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import "react-loading-skeleton/dist/skeleton.css";
-import { stripHtmlTags } from '@/lib/utility';
+import RichContent from '@/components/ui/richContent';
 
 const Resources = () => {
   const searchParams = useSearchParams();
@@ -36,9 +36,10 @@ const Resources = () => {
 
   return (
     <div className="px-4 sm:px-6 pb-6">
-      {instructions && (
-        <p className="mb-4 text-sm text-gray-600">{stripHtmlTags(instructions)}</p>
-      )}
+      <RichContent
+        html={instructions}
+        className="rich-content--compact mb-4"
+      />
 
       {hasContent ? (
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">

@@ -244,3 +244,323 @@
     opacity: 0;
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Tutor-authored lesson content
+ *
+ * Markup comes from react-quill and is sanitized + enhanced in
+ * lib/richText.ts. These rules are the reason a lesson now reads like a
+ * document instead of one flat paragraph.
+ * ------------------------------------------------------------------ */
+
+.rich-content {
+  color: #27272a;
+  font-size: 1rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+.rich-content > *:first-child { margin-top: 0; }
+.rich-content > *:last-child { margin-bottom: 0; }
+
+.rich-content p { margin: 0 0 1rem; }
+
+.rich-content h1,
+.rich-content h2,
+.rich-content h3,
+.rich-content h4,
+.rich-content h5,
+.rich-content h6 {
+  color: #18181b;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 2rem 0 0.75rem;
+  scroll-margin-top: 6rem;
+}
+
+.rich-content h1 { font-size: 1.6rem; }
+.rich-content h2 { font-size: 1.35rem; }
+.rich-content h3 { font-size: 1.15rem; }
+.rich-content h4,
+.rich-content h5,
+.rich-content h6 { font-size: 1rem; }
+
+.rich-content ul,
+.rich-content ol {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.rich-content ul { list-style: disc; }
+.rich-content ol { list-style: decimal; }
+.rich-content li { margin: 0.35rem 0; }
+.rich-content li::marker { color: #71717a; }
+.rich-content ul ul { list-style: circle; }
+
+.rich-content a {
+  color: #1c4e85;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-content a:hover { color: #143a63; }
+
+.rich-content strong, .rich-content b { font-weight: 700; color: #18181b; }
+.rich-content em, .rich-content i { font-style: italic; }
+.rich-content u { text-decoration: underline; }
+.rich-content s, .rich-content del { text-decoration: line-through; color: #71717a; }
+
+.rich-content mark {
+  background: #fef3c7;
+  padding: 0 0.15em;
+  border-radius: 2px;
+}
+
+.rich-content hr {
+  border: 0;
+  border-top: 1px solid #e4e4e7;
+  margin: 2rem 0;
+}
+
+.rich-content blockquote {
+  border-left: 3px solid #d4d4d8;
+  color: #52525b;
+  font-style: italic;
+  margin: 0 0 1rem;
+  padding: 0.25rem 0 0.25rem 1rem;
+}
+
+.rich-content blockquote p:last-child { margin-bottom: 0; }
+
+.rich-content .rc-image {
+  border-radius: 0.5rem;
+  display: block;
+  height: auto;
+  margin: 1.25rem 0;
+  max-width: 100%;
+}
+
+.rich-content figure { margin: 1.25rem 0; }
+.rich-content figcaption {
+  color: #71717a;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Inline code */
+.rich-content :not(.rc-code) > pre code,
+.rich-content p code,
+.rich-content li code,
+.rich-content td code {
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 4px;
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+}
+
+/* Code blocks */
+.rich-content .rc-code {
+  border: 1px solid #e4e4e7;
+  border-radius: 0.5rem;
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+
+.rich-content .rc-code__bar {
+  align-items: center;
+  background: #fafafa;
+  border-bottom: 1px solid #e4e4e7;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+}
+
+.rich-content .rc-code__lang {
+  color: #71717a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rich-content .rc-code__copy {
+  background: transparent;
+  border: 1px solid #d4d4d8;
+  border-radius: 4px;
+  color: #52525b;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.rich-content .rc-code__copy:hover {
+  background: #18181b;
+  border-color: #18181b;
+  color: #fff;
+}
+
+.rich-content .rc-code pre {
+  background: #fff;
+  margin: 0;
+  overflow-x: auto;
+  padding: 0.9rem 1rem;
+}
+
+.rich-content .rc-code pre code {
+  background: none;
+  border: 0;
+  color: #27272a;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding: 0;
+  white-space: pre;
+}
+
+/* Callouts - a blockquote opening with "Tip:", "Warning:", ... */
+.rich-content .rc-callout {
+  border: 1px solid;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  padding: 0.9rem 1rem;
+}
+
+.rich-content .rc-callout__icon {
+  flex-shrink: 0;
+  line-height: 0;
+  padding-top: 0.15rem;
+}
+
+.rich-content .rc-callout__icon svg {
+  height: 1.1rem;
+  width: 1.1rem;
+}
+
+.rich-content .rc-callout__body { min-width: 0; }
+.rich-content .rc-callout__body > *:last-child { margin-bottom: 0; }
+
+.rich-content .rc-callout__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+}
+
+.rich-content .rc-callout--note {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e3a8a;
+}
+
+.rich-content .rc-callout--tip {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.rich-content .rc-callout--warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.rich-content .rc-callout--key {
+  background: #faf5ff;
+  border-color: #e9d5ff;
+  color: #6b21a8;
+}
+
+.rich-content .rc-callout a { color: inherit; }
+
+/* Tables */
+.rich-content .rc-table {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+}
+
+.rich-content table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 100%;
+}
+
+.rich-content th,
+.rich-content td {
+  border: 1px solid #e4e4e7;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.rich-content th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+/* Math */
+.rich-content .rc-math--block {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+/* Diagrams */
+.rich-content .rc-diagram {
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.rich-content .rc-diagram:not(.rc-diagram--ready) {
+  color: #a1a1aa;
+  font-size: 0.85rem;
+}
+
+.rich-content .rc-diagram--raw {
+  background: #fafafa;
+  border: 1px dashed #d4d4d8;
+  border-radius: 0.5rem;
+  color: #52525b;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+.rich-content .rc-diagram svg {
+  height: auto;
+  max-width: 100%;
+}
+
+/* Quill's own alignment / indent classes */
+.rich-content .ql-align-center { text-align: center; }
+.rich-content .ql-align-right { text-align: right; }
+.rich-content .ql-align-justify { text-align: justify; }
+.rich-content .ql-indent-1 { padding-left: 3em; }
+.rich-content .ql-indent-2 { padding-left: 6em; }
+.rich-content .ql-indent-3 { padding-left: 9em; }
+.rich-content .ql-indent-4 { padding-left: 12em; }
+.rich-content .ql-indent-5 { padding-left: 15em; }
+.rich-content .ql-indent-6 { padding-left: 18em; }
+.rich-content .ql-indent-7 { padding-left: 21em; }
+.rich-content .ql-indent-8 { padding-left: 24em; }
+
+/* Compact variant for side panels and instruction blurbs */
+.rich-content.rich-content--compact {
+  color: #52525b;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.rich-content.rich-content--compact p { margin-bottom: 0.6rem; }
+.rich-content.rich-content--compact h1,
+.rich-content.rich-content--compact h2,
+.rich-content.rich-content--compact h3 {
+  font-size: 1rem;
+  margin: 1.1rem 0 0.4rem;
+}

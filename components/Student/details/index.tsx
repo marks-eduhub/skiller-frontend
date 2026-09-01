@@ -27,12 +27,21 @@ const DetailsPage: React.FC = () => {
   }, [userId, topicId, courseTrackerId]);
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden">
-      <div className="flex sm:flex-row flex-col gap-3 cursor-pointer sm:bg-gray-100 py-4 sm:px-3 max-w-full">
-        <VideoCard />
-        <TopicsCard />
+    <div className="flex-1 pb-6">
+      {/* Reading column and path rail sit side by side, so the transcript,
+          discussion and knowledge check stay in view next to the lesson
+          instead of below the fold. */}
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+        <main className="min-w-0 flex-1">
+          <VideoCard />
+          <Tabs />
+        </main>
+
+        <aside className="w-full shrink-0 lg:sticky lg:top-0 lg:max-h-[calc(100vh-2rem)] lg:w-[340px] lg:overflow-y-auto xl:w-[380px] hide-scrollbar">
+          <TopicsCard />
+        </aside>
       </div>
-      <Tabs />
+
       <SimilarCourses />
     </div>
   );
