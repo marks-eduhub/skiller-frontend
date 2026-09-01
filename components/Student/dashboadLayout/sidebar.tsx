@@ -1,10 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { NavLinks } from "@/components/Student/dashboadLayout/nav-links";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { ExitIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import SmallScreenSideNav from "./smallscreens";
 import { useMediaQuery } from "@mui/material";
-import SkillerLogo from "@/components/ui/logo";
 import { logout } from "@/lib/helpers";
 import { useState } from "react";
 import dynamic from "next/dynamic";
@@ -45,41 +44,32 @@ const SideNav: React.FC<SideNavProps> = ({
         <SmallScreenSideNav onNavigate={handleNavigation} />
       ) : (
         <div
-          className={`${
-            sidebarMinimized ? "w-[116px]" : "w-[224px]"
-          } transition-width duration-300 ease rounded-br-[20px] rounded-tr-[20px] bg-black h-full flex flex-col text-white`}
+          className="w-full h-full flex flex-col rounded-br-xl rounded-tr-xl bg-primary text-primary-foreground transition-[width] duration-300 ease"
         >
-          <div
-            className={`flex items-center justify-start space-x-4 cursor-pointer bg-black px-4 py-3 ${
-              sidebarMinimized ? "pl-7" : ""
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label={sidebarMinimized ? "Expand sidebar" : "Collapse sidebar"}
+            className={`flex h-14 items-center bg-primary px-4 py-3 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
+              sidebarMinimized ? "justify-center px-0" : "justify-start"
             }`}
           >
-            <HamburgerMenuIcon
-              className={`w-6 h-6 text-white ${
-                sidebarMinimized ? "rotate-90 mt-1 ml-3" : ""
-              }`}
-              onClick={toggleSidebar}
-            />
-            {!sidebarMinimized && (
-              <div className="w-24 text-white">
-                <SkillerLogo />
-              </div>
-            )}
-          </div>
-          <div className="h-auto w-full grow bg-black">
+            <HamburgerMenuIcon className="h-6 w-6 shrink-0 text-primary-foreground" />
+          </button>
+          <div className="h-auto w-full grow bg-primary">
             <NavLinks
               minimized={sidebarMinimized}
               onNavigate={handleNavigation}
             />
           </div>
-          <div className="px-4 pb-2 text-center text-[10px] font-medium uppercase tracking-[0.24em] text-white/35">
-            v_1
-          </div>
           <form onSubmit={handleSignOut}>
             <button
               type="submit"
-              className="flex h-[44px] w-full grow items-center justify-start bg-black p-3 text-sm font-medium hover:bg-gray-900 hover:text-blue-600"
-              disabled={loading} 
+              aria-label="Sign Out"
+              className={`flex h-11 w-full items-center gap-3 bg-primary p-3 text-sm font-medium text-primary-foreground/70 hover:bg-white/10 hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
+                sidebarMinimized ? "justify-center" : "justify-start"
+              }`}
+              disabled={loading}
             >
               {loading ? (
                 <DotPulseWrapper
@@ -89,7 +79,10 @@ const SideNav: React.FC<SideNavProps> = ({
                   color="white"
                 />
               ) : (
-                <div className="px-3 py-2">Sign Out</div>
+                <>
+                  <ExitIcon className="h-5 w-5 shrink-0" />
+                  {!sidebarMinimized && <span>Sign Out</span>}
+                </>
               )}
             </button>
           </form>

@@ -104,66 +104,66 @@ const SignupForm = () => {
     } catch (error) {}
   };
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center overflow-x-hidden bg-[#E9E9E9] px-4 py-8 text-black sm:px-6">
-      <div className="fixed -bottom-[10rem] -right-[5.5rem] sm:-top-[8rem] sm:-right-[6.5rem] h-[14rem] w-[14rem] bg-black opacity-[14%] transform rounded-full " />
-      <h2 className="text-center text-[34px] font-[400] sm:text-[42px]">
+    <div className="relative flex min-h-screen w-full flex-col items-center overflow-x-hidden bg-background px-4 py-8 text-foreground sm:px-6">
+      <div className="fixed -bottom-40 -right-[5.5rem] h-56 w-56 rounded-full bg-primary opacity-[0.08] sm:-right-[6.5rem] sm:-top-32" />
+      <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">
         {data.registerForm.title}
       </h2>
       <div className="mt-8 flex w-full max-w-[960px] flex-col gap-6">
-        <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
-          <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="text-[16px] font-medium sm:text-[18px]">First Name</label>
+        <div className="flex w-full flex-col justify-between gap-6 sm:flex-row">
+          <div className="flex w-full flex-col items-start sm:w-[22rem]">
+            <label className="mb-2 text-sm font-medium sm:text-base">First Name</label>
             <input
               type="text"
               name="firstName"
               required
               value={formData.firstName}
               onChange={handleChange}
-              className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+              className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:py-4"
             />
           </div>
-          <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="text-[16px] font-medium sm:text-[18px]">Last Name</label>
+          <div className="flex w-full flex-col items-start sm:w-[22rem]">
+            <label className="mb-2 text-sm font-medium sm:text-base">Last Name</label>
             <input
               type="text"
               name="lastName"
               required
               value={formData.lastName}
               onChange={handleChange}
-              className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+              className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:py-4"
             />
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
-          <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="text-[16px] font-medium sm:text-[18px]">Email Address</label>
+        <div className="flex w-full flex-col justify-between gap-6 sm:flex-row">
+          <div className="flex w-full flex-col items-start sm:w-[22rem]">
+            <label className="mb-2 text-sm font-medium sm:text-base">Email Address</label>
             <input
               type="text"
               name="email"
               required
               value={formData.email}
               onChange={handleChange}
-              className="border border-gray-600 my-3 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+              className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:py-4"
             />
           </div>
-          <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="text-[16px] font-medium sm:text-[18px]">Username</label>
+          <div className="flex w-full flex-col items-start sm:w-[22rem]">
+            <label className="mb-2 text-sm font-medium sm:text-base">Username</label>
             <input
               type="text"
               name="username"
               required
               value={formData.username}
               onChange={handleChange}
-              className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+              className="w-full rounded-md border border-input bg-background px-4 py-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:py-4"
             />
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between max-sm:gap-[1.5rem] w-full">
-          <div className="flex flex-col items-start w-full">
-            <label className="text-[16px] font-medium sm:text-[18px]">Password</label>
-            <div className="relative  sm:w-[22rem] w-full">
+        <div className="flex w-full flex-col justify-between gap-6 sm:flex-row">
+          <div className="flex w-full flex-col items-start">
+            <label className="mb-2 text-sm font-medium sm:text-base">Password</label>
+            <div className="relative w-full sm:w-[22rem]">
               <input
                 type={passwordVisible ? "text" : "password"}
                 name="password"
@@ -171,19 +171,22 @@ const SignupForm = () => {
                 value={formData.password}
                 placeholder="Enter your password"
                 onChange={handleChange}
-                className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+                className="w-full rounded-md border border-input bg-background px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:py-4"
               />
-              <span
+              <button
+                type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-[50%] transform -translate-y-[50%] cursor-pointer"
+                aria-label={passwordVisible ? "Hide password" : "Show password"}
+                aria-pressed={passwordVisible}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 {passwordVisible ? <FaEye /> : <FaEyeSlash />}
-              </span>
+              </button>
             </div>
           </div>
-          <div className="flex flex-col items-start w-full sm:w-[22rem]">
-            <label className="text-[16px] font-medium sm:text-[18px]">Confirm password</label>
-            <div className="relative sm:w-[22rem] w-full">
+          <div className="flex w-full flex-col items-start sm:w-[22rem]">
+            <label className="mb-2 text-sm font-medium sm:text-base">Confirm password</label>
+            <div className="relative w-full sm:w-[22rem]">
               <input
                 type={confirmPasswordVisible ? "text" : "password"}
                 name="confirmPassword"
@@ -191,14 +194,17 @@ const SignupForm = () => {
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="border border-gray-600 my-2 bg-inherit rounded-md px-4 py-[0.7rem] sm:py-4 w-full"
+                className="w-full rounded-md border border-input bg-background px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:py-4"
               />
-              <span
+              <button
+                type="button"
                 onClick={toggleConfirmPasswordVisibility}
-                className="absolute right-3 top-[50%] transform -translate-y-[50%] cursor-pointer"
+                aria-label={confirmPasswordVisible ? "Hide password" : "Show password"}
+                aria-pressed={confirmPasswordVisible}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                {confirmPasswordVisible? <FaEye /> : <FaEyeSlash />}
-              </span>
+                {confirmPasswordVisible ? <FaEye /> : <FaEyeSlash />}
+              </button>
             </div>
           </div>
         </div>
@@ -209,15 +215,15 @@ const SignupForm = () => {
             id="terms"
             name="terms"
             required
-            className="w-[1.2rem] h-[1.2rem]"
+            className="h-[1.2rem] w-[1.2rem] rounded-sm border-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           />
-          <label className="text-sm leading-6 text-black/75 sm:text-[15px]">
+          <label htmlFor="terms" className="text-sm leading-6 text-muted-foreground">
             I agree to{" "}
-            <Link href="/terms" className="text-blue-600 underline-offset-2 hover:underline">
+            <Link href="/terms" className="font-medium text-primary underline-offset-2 hover:underline">
               terms of service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-blue-600 underline-offset-2 hover:underline">
+            <Link href="/privacy" className="font-medium text-primary underline-offset-2 hover:underline">
               privacy policy
             </Link>
           </label>
@@ -227,44 +233,42 @@ const SignupForm = () => {
           <button
             onClick={handleSubmit}
             type="submit"
-            className="my-2 flex min-h-[48px] w-full max-w-96 items-center justify-center rounded-lg bg-black px-4 text-base text-white transition disabled:cursor-not-allowed disabled:opacity-70"
+            className="my-2 flex min-h-[48px] w-full max-w-96 items-center justify-center rounded-md bg-primary px-4 text-base font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             disabled={isPending}
           >
             {isPending ? "Creating account..." : "Sign Up"}
           </button>
         </div>
 
-        <div className="flex flex-row items-center gap-6 bottom-[5rem] font-[700]">
-          <hr className="border-[1px] border-black w-[48%] " />
+        <div className="flex flex-row items-center gap-6 text-sm font-semibold text-muted-foreground">
+          <hr className="w-[48%] border-border" />
           OR
-          <hr className="border-[1px] border-black w-[48%] " />
+          <hr className="w-[48%] border-border" />
         </div>
 
         <div className="flex justify-center">
           <button
             onClick={handleGoogleSignUp}
             disabled={isPendingGoogle}
-            className="my-2 flex min-h-[48px] w-full max-w-96 items-center justify-center gap-2 rounded-md border border-black px-4 text-base transition disabled:cursor-not-allowed disabled:opacity-70"
+            className="my-2 flex min-h-[48px] w-full max-w-96 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-base font-medium text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <Image
               src={data.registerForm.action.googlelogo}
-              alt={"google"}
-              width={32}
-              height={32}
+              alt=""
+              width={40}
+              height={40}
             />
-            <p className="text-[16px]">
-              {isPendingGoogle ? "Redirecting..." : "Sign In with Google"}
-            </p>
+            <span>{isPendingGoogle ? "Redirecting..." : "Sign In with Google"}</span>
           </button>
         </div>
 
-        <div className="sm:hidden flex items-center ">
-          <h1>
+        <div className="flex items-center text-sm sm:hidden">
+          <p>
             Already have an account?{" "}
-            <Link href="/auth" className="text-blue-600">
+            <Link href="/auth" className="font-medium text-primary hover:underline">
               Login
             </Link>
-          </h1>
+          </p>
         </div>
       </div>
     </div>
